@@ -1,0 +1,21 @@
+line-length = 96
+target-version = "py311"
+
+[lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+ignore = [
+  "SIM118",  # h5py Groups are not dicts; .keys() is the idiomatic read there
+  "B008",
+  "E501",    # long lines are the persisted query bodies, which must not be wrapped
+]
+
+[lint.per-file-ignores]
+# The query bodies are single enormous string literals by necessity.
+"packages/cap-client/src/cap_client/queries.py" = ["E501"]
+"**/tests/**" = ["S101"]
+
+[lint.isort]
+# Modules that live beside the code importing them rather than being installed:
+# pytest puts `conftest` on sys.path, and evals/ is run as scripts with its own
+# directory on sys.path. Without this ruff sorts them as third-party.
+known-first-party = ["cap_client", "h5ad_obs", "conftest", "graders", "runner"]

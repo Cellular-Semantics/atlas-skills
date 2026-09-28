@@ -1,0 +1,13 @@
+{
+  "name": "atlas-tools",
+  "version": "0.1.0",
+  "description": "Portal-agnostic tools for working with published single-cell atlases: read per-cell obs out of a remote h5ad over range requests, without downloading the expression matrix.",
+  "author": {
+    "name": "Cellular Semantics",
+    "url": "https://github.com/Cellular-Semantics"
+  },
+  "homepage": "https://github.com/Cellular-Semantics/atlas-skills",
+  "repository": "https://github.com/Cellular-Semantics/atlas-skills",
+  "license": "MIT",
+  "keywords": ["single-cell", "cell-atlas", "anndata", "h5ad", "cell-annotation"]
+}

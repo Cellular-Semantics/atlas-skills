@@ -1,0 +1,46 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: false
+      - run: uvx ruff check packages/
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: false
+      - run: uv venv --python ${{ matrix.python }}
+      - run: uv pip install -e "packages/h5ad-obs[test]"
+      # Live tests are excluded by the package's addopts: they read a real remote
+      # h5ad. The offline suite still covers the whole range-read path, against a
+      # localhost server that honours Range.
+      - run: uv run pytest packages/h5ad-obs -q
+
+  install-from-git:
+    # The published contract: what a user gets from the SKILL.md command.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: false
+      - run: |
+          uvx --from "git+https://github.com/${{ github.repository }}@${{ github.sha }}#subdirectory=packages/h5ad-obs" \
+            h5ad-obs --version
