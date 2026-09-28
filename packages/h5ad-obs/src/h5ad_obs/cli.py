@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import urllib.parse
 
 from . import __version__
 from .reader import ObsReadError, check_range_support, list_columns, read_obs
@@ -21,6 +22,10 @@ def _log(msg: str) -> None:
 #: This package stays free of portal-specific clients -- each of these has its own
 #: tool for the lookup -- but recognising them turns a baffling HTML-parse failure
 #: into a message saying exactly what to run.
+#:
+#: Keyed on the EXACT hostname, never a substring: CELLxGENE serves its actual
+#: assets from datasets.cellxgene.cziscience.com, which contains the portal host
+#: and would otherwise be rejected as a portal page.
 _PORTAL_HINTS = {
     "celltype.info": (
         "That is a CAP dataset page, not an h5ad. Resolve it first:\n"
@@ -40,9 +45,10 @@ _PORTAL_HINTS = {
 
 def check_target(target: str) -> None:
     """Fail early, and usefully, on a portal page handed over in place of a file."""
-    for host, hint in _PORTAL_HINTS.items():
-        if host in target:
-            raise ObsReadError(hint.format(target=target))
+    host = (urllib.parse.urlparse(target).hostname or "").lower().removeprefix("www.")
+    hint = _PORTAL_HINTS.get(host)
+    if hint:
+        raise ObsReadError(hint.format(target=target))
 
 
 def build_parser() -> argparse.ArgumentParser:

@@ -86,6 +86,43 @@ def test_a_plain_h5ad_url_is_not_intercepted(capsys, served, tmp_path):
     assert json.loads(out.out)["n_rows"] == N_CELLS
 
 
+@pytest.mark.parametrize("url", [
+    # The bug this pins: a substring match on "cellxgene.cziscience.com" rejects
+    # CELLxGENE's own asset host, which is the single most likely URL a user will
+    # pass. Found by running the published artifact, not by the offline suite.
+    "https://datasets.cellxgene.cziscience.com/28ef397e-0819.h5ad",
+    "https://api.cellxgene.cziscience.com/something.h5ad",
+    # Nor should a portal name appearing elsewhere in the URL trigger it.
+    "https://example.org/mirror/celltype.info/copy.h5ad",
+    "https://example.org/f.h5ad?from=cellxgene.cziscience.com",
+])
+def test_portal_check_matches_the_host_not_a_substring(url):
+    from h5ad_obs.cli import check_target
+    check_target(url)  # must not raise
+
+
+@pytest.mark.parametrize("url", [
+    "https://celltype.info/project/1/dataset/2",
+    "https://www.celltype.info/project/1/dataset/2",
+    "https://CELLTYPE.INFO/project/1/dataset/2",
+    "https://cellxgene.cziscience.com/collections/abc",
+])
+def test_portal_check_catches_portal_hosts(url):
+    from h5ad_obs.cli import check_target
+    from h5ad_obs.reader import ObsReadError
+    with pytest.raises(ObsReadError):
+        check_target(url)
+
+
+def test_version_matches_the_installed_distribution():
+    """__version__ was hand-maintained and drifted from pyproject.toml during the
+    split out of cap_skills, so --version reported a release that did not exist."""
+    from importlib import metadata
+
+    from h5ad_obs import __version__
+    assert __version__ == metadata.version("h5ad-obs")
+
+
 def test_version(capsys):
     from h5ad_obs import __version__
     with pytest.raises(SystemExit) as e:
