@@ -1,0 +1,14 @@
+{
+  "tags": ["picker", "rules"],
+  "checks": [
+    {"kind": "command_matches", "pattern": "--profile",
+     "why": "the constant flag is what makes this answerable, and it only appears in a profile"},
+    {"kind": "answer_any_of",
+     "patterns": ["constant", "same value", "single value", "one value", "no per-cell",
+                  "does not vary", "no variation", "invariant"],
+     "min_hits": 1,
+     "why": "the finding is that the candidate columns do not vary per cell; an answer that does not say so has not understood the dataset"},
+    {"kind": "answer_not_matches", "pattern": "(?:^|[^\\w])(?:the )?author cell[- ]type column[s]? (?:is|are) [`'\"]?(?:Cell\\.class|Cell\\.group|Lineage)",
+     "why": "Cell.class, Cell.group and Lineage all read like cell types and are all constant here; presenting one as the answer is the failure the rule was written for"}
+  ]
+}

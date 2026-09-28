@@ -11,9 +11,12 @@ it never contains non-trivial code.
 ## Layout
 
 ```
-packages/h5ad-obs/      remote h5ad obs reader + `h5ad-obs` CLI
-plugins/atlas-tools/    the skills, pinned to a package tag
-.claude-plugin/         marketplace manifest
+packages/h5ad-obs/              remote h5ad obs reader + `h5ad-obs` CLI
+packages/celltype-column-eval/  the gold set and metrics for the picker benchmark
+plugins/atlas-tools/            the skills and sub-agents, pinned to a package tag
+evals/                          skill-behaviour cases + the picker benchmark
+docs/                           what the benchmark measured
+.claude-plugin/                 marketplace manifest
 ```
 
 Nothing under `plugins/` imports from, or references by relative path, anything
@@ -37,18 +40,33 @@ is slow while uv builds h5py, pandas and aiohttp; cached after that.
 ## Use the CLI directly
 
 ```sh
-uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@v0.1.0#subdirectory=packages/h5ad-obs" \
+uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@v0.2.0#subdirectory=packages/h5ad-obs" \
     h5ad-obs https://datasets.cellxgene.cziscience.com/<id>.h5ad --list-columns
 ```
 
 stdout is a JSON summary with stable field names, including byte accounting;
 the obs table goes to `--out`.
 
+`--profile` prints a per-column summary — kind, cardinality, and sample values
+spread across the table — instead of reading obs. It works on a URL, and on an
+obs table already pulled to disk:
+
+```sh
+h5ad-obs <url> --out obs.parquet      # one remote read
+h5ad-obs obs.parquet --profile text   # free
+```
+
 ## What is here
 
 | skill | does |
 |---|---|
 | `remote-h5ad-obs` | reads `obs` from a remote `.h5ad` over HTTP range requests, never touching `X` |
+| `author-celltype-columns` | works out which `obs` columns hold the authors' own cell-type labels, as opposed to the portal's standardised `cell_type`, cluster indices and QC |
+
+`author-celltype-columns` ships a sub-agent, `author-celltype-picker`, which
+makes the judgment call in a fresh context from a column profile. Benchmarked at
+Jaccard 0.81 against hand curation on 73 CELLxGENE datasets — see
+[`docs/benchmark.md`](docs/benchmark.md) for what that does and does not mean.
 
 ## Portal clients live elsewhere
 
@@ -75,6 +93,10 @@ honours `Range`, including a check that the expression matrix's byte ranges are
 never fetched. The live suite reads a 385-cell CELLxGENE Patch-seq dataset,
 resolved through the CELLxGENE API at run time so an upstream revision does not
 break it; `H5AD_OBS_LIVE_URL` points it at your own host instead.
+
+Skill behaviour is a separate layer, in [`evals/`](evals). Those drive a real
+agent and cost money, so they are not in `dev.sh` or CI — but their graders are
+pure functions and both are.
 
 ## Rules for changes
 
