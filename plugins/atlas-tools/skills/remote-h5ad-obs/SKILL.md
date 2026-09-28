@@ -22,13 +22,14 @@ transfers ~27 MB in ~8-13 s.
 ## Command
 
 ```sh
-uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@v0.1.0#subdirectory=packages/h5ad-obs" \
+uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@v0.2.0#subdirectory=packages/h5ad-obs" \
     h5ad-obs <url> [options]
 ```
 
 Needs `uv` and, on first run, network access to GitHub. Expect the first
 invocation to take a minute while uv builds h5py, pandas and aiohttp; cached
-thereafter. Expects `h5ad-obs` 0.1.0 or later (`h5ad-obs --version`).
+thereafter. Expects `h5ad-obs` 0.2.0 or later (`h5ad-obs --version`), the release
+that added `--profile`.
 
 **Options:**
 
@@ -39,6 +40,10 @@ thereafter. Expects `h5ad-obs` 0.1.0 or later (`h5ad-obs --version`).
   `pyarrow`; csv and tsv need nothing extra).
 - `--block-size MB` — default 2. **Tune this** (see below).
 - `--no-preflight` — skip the range-support check.
+- `--profile [json|text]` — print a per-column summary (kind, cardinality,
+  spread sample values) instead of reading obs. Also works on an obs table
+  already on disk, which costs nothing. See the `author-celltype-columns` skill,
+  which is built on it.
 
 stdout is a JSON summary — row and column counts, skipped columns, and byte
 accounting (`range_requests`, `mb_fetched`, `file_bytes`). The obs table itself

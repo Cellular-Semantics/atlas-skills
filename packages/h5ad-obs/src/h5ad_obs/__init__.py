@@ -5,6 +5,7 @@ never touched. On a 476 MB atlas that is ~27 MB and ~8 s.
 """
 from importlib import metadata as _metadata
 
+from .profile import as_text, profile_frame, profile_local, profile_remote
 from .reader import ReadStats, read_obs
 
 # Read from the installed distribution metadata rather than duplicated here:
@@ -15,4 +16,5 @@ try:
 except _metadata.PackageNotFoundError:  # running from a source tree, not installed
     __version__ = "0+unknown"
 
-__all__ = ["ReadStats", "__version__", "read_obs"]
+__all__ = ["ReadStats", "__version__", "as_text", "profile_frame", "profile_local",
+           "profile_remote", "read_obs"]
