@@ -26,16 +26,75 @@ that has only ever seen the plugin directory.
 
 ## Install
 
-In Claude Code:
+Install into the project you are working in, rather than globally:
 
+```sh
+claude plugin marketplace add Cellular-Semantics/atlas-skills --scope local
+claude plugin install atlas-tools@atlas-skills --scope local
 ```
-/plugin marketplace add Cellular-Semantics/atlas-skills
-/plugin install atlas-tools
-```
+
+`--scope local` writes `.claude/settings.local.json`, which is gitignored by
+convention: the plugin is available in this checkout, for you, and nowhere else.
+Nothing leaks into your other projects and nothing is committed. Remove it with
+`claude plugin uninstall atlas-tools@atlas-skills --scope local`.
+
+The three scopes, and when each is right:
+
+| scope | written to | who gets it |
+|---|---|---|
+| `local` | `.claude/settings.local.json` (gitignored) | you, in this checkout |
+| `project` | `.claude/settings.json` (committed) | everyone who clones the repo |
+| `user` | `~/.claude/settings.json` | you, everywhere |
+
+`user` is the default if you omit `--scope`, which is usually more than you
+meant. Prefer `local` to try something out, `project` to give a repo's whole team
+the same tools.
 
 The skills invoke their CLI with `uvx --from git+…@vX.Y.Z`, so the only
 prerequisites are `uv` and network access to GitHub on first run. The first call
 is slow while uv builds h5py, pandas and aiohttp; cached after that.
+
+### Setting it up for a repo
+
+To make these tools part of a repository's setup — so anyone who clones it has
+them without being told to install anything — install at **project** scope from
+inside that repo:
+
+```sh
+claude plugin marketplace add Cellular-Semantics/atlas-skills --scope project
+claude plugin install atlas-tools@atlas-skills --scope project
+```
+
+That writes `.claude/settings.json`. **Commit it.**
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "atlas-skills": {
+      "source": { "source": "github", "repo": "Cellular-Semantics/atlas-skills" }
+    }
+  },
+  "enabledPlugins": {
+    "atlas-tools@atlas-skills": true
+  }
+}
+```
+
+You can equally write that file by hand and skip the two commands — it is the
+whole of the configuration. A fresh clone picks the plugin up from it with no
+install step, resolving to whatever version the marketplace currently publishes.
+
+Two things worth knowing:
+
+- It layers rather than replaces. Someone who already has `atlas-tools` at user
+  scope keeps that too; the project-scope copy takes precedence in this repo.
+- Pin deliberately if you need to. The marketplace tracks the default branch, so
+  a clone gets the current release, not the one you tested against. For
+  reproducible analysis, pin the *package* instead by calling the CLI directly
+  with a tagged `uvx --from` line (see below) rather than relying on the plugin.
+
+To add these tools to a repo whose `.claude/settings.json` already exists, merge
+the two keys into it rather than overwriting.
 
 ## Use the CLI directly
 
