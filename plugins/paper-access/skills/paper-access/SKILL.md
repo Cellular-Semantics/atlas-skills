@@ -66,18 +66,24 @@ alias paper-access='uvx --from "git+https://github.com/Cellular-Semantics/atlas-
 
 # Turn whatever the user gave you into identifiers. Exact DOIs, PMIDs and
 # PMCIDs pass straight through; anything else comes back as a candidate.
-paper-access resolve --input <file> --json
-paper-access resolve --id "Gopee 2024 prenatal skin atlas" --json
+paper-access resolve --input <file>
+paper-access resolve --id "Gopee 2024 prenatal skin atlas"
 
 # Walk the waterfall. Repeatable --id, or a whole list at once.
 paper-access fetch --store <store> --id <id> [--id <id> ...] [--retry]
 paper-access fetch --store <store> --input <file>      # one id per line
+#   --no-pdf   keep the corpus to tagged XML, at the cost of PDF-only papers
+#   --no-asta  skip the probe (rarely worth it: one call, and the only
+#              instrument there is)
 
 # One paper's record, with any inconsistency flagged.
 paper-access show --store <store> --id <id>
 
 # The whole store as a table: route, kind, ASTA band, size.
 paper-access report --store <store> [--json]
+
+# Identifiers in the store, one per line, for piping onward.
+paper-access papers --store <store>
 
 # What in a drop zone could be a paper: the id each file declares, its opening
 # title, its size. Recursive.
@@ -89,6 +95,11 @@ paper-access adopt --store <store> --id <id> --file <path>
 # Re-resolve every recorded identifier and check the title still matches.
 paper-access verify --store <store>
 ```
+
+Every command prints JSON on stdout, except `report`, which prints a table
+unless you ask for `--json`. Exit code 2 means what you asked to be checked
+does not check out — `resolve` uses it when something needs confirming,
+`check-refs` when a document cites a paper the store does not hold.
 
 `fetch` is idempotent and cheap to re-run: a paper already here is not
 re-fetched, and a paper recorded as unreachable is not re-attempted until you

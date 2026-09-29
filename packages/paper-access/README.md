@@ -2,12 +2,10 @@
 
 Retrieve the text of a list of papers and record honestly what arrived.
 
-**Status: contract only.** The schema in
-`src/paper_access/schemas/paper_availability.schema.json` is written and is the
-thing the `paper-access` skill is documented against. The code is not written
-yet. Nothing pins to this package until there is a `paper-access--v0.1.0` tag,
-and the `uvx --from` lines in the skill and its hooks will not resolve before
-then.
+**Status: implemented, not yet released.** 139 unit tests, all offline —
+every rung runs through an `httpx` MockTransport. The `uvx --from` lines in the
+skill and its hooks pin to `paper-access--v0.1.0`, which does not exist until
+the tag is pushed; until then use an editable install or a local path.
 
 ## The waterfall
 
@@ -26,7 +24,7 @@ The ASTA probe runs for every paper whatever route served it. There is no API
 field that reports snippet coverage, so probing is the only instrument, and the
 band is what tells a later multi-paper search which papers it can reach.
 
-## The CLI the skill is written against
+## The CLI
 
 ```
 paper-access resolve    --input <file> | --id <id>        → identifiers or candidates
@@ -43,9 +41,25 @@ paper-access schema                                       → print the record s
 paper-access --version
 ```
 
+`paper-access papers --store <store>` lists the identifiers, one per line, for
+piping into something else. `fetch` also takes `--no-pdf` (keep a corpus to
+tagged XML) and `--no-asta` (skip the probe).
+
+Exit codes are meaningful, and the plugin's hooks depend on them: 0 success,
+1 error, 2 "the thing you asked me to check does not check out". `resolve`
+exits 2 when anything needs a person to confirm it.
+
 Store layout: `<store>/<id-slug>/{availability.json, source/paper.jats.xml |
 source/paper.pdf, source/paper.txt}`. Paths inside a record are relative to the
 record, so a store can be moved.
+
+## Verified against the live services
+
+Fetching `10.1038/s41586-023-06812-z` reproduces the worked example exactly:
+Europe PMC serves 398 KB of article XML, and the probe returns 3 snippets,
+0 sections, 0 refMentions — `abstract_only` — for a paper that is open access,
+sits in PMC, and carries 118 graph references. Nothing but the probe tells that
+apart from a fully indexed paper.
 
 ## What harvests from where
 
@@ -59,7 +73,7 @@ than invention:
 | `Cellular-Semantics/Atlas-reporter@dev`, `services/_jats_parser.py` | JATS parsing across publisher dialects |
 | `Cellular-Semantics/citation-traverse`, `cite_traverse/europepmc.py` | `_parse_id` — DOI / PMID / PMCID normalisation and interconversion |
 
-Their unit tests are fixture-driven and come across largely intact.
+Their unit tests are fixture-driven and came across largely intact.
 
 Two deliberate departures from the Atlas-reporter original:
 
