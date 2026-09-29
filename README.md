@@ -1,7 +1,11 @@
 # atlas-skills
 
-Agentic skills for working with published single-cell atlases, plus the packages
-they call. Portal-agnostic: these work against any atlas you can reach by URL.
+Agentic skills for working with published single-cell atlases and the literature
+behind them, plus the packages they call. Portal-agnostic: these work against
+any atlas you can reach by URL.
+
+**Each skill is its own plugin, and installs on its own.** Nothing here is
+all-or-nothing: take the one you want.
 
 The split is deliberate. **Skills hold judgment** — when to use a capability, how
 to read the result, what the traps are. **Packages hold deterministic logic**,
@@ -11,12 +15,16 @@ it never contains non-trivial code.
 ## Layout
 
 ```
-packages/h5ad-obs/              remote h5ad obs reader + `h5ad-obs` CLI
-packages/celltype-column-eval/  the gold set and metrics for the picker benchmark
-plugins/atlas-tools/            the skills and sub-agents, pinned to a package tag
-evals/                          skill-behaviour cases + the picker benchmark
-docs/                           what the benchmark measured
-.claude-plugin/                 marketplace manifest
+packages/h5ad-obs/               remote h5ad obs reader + `h5ad-obs` CLI
+packages/celltype-column-eval/   the gold set and metrics for the picker benchmark
+packages/paper-access/           paper retrieval + `paper-access` CLI
+plugins/remote-h5ad-obs/         one skill
+plugins/author-celltype-columns/ one skill + the picker sub-agent
+plugins/paper-access/            one skill + the identifier-provenance hooks
+plugins/atlas-tools/             a bundle of the two h5ad plugins; no skills of its own
+evals/                           skill-behaviour cases + the picker benchmark
+docs/                            what the benchmark measured
+.claude-plugin/                  marketplace manifest
 ```
 
 Nothing under `plugins/` imports from, or references by relative path, anything
@@ -30,13 +38,18 @@ Install into the project you are working in, rather than globally:
 
 ```sh
 claude plugin marketplace add Cellular-Semantics/atlas-skills --scope local
-claude plugin install atlas-tools@atlas-skills --scope local
+claude plugin install remote-h5ad-obs@atlas-skills --scope local
 ```
+
+Install whichever plugins you want; they are independent. `atlas-tools` is a
+convenience bundle that pulls in the two h5ad plugins and nothing else — it
+carries no skills itself, so installing it and installing both separately give
+the same result.
 
 `--scope local` writes `.claude/settings.local.json`, which is gitignored by
 convention: the plugin is available in this checkout, for you, and nowhere else.
 Nothing leaks into your other projects and nothing is committed. Remove it with
-`claude plugin uninstall atlas-tools@atlas-skills --scope local`.
+`claude plugin uninstall remote-h5ad-obs@atlas-skills --scope local`.
 
 The three scopes, and when each is right:
 
@@ -62,7 +75,7 @@ inside that repo:
 
 ```sh
 claude plugin marketplace add Cellular-Semantics/atlas-skills --scope project
-claude plugin install atlas-tools@atlas-skills --scope project
+claude plugin install remote-h5ad-obs@atlas-skills --scope project
 ```
 
 That writes `.claude/settings.json`. **Commit it.**
@@ -75,7 +88,7 @@ That writes `.claude/settings.json`. **Commit it.**
     }
   },
   "enabledPlugins": {
-    "atlas-tools@atlas-skills": true
+    "remote-h5ad-obs@atlas-skills": true
   }
 }
 ```
@@ -86,7 +99,7 @@ install step, resolving to whatever version the marketplace currently publishes.
 
 Two things worth knowing:
 
-- It layers rather than replaces. Someone who already has `atlas-tools` at user
+- It layers rather than replaces. Someone who already has the plugin at user
   scope keeps that too; the project-scope copy takes precedence in this repo.
 - Pin deliberately if you need to. The marketplace tracks the default branch, so
   a clone gets the current release, not the one you tested against. For
@@ -117,10 +130,11 @@ h5ad-obs obs.parquet --profile text   # free
 
 ## What is here
 
-| skill | does |
-|---|---|
-| `remote-h5ad-obs` | reads `obs` from a remote `.h5ad` over HTTP range requests, never touching `X` |
-| `author-celltype-columns` | works out which `obs` columns hold the authors' own cell-type labels, as opposed to the portal's standardised `cell_type`, cluster indices and QC |
+| plugin | skill | does |
+|---|---|---|
+| `remote-h5ad-obs` | `remote-h5ad-obs` | reads `obs` from a remote `.h5ad` over HTTP range requests, never touching `X` |
+| `author-celltype-columns` | `author-celltype-columns` | works out which `obs` columns hold the authors' own cell-type labels, as opposed to the portal's standardised `cell_type`, cluster indices and QC |
+| `paper-access` | `paper-access` | retrieves a list of papers as tagged article XML where it can be had, probes how much of each a search index holds, and names the papers nobody can reach |
 
 `author-celltype-columns` ships a sub-agent, `author-celltype-picker`, which
 makes the judgment call in a fresh context from a column profile. Benchmarked on
@@ -128,6 +142,25 @@ makes the judgment call in a fresh context from a column profile. Benchmarked on
 0.96, recall 0.96**, exact agreement on 63 of 73. See
 [`docs/benchmark.md`](docs/benchmark.md) for what that does and does not mean —
 precision in particular is a lower bound.
+
+### paper-access
+
+Takes DOIs, PMIDs, PMCIDs or rough citations. Walks **JATS XML → ASTA index
+probe → open-access PDF → ask a person**, in that order: reading a whole paper
+beats retrieving from it, and article XML is the only source that carries
+reference markup, document order and figure legends. The ASTA probe runs for
+every paper regardless of how it arrived, because no API field reports snippet
+coverage and the band is what tells a later multi-paper search which papers it
+can reach.
+
+Identifiers and publication metadata enter a record from exactly two places —
+the caller, or a named API at a recorded time — and the plugin ships hooks that
+enforce it: a direct write to an `availability.json` is denied, and with
+`PAPER_ACCESS_STORE` set, identifiers quoted in a written document are checked
+against the store.
+
+Supplementary material is deliberately a separate job, and will be a separate
+plugin.
 
 ## Portal clients live elsewhere
 
@@ -162,6 +195,20 @@ pure functions and both are.
 The picker's accuracy benchmark re-scores offline: the obs profiles it runs on
 are committed fixtures, not fetched.
 
+## Releasing
+
+Each plugin versions independently, and so does each package. A repo-wide tag
+would mean an h5ad release forcing a re-pin in a plugin that does not use it.
+
+```sh
+claude plugin tag plugins/remote-h5ad-obs     # remote-h5ad-obs--v0.3.0
+```
+
+`claude plugin tag` checks that `plugin.json` and the marketplace entry agree
+before it writes the tag. Package tags follow the same shape by hand —
+`h5ad-obs--v0.3.0` — and are what the `uvx --from …@<tag>` lines in the skills
+pin to.
+
 ## Rules for changes
 
 - Deterministic and testable → a package, with tests. About when/how/why → skill text.
@@ -169,5 +216,8 @@ are committed fixtures, not fetched.
   supports `--version`.
 - Changing a CLI contract is a breaking change: bump the version and update every
   pinning skill in the same PR.
-- Pin skills to tags, never to a branch.
+- Pin skills to tags, never to a branch. Tags are per package and per plugin,
+  `<name>--v<version>`, never repo-wide.
+- One skill per plugin, unless two genuinely cannot be used apart. A user should
+  be able to take the one thing they want.
 - No dependency on any single data portal.

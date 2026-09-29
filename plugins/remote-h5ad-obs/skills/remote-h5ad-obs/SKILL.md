@@ -42,8 +42,8 @@ that added `--profile`.
 - `--no-preflight` — skip the range-support check.
 - `--profile [json|text]` — print a per-column summary (kind, cardinality,
   spread sample values) instead of reading obs. Also works on an obs table
-  already on disk, which costs nothing. See the `author-celltype-columns` skill,
-  which is built on it.
+  already on disk, which costs nothing. The `author-celltype-columns` skill is
+  built on it, and installs separately.
 
 stdout is a JSON summary — row and column counts, skipped columns, and byte
 accounting (`range_requests`, `mb_fetched`, `file_bytes`). The obs table itself

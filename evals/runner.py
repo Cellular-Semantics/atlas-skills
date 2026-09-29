@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the eval cases against the installed atlas-tools plugin.
+"""Run the eval cases against the installed author-celltype-columns plugin.
 
 This is scaffolding, not a product: `claude plugin eval` does this properly
 (including a no-plugin ablation arm and LLM graders) but is in early access and
@@ -102,12 +102,18 @@ def invoke(prompt: str, spec: dict, transcript_path: pathlib.Path) -> Run:
     return run
 
 
-#: What the cases need to be present. Bump alongside the plugin version.
-EXPECTED_PLUGIN_VERSION = "0.2.0"
+#: The plugin that owns the skills and the sub-agent these cases exercise.
+#: Named explicitly rather than taken as "the repo's plugin": each skill now
+#: installs on its own, so a user with a different one installed would
+#: otherwise satisfy a guard that checks nothing relevant.
+REQUIRED_PLUGIN = "author-celltype-columns"
+
+#: What the cases need to be present. Bump alongside that plugin's version.
+EXPECTED_PLUGIN_VERSION = "0.3.0"
 
 INSTALL_HINT = (
     "  claude plugin marketplace add Cellular-Semantics/atlas-skills --scope user\n"
-    "  claude plugin install atlas-tools@atlas-skills --scope user")
+    f"  claude plugin install {REQUIRED_PLUGIN}@atlas-skills --scope user")
 
 
 def installed_plugins() -> list[dict]:
@@ -136,21 +142,22 @@ def check_plugin_installed() -> None:
     the repo, and every case would silently run with no plugin and fail for the
     wrong reason. Matching on the plugin name alone waves that setup through.
     """
-    rows = [r for r in installed_plugins() if r["name"].startswith("atlas-tools@")]
+    rows = [r for r in installed_plugins()
+            if r["name"].startswith(f"{REQUIRED_PLUGIN}@")]
     user = [r for r in rows if r.get("scope") == "user"]
     if not user:
         other = ", ".join(f'{r.get("scope")} scope' for r in rows)
-        sys.exit("atlas-tools is not installed at user scope"
+        sys.exit(f"{REQUIRED_PLUGIN} is not installed at user scope"
                  + (f" (found at: {other} -- the cases run in a temp directory and "
                     "cannot see those)" if rows else "")
                  + ". These cases test the published plugin:\n" + INSTALL_HINT)
     version = user[0].get("version", "?")
     if version != EXPECTED_PLUGIN_VERSION:
-        sys.exit(f"atlas-tools {version} is installed at user scope, but these cases "
-                 f"expect {EXPECTED_PLUGIN_VERSION}. A pushed tag plus a marketplace "
-                 "update is needed before an edit shows up here:\n"
+        sys.exit(f"{REQUIRED_PLUGIN} {version} is installed at user scope, but these "
+                 f"cases expect {EXPECTED_PLUGIN_VERSION}. A pushed tag plus a "
+                 "marketplace update is needed before an edit shows up here:\n"
                  "  claude plugin marketplace update atlas-skills\n"
-                 f"  claude plugin install atlas-tools@atlas-skills --scope user")
+                 f"  claude plugin install {REQUIRED_PLUGIN}@atlas-skills --scope user")
 
 
 def main() -> int:

@@ -25,7 +25,8 @@ This skill profiles every obs column, hands that profile to the
 - an atlas comparison that needs author labels rather than harmonised ones
 
 Not needed if the standardised `cell_type` column is what the user wants — read
-that directly with `remote-h5ad-obs`.
+that directly with the `h5ad-obs` CLI below, or with the `remote-h5ad-obs`
+skill if it is installed.
 
 ## Read obs once, then profile it locally
 
@@ -146,12 +147,13 @@ portal's `cell_type`. A picked column with 33 values against a `cell_type` with
   `structure` column. Both are visible in the answer if you list what was picked
   — which is the reason to list it.
 - **This takes a file URL, not a portal page.** The same rule as
-  `remote-h5ad-obs`: the tool refuses a `celltype.info` or `cellxgene.cziscience.com`
+  every reader here: the tool refuses a `celltype.info` or `cellxgene.cziscience.com`
   page and tells you what to run instead.
 
 ## See also
 
-- `remote-h5ad-obs` — the same reader, for when you just want obs.
+- `remote-h5ad-obs` — the same reader as its own skill, for when you just want
+  obs. Installs separately: `claude plugin install remote-h5ad-obs@atlas-skills`.
 - [`packages/celltype-column-eval`](https://github.com/Cellular-Semantics/atlas-skills/tree/main/packages/celltype-column-eval)
   — the gold set and metrics behind the numbers above.
 - [`docs/benchmark.md`](https://github.com/Cellular-Semantics/atlas-skills/blob/main/docs/benchmark.md)
