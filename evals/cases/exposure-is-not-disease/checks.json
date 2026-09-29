@@ -1,0 +1,15 @@
+{
+  "tags": ["picker", "rules", "disease", "development_stage", "tissue"],
+  "checks": [
+    {"kind": "answer_matches", "pattern": "COVID_status",
+     "why": "the authors' disease column: 'Healthy', 'COVID-19', 'Post-COVID-19'"},
+    {"kind": "answer_matches", "pattern": "Age_group|Group",
+     "why": "the stage column: 'Adult', 'Infant', 'Neonate', 'Child', 'Elderly'"},
+    {"kind": "answer_not_matches", "pattern": "(?:^|[^\\w])(?:picks?|pick(?:ed|ing)?|select(?:ed)?|disease column[s]?)[^.\\n]{0,80}\\bSmoker\\b",
+     "why": "smoking is an exposure, not a diagnosis"},
+    {"kind": "answer_not_matches", "pattern": "(?:^|[^\\w])(?:picks?|pick(?:ed|ing)?|select(?:ed)?|disease column[s]?)[^.\\n]{0,80}\\bBMI\\b",
+     "why": "BMI is `bounded 6.8..37.11` -- a bounded numeric about the donor, and not a diagnosis"},
+    {"kind": "answer_not_matches", "pattern": "(?:^|[^\\w])(?:picks?|pick(?:ed|ing)?|select(?:ed)?)[^.\\n]{0,60}\\bEthnicity\\b",
+     "why": "demographics are none of the four field types"}
+  ]
+}

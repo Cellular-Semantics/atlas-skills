@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import pytest
-from celltype_column_eval import bootstrap_ci, hypergeom_p_hit, jaccard, score_picks, wilson
+from obs_column_eval import bootstrap_ci, hypergeom_p_hit, jaccard, score_picks, wilson
 
 
 def test_jaccard():

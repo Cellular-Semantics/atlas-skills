@@ -116,3 +116,36 @@ def score_picks(
         overall["null_hit_rate_expected"] = sum(null_hit_ps) / len(null_hit_ps)
 
     return {"overall": overall, "per_dataset": rows}
+
+
+def score_by_field_type(
+    picks: Mapping[str, object],
+    gold: Mapping[str, dict],
+    field_types: Iterable[str],
+    schema: Mapping[str, dict] | None = None,
+) -> dict:
+    """Score a picks file one field type at a time.
+
+    Only datasets the gold set was *curated for* on a given field type are
+    scored on it. Scoring the rest would count every correct tissue pick on a
+    cell-type-only dataset as a false positive, which would say more about the
+    gold set's coverage than about the agent.
+    """
+    from .gold import flatten
+
+    out = {}
+    for ft in field_types:
+        eligible = {dsid for dsid, entry in gold.items()
+                    if ft in entry.get("curated_for", [])}
+        ft_picks = {d: p for d, p in flatten(picks, ft).items() if d in eligible}
+        ft_gold = {d: {"columns": gold[d]["columns"].get(ft, [])} for d in eligible}
+        if not ft_picks:
+            out[ft] = {"overall": {"n": 0}, "per_dataset": [],
+                       "skipped": "no picks for any dataset curated for this "
+                                  "field type"}
+            continue
+        result = score_picks(ft_picks, ft_gold, schema)
+        result["n_eligible_datasets"] = len(eligible)
+        result["n_scored"] = len(ft_picks)
+        out[ft] = result
+    return out

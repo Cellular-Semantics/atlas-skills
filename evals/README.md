@@ -7,6 +7,10 @@ read the result correctly and avoid the documented traps.
 
 Two arms, answering two different questions.
 
+Cases are tagged by field type as well as by skill: `--tag tissue`,
+`--tag development_stage`, `--tag disease` select the cases added for the
+sample-field picker, `--tag picker` selects every picking case.
+
 ## `runner.py` — does the skill behave
 
 ```sh
@@ -63,10 +67,15 @@ python3 evals/benchmark.py --all           # all 74; slow, not free
 python3 evals/benchmark.py --profiles-only # refresh the profile cache, no agent
 ```
 
-Scored against the CL_KG gold set in `packages/celltype-column-eval`, and
-reported next to the frozen n=73 picker on the same datasets, so a change is
-visible as a delta rather than an absolute. See
+**Cell type only.** Scored against the CL_KG gold set in
+`packages/obs-column-eval`, and reported next to the frozen n=73 picker on the
+same datasets, so a change is visible as a delta rather than an absolute. See
 [`docs/benchmark.md`](../docs/benchmark.md).
+
+There is no equivalent arm for tissue, stage and disease yet — the gold set is
+one dataset. `obs-column-eval candidates evals/fixtures/profiles` narrows what
+to curate next; [`docs/sample-fields.md`](../docs/sample-fields.md) says what
+would have to happen to turn it into a number.
 
 Two stages, both cached under `evals/.cache/`. Profiling is deterministic and
 needs no agent, so a rerun costs no bandwidth; picks are cached too, so a spend
@@ -92,7 +101,7 @@ claude plugin marketplace add "$PWD" --scope local
 claude plugin install atlas-tools@atlas-skills --scope local
 
 H5AD_OBS_CMD="packages/h5ad-obs/.venv/bin/h5ad-obs" \
-CELLTYPE_COLUMN_EVAL_CMD="packages/celltype-column-eval/.venv/bin/celltype-column-eval" \
+OBS_COLUMN_EVAL_CMD="packages/obs-column-eval/.venv/bin/obs-column-eval" \
   python3 evals/benchmark.py --all --record docs/benchmark-results.json
 ```
 

@@ -1,0 +1,65 @@
+{
+  "dsid": "HCA_reproductive_atlas_v1",
+  "title": "HCA human reproductive atlas v1 (integrated)",
+  "source": "Atlas-reporter, branch HCA_reproductive_atlas_v1: projects/HCA_reproductive_atlas_v1/h5ad_obs/obs.categoricals.parquet, cross-checked against cas.json composition categories and h5ad_obs/column_inventory.csv",
+  "url": null,
+  "curated_by": "seeded from the atlas curator's own cas.json categories, then extended to every obs column by hand",
+  "obs": {"n_cells": 2235448, "n_columns": 54},
+  "columns": {
+    "cell_type": [
+      "celltype_HCA",
+      "celltype_HCA_broad",
+      "celltype_HCA_fine",
+      "celltype_HCA_lineage",
+      "celltype_HCA_ontology_level1",
+      "celltype_HCA_ontology_level2",
+      "celltype_HCA_ontology_level3",
+      "celltype_HCA_ontology_level4",
+      "celltype_GarciaAlonso2021",
+      "celltype_GarciaAlonso2022",
+      "celltype_HECA",
+      "celltype_Lardenois2026",
+      "celltype_Lorenzi2025",
+      "celltype_OvarySanger2026",
+      "celltype_Ulrich2022",
+      "celltype_Ulrich2024",
+      "celltype_Weigert2025"
+    ],
+    "tissue": ["Organ", "Organ_part", "Tissue_ROI"],
+    "development_stage": [
+      "Developmental_stage",
+      "Gestational_age_pcw",
+      "Postnatal_age_years",
+      "Tanner Stage"
+    ],
+    "other_stage": [
+      "Menstrual_stage",
+      "Menstrual_stage_OriginalAuthors",
+      "phase"
+    ],
+    "disease": [
+      "Clinical_diagnosis",
+      "Disease",
+      "Observed_pathology",
+      "Sampled_site_condition",
+      "Tissue_status"
+    ]
+  },
+  "notes": {
+    "Collection_site": "REJECT tissue. 'Wellcome Sanger Institute', 'University of Michigan' -- the institution that collected the sample. The name is the whole trap.",
+    "Specimen_type": "REJECT tissue. 'biopsy', 'whole_tissue' -- how the sample was taken, not what it is.",
+    "Sampled_site_condition": "disease, not tissue. 'normal', 'endometriosis', 'infertility' qualifies the health of the site; it does not name the site.",
+    "Tissue_status": "disease, not tissue. 'affected'/'unaffected' is disease state with no disease named. Kept in `disease` because it is a statement about pathology; a value mapper will get a state, not a MONDO term.",
+    "Target_cell_population": "REJECT cell_type. 'Not applicable', 'unknown', 'oogonial stem cells' -- the population the experiment sorted for, a fact about the protocol rather than a per-cell annotation.",
+    "Tanner Stage": "development_stage by the curator's own call in cas.json, and kept. A clinical pubertal scale, not an ontology stage term: 'Pubic V/Genitals-Breast V' will not resolve to HsapDv without a lookup table.",
+    "Menstrual_stage": "other_stage, against cas.json which left it 'unclassified'. A cyclical phase of an adult, not a point in development -- real, mappable, but not HsapDv.",
+    "phase": "other_stage. 'G1'/'S'/'G2M' is a computationally assigned cell-cycle phase. The only per-cell entry in any stage bucket, and the reason `other_stage` is separate.",
+    "Postnatal_age_years": "development_stage, and the reason the numeric gate exists. Stored as a categorical of numerals beside 'Not applicable'; profiles as bounded 1..70, 88% numeric.",
+    "Gestational_age_pcw": "development_stage. bounded 5..21, 97% numeric. Mostly 'Not applicable' in this adult-heavy atlas, so a row scan alone would miss the range.",
+    "Batch": "REJECT development_stage. Profiles as bounded 1..4, 67% numeric -- it passes the cardinality gate exactly as an age does. Name and range are what reject it.",
+    "Dataset_id": "REJECT everything. Accession ids.",
+    "celltype_HCA_ontology_level1": "cell_type. Consortium-harmonised rather than portal-standardised: the HCA master nomenclature is this atlas's own annotation, so it is a pick, unlike CxG's `cell_type`.",
+    "Sex": "REJECT. Constant ('female') in this atlas, and demographics in any case.",
+    "Assay_type": "REJECT. Constant."
+  }
+}

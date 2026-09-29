@@ -1,0 +1,11 @@
+{
+  "tags": ["picker", "rules", "development_stage"],
+  "checks": [
+    {"kind": "answer_matches", "pattern": "age_death",
+     "why": "post-mortem tissue, so age at death is the age of the donor the cells came from"},
+    {"kind": "answer_not_matches", "pattern": "(?:^|[^\\w])(?:picks?|pick(?:ed|ing)?|select(?:ed)?|age column[s]?|stage column[s]?)[^.\\n]{0,80}age_onset",
+     "why": "age at disease onset is an age, but not the donor's age at collection"},
+    {"kind": "answer_not_matches", "pattern": "(?:^|[^\\w])(?:picks?|pick(?:ed|ing)?|select(?:ed)?)[^.\\n]{0,60}\\bduration\\b",
+     "why": "'9 yrs' is how long the illness lasted"}
+  ]
+}

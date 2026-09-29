@@ -3,8 +3,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "celltype-column-eval"
-version = "0.1.0"
+name = "obs-column-eval"
+version = "0.2.0"
 description = "Gold set and metrics for scoring author cell-type obs column picks against CL_KG curation."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -27,10 +27,10 @@ Homepage = "https://github.com/Cellular-Semantics/atlas-skills"
 Repository = "https://github.com/Cellular-Semantics/atlas-skills"
 
 [project.scripts]
-celltype-column-eval = "celltype_column_eval.cli:main"
+obs-column-eval = "obs_column_eval.cli:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/celltype_column_eval"]
+packages = ["src/obs_column_eval"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

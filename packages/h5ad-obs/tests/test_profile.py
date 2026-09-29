@@ -186,6 +186,108 @@ def test_text_marks_an_estimate():
     assert "| ~" in as_text(profile_frame(df, scan_n=100))
 
 
+# --- measurement: telling an age from a score --------------------------------
+
+def test_a_per_cell_score_is_continuous_and_an_age_is_bounded():
+    """The whole point of the flag. Both columns are numbers; only the number
+    of distinct values says which one is a property of the donor."""
+    rng = np.random.default_rng(0)
+    df = pd.DataFrame({
+        "percent_mito": rng.random(20_000),
+        "n_genes": rng.integers(500, 12_000, 20_000),
+        "age_years": rng.choice([23, 30, 37, 55, 64], 20_000),
+    })
+    cols = by_name(profile_frame(df))
+    assert cols["percent_mito"]["bounded"] is False
+    assert cols["n_genes"]["bounded"] is False
+    assert cols["age_years"]["bounded"] is True
+
+
+def test_an_age_stored_as_a_categorical_of_numerals_is_still_a_measurement():
+    """How ages actually arrive: numerals in a category table beside a sentinel.
+    A test that looked at the dtype would call this text and stop."""
+    values = ["Not applicable"] + [str(w) for w in range(6, 22)]
+    df = pd.DataFrame({"Gestational_age_pcw": pd.Categorical(values * 50)})
+    col = by_name(profile_frame(df))["Gestational_age_pcw"]
+    assert col["numeric"]["min"] == 6.0 and col["numeric"]["max"] == 21.0
+    assert col["numeric"]["fraction"] < 1.0      # the sentinel did not parse
+    assert col["bounded"] is True
+
+
+def test_a_categorical_is_characterised_from_its_categories_not_the_scan():
+    """A rare category -- one late gestational age in a 2M-cell adult atlas --
+    never shows up in a 2000-row scan. The category table is exact, so the
+    range must include it anyway."""
+    common = ["6"] * 200_000
+    rare = ["40"]
+    df = pd.DataFrame({"age": pd.Categorical(common + rare)})
+    col = by_name(profile_frame(df, scan_n=2000))["age"]
+    assert col["numeric"]["max"] == 40.0
+
+
+def test_a_text_column_has_no_measurement():
+    df = pd.DataFrame({"Organ": pd.Categorical(["Uterus", "Ovary"] * 50)})
+    assert by_name(profile_frame(df))["Organ"]["numeric"] is None
+
+
+def test_a_mostly_text_column_with_a_few_numerals_has_no_measurement():
+    """`disease` with a '2' in it is not a measurement, and a range over the
+    stray numerals would be noise the picker has to read past."""
+    values = ["control", "endometriosis", "teratoma", "2"]
+    df = pd.DataFrame({"Disease": pd.Categorical(values * 50)})
+    assert by_name(profile_frame(df))["Disease"]["numeric"] is None
+
+
+def test_a_boolean_is_not_a_measurement():
+    """True is not 1. A bool column read as numeric would render as a bounded
+    measurement spanning 0..1, which is exactly what a fraction looks like."""
+    df = pd.DataFrame({"predicted_doublet": [True, False] * 100})
+    assert by_name(profile_frame(df))["predicted_doublet"]["numeric"] is None
+
+
+def test_the_floor_lets_a_small_table_through():
+    """8 distinct ages in 60 rows is 13% -- over the ratio. Without the absolute
+    floor every small dataset would have its age column called continuous."""
+    df = pd.DataFrame({"age": [20, 25, 30, 35, 40, 45, 50, 55] * 8})
+    assert by_name(profile_frame(df))["age"]["bounded"] is True
+
+
+def test_a_cluster_index_is_bounded_too():
+    """The flag is a filter, not a verdict: `seurat_clusters` passes it. What
+    rejects a cluster index is its values, and those are in the profile."""
+    rng = np.random.default_rng(1)
+    df = pd.DataFrame({"seurat_clusters": pd.Categorical(
+        rng.integers(0, 30, 5000).astype(str))})
+    assert by_name(profile_frame(df))["seurat_clusters"]["bounded"] is True
+
+
+def test_text_shows_the_shape_and_the_range():
+    rng = np.random.default_rng(2)
+    df = pd.DataFrame({
+        "percent_mito": rng.random(20_000),
+        "age_years": rng.choice([23, 64], 20_000),
+    })
+    text = as_text(profile_frame(df))
+    assert "| continuous 0" in text
+    assert "| bounded 23..64 |" in text
+
+
+def test_text_reports_the_numeric_fraction_only_when_it_is_short():
+    whole = pd.DataFrame({"age": pd.Categorical(["30", "40"] * 50)})
+    assert "% numeric" not in as_text(profile_frame(whole))
+    mixed = pd.DataFrame({"age": pd.Categorical(["30", "40", "unknown"] * 50)})
+    assert "(67% numeric)" in as_text(profile_frame(mixed))
+
+
+def test_text_stays_readable_for_a_column_that_is_not_a_measurement():
+    """An empty cell, not the word 'None' -- 50 of them in a profile is noise."""
+    df = pd.DataFrame({"Organ": pd.Categorical(["Uterus"] * 50)})
+    line = next(ln for ln in as_text(profile_frame(df)).splitlines()
+                if ln.startswith("Organ |"))
+    assert line.endswith("|  | 'Uterus', 'Uterus', 'Uterus', 'Uterus', 'Uterus', "
+                         "'Uterus', 'Uterus', 'Uterus', 'Uterus', 'Uterus', ...")
+
+
 # --- the CLI contract --------------------------------------------------------
 
 def test_cli_profile_json(served, capsys):
@@ -244,6 +346,49 @@ def test_a_declared_but_unused_category_is_not_called_constant():
     col = by_name(profile_frame(pd.DataFrame({"c": values})))["c"]
     assert col["n_unique"] == 2
     assert col["constant"] is False
+
+
+def test_a_stringified_nan_category_is_not_a_number():
+    """`float('nan')` succeeds. obs categoricals routinely carry a literal
+    'nan' category from a stringified missing value, and letting it through put
+    a NaN in the range and crashed the text profile on a fifth of CELLxGENE."""
+    values = ["nan", "6", "11", "nan"]
+    df = pd.DataFrame({"age": pd.Categorical(values * 50)})
+    col = by_name(profile_frame(df))["age"]
+    assert col["numeric"]["min"] == 6.0 and col["numeric"]["max"] == 11.0
+    as_text(profile_frame(df))        # must not raise
+
+
+def test_an_all_nan_string_column_is_not_a_measurement():
+    df = pd.DataFrame({"x": pd.Categorical(["nan", "NA", "inf"] * 50)})
+    assert by_name(profile_frame(df))["x"]["numeric"] is None
+
+
+def test_the_remote_path_measures_a_numeric_column_too(served):
+    """The two paths must agree. `profile_frame` normalises through .tolist()
+    and the remote path does not, so building the vocabulary from raw values
+    classified every numeric column in every *remote* profile as not-a-number
+    -- invisible to every local-path test in this file."""
+    url, _server = served
+    prof, _stats = profile_remote(url, block_size_mb=0.05)
+    n_genes = by_name(prof)["n_genes"]
+    assert n_genes["numeric"] is not None, "a numeric column read remotely lost its range"
+    assert n_genes["numeric"]["fraction"] == 1.0
+
+
+def test_both_paths_agree_on_the_measurement(served):
+    """Read obs whole, profile the frame, and compare against the profile taken
+    over range reads. This is the shape the skill actually uses."""
+    url, _server = served
+    remote, _stats = profile_remote(url, block_size_mb=0.05)
+    from h5ad_obs.reader import read_obs
+    df, _skipped, _stats2 = read_obs(url, block_size_mb=0.05)
+    local = profile_frame(df)
+    for name, col in by_name(remote).items():
+        if col["kind"] == "unknown":
+            continue
+        assert col["numeric"] == by_name(local)[name]["numeric"], name
+        assert col["bounded"] == by_name(local)[name]["bounded"], name
 
 
 def test_sample_values_are_plain_strings():

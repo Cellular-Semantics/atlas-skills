@@ -26,12 +26,12 @@ jobs:
         with:
           enable-cache: false
       - run: uv venv --python ${{ matrix.python }}
-      - run: uv pip install -e "packages/h5ad-obs[test]" -e "packages/celltype-column-eval[test]"
+      - run: uv pip install -e "packages/h5ad-obs[test]" -e "packages/obs-column-eval[test]"
       # Live tests are excluded by the package's addopts: they read a real remote
       # h5ad. The offline suite still covers the whole range-read path, against a
       # localhost server that honours Range.
       - run: uv run pytest packages/h5ad-obs -q
-      - run: uv run pytest packages/celltype-column-eval -q
+      - run: uv run pytest packages/obs-column-eval -q
       # The eval *cases* drive a real agent and are not in CI. Their graders are
       # pure functions and are: a rejection check that fails a correct answer
       # makes a green suite meaningless.
@@ -50,5 +50,5 @@ jobs:
           uvx --from "git+https://github.com/${{ github.repository }}@${{ github.sha }}#subdirectory=packages/h5ad-obs" \
             h5ad-obs --version
       - run: |
-          uvx --from "git+https://github.com/${{ github.repository }}@${{ github.sha }}#subdirectory=packages/celltype-column-eval" \
-            celltype-column-eval --version
+          uvx --from "git+https://github.com/${{ github.repository }}@${{ github.sha }}#subdirectory=packages/obs-column-eval" \
+            obs-column-eval --version

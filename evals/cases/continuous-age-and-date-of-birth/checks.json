@@ -1,0 +1,13 @@
+{
+  "tags": ["picker", "rules", "tissue", "development_stage"],
+  "checks": [
+    {"kind": "answer_matches", "pattern": "Mouse age",
+     "why": "the age column, and the point of the case: it profiles as `continuous 36..105` because this is Patch-seq with one animal per cell, so the bounded gate alone would throw it away"},
+    {"kind": "answer_not_matches", "pattern": "(?:^|[^\\w])(?:picks?|pick(?:ed|ing)?|select(?:ed)?|stage column[s]?)[^.\\n]{0,80}Mouse date of birth",
+     "why": "a date an age is derivable from is not an age"},
+    {"kind": "answer_not_matches", "pattern": "(?:^|[^\\w])(?:picks?|pick(?:ed|ing)?|select(?:ed)?|stage column[s]?)[^.\\n]{0,80}Sequencing batch",
+     "why": "`Sequencing batch` is `continuous 1..10` -- numeric, small-ranged, and a batch"},
+    {"kind": "answer_not_matches", "pattern": "(?:^|[^\\w])(?:picks?|pick(?:ed|ing)?|select(?:ed)?|tissue column[s]?)[^.\\n]{0,60}\\b`?tissue`?\\b[^.\\n]{0,20}(?:is|as) (?:the |a )?(?:author|pick)",
+     "why": "`tissue` is CELLxGENE's, constant at 'primary motor cortex', and never a pick"}
+  ]
+}
