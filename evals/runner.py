@@ -28,6 +28,7 @@ import argparse
 import fnmatch
 import json
 import pathlib
+import re
 import subprocess
 import sys
 import tempfile
@@ -101,13 +102,55 @@ def invoke(prompt: str, spec: dict, transcript_path: pathlib.Path) -> Run:
     return run
 
 
-def check_plugin_installed() -> None:
+#: What the cases need to be present. Bump alongside the plugin version.
+EXPECTED_PLUGIN_VERSION = "0.2.0"
+
+INSTALL_HINT = (
+    "  claude plugin marketplace add Cellular-Semantics/atlas-skills --scope user\n"
+    "  claude plugin install atlas-tools@atlas-skills --scope user")
+
+
+def installed_plugins() -> list[dict]:
+    """Parse `claude plugin list` into {name, version, scope} rows."""
     out = subprocess.run(["claude", "plugin", "list"], capture_output=True, text=True).stdout
-    if "atlas-tools@" not in out:
-        sys.exit("atlas-tools is not installed. These cases test the published plugin, so "
-                 "install it first:\n  claude plugin marketplace add "
-                 "Cellular-Semantics/atlas-skills --scope user\n  claude plugin install "
-                 "atlas-tools@atlas-skills --scope user")
+    rows, current = [], None
+    for line in out.splitlines():
+        stripped = line.strip()
+        if "@" in stripped and not stripped.startswith(("Version:", "Scope:", "Status:")):
+            # Strip whatever bullet the CLI prefixes the name with, rather than
+            # one specific glyph -- it is decoration and liable to change.
+            current = {"name": re.sub(r"^\W+", "", stripped)}
+            rows.append(current)
+        elif current is not None and ":" in stripped:
+            key, _, value = stripped.partition(":")
+            current[key.strip().lower()] = value.strip()
+    return rows
+
+
+def check_plugin_installed() -> None:
+    """Insist on a *user-scope* install, at the version the cases expect.
+
+    Scope matters here and the obvious check gets it wrong. Each case runs in a
+    fresh temp directory, deliberately, so nothing but user scope is visible --
+    a project- or local-scope install lives in the repo, the temp dir is not in
+    the repo, and every case would silently run with no plugin and fail for the
+    wrong reason. Matching on the plugin name alone waves that setup through.
+    """
+    rows = [r for r in installed_plugins() if r["name"].startswith("atlas-tools@")]
+    user = [r for r in rows if r.get("scope") == "user"]
+    if not user:
+        other = ", ".join(f'{r.get("scope")} scope' for r in rows)
+        sys.exit("atlas-tools is not installed at user scope"
+                 + (f" (found at: {other} -- the cases run in a temp directory and "
+                    "cannot see those)" if rows else "")
+                 + ". These cases test the published plugin:\n" + INSTALL_HINT)
+    version = user[0].get("version", "?")
+    if version != EXPECTED_PLUGIN_VERSION:
+        sys.exit(f"atlas-tools {version} is installed at user scope, but these cases "
+                 f"expect {EXPECTED_PLUGIN_VERSION}. A pushed tag plus a marketplace "
+                 "update is needed before an edit shows up here:\n"
+                 "  claude plugin marketplace update atlas-skills\n"
+                 f"  claude plugin install atlas-tools@atlas-skills --scope user")
 
 
 def main() -> int:

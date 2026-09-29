@@ -124,11 +124,11 @@ portal's `cell_type`. A picked column with 33 values against a `cell_type` with
 
 ## Traps
 
-- **The picker is right about 8 times in 10 and you should show your working.**
-  Benchmarked on 73 CELLxGENE datasets against CL_KG hand curation: mean Jaccard
-  0.81, recall 0.97, at least one correct column found in 72/73. Recall is the
-  easy part. Name the picked columns in your answer so the user can see a
-  spurious one; do not present the picks as settled fact.
+- **Show your working.** Benchmarked on 73 CELLxGENE datasets against CL_KG hand
+  curation: mean Jaccard 0.93, precision 0.94, recall 0.96, at least one correct
+  column in 72/73, and exact agreement on 62 of 73. Good, not settled — name the
+  picked columns and their label counts in your answer so the user can see a
+  spurious one, rather than presenting the list as fact.
 - **A numeric column with many categories is a cluster index, not a label** —
   even when the values are strings. `seurat_clusters`, `leiden`, `louvain`,
   `initial_clustering` and `orig_cluster` all appear in the test set with
@@ -138,7 +138,13 @@ portal's `cell_type`. A picked column with 33 values against a `cell_type` with
   population often carry a `Lineage` or `Cell.class` column with one value in
   every cell. It reads like a cell type and carries no information.
 - **`cell_type` and `cell_type_ontology_term_id` are the portal's, not the
-  authors'.** They are never picks, whatever the user asked for.
+  authors'.** They are never picks, whatever the user asked for. An
+  author-asserted ontology column such as `putative_CL_label` is a different
+  thing and is a legitimate pick.
+- **Where the picker still errs, it errs by over-picking.** Two known failures in
+  73: a numeric cluster index that slipped past the rule, and an anatomical
+  `structure` column. Both are visible in the answer if you list what was picked
+  — which is the reason to list it.
 - **This takes a file URL, not a portal page.** The same rule as
   `remote-h5ad-obs`: the tool refuses a `celltype.info` or `cellxgene.cziscience.com`
   page and tells you what to run instead.

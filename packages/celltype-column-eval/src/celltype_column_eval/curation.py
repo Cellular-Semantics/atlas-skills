@@ -31,6 +31,26 @@ CELL_TYPE_CONTENT = {
 
 _NULLISH = {"n/a", "na", "none", "-", ""}
 
+#: Transcription fixes, applied on read so the shipped CSVs stay a faithful copy
+#: of the CL_KG sheets. These four name columns that do not exist in the
+#: dataset's obs -- the curator capitalised them. obs column names are
+#: case-sensitive, so scoring against the sheet as written marks a picker wrong
+#: for choosing the column that is actually there.
+#:
+#: Found by cross-checking all 186 curated names against the committed obs
+#: profiles; these were the only mismatches, and `evals/test_cases.py` fails if
+#: another appears. Case is NOT folded during scoring -- an agent inventing a
+#: name with the wrong case would fail at pull time, and that is a real error
+#: worth catching.
+_CORRECTIONS: dict[str, dict[str, str]] = {
+    "ac818189-5c6b-48d2-8bf1-f7511de7b5a9": {
+        "Cell_type_original": "cell_type_original",
+        "Cell_type_source": "cell_type_source",
+        "Cluster": "cluster",
+        "Cluster_source": "cluster_source",
+    },
+}
+
 
 def parse_curation(curation_dir: str | Path | None = None, *,
                    filter_celltype: bool = True) -> dict[str, dict]:
@@ -70,7 +90,9 @@ def parse_curation(curation_dir: str | Path | None = None, *,
                 col = row.get("Author Category Cell Type Field Name") or ""
                 if col.lower() in _NULLISH:
                     continue
-                entry = by_dataset[match.group(1)]
+                dsid = match.group(1)
+                col = _CORRECTIONS.get(dsid, {}).get(col, col)
+                entry = by_dataset[dsid]
                 entry["groups"].add(group)
                 entry["columns"].add(col)
                 entry["rows"] += 1

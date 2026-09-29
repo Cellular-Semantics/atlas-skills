@@ -141,3 +141,14 @@ def test_cli_version():
     out = subprocess.run([sys.executable, "-m", "celltype_column_eval.cli", "--version"],
                          capture_output=True, text=True)
     assert "celltype-column-eval" in out.stdout
+
+
+def test_known_transcription_fixes_are_applied():
+    """Four curated names capitalise a column that is lowercase in obs. Applied
+    on read so the shipped CSVs stay a faithful copy of the CL_KG sheets."""
+    from celltype_column_eval.curation import _CORRECTIONS
+
+    columns = set(parse_curation()["ac818189-5c6b-48d2-8bf1-f7511de7b5a9"]["columns"])
+    for wrong, right in _CORRECTIONS["ac818189-5c6b-48d2-8bf1-f7511de7b5a9"].items():
+        assert right in columns
+        assert wrong not in columns

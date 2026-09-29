@@ -1,135 +1,100 @@
 # The author cell-type column benchmark
 
-The `author-celltype-columns` skill claims mean Jaccard 0.81 against hand
-curation. This is where that number comes from, what it does and does not cover,
-and what has changed since it was measured.
+How well `author-celltype-columns` identifies the obs columns holding author cell-type
+annotations, measured against hand curation.
 
-## What was measured
+## Latest result
 
-73 CELLxGENE datasets, drawn from CL_KG curation sheets across the HCA, Gut
-Atlas, lung, skin and brain collections. For each, curators had recorded by hand
-which `obs` columns hold author cell-type annotations. An agent was shown a
-schema-and-samples summary of every obs column and asked to pick the cell-type
-ones; the picks were scored against the curation.
+**n=73 CELLxGENE datasets, 2026-09-29**
 
-| metric | n=73 |
-|---|---|
-| mean Jaccard | 0.811 |
-| mean precision | 0.823 |
-| mean recall | 0.969 |
-| hit rate (≥1 correct column) | 72 / 73 |
-
-Recall is the easy part. Precision is what the picker rules are mostly about.
-
-A random-pick null model over the actual obs schema sizes is computed alongside,
-because "picked at least one right column" is not impressive on its own when a
-dataset has four cell-type columns out of forty.
-
-The gold set, the metrics and the frozen picks all ship in
-[`packages/celltype-column-eval`](../packages/celltype-column-eval), so the
-number is reproducible rather than quoted:
-
-```sh
-celltype-column-eval score \
-  packages/celltype-column-eval/src/celltype_column_eval/data/frozen/n73_picks.json
-```
-
-## Provenance, and one correction
-
-The run was done in
-[agent_celltype_eval](https://github.com/Cellular-Semantics/agent_celltype_eval)
-and reproduced in `cxg-author-probe`, whose rewritten pipeline scored 0.814
-(95% CI 0.74–0.88) on the 42 datasets that completed before a spend cap stopped
-the run — statistically indistinguishable from the original 0.819 on the same
-42.
-
-The curation snapshot shipped here includes a typo correction made after the
-original scoring. Rescoring the untouched frozen picks against it gives 0.8114
-rather than the published 0.8079. The picks are the original artefact and have
-not been edited; both figures are recorded in `data/frozen/n73_scores.json`.
-
-## What has changed, and why the number needs re-earning
-
-The pipeline that produced 0.81 is not the pipeline in this repo. Three
-differences matter:
-
-1. **Sample values are spread across the table, not taken from the head.** obs
-   is routinely sorted by donor or cluster, so a head sample of a sorted column
-   shows one value. The old profile could not distinguish that from a genuinely
-   constant column, and the picker had to guess. This should help.
-2. **The profile reports `(constant)` explicitly**, and reports whether a
-   cardinality is exact or estimated. Rule 4 previously had to be inferred from
-   `n_unique == 1`.
-3. **The picking rules live in exactly one place.** In the old pipeline the
-   rendered prompt carried rules 1–2 and the sub-agent definition carried rules
-   1–7; the three rules added latest — reject numeric-only columns, reject
-   constant columns, include varying lineage columns — went into the agent only
-   and never reached the prompt. The profile here is data with no instructions
-   in it, so that class of drift cannot recur.
-
-Changes 1 and 2 give the picker information it did not have, and change 3 means
-the rules it is given are the rules that were written. All three point the same
-way, but **none of them has been measured on the full set here**. Treat 0.81 as
-the figure for the predecessor and the thing to beat, not as a claim about this
-skill.
-
-### First indication, on six datasets
-
-Run 2026-09-28, before the plugin was published, so the *rules text* was fed to
-a bare `claude -p --model sonnet` rather than dispatched as the packaged
-sub-agent. Six datasets, $0.52.
-
-| | this rules text | frozen n=73 picker, same six |
+| | this skill | frozen predecessor, same datasets |
 |---|---|---|
-| mean Jaccard | 0.833 | 0.583 |
-| hit rate | 5/6 | 5/6 |
+| mean Jaccard | **0.926** (95% CI 0.88–0.97) | 0.815 |
+| mean precision | 0.944 (0.90–0.98) | 0.830 |
+| mean recall | 0.964 (0.92–0.99) | 0.972 |
+| hit rate (≥1 correct column) | 72 / 73 | 72 / 73 |
 
-Five of six exact. The three traps the subset was chosen for all held: `leiden`
-and `louvain` rejected where the frozen picker took them, `seurat_clusters`
-rejected without losing `author_cell_type` beside it, and a constant `Lineage`
-rejected while the varying `Cell.class`/`Cell.group` were kept.
+Exact agreement with curation on **62 of 73**. The full per-dataset breakdown — what was
+picked, what was curated, what was missed — is in
+[`benchmark-results.json`](benchmark-results.json), which also records the plugin
+version, commit and a hash of the agent definition that produced the picks.
 
-Two caveats, both load-bearing:
+**Precision is a lower bound.** Reviewing the 11 imperfect datasets, most of the
+"spurious" picks are columns that do hold author cell-type labels and are simply not in
+the curation — seven pre-harmonisation HLCA annotations, an author-asserted CL label, a
+transcriptomic family. These are raised in
+[`curation-review-2026-09-29.md`](curation-review-2026-09-29.md). Two picks are genuine
+errors: a numeric cluster index, and an anatomical structure column.
 
-- **n=6 and the subset is not random** — it was chosen to contain the traps. It
-  is a regression check, not an estimate. The full-set number is the one that
-  can be compared to 0.81.
-- **One rule was added because of this run.** `cre`, holding mouse driver lines
-  (`Calb2`, `Rorb`, `Gad2`), was picked on the Patch-seq dataset; the values are
-  marker gene symbols and track cell class closely, which is what makes it
-  tempting, but it says which animal the cell came from. Rule 2 now rejects
-  driver lines and reporter genotypes explicitly. That took the subset from
-  0.778 to 0.833 — a rule fitted on one observation and **not yet measured
-  anywhere else**.
+## What is measured
 
-The one remaining miss is a disagreement, not clearly an error: on the
-all-constant dataset the picker rejected every constant column, as intended, and
-then offered `sub_cluster` (`plt_0`…`plt_4`), which does vary per cell. The
-curation records nothing for that dataset, so it scores zero. Rule 3 explicitly
-permits mixed letter-and-digit names, and the pick is defensible.
+73 CELLxGENE datasets drawn from CL_KG curation sheets across the HCA, Gut Atlas, lung,
+kidney, skin, immune and brain collections — 1.7k to 4M cells, and every common author
+naming convention in the wild. For each, curators recorded by hand which obs columns
+hold author cell-type annotations; only rows whose `Content` names a cell-type field
+count as ground truth, since the sheets also record clonotypes, donor demographics and
+sample identifiers.
 
-## Running it
+The picker sees only an obs column profile — name, kind, cardinality, sample values —
+in a fresh context per dataset, and returns a list of column names. Those are scored
+against the curated set: Jaccard, precision, recall, and hit rate, with bootstrap and
+Wilson intervals. A random-pick null over the actual obs schema sizes is computed
+alongside, because "found at least one" is unimpressive when a dataset has four
+cell-type columns out of forty.
 
-The eval harness is in [`evals/`](../evals). Six datasets by default:
+The gold set, the metrics and the frozen baseline all ship in
+[`packages/celltype-column-eval`](../packages/celltype-column-eval), so the numbers are
+reproducible rather than quoted.
+
+## Reproducing it
+
+The obs profiles are **committed** under `evals/fixtures/profiles/` — 571 KB for the
+whole test set. Re-scoring therefore needs no network and no re-reading of ~1.5 GB, and
+the scored inputs cannot shift under a CELLxGENE re-ingest.
 
 ```sh
-python3 evals/runner.py --tag picker
+python3 evals/benchmark.py --all --record docs/benchmark-results.json
 ```
 
-The full 73 is `--all-datasets`, and is slow and not free. See
-[`evals/README.md`](../evals/README.md).
+Picks are cached too, so this re-scores instantly until you clear
+`evals/.cache/picks/`. A fresh set of picks costs roughly $20 and an hour. See
+[`evals/README.md`](../evals/README.md), including how to run it before a release is
+tagged.
+
+If the profile format changes, the fixtures must be regenerated and the benchmark
+re-scored — `benchmark.py` warns when the installed `h5ad-obs` no longer matches the
+version recorded in `fixtures/profiles/PROVENANCE.json`.
 
 ## Limits
 
-- **CELLxGENE only.** The skill is portal-agnostic; this gold set is not. It is
-  a good cross-section — 74 datasets from 1.7k to 4M cells, across brain, gut,
-  lung, kidney, skin and immune atlases, with every common author naming
-  convention in it — but nothing here tests an atlas from another portal.
-- **The curation is a snapshot and is itself hand work.** Some disagreements in
-  the n=73 run were the curation being wrong, not the agent. Reported precision
-  is therefore a lower bound.
-- **Three of the 74 datasets have no curated cell-type column.** For those the
-  correct answer is to pick nothing, which is a real and useful case, but it
-  means "curated columns" and "columns that exist" are not the same set.
-- **One dataset's obs could not be read** at snapshot time. It is kept in the
-  manifest rather than dropped, so coverage is not quietly overstated.
+- **CELLxGENE only.** The skill is portal-agnostic; this gold set is not. It is a good
+  cross-section, but nothing here tests another portal.
+- **The curation is hand work, and is the thing being compared against.** Section 2 of
+  the curation review lists columns it appears to be missing; until those are settled,
+  reported precision understates the picker.
+- **One dataset cannot be read.** `b1b7e4e0` returns HTTP 403 from the CDN — withdrawn
+  or access-restricted, not malformed. It stays in the manifest rather than being
+  dropped, so coverage is not quietly overstated.
+- **Three of the 74 have no curated cell-type column.** For those the correct answer is
+  to pick nothing, which is a real case, but it means "curated columns" and "columns
+  that exist" are not the same set.
+- **One picker rule was fitted on a single observation.** Rejecting transgenic driver
+  lines (`cre`, with values `Calb2`, `Rorb`, `Gad2`) came from one Patch-seq dataset
+  during development. It is right on the merits — a driver line says which animal the
+  cell came from — but it fires on one dataset in 73, so the full set does not really
+  test it.
+
+## History
+
+The predecessor pipeline scored Jaccard 0.81 on the same 73 datasets, in
+[agent_celltype_eval](https://github.com/Cellular-Semantics/agent_celltype_eval) and
+then [cxg-author-probe](https://github.com/Cellular-Semantics/cxg-author-probe). Its
+picks are frozen in the eval package and re-scored on every run as the comparison arm,
+which is where the 0.815 above comes from — the small drift from the published 0.8079
+is two corrections to the curation snapshot, both recorded in
+`data/frozen/n73_scores.json`.
+
+The +0.111 comes from giving the picker better inputs and one set of rules instead of
+two: sample values spread across the table rather than taken from the head, an explicit
+constant-column flag, and picking rules that live only in the agent definition rather
+than being half-duplicated into a rendered prompt.

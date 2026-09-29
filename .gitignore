@@ -7,6 +7,9 @@ __pycache__/
 dist/
 build/
 
-# Cached obs profiles for the eval benchmark: regenerable, and large.
+# Local eval scratch: the picks cache (picks are the thing under test, so they
+# are not committed) and timestamped run directories. Obs profiles are NOT here
+# -- they are committed fixtures under evals/fixtures/profiles/, so re-scoring
+# the picker needs no network.
 evals/.cache/
 evals/results/

@@ -1,28 +1,43 @@
 {
+  "run": {
+    "date": "2026-09-29",
+    "datasets": "all",
+    "n_scored": 73,
+    "n_requested": 74,
+    "unreadable": [
+      "b1b7e4e0-d31d-47f5-ad35-1181fe2647d7"
+    ],
+    "no_picks_returned": [],
+    "picker": {
+      "plugin": "atlas-tools 0.1.0 (user scope)",
+      "commit": "581d4e9",
+      "agent_sha256": "2535ddc75e48"
+    }
+  },
   "overall": {
     "n": 73,
     "jaccard": {
-      "mean": 0.8150456048797794,
-      "sd": 0.2583080572523943,
+      "mean": 0.9257435827010448,
+      "sd": 0.20257148930953295,
       "ci95": [
-        0.7546411691328778,
-        0.8719178082191781
+        0.8771655165310537,
+        0.9688845401174169
       ]
     },
     "precision": {
-      "mean": 0.829505270024376,
-      "sd": 0.2533282373169488,
+      "mean": 0.9438562158821712,
+      "sd": 0.17732059088697225,
       "ci95": [
-        0.7696312699557112,
-        0.8846053489889106
+        0.8999965667593642,
+        0.9806262230919766
       ]
     },
     "recall": {
-      "mean": 0.971841704718417,
-      "sd": 0.14437417796820382,
+      "mean": 0.9636225266362253,
+      "sd": 0.15907892755468883,
       "ci95": [
-        0.9360730593607305,
-        1.0
+        0.9232876712328768,
+        0.9931506849315068
       ]
     },
     "hit_rate": {
@@ -35,30 +50,47 @@
       ]
     }
   },
+  "baseline": {
+    "source": "frozen n=73 picks",
+    "n_shared_datasets": 73,
+    "overall": {
+      "n": 73,
+      "jaccard": {
+        "mean": 0.8150456048797794,
+        "sd": 0.2583080572523943,
+        "ci95": [
+          0.7547825042057198,
+          0.8720253830924343
+        ]
+      },
+      "precision": {
+        "mean": 0.829505270024376,
+        "sd": 0.2533282373169488,
+        "ci95": [
+          0.770808871493803,
+          0.8861382909328116
+        ]
+      },
+      "recall": {
+        "mean": 0.971841704718417,
+        "sd": 0.14437417796820382,
+        "ci95": [
+          0.9360730593607305,
+          1.0
+        ]
+      },
+      "hit_rate": {
+        "k": 72,
+        "n": 73,
+        "p": 0.9863013698630136,
+        "ci95": [
+          0.9264008673087267,
+          0.9975778109072393
+        ]
+      }
+    }
+  },
   "per_dataset": [
-    {
-      "dsid": "0054013c-290b-437e-b98e-642aa77d6ebc",
-      "n_curated": 1,
-      "n_picked": 3,
-      "n_intersect": 1,
-      "jaccard": 0.3333333333333333,
-      "precision": 0.3333333333333333,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "free_annotation",
-        "leiden",
-        "louvain"
-      ],
-      "curated": [
-        "free_annotation"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "leiden",
-        "louvain"
-      ]
-    },
     {
       "dsid": "01afd5b8-21be-4869-a686-1fe94ff6f4d8",
       "n_curated": 5,
@@ -86,48 +118,46 @@
       "agent_extras": []
     },
     {
-      "dsid": "01bc7039-961f-4c24-b407-d535a2a7ba2c",
-      "n_curated": 1,
-      "n_picked": 2,
-      "n_intersect": 1,
-      "jaccard": 0.5,
-      "precision": 0.5,
+      "dsid": "18fb432a-be41-4677-9396-e1680a0852bf",
+      "n_curated": 4,
+      "n_picked": 5,
+      "n_intersect": 4,
+      "jaccard": 0.8,
+      "precision": 0.8,
       "recall": 1.0,
       "hit": 1,
       "picks": [
         "author_cell_type",
-        "seurat_clusters"
+        "broad_lineage",
+        "dev_state",
+        "precisest_label",
+        "subtype"
       ],
       "curated": [
-        "author_cell_type"
+        "author_cell_type",
+        "broad_lineage",
+        "precisest_label",
+        "subtype"
       ],
       "missed_by_agent": [],
       "agent_extras": [
-        "seurat_clusters"
+        "dev_state"
       ]
     },
     {
-      "dsid": "0b3d19b3-df06-4265-9803-82f598e59dba",
-      "n_curated": 5,
-      "n_picked": 5,
-      "n_intersect": 5,
+      "dsid": "0054013c-290b-437e-b98e-642aa77d6ebc",
+      "n_curated": 1,
+      "n_picked": 1,
+      "n_intersect": 1,
       "jaccard": 1.0,
       "precision": 1.0,
       "recall": 1.0,
       "hit": 1,
       "picks": [
-        "Class",
-        "CrossArea_cluster",
-        "CrossArea_subclass",
-        "WithinArea_cluster",
-        "WithinArea_subclass"
+        "free_annotation"
       ],
       "curated": [
-        "Class",
-        "CrossArea_cluster",
-        "CrossArea_subclass",
-        "WithinArea_cluster",
-        "WithinArea_subclass"
+        "free_annotation"
       ],
       "missed_by_agent": [],
       "agent_extras": []
@@ -157,35 +187,108 @@
       "agent_extras": []
     },
     {
-      "dsid": "18fb432a-be41-4677-9396-e1680a0852bf",
-      "n_curated": 4,
-      "n_picked": 7,
-      "n_intersect": 4,
-      "jaccard": 0.5714285714285714,
-      "precision": 0.5714285714285714,
+      "dsid": "1c6e54ca-ef0c-4acc-9891-d3b7d2cd7a0e",
+      "n_curated": 2,
+      "n_picked": 2,
+      "n_intersect": 2,
+      "jaccard": 1.0,
+      "precision": 1.0,
       "recall": 1.0,
       "hit": 1,
       "picks": [
-        "author_cell_type",
-        "broad_lineage",
-        "dev_state",
-        "orig_cluster",
-        "orig_sub_cluster",
-        "precisest_label",
-        "subtype"
+        "_MajorType",
+        "_SubType"
       ],
       "curated": [
-        "author_cell_type",
-        "broad_lineage",
-        "precisest_label",
-        "subtype"
+        "_MajorType",
+        "_SubType"
       ],
       "missed_by_agent": [],
-      "agent_extras": [
-        "dev_state",
-        "orig_cluster",
-        "orig_sub_cluster"
-      ]
+      "agent_extras": []
+    },
+    {
+      "dsid": "0b3d19b3-df06-4265-9803-82f598e59dba",
+      "n_curated": 5,
+      "n_picked": 5,
+      "n_intersect": 5,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "Class",
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "curated": [
+        "Class",
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
+    },
+    {
+      "dsid": "24c44ebe-c9c8-403b-9b55-6c8e4b46c69e",
+      "n_curated": 1,
+      "n_picked": 1,
+      "n_intersect": 1,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "sub_cluster"
+      ],
+      "curated": [
+        "sub_cluster"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
+    },
+    {
+      "dsid": "01bc7039-961f-4c24-b407-d535a2a7ba2c",
+      "n_curated": 1,
+      "n_picked": 1,
+      "n_intersect": 1,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "author_cell_type"
+      ],
+      "curated": [
+        "author_cell_type"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
+    },
+    {
+      "dsid": "1cbe52c1-0567-4188-9c18-9d7271c56055",
+      "n_curated": 3,
+      "n_picked": 3,
+      "n_intersect": 3,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "class",
+        "subclass.l1",
+        "subclass.l2"
+      ],
+      "curated": [
+        "class",
+        "subclass.l1",
+        "subclass.l2"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
     },
     {
       "dsid": "1af9835f-469e-452f-a91d-f42af3f91042",
@@ -205,111 +308,6 @@
         "BICCN_cluster_label",
         "BICCN_subclass_label",
         "label_for_heatmap"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": []
-    },
-    {
-      "dsid": "1c6e54ca-ef0c-4acc-9891-d3b7d2cd7a0e",
-      "n_curated": 2,
-      "n_picked": 3,
-      "n_intersect": 2,
-      "jaccard": 0.6666666666666666,
-      "precision": 0.6666666666666666,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "_CellClass",
-        "_MajorType",
-        "_SubType"
-      ],
-      "curated": [
-        "_MajorType",
-        "_SubType"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "_CellClass"
-      ]
-    },
-    {
-      "dsid": "1cbe52c1-0567-4188-9c18-9d7271c56055",
-      "n_curated": 3,
-      "n_picked": 4,
-      "n_intersect": 3,
-      "jaccard": 0.75,
-      "precision": 0.75,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "class",
-        "cluster_id",
-        "subclass.l1",
-        "subclass.l2"
-      ],
-      "curated": [
-        "class",
-        "subclass.l1",
-        "subclass.l2"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "cluster_id"
-      ]
-    },
-    {
-      "dsid": "24c44ebe-c9c8-403b-9b55-6c8e4b46c69e",
-      "n_curated": 1,
-      "n_picked": 4,
-      "n_intersect": 1,
-      "jaccard": 0.25,
-      "precision": 0.25,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "Cell.class",
-        "Cell.group",
-        "Lineage",
-        "sub_cluster"
-      ],
-      "curated": [
-        "sub_cluster"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "Cell.class",
-        "Cell.group",
-        "Lineage"
-      ]
-    },
-    {
-      "dsid": "250192f0-94d8-4e26-91cb-afe7e360605e",
-      "n_curated": 8,
-      "n_picked": 8,
-      "n_intersect": 8,
-      "jaccard": 1.0,
-      "precision": 1.0,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "Author_CellType",
-        "Author_Class_Curated",
-        "C185_named",
-        "C25_named",
-        "C286_named",
-        "C465_named",
-        "C66_named",
-        "C7_named"
-      ],
-      "curated": [
-        "Author_CellType",
-        "Author_Class_Curated",
-        "C185_named",
-        "C25_named",
-        "C286_named",
-        "C465_named",
-        "C66_named",
-        "C7_named"
       ],
       "missed_by_agent": [],
       "agent_extras": []
@@ -347,6 +345,24 @@
       "agent_extras": []
     },
     {
+      "dsid": "3310476e-ee9d-4179-9446-df5d073f38d8",
+      "n_curated": 1,
+      "n_picked": 1,
+      "n_intersect": 1,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "free_annotation"
+      ],
+      "curated": [
+        "free_annotation"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
+    },
+    {
       "dsid": "325567b8-e698-48ab-9969-ab0b1a2bbb2f",
       "n_curated": 5,
       "n_picked": 5,
@@ -373,93 +389,36 @@
       "agent_extras": []
     },
     {
-      "dsid": "3310476e-ee9d-4179-9446-df5d073f38d8",
-      "n_curated": 1,
-      "n_picked": 3,
-      "n_intersect": 1,
-      "jaccard": 0.3333333333333333,
-      "precision": 0.3333333333333333,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "free_annotation",
-        "leiden",
-        "louvain"
-      ],
-      "curated": [
-        "free_annotation"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "leiden",
-        "louvain"
-      ]
-    },
-    {
-      "dsid": "36141ff7-ec4f-44cc-8bf3-ed9d9675d89a",
-      "n_curated": 1,
-      "n_picked": 2,
-      "n_intersect": 1,
-      "jaccard": 0.5,
-      "precision": 0.5,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "author_cell_type",
-        "seurat_clusters"
-      ],
-      "curated": [
-        "author_cell_type"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "seurat_clusters"
-      ]
-    },
-    {
-      "dsid": "37a13a09-e9aa-4d2a-900c-0862e13cfac3",
-      "n_curated": 3,
-      "n_picked": 3,
-      "n_intersect": 3,
+      "dsid": "250192f0-94d8-4e26-91cb-afe7e360605e",
+      "n_curated": 8,
+      "n_picked": 8,
+      "n_intersect": 8,
       "jaccard": 1.0,
       "precision": 1.0,
       "recall": 1.0,
       "hit": 1,
       "picks": [
-        "cell_name",
-        "cell_name_detailed",
-        "cell_type_group"
+        "Author_CellType",
+        "Author_Class_Curated",
+        "C185_named",
+        "C25_named",
+        "C286_named",
+        "C465_named",
+        "C66_named",
+        "C7_named"
       ],
       "curated": [
-        "cell_name",
-        "cell_name_detailed",
-        "cell_type_group"
+        "Author_CellType",
+        "Author_Class_Curated",
+        "C185_named",
+        "C25_named",
+        "C286_named",
+        "C465_named",
+        "C66_named",
+        "C7_named"
       ],
       "missed_by_agent": [],
       "agent_extras": []
-    },
-    {
-      "dsid": "43b216d8-b988-4ade-8263-55c45f1944db",
-      "n_curated": 2,
-      "n_picked": 3,
-      "n_intersect": 2,
-      "jaccard": 0.6666666666666666,
-      "precision": 0.6666666666666666,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "_CellClass",
-        "_MajorType",
-        "_SubType"
-      ],
-      "curated": [
-        "_MajorType",
-        "_SubType"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "_CellClass"
-      ]
     },
     {
       "dsid": "443f7fb8-2a27-47c3-98f6-6a603c7a294e",
@@ -493,55 +452,47 @@
       ]
     },
     {
-      "dsid": "460d368c-9147-4716-8674-76bf0795ba85",
-      "n_curated": 2,
-      "n_picked": 5,
-      "n_intersect": 2,
-      "jaccard": 0.4,
-      "precision": 0.4,
+      "dsid": "37a13a09-e9aa-4d2a-900c-0862e13cfac3",
+      "n_curated": 3,
+      "n_picked": 3,
+      "n_intersect": 3,
+      "jaccard": 1.0,
+      "precision": 1.0,
       "recall": 1.0,
       "hit": 1,
       "picks": [
-        "ALMVISp top-3",
-        "BICCN_cluster_label",
-        "BICCN_subclass_label",
-        "RNA family",
-        "RNA type top-3"
+        "cell_name",
+        "cell_name_detailed",
+        "cell_type_group"
       ],
       "curated": [
-        "BICCN_cluster_label",
-        "BICCN_subclass_label"
+        "cell_name",
+        "cell_name_detailed",
+        "cell_type_group"
       ],
       "missed_by_agent": [],
-      "agent_extras": [
-        "ALMVISp top-3",
-        "RNA family",
-        "RNA type top-3"
-      ]
+      "agent_extras": []
     },
     {
-      "dsid": "47de6fa9-411b-429a-a04f-318930848a3c",
+      "dsid": "36141ff7-ec4f-44cc-8bf3-ed9d9675d89a",
       "n_curated": 1,
-      "n_picked": 2,
+      "n_picked": 1,
       "n_intersect": 1,
-      "jaccard": 0.5,
-      "precision": 0.5,
+      "jaccard": 1.0,
+      "precision": 1.0,
       "recall": 1.0,
       "hit": 1,
       "picks": [
-        "author_cell_type",
-        "seurat_clusters"
+        "author_cell_type"
       ],
       "curated": [
         "author_cell_type"
       ],
       "missed_by_agent": [],
-      "agent_extras": [
-        "seurat_clusters"
-      ]
+      "agent_extras": []
     },
     {
-      "dsid": "4d3469a7-339f-40b3-92a3-22f7043545f8",
+      "dsid": "47de6fa9-411b-429a-a04f-318930848a3c",
       "n_curated": 1,
       "n_picked": 1,
       "n_intersect": 1,
@@ -585,7 +536,7 @@
       "agent_extras": []
     },
     {
-      "dsid": "50bbe1a2-5f27-47f5-a809-046459a4ae5e",
+      "dsid": "526c1ebb-7d87-405d-8b64-5427105ba923",
       "n_curated": 1,
       "n_picked": 1,
       "n_intersect": 1,
@@ -594,16 +545,16 @@
       "recall": 1.0,
       "hit": 1,
       "picks": [
-        "celltype_annotation"
+        "author_cell_type"
       ],
       "curated": [
-        "celltype_annotation"
+        "author_cell_type"
       ],
       "missed_by_agent": [],
       "agent_extras": []
     },
     {
-      "dsid": "526c1ebb-7d87-405d-8b64-5427105ba923",
+      "dsid": "4d3469a7-339f-40b3-92a3-22f7043545f8",
       "n_curated": 1,
       "n_picked": 1,
       "n_intersect": 1,
@@ -643,18 +594,14 @@
     {
       "dsid": "5b8941a9-fef8-4348-876c-c333a87c0c3f",
       "n_curated": 5,
-      "n_picked": 6,
-      "n_intersect": 5,
-      "jaccard": 0.8333333333333334,
-      "precision": 0.8333333333333334,
-      "recall": 1.0,
+      "n_picked": 2,
+      "n_intersect": 2,
+      "jaccard": 0.4,
+      "precision": 1.0,
+      "recall": 0.4,
       "hit": 1,
       "picks": [
-        "BCA_cluster_info",
         "Main_cluster_name",
-        "Matched_BCA_cell_name",
-        "Matched_MCA_cell_name",
-        "Organ_cell_lineage",
         "sub_cluster_name"
       ],
       "curated": [
@@ -664,25 +611,26 @@
         "Organ_cell_lineage",
         "sub_cluster_name"
       ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "BCA_cluster_info"
-      ]
+      "missed_by_agent": [
+        "Matched_BCA_cell_name",
+        "Matched_MCA_cell_name",
+        "Organ_cell_lineage"
+      ],
+      "agent_extras": []
     },
     {
       "dsid": "5d338c19-dae4-49e9-88e4-86c76c78a340",
       "n_curated": 3,
-      "n_picked": 4,
+      "n_picked": 3,
       "n_intersect": 3,
-      "jaccard": 0.75,
-      "precision": 0.75,
+      "jaccard": 1.0,
+      "precision": 1.0,
       "recall": 1.0,
       "hit": 1,
       "picks": [
         "cell_type_fine",
         "cell_type_intermediate",
-        "cell_type_main",
-        "initial_clustering"
+        "cell_type_main"
       ],
       "curated": [
         "cell_type_fine",
@@ -690,9 +638,25 @@
         "cell_type_main"
       ],
       "missed_by_agent": [],
-      "agent_extras": [
-        "initial_clustering"
-      ]
+      "agent_extras": []
+    },
+    {
+      "dsid": "60b76da3-5490-4b61-a73f-38dc7b586465",
+      "n_curated": 1,
+      "n_picked": 1,
+      "n_intersect": 1,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "celltype.final"
+      ],
+      "curated": [
+        "celltype.final"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
     },
     {
       "dsid": "5f4efede-b295-4be4-aded-eb8b9a946382",
@@ -713,27 +677,6 @@
       "agent_extras": []
     },
     {
-      "dsid": "60b76da3-5490-4b61-a73f-38dc7b586465",
-      "n_curated": 1,
-      "n_picked": 2,
-      "n_intersect": 1,
-      "jaccard": 0.5,
-      "precision": 0.5,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "celltype.broad_clustering_annot",
-        "celltype.final"
-      ],
-      "curated": [
-        "celltype.final"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "celltype.broad_clustering_annot"
-      ]
-    },
-    {
       "dsid": "662c884d-add3-494d-b325-c13bc9f0b6ae",
       "n_curated": 1,
       "n_picked": 1,
@@ -752,35 +695,62 @@
       "agent_extras": []
     },
     {
-      "dsid": "77a91ab6-4fcc-428d-b719-a3f1238df262",
-      "n_curated": 5,
-      "n_picked": 7,
-      "n_intersect": 5,
-      "jaccard": 0.7142857142857143,
-      "precision": 0.7142857142857143,
+      "dsid": "460d368c-9147-4716-8674-76bf0795ba85",
+      "n_curated": 2,
+      "n_picked": 2,
+      "n_intersect": 2,
+      "jaccard": 1.0,
+      "precision": 1.0,
       "recall": 1.0,
       "hit": 1,
       "picks": [
-        "cell_type_alias",
-        "cell_type_alt_alias",
-        "cell_type_designation",
-        "class",
-        "cluster",
-        "outlier_type",
-        "subclass"
+        "BICCN_cluster_label",
+        "BICCN_subclass_label"
       ],
       "curated": [
-        "cell_type_alias",
-        "cell_type_alt_alias",
-        "class",
-        "cluster",
-        "subclass"
+        "BICCN_cluster_label",
+        "BICCN_subclass_label"
       ],
       "missed_by_agent": [],
-      "agent_extras": [
-        "cell_type_designation",
-        "outlier_type"
-      ]
+      "agent_extras": []
+    },
+    {
+      "dsid": "43b216d8-b988-4ade-8263-55c45f1944db",
+      "n_curated": 2,
+      "n_picked": 2,
+      "n_intersect": 2,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "_MajorType",
+        "_SubType"
+      ],
+      "curated": [
+        "_MajorType",
+        "_SubType"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
+    },
+    {
+      "dsid": "50bbe1a2-5f27-47f5-a809-046459a4ae5e",
+      "n_curated": 1,
+      "n_picked": 1,
+      "n_intersect": 1,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "celltype_annotation"
+      ],
+      "curated": [
+        "celltype_annotation"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
     },
     {
       "dsid": "79772e00-00d5-497e-b8ff-f83af5ce59c1",
@@ -801,33 +771,6 @@
       ],
       "missed_by_agent": [],
       "agent_extras": []
-    },
-    {
-      "dsid": "839cae6e-36e9-4aad-a0fd-99ffe8897c56",
-      "n_curated": 4,
-      "n_picked": 5,
-      "n_intersect": 4,
-      "jaccard": 0.8,
-      "precision": 0.8,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "Class",
-        "CrossArea_cluster",
-        "CrossArea_subclass",
-        "WithinArea_cluster",
-        "WithinArea_subclass"
-      ],
-      "curated": [
-        "CrossArea_cluster",
-        "CrossArea_subclass",
-        "WithinArea_cluster",
-        "WithinArea_subclass"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "Class"
-      ]
     },
     {
       "dsid": "83bde98b-fc88-4147-a217-1f1ffa508dd2",
@@ -892,6 +835,30 @@
       "agent_extras": []
     },
     {
+      "dsid": "839cae6e-36e9-4aad-a0fd-99ffe8897c56",
+      "n_curated": 4,
+      "n_picked": 4,
+      "n_intersect": 4,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "curated": [
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
+    },
+    {
       "dsid": "926a6acd-6555-4d55-9ba5-6927c9884e96",
       "n_curated": 3,
       "n_picked": 3,
@@ -936,69 +903,30 @@
       "agent_extras": []
     },
     {
-      "dsid": "9ad2790f-25e5-44d7-8828-ff5aadeba589",
-      "n_curated": 1,
-      "n_picked": 1,
-      "n_intersect": 1,
+      "dsid": "77a91ab6-4fcc-428d-b719-a3f1238df262",
+      "n_curated": 5,
+      "n_picked": 5,
+      "n_intersect": 5,
       "jaccard": 1.0,
       "precision": 1.0,
       "recall": 1.0,
       "hit": 1,
       "picks": [
-        "author_cell_type"
+        "cell_type_alias",
+        "cell_type_alt_alias",
+        "class",
+        "cluster",
+        "subclass"
       ],
       "curated": [
-        "author_cell_type"
+        "cell_type_alias",
+        "cell_type_alt_alias",
+        "class",
+        "cluster",
+        "subclass"
       ],
       "missed_by_agent": [],
       "agent_extras": []
-    },
-    {
-      "dsid": "9bb8be38-d63f-4c8c-bf31-5ba078713315",
-      "n_curated": 3,
-      "n_picked": 3,
-      "n_intersect": 3,
-      "jaccard": 1.0,
-      "precision": 1.0,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "celltype.l1",
-        "celltype.l2",
-        "celltype.l3"
-      ],
-      "curated": [
-        "celltype.l1",
-        "celltype.l2",
-        "celltype.l3"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": []
-    },
-    {
-      "dsid": "9fd987e8-bf5f-42a1-ba2e-20d0b7b36228",
-      "n_curated": 3,
-      "n_picked": 4,
-      "n_intersect": 3,
-      "jaccard": 0.75,
-      "precision": 0.75,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "cell.type.coarse",
-        "cell.type.fine",
-        "seurat_clusters",
-        "singler"
-      ],
-      "curated": [
-        "cell.type.coarse",
-        "cell.type.fine",
-        "singler"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "seurat_clusters"
-      ]
     },
     {
       "dsid": "aa4849b3-7178-4c8c-b079-a49ed03ab09d",
@@ -1019,25 +947,19 @@
       "agent_extras": []
     },
     {
-      "dsid": "ab149f9b-8fda-414a-a312-69279695f342",
-      "n_curated": 4,
-      "n_picked": 4,
-      "n_intersect": 4,
+      "dsid": "9ad2790f-25e5-44d7-8828-ff5aadeba589",
+      "n_curated": 1,
+      "n_picked": 1,
+      "n_intersect": 1,
       "jaccard": 1.0,
       "precision": 1.0,
       "recall": 1.0,
       "hit": 1,
       "picks": [
-        "Cell.class_reannotated",
-        "Cell.group",
-        "Lineage",
-        "cluster_labels_res.0.4"
+        "author_cell_type"
       ],
       "curated": [
-        "Cell.class_reannotated",
-        "Cell.group",
-        "Lineage",
-        "cluster_labels_res.0.4"
+        "author_cell_type"
       ],
       "missed_by_agent": [],
       "agent_extras": []
@@ -1080,23 +1002,88 @@
     {
       "dsid": "b09dac61-836f-418a-ad0a-064d2bc5343d",
       "n_curated": 1,
-      "n_picked": 2,
+      "n_picked": 1,
       "n_intersect": 1,
-      "jaccard": 0.5,
-      "precision": 0.5,
+      "jaccard": 1.0,
+      "precision": 1.0,
       "recall": 1.0,
       "hit": 1,
       "picks": [
-        "author_cell_type",
-        "clusters_res_0.5"
+        "author_cell_type"
       ],
       "curated": [
         "author_cell_type"
       ],
       "missed_by_agent": [],
-      "agent_extras": [
-        "clusters_res_0.5"
-      ]
+      "agent_extras": []
+    },
+    {
+      "dsid": "9bb8be38-d63f-4c8c-bf31-5ba078713315",
+      "n_curated": 3,
+      "n_picked": 3,
+      "n_intersect": 3,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "celltype.l1",
+        "celltype.l2",
+        "celltype.l3"
+      ],
+      "curated": [
+        "celltype.l1",
+        "celltype.l2",
+        "celltype.l3"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
+    },
+    {
+      "dsid": "9fd987e8-bf5f-42a1-ba2e-20d0b7b36228",
+      "n_curated": 3,
+      "n_picked": 3,
+      "n_intersect": 3,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "cell.type.coarse",
+        "cell.type.fine",
+        "singler"
+      ],
+      "curated": [
+        "cell.type.coarse",
+        "cell.type.fine",
+        "singler"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
+    },
+    {
+      "dsid": "ab149f9b-8fda-414a-a312-69279695f342",
+      "n_curated": 4,
+      "n_picked": 4,
+      "n_intersect": 4,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "Cell.class_reannotated",
+        "Cell.group",
+        "Lineage",
+        "cluster_labels_res.0.4"
+      ],
+      "curated": [
+        "Cell.class_reannotated",
+        "Cell.group",
+        "Lineage",
+        "cluster_labels_res.0.4"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
     },
     {
       "dsid": "b13072bd-9cb6-42ca-9f4f-01252baef273",
@@ -1154,51 +1141,6 @@
       ]
     },
     {
-      "dsid": "b1784014-d30f-4e3a-88d6-65110285d5e4",
-      "n_curated": 1,
-      "n_picked": 1,
-      "n_intersect": 1,
-      "jaccard": 1.0,
-      "precision": 1.0,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "Celltype"
-      ],
-      "curated": [
-        "Celltype"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": []
-    },
-    {
-      "dsid": "b33ff5a3-527e-41c3-83ce-012a8ad2d2c1",
-      "n_curated": 4,
-      "n_picked": 5,
-      "n_intersect": 4,
-      "jaccard": 0.8,
-      "precision": 0.8,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "Class",
-        "CrossArea_cluster",
-        "CrossArea_subclass",
-        "WithinArea_cluster",
-        "WithinArea_subclass"
-      ],
-      "curated": [
-        "CrossArea_cluster",
-        "CrossArea_subclass",
-        "WithinArea_cluster",
-        "WithinArea_subclass"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "Class"
-      ]
-    },
-    {
       "dsid": "b351804c-293e-4aeb-9c4c-043db67f4540",
       "n_curated": 6,
       "n_picked": 14,
@@ -1244,6 +1186,89 @@
       ]
     },
     {
+      "dsid": "b33ff5a3-527e-41c3-83ce-012a8ad2d2c1",
+      "n_curated": 4,
+      "n_picked": 4,
+      "n_intersect": 4,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "curated": [
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
+    },
+    {
+      "dsid": "b1784014-d30f-4e3a-88d6-65110285d5e4",
+      "n_curated": 1,
+      "n_picked": 1,
+      "n_intersect": 1,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "Celltype"
+      ],
+      "curated": [
+        "Celltype"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
+    },
+    {
+      "dsid": "bc474348-6dbd-483a-acb7-f295d1521fa2",
+      "n_curated": 2,
+      "n_picked": 3,
+      "n_intersect": 2,
+      "jaccard": 0.6666666666666666,
+      "precision": 0.6666666666666666,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "BICCN_cluster_label",
+        "BICCN_subclass_label",
+        "RNA family"
+      ],
+      "curated": [
+        "BICCN_cluster_label",
+        "BICCN_subclass_label"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": [
+        "RNA family"
+      ]
+    },
+    {
+      "dsid": "bde8eef6-8bee-4bc1-8071-93335974bbf7",
+      "n_curated": 1,
+      "n_picked": 1,
+      "n_intersect": 1,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "Celltype"
+      ],
+      "curated": [
+        "Celltype"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
+    },
+    {
       "dsid": "bc335baf-8218-4db0-bdbf-efc3750f99a9",
       "n_curated": 1,
       "n_picked": 1,
@@ -1262,36 +1287,33 @@
       "agent_extras": []
     },
     {
-      "dsid": "bc474348-6dbd-483a-acb7-f295d1521fa2",
-      "n_curated": 2,
-      "n_picked": 6,
-      "n_intersect": 2,
-      "jaccard": 0.3333333333333333,
-      "precision": 0.3333333333333333,
+      "dsid": "c662a5b4-2589-4829-965d-87f01f7b7c5f",
+      "n_curated": 5,
+      "n_picked": 5,
+      "n_intersect": 5,
+      "jaccard": 1.0,
+      "precision": 1.0,
       "recall": 1.0,
       "hit": 1,
       "picks": [
-        "ALMVISp top-3",
-        "BICCN_cluster_label",
-        "BICCN_subclass_label",
-        "RNA family",
-        "RNA type top-3",
-        "cell class"
+        "Class",
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
       ],
       "curated": [
-        "BICCN_cluster_label",
-        "BICCN_subclass_label"
+        "Class",
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
       ],
       "missed_by_agent": [],
-      "agent_extras": [
-        "ALMVISp top-3",
-        "RNA family",
-        "RNA type top-3",
-        "cell class"
-      ]
+      "agent_extras": []
     },
     {
-      "dsid": "bde8eef6-8bee-4bc1-8071-93335974bbf7",
+      "dsid": "bffd503d-e488-44de-8512-0f3c01482adf",
       "n_curated": 1,
       "n_picked": 1,
       "n_intersect": 1,
@@ -1330,68 +1352,6 @@
       ]
     },
     {
-      "dsid": "bffd503d-e488-44de-8512-0f3c01482adf",
-      "n_curated": 1,
-      "n_picked": 1,
-      "n_intersect": 1,
-      "jaccard": 1.0,
-      "precision": 1.0,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "Celltype"
-      ],
-      "curated": [
-        "Celltype"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": []
-    },
-    {
-      "dsid": "c588e5ee-0741-486e-9283-a8f0157a1406",
-      "n_curated": 1,
-      "n_picked": 1,
-      "n_intersect": 1,
-      "jaccard": 1.0,
-      "precision": 1.0,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "Celltype"
-      ],
-      "curated": [
-        "Celltype"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": []
-    },
-    {
-      "dsid": "c662a5b4-2589-4829-965d-87f01f7b7c5f",
-      "n_curated": 5,
-      "n_picked": 5,
-      "n_intersect": 5,
-      "jaccard": 1.0,
-      "precision": 1.0,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "Class",
-        "CrossArea_cluster",
-        "CrossArea_subclass",
-        "WithinArea_cluster",
-        "WithinArea_subclass"
-      ],
-      "curated": [
-        "Class",
-        "CrossArea_cluster",
-        "CrossArea_subclass",
-        "WithinArea_cluster",
-        "WithinArea_subclass"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": []
-    },
-    {
       "dsid": "cece7dd6-cad7-450d-8b1c-841d49552cea",
       "n_curated": 2,
       "n_picked": 2,
@@ -1407,28 +1367,6 @@
       "curated": [
         "author_cell_type",
         "ct_cov"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": []
-    },
-    {
-      "dsid": "d25fc11f-5790-4a62-af67-e6e58816194e",
-      "n_curated": 3,
-      "n_picked": 3,
-      "n_intersect": 3,
-      "jaccard": 1.0,
-      "precision": 1.0,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "class",
-        "subclass",
-        "subtype"
-      ],
-      "curated": [
-        "class",
-        "subclass",
-        "subtype"
       ],
       "missed_by_agent": [],
       "agent_extras": []
@@ -1472,6 +1410,46 @@
       "agent_extras": []
     },
     {
+      "dsid": "c588e5ee-0741-486e-9283-a8f0157a1406",
+      "n_curated": 1,
+      "n_picked": 1,
+      "n_intersect": 1,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "Celltype"
+      ],
+      "curated": [
+        "Celltype"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
+    },
+    {
+      "dsid": "d25fc11f-5790-4a62-af67-e6e58816194e",
+      "n_curated": 3,
+      "n_picked": 3,
+      "n_intersect": 3,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "class",
+        "subclass",
+        "subtype"
+      ],
+      "curated": [
+        "class",
+        "subclass",
+        "subtype"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
+    },
+    {
       "dsid": "d7d2718a-8a6a-4697-bded-6a4f00fa8d8c",
       "n_curated": 1,
       "n_picked": 1,
@@ -1485,6 +1463,48 @@
       ],
       "curated": [
         "Cell_Type"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
+    },
+    {
+      "dsid": "db34a663-a726-4404-9b50-bad19c607d0b",
+      "n_curated": 2,
+      "n_picked": 2,
+      "n_intersect": 1,
+      "jaccard": 0.3333333333333333,
+      "precision": 0.5,
+      "recall": 0.5,
+      "hit": 1,
+      "picks": [
+        "author_cell_type",
+        "compartment"
+      ],
+      "curated": [
+        "author_cell_type",
+        "cell_state"
+      ],
+      "missed_by_agent": [
+        "cell_state"
+      ],
+      "agent_extras": [
+        "compartment"
+      ]
+    },
+    {
+      "dsid": "dabd979f-cc50-4526-81f3-8bc6c673ca36",
+      "n_curated": 1,
+      "n_picked": 1,
+      "n_intersect": 1,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "author_cell_type"
+      ],
+      "curated": [
+        "author_cell_type"
       ],
       "missed_by_agent": [],
       "agent_extras": []
@@ -1512,71 +1532,6 @@
       "agent_extras": []
     },
     {
-      "dsid": "dabd979f-cc50-4526-81f3-8bc6c673ca36",
-      "n_curated": 1,
-      "n_picked": 2,
-      "n_intersect": 1,
-      "jaccard": 0.5,
-      "precision": 0.5,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "author_cell_type",
-        "seurat_clusters"
-      ],
-      "curated": [
-        "author_cell_type"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "seurat_clusters"
-      ]
-    },
-    {
-      "dsid": "db34a663-a726-4404-9b50-bad19c607d0b",
-      "n_curated": 2,
-      "n_picked": 1,
-      "n_intersect": 1,
-      "jaccard": 0.5,
-      "precision": 1.0,
-      "recall": 0.5,
-      "hit": 1,
-      "picks": [
-        "author_cell_type"
-      ],
-      "curated": [
-        "author_cell_type",
-        "cell_state"
-      ],
-      "missed_by_agent": [
-        "cell_state"
-      ],
-      "agent_extras": []
-    },
-    {
-      "dsid": "e48806af-87d1-45ae-843a-c7ee06eac672",
-      "n_curated": 2,
-      "n_picked": 3,
-      "n_intersect": 2,
-      "jaccard": 0.6666666666666666,
-      "precision": 0.6666666666666666,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "BICCN_class_label",
-        "BICCN_cluster_label",
-        "BICCN_ontology_term_id"
-      ],
-      "curated": [
-        "BICCN_class_label",
-        "BICCN_cluster_label"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "BICCN_ontology_term_id"
-      ]
-    },
-    {
       "dsid": "e72d0170-3399-4aa0-8c56-da7b4f0ced6b",
       "n_curated": 4,
       "n_picked": 4,
@@ -1596,6 +1551,53 @@
         "cluster",
         "major_subset",
         "minor_subset"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
+    },
+    {
+      "dsid": "f202ae56-b9b6-48bd-87cd-fda4561d9dc9",
+      "n_curated": 5,
+      "n_picked": 6,
+      "n_intersect": 5,
+      "jaccard": 0.8333333333333334,
+      "precision": 0.8333333333333334,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "class",
+        "structure",
+        "subclass.full",
+        "subclass.l1",
+        "subclass.l2",
+        "subclass.l3"
+      ],
+      "curated": [
+        "class",
+        "subclass.full",
+        "subclass.l1",
+        "subclass.l2",
+        "subclass.l3"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": [
+        "structure"
+      ]
+    },
+    {
+      "dsid": "f697d6db-798b-41b4-95fc-15c739367a4d",
+      "n_curated": 1,
+      "n_picked": 1,
+      "n_intersect": 1,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "author_cell_type"
+      ],
+      "curated": [
+        "author_cell_type"
       ],
       "missed_by_agent": [],
       "agent_extras": []
@@ -1621,73 +1623,20 @@
       "agent_extras": []
     },
     {
-      "dsid": "f202ae56-b9b6-48bd-87cd-fda4561d9dc9",
-      "n_curated": 5,
-      "n_picked": 6,
-      "n_intersect": 5,
-      "jaccard": 0.8333333333333334,
-      "precision": 0.8333333333333334,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "class",
-        "state.l2",
-        "subclass.full",
-        "subclass.l1",
-        "subclass.l2",
-        "subclass.l3"
-      ],
-      "curated": [
-        "class",
-        "subclass.full",
-        "subclass.l1",
-        "subclass.l2",
-        "subclass.l3"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "state.l2"
-      ]
-    },
-    {
-      "dsid": "f697d6db-798b-41b4-95fc-15c739367a4d",
-      "n_curated": 1,
-      "n_picked": 1,
-      "n_intersect": 1,
-      "jaccard": 1.0,
-      "precision": 1.0,
-      "recall": 1.0,
-      "hit": 1,
-      "picks": [
-        "author_cell_type"
-      ],
-      "curated": [
-        "author_cell_type"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": []
-    },
-    {
       "dsid": "fb995261-472e-4ebc-99b0-d1136e1fad8a",
       "n_curated": 0,
-      "n_picked": 4,
+      "n_picked": 1,
       "n_intersect": 0,
       "jaccard": 0.0,
       "precision": 0.0,
       "recall": 0.0,
       "hit": 0,
       "picks": [
-        "Cell.class",
-        "Cell.group",
-        "Lineage",
         "sub_cluster"
       ],
       "curated": [],
       "missed_by_agent": [],
       "agent_extras": [
-        "Cell.class",
-        "Cell.group",
-        "Lineage",
         "sub_cluster"
       ]
     },
@@ -1710,6 +1659,26 @@
       "agent_extras": []
     },
     {
+      "dsid": "e48806af-87d1-45ae-843a-c7ee06eac672",
+      "n_curated": 2,
+      "n_picked": 2,
+      "n_intersect": 2,
+      "jaccard": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "hit": 1,
+      "picks": [
+        "BICCN_class_label",
+        "BICCN_cluster_label"
+      ],
+      "curated": [
+        "BICCN_class_label",
+        "BICCN_cluster_label"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": []
+    },
+    {
       "dsid": "ffb3295a-710f-4759-9291-634af3707848",
       "n_curated": 1,
       "n_picked": 1,
@@ -1727,27 +1696,5 @@
       "missed_by_agent": [],
       "agent_extras": []
     }
-  ],
-  "_provenance": {
-    "note": "Rescored from the frozen n=73 picks against the curation snapshot as shipped. That snapshot differs from the sheets as originally scored in two ways: a CL_KG typo corrected upstream after the original run, and four capitalisation fixes applied on read (see curation._CORRECTIONS) for names that did not match any obs column. The picks are the original artefact and are untouched. Both figures are kept so the drift is visible rather than absorbed.",
-    "as_published": {
-      "jaccard": 0.8079,
-      "precision": 0.8204,
-      "recall": 0.9661
-    },
-    "as_published_hit_rate": {
-      "k": 72,
-      "n": 73,
-      "p": 0.9863013698630136,
-      "ci95": [
-        0.9264008673087267,
-        0.9975778109072393
-      ]
-    },
-    "rescored_against_corrected_curation": {
-      "jaccard": 0.815,
-      "precision": 0.8295,
-      "recall": 0.9718
-    }
-  }
+  ]
 }

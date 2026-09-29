@@ -64,9 +64,11 @@ h5ad-obs obs.parquet --profile text   # free
 | `author-celltype-columns` | works out which `obs` columns hold the authors' own cell-type labels, as opposed to the portal's standardised `cell_type`, cluster indices and QC |
 
 `author-celltype-columns` ships a sub-agent, `author-celltype-picker`, which
-makes the judgment call in a fresh context from a column profile. Benchmarked at
-Jaccard 0.81 against hand curation on 73 CELLxGENE datasets — see
-[`docs/benchmark.md`](docs/benchmark.md) for what that does and does not mean.
+makes the judgment call in a fresh context from a column profile. Benchmarked on
+73 CELLxGENE datasets against CL_KG hand curation: **Jaccard 0.93, precision
+0.94, recall 0.96**, exact agreement on 62 of 73. See
+[`docs/benchmark.md`](docs/benchmark.md) for what that does and does not mean —
+precision in particular is a lower bound.
 
 ## Portal clients live elsewhere
 
@@ -97,6 +99,9 @@ break it; `H5AD_OBS_LIVE_URL` points it at your own host instead.
 Skill behaviour is a separate layer, in [`evals/`](evals). Those drive a real
 agent and cost money, so they are not in `dev.sh` or CI — but their graders are
 pure functions and both are.
+
+The picker's accuracy benchmark re-scores offline: the obs profiles it runs on
+are committed fixtures, not fetched.
 
 ## Rules for changes
 

@@ -17,13 +17,25 @@ python3 evals/runner.py --dry-run              # print the prompts, spend nothin
 python3 evals/runner.py --runs 3               # three runs per case, for flakiness
 ```
 
-Needs the plugin installed (`claude plugin install atlas-tools@atlas-skills
---scope user`) — the cases test the **published** plugin, not the working tree,
-so a SKILL.md edit needs a push plus `claude plugin marketplace update
-atlas-skills` before it shows up here.
+Needs the plugin installed **at user scope** — these cases test the
+**published** plugin, so a SKILL.md edit needs a tag and a push plus
+`claude plugin marketplace update atlas-skills` before it shows up here.
+
+```sh
+claude plugin marketplace add Cellular-Semantics/atlas-skills --scope user
+claude plugin install atlas-tools@atlas-skills --scope user
+```
 
 Each case runs in a fresh temporary directory, so nothing but the user-scope
-plugin is in scope: no project `CLAUDE.md`, no `.claude/skills`.
+plugin is in scope: no project `CLAUDE.md`, no `.claude/skills`. **A project- or
+local-scope install is therefore invisible here** — it lives in the repo and the
+temp directory does not — so `runner.py` checks the scope and the version, not
+just that something called `atlas-tools` exists. Matching on the name alone
+waves through a setup whose cases would all fail for the wrong reason.
+
+Testing the published pin is the point, not an inconvenience: half of what these
+cases assert is that the `uvx --from …@vX.Y.Z` command in SKILL.md actually
+resolves and runs.
 
 **These cost money and read real h5ads from the CELLxGENE CDN.** About
 $0.20–0.50 per run, ~$2 for the suite. One run per case by default;
@@ -56,15 +68,40 @@ reported next to the frozen n=73 picker on the same datasets, so a change is
 visible as a delta rather than an absolute. See
 [`docs/benchmark.md`](../docs/benchmark.md).
 
-Two stages. Profiling is deterministic, needs no agent, and is cached under
-`evals/.cache/profiles/` — a rerun costs no bandwidth. Picking dispatches the
-published sub-agent, three at a time by default.
+Two stages, both cached under `evals/.cache/`. Profiling is deterministic and
+needs no agent, so a rerun costs no bandwidth; picks are cached too, so a spend
+ceiling or a Ctrl-C costs only the datasets still outstanding.
 
-To run either arm against the working tree before a tag exists:
+`--record docs/benchmark-results.json` writes the committed summary. Timestamped
+run directories under `results/` are gitignored; the recorded file is the one
+that goes in a PR, so a change to the picker shows up as a diff in review rather
+than as a claim. It carries the plugin version, the commit, and a hash of the
+agent definition that produced the picks.
+
+### This arm needs no tag
+
+Unlike `runner.py`, the accuracy arm can run against the working tree. The
+picker sub-agent is declared `tools: Read` — it reads a profile file and returns
+JSON, and never shells out — so it never touches the pinned `uvx` command.
+`benchmark.py` produces the profiles itself, and takes env overrides for the
+CLIs. And it inherits the cwd rather than isolating to a temp directory, so a
+**local-scope** install is visible to it:
 
 ```sh
-H5AD_OBS_CMD="packages/h5ad-obs/.venv/bin/h5ad-obs" python3 evals/benchmark.py
+claude plugin marketplace add "$PWD" --scope local
+claude plugin install atlas-tools@atlas-skills --scope local
+
+H5AD_OBS_CMD="packages/h5ad-obs/.venv/bin/h5ad-obs" \
+CELLTYPE_COLUMN_EVAL_CMD="packages/celltype-column-eval/.venv/bin/celltype-column-eval" \
+  python3 evals/benchmark.py --all --record docs/benchmark-results.json
 ```
+
+Local scope writes to `.claude/settings.local.json`, which is gitignored, and
+does not disturb whatever is installed at user scope. Remove it afterwards with
+`claude plugin uninstall atlas-tools@atlas-skills --scope local`.
+
+So the accuracy number can be measured, reviewed and landed *before* a release
+is tagged; only the behaviour cases have to wait for one.
 
 ## Layout
 

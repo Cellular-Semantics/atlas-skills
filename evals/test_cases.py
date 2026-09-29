@@ -126,3 +126,157 @@ def test_tool_choice_case_fails_on_a_picker_dispatch():
     calls = [{"name": "Bash", "input": {"command": "h5ad-obs https://x/y.h5ad --out o.parquet"}},
              {"name": "Task", "input": {"subagent_type": "author-celltype-picker"}}]
     assert not all(r.passed for r in grade(Run(answer=answer, tool_calls=calls), checks))
+
+
+# --- the runner's plugin guard ----------------------------------------------
+
+def test_plugin_list_is_parsed_into_name_version_scope(monkeypatch):
+    """Scope is the part that matters and the obvious check drops it: the cases
+    run in a temp directory, so a project- or local-scope install is invisible
+    to them and must not satisfy the guard."""
+    import subprocess as sp
+
+    import runner
+
+    bullet = "\u276f"  # the glyph the CLI actually prints, kept out of the source
+    listing = "\n".join([
+        "Installed plugins:", "",
+        f"  {bullet} atlas-tools@atlas-skills",
+        "    Version: 0.1.0", "    Scope: user", "    Status: enabled", "",
+        f"  {bullet} atlas-tools@atlas-skills",
+        "    Version: 0.2.0", "    Scope: local", "    Status: enabled", ""])
+    monkeypatch.setattr(sp, "run", lambda *a, **k: sp.CompletedProcess(a, 0, listing, ""))
+    rows = runner.installed_plugins()
+    assert [(r["version"], r["scope"]) for r in rows] == [("0.1.0", "user"), ("0.2.0", "local")]
+
+
+def test_guard_rejects_a_local_only_install(monkeypatch):
+    import runner
+
+    monkeypatch.setattr(runner, "installed_plugins", lambda: [
+        {"name": "atlas-tools@atlas-skills", "version": "0.2.0", "scope": "local"}])
+    with pytest.raises(SystemExit) as exc:
+        runner.check_plugin_installed()
+    assert "temp directory" in str(exc.value)
+
+
+def test_guard_rejects_a_stale_user_install(monkeypatch):
+    """A SKILL.md edit needs a tag and a marketplace update before it reaches
+    these cases. Silently testing the previous release is the trap."""
+    import runner
+
+    monkeypatch.setattr(runner, "installed_plugins", lambda: [
+        {"name": "atlas-tools@atlas-skills", "version": "0.1.0", "scope": "user"}])
+    with pytest.raises(SystemExit) as exc:
+        runner.check_plugin_installed()
+    assert runner.EXPECTED_PLUGIN_VERSION in str(exc.value)
+
+
+def test_guard_accepts_the_expected_user_install(monkeypatch):
+    import runner
+
+    monkeypatch.setattr(runner, "installed_plugins", lambda: [
+        {"name": "atlas-tools@atlas-skills",
+         "version": runner.EXPECTED_PLUGIN_VERSION, "scope": "user"}])
+    runner.check_plugin_installed()
+
+
+# --- the committed profile fixtures -----------------------------------------
+
+def test_every_manifest_dataset_has_a_committed_profile():
+    """Re-scoring the picker must need no network. A missing fixture silently
+    turns an offline re-score into a 1.5 GB fetch."""
+    import json as _json
+
+    import benchmark
+
+    prov = _json.loads(benchmark.PROVENANCE.read_text())
+    have = {p.stem for p in benchmark.PROFILES.glob("*.txt")}
+    assert len(have) == prov["n_datasets"] == 73
+    # The one absent dataset is absent for a recorded reason, not by accident.
+    assert set(prov["missing"]) & set(prov["missing"])
+    for dsid, reason in prov["missing"].items():
+        assert dsid not in have
+        assert len(reason) > 20, f"{dsid} is missing with no explanation"
+
+
+def test_provenance_records_what_captured_the_profiles():
+    """A profile with no record of which reader version produced it cannot be
+    checked for staleness, and the format is exactly what the picker sees."""
+    import json as _json
+
+    import benchmark
+
+    prov = _json.loads(benchmark.PROVENANCE.read_text())
+    assert prov["captured_by"].startswith("h5ad-obs ")
+    assert prov["captured"] and prov["commit"]
+    for dsid, entry in prov["profiles"].items():
+        path = benchmark.PROFILES / f"{dsid}.txt"
+        assert path.stat().st_size == entry["bytes"], f"{dsid} changed since capture"
+
+
+def test_profiles_carry_no_picking_instructions():
+    """The rules live in the picker agent. A fixture that smuggled guidance in
+    would make the benchmark score the prompt, not the agent."""
+    import benchmark
+
+    for path in benchmark.PROFILES.glob("*.txt"):
+        text = path.read_text().lower()
+        for word in ("you are", "do not pick", "rule ", "author-provided"):
+            assert word not in text, f"{path.name} contains instruction text: {word!r}"
+
+
+# --- pulling the picks out of a reply ---------------------------------------
+
+@pytest.mark.parametrize(("label", "reply", "expected"), [
+    ("bare", '{"picks": ["a"], "reasoning": "x"}', ["a"]),
+    ("fenced", '```json\n{"picks": ["a"], "reasoning": "x"}\n```', ["a"]),
+    ("trailing prose", '{"picks": ["a"], "reasoning": "x"}\n\nLet me know if you '
+                       'want the counts.', ["a"]),
+    ("preamble", 'Here you go:\n{"picks": [], "reasoning": "all constant"}', []),
+    ("earlier object", '{"note": 1}\n{"picks": ["b"], "reasoning": "y"}', ["b"]),
+])
+def test_picks_are_recovered_from_an_untidy_reply(label, reply, expected):
+    """A formatting slip is not the behaviour under test. The first attempt used
+    a greedy brace-to-brace regex, which spans from the first brace to the last
+    in the whole reply -- so a single trailing line swallowed the match and the
+    parse failed. That silently cost two datasets on the first full run."""
+    import benchmark
+
+    assert benchmark._extract_picks(reply)["picks"] == expected, label
+
+
+def test_a_reply_with_no_picks_object_is_not_invented():
+    import benchmark
+
+    assert benchmark._extract_picks("I could not determine the columns.") is None
+    assert benchmark._extract_picks('{"reasoning": "no picks key here"}') is None
+
+
+def test_every_curated_column_exists_in_the_dataset():
+    """The gold set names obs columns; if one is not there, no picker can ever
+    match it and the dataset's score is capped below 1 for no reason. Four such
+    names were found on the first full run -- all capitalisation slips, now
+    corrected on read in `celltype_column_eval.curation`. This fails if another
+    appears, in the curation or after a profile regeneration."""
+    import sys
+
+    sys.path.insert(0, str(pathlib.Path(__file__).parent.parent
+                           / "packages/celltype-column-eval/src"))
+    import benchmark
+    from celltype_column_eval import full, parse_curation
+
+    curation = parse_curation()
+    missing = []
+    for dsid in full():
+        path = benchmark.PROFILES / f"{dsid}.txt"
+        if not path.exists() or dsid not in curation:
+            continue
+        present = {line.split(" | ")[0]
+                   for line in path.read_text().splitlines()[4:] if " | " in line}
+        for name in curation[dsid]["columns"]:
+            if name not in present:
+                near = [c for c in present if c.lower() == name.lower()]
+                missing.append(f"{dsid} {name!r}"
+                               + (f" (obs has {near[0]!r})" if near else " (no near match)"))
+    assert not missing, "curated columns absent from obs:\n  " + "\n  ".join(missing)
