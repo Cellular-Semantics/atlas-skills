@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "celltype-column-eval"
+version = "0.1.0"
+description = "Gold set and metrics for scoring author cell-type obs column picks against CL_KG curation."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Cellular Semantics" }]
+keywords = ["single-cell", "cell-annotation", "evaluation", "cellxgene"]
+classifiers = [
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+# Deliberately none. The gold set is CSV and JSON, the metrics are arithmetic,
+# and an eval that cannot be installed anywhere does not get run.
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.urls]
+Homepage = "https://github.com/Cellular-Semantics/atlas-skills"
+Repository = "https://github.com/Cellular-Semantics/atlas-skills"
+
+[project.scripts]
+celltype-column-eval = "celltype_column_eval.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/celltype_column_eval"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

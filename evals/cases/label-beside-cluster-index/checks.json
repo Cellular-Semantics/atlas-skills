@@ -1,0 +1,11 @@
+{
+  "tags": ["picker", "rules"],
+  "checks": [
+    {"kind": "answer_matches", "pattern": "author_cell_type",
+     "why": "the curated answer, sitting next to a numeric seurat_clusters that must not displace it"},
+    {"kind": "answer_not_matches", "pattern": "(?:^|[^\\w])(?:picks?|pick(?:ed|ing)?|select(?:ed)?|author cell-type column[s]?)[^.\\n]{0,80}\\bseurat_clusters\\b",
+     "why": "seurat_clusters is a 20-level categorical of string-encoded integers; the frozen picker took it"},
+    {"kind": "numeric_present", "pattern": "([\\d,]{3,})", "min": 1000, "max": 30000,
+     "why": "label counts were actually computed, not just column names returned"}
+  ]
+}

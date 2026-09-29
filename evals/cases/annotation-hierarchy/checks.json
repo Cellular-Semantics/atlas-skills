@@ -1,0 +1,10 @@
+{
+  "tags": ["picker", "rules"],
+  "checks": [
+    {"kind": "answer_any_of", "patterns": ["celltype.l1", "celltype.l2", "celltype.l3"],
+     "min_hits": 3,
+     "why": "all three levels are curated; picking only the finest throws away the hierarchy the user asked about"},
+    {"kind": "answer_not_matches", "pattern": "cannot|unable to|no author",
+     "why": "this dataset has a clean, unambiguous answer; failing it means the plumbing broke, not the judgment"}
+  ]
+}

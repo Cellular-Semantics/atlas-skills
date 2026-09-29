@@ -1,0 +1,44 @@
+{
+  "e48806af-87d1-45ae-843a-c7ee06eac672": {
+    "url": "https://datasets.cellxgene.cziscience.com/e48806af-87d1-45ae-843a-c7ee06eac672.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 1679,
+    "n_obs_columns": 38,
+    "why": "Smallest dataset in the set (1,679 cells): the cheap does-it-work-at-all case. Two marker-encoded BICCN labels at different granularities, so it also pins multi-granularity picking."
+  },
+  "0054013c-290b-437e-b98e-642aa77d6ebc": {
+    "url": "https://datasets.cellxgene.cziscience.com/0054013c-290b-437e-b98e-642aa77d6ebc.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 7249,
+    "n_obs_columns": 32,
+    "why": "Carries `leiden` and `louvain` alongside a real `free_annotation`. Both are string-encoded integers in a categorical with many levels. The frozen n=73 picker took all three; rule 3 exists because of cases like this."
+  },
+  "fb995261-472e-4ebc-99b0-d1136e1fad8a": {
+    "url": "https://datasets.cellxgene.cziscience.com/fb995261-472e-4ebc-99b0-d1136e1fad8a.h5ad",
+    "group": "HCA CxG clean V6 - Immune",
+    "n_cells": 7274,
+    "n_obs_columns": 37,
+    "why": "Every cell-type-shaped column (`Cell.class`, `Cell.group`, `Lineage`) is constant across all 7,274 cells -- this is an isolated population, and the curators recorded no cell-type field for it. The correct answer is to pick nothing. The frozen picker picked four columns."
+  },
+  "dabd979f-cc50-4526-81f3-8bc6c673ca36": {
+    "url": "https://datasets.cellxgene.cziscience.com/dabd979f-cc50-4526-81f3-8bc6c673ca36.h5ad",
+    "group": "HCA CxG clean V6 - Kidney",
+    "n_cells": 27034,
+    "n_obs_columns": 39,
+    "why": "A real `author_cell_type` next to a numeric `seurat_clusters`. Rule 3 under pressure: rejecting the cluster index must not cost the label beside it."
+  },
+  "5668bd32-5e84-4708-b976-af6a902ed9a4": {
+    "url": "https://datasets.cellxgene.cziscience.com/5668bd32-5e84-4708-b976-af6a902ed9a4.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 109995,
+    "n_obs_columns": 36,
+    "why": "Rules 4 and 5 pulling against each other: `Lineage` is a lineage column, which rule 5 says to pick, but it is constant here, which rule 4 says to reject. `Cell.class` and `Cell.group` vary and are the curated answer."
+  },
+  "9bb8be38-d63f-4c8c-bf31-5ba078713315": {
+    "url": "https://datasets.cellxgene.cziscience.com/9bb8be38-d63f-4c8c-bf31-5ba078713315.h5ad",
+    "group": "HCA CxG clean V6 - Immune",
+    "n_cells": 161764,
+    "n_obs_columns": 35,
+    "why": "A clean three-level hierarchy (`celltype.l1/l2/l3`) with no traps. If this one fails, something has broken in the plumbing rather than in the judgment."
+  }
+}

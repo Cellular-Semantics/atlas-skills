@@ -1,0 +1,11 @@
+{
+  "tags": ["tool-choice"],
+  "checks": [
+    {"kind": "command_matches", "pattern": "h5ad-obs",
+     "why": "reading obs is the right route; the question is about a column that is already there"},
+    {"kind": "command_not_matches", "pattern": "author-celltype-picker",
+     "why": "the picker costs a sub-agent and answers a question that was not asked; a request for the standardised field must not trigger it"},
+    {"kind": "numeric_present", "pattern": "(\\d[\\d,]*)", "min": 2, "max": 1679,
+     "why": "per-type counts were computed from the pulled column"}
+  ]
+}

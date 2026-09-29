@@ -7,12 +7,49 @@ Works against any host honouring HTTP range requests — GCS, S3, Sanger COG,
 CELLxGENE's CDN, plain static hosts.
 
 ```sh
-uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@v0.1.0#subdirectory=packages/h5ad-obs" \
+uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@v0.2.0#subdirectory=packages/h5ad-obs" \
     h5ad-obs https://datasets.cellxgene.cziscience.com/<id>.h5ad --list-columns
 ```
 
 stdout is a JSON summary including byte accounting; the obs table itself goes to
 `--out` (parquet by default) because it is usually large.
+
+## Profiling
+
+`--profile` prints a per-column summary — storage kind, cardinality, and sample
+values — instead of reading obs. It is what an agent needs to decide *what a
+column is*.
+
+```sh
+h5ad-obs <url> --out obs.parquet       # one remote read
+h5ad-obs obs.parquet --profile text    # free; also accepts .csv / .tsv
+h5ad-obs <url> --profile               # JSON, straight off the wire
+```
+
+```
+name | kind | n_unique | sample values
+BICCN_cluster_label | categorical[33 cats] | 33 | 'Vip', 'L4', 'Ndnf', 'Pvalb', ...
+major_dissection | categorical[1 cats] | 1 (constant) | 'V1', 'V1', 'V1', ...
+total_reads | array int64 | 1679 | 23770190, 18388503, 20515208, ...
+```
+
+Sample values are **spread across the table, not taken from the head**: obs is
+routinely sorted by donor or cluster, and the first twenty rows of a sorted
+column show one value. `(constant)` means the cardinality is known exactly and
+is one — always determinable for a categorical, and for anything else only when
+every row was scanned (`--scan-rows`, default 2000).
+
+Profiling a URL reads less than a full obs read, but not by much, so it is
+rarely worth a second trip to the network:
+
+| obs | `--profile` | full obs |
+|---|---|---|
+| 1,679 x 37 | 1.3 MB, 5 requests | 1.3 MB, 5 requests |
+| 115,282 x 34 | 12.6 MB, 6 requests | 16.8 MB, 8 requests |
+| 2,282,447 x 70 | 180 MB, 86 requests | 306 MB, 146 requests |
+
+Read obs once and profile the file, unless obs has millions of rows and you want
+very few columns.
 
 ## Cost
 

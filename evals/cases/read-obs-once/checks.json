@@ -1,0 +1,37 @@
+{
+  "tags": [
+    "picker",
+    "composition"
+  ],
+  "checks": [
+    {
+      "kind": "command_matches",
+      "pattern": "h5ad-obs[^\"]*--out",
+      "why": "obs is pulled to a file once; the remote read is the expensive step"
+    },
+    {
+      "kind": "command_matches",
+      "pattern": "--profile",
+      "why": "the picker needs a column profile, not a raw obs dump"
+    },
+    {
+      "kind": "command_not_matches",
+      "pattern": "\\.h5ad[^\"\\n&|;]*--profile",
+      "why": "profiling the URL after already pulling obs is a second trip past the same HDF5 metadata floor -- the whole point of the composition is one remote read"
+    },
+    {
+      "kind": "answer_any_of",
+      "patterns": [
+        "BICCN_class_label",
+        "BICCN_cluster_label"
+      ],
+      "min_hits": 2,
+      "why": "both curated columns are found; this dataset annotates at two granularities"
+    },
+    {
+      "kind": "answer_not_matches",
+      "pattern": "(?:^|[^\\w])(?:picks?|pick(?:ed|ing)?|select(?:ed)?|author cell-type column[s]?)(?![^.\\n]{0,20}\\bnot\\b)[^.\\n]{0,80}\\bcell_type_ontology_term_id\\b",
+      "why": "the portal's standardised field is never an author column -- but naming it as explicitly rejected is a better answer, not a worse one, so this fires only on picking language"
+    }
+  ]
+}

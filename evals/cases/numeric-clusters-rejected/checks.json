@@ -1,0 +1,11 @@
+{
+  "tags": ["picker", "rules"],
+  "checks": [
+    {"kind": "answer_matches", "pattern": "free_annotation",
+     "why": "the curated answer; rejecting the cluster indices must not cost the real label beside them"},
+    {"kind": "answer_not_matches", "pattern": "(?:^|[^\\w])(?:picks?|pick(?:ed|ing)?|select(?:ed)?|author cell-type column[s]?)[^.\\n]{0,80}\\bleiden\\b",
+     "why": "leiden holds string-encoded integers -- a cluster index, not a label"},
+    {"kind": "answer_not_matches", "pattern": "(?:^|[^\\w])(?:picks?|pick(?:ed|ing)?|select(?:ed)?|author cell-type column[s]?)[^.\\n]{0,80}\\blouvain\\b",
+     "why": "same for louvain; the frozen n=73 picker took both"}
+  ]
+}

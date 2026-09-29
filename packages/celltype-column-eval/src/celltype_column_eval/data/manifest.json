@@ -1,0 +1,446 @@
+{
+  "0054013c-290b-437e-b98e-642aa77d6ebc": {
+    "url": "https://datasets.cellxgene.cziscience.com/0054013c-290b-437e-b98e-642aa77d6ebc.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 7249,
+    "n_obs_columns": 32
+  },
+  "01afd5b8-21be-4869-a686-1fe94ff6f4d8": {
+    "url": "https://datasets.cellxgene.cziscience.com/01afd5b8-21be-4869-a686-1fe94ff6f4d8.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 110752,
+    "n_obs_columns": 34
+  },
+  "01bc7039-961f-4c24-b407-d535a2a7ba2c": {
+    "url": "https://datasets.cellxgene.cziscience.com/01bc7039-961f-4c24-b407-d535a2a7ba2c.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 39176,
+    "n_obs_columns": 38
+  },
+  "0b3d19b3-df06-4265-9803-82f598e59dba": {
+    "url": "https://datasets.cellxgene.cziscience.com/0b3d19b3-df06-4265-9803-82f598e59dba.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 114605,
+    "n_obs_columns": 34
+  },
+  "10bb8aaa-ebc6-4026-94ae-a33ac16b5366": {
+    "url": "https://datasets.cellxgene.cziscience.com/10bb8aaa-ebc6-4026-94ae-a33ac16b5366.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 103982,
+    "n_obs_columns": 60
+  },
+  "18fb432a-be41-4677-9396-e1680a0852bf": {
+    "url": "https://datasets.cellxgene.cziscience.com/18fb432a-be41-4677-9396-e1680a0852bf.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 115282,
+    "n_obs_columns": 35
+  },
+  "1af9835f-469e-452f-a91d-f42af3f91042": {
+    "url": "https://datasets.cellxgene.cziscience.com/1af9835f-469e-452f-a91d-f42af3f91042.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 10739,
+    "n_obs_columns": 37
+  },
+  "1c6e54ca-ef0c-4acc-9891-d3b7d2cd7a0e": {
+    "url": "https://datasets.cellxgene.cziscience.com/1c6e54ca-ef0c-4acc-9891-d3b7d2cd7a0e.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 163779,
+    "n_obs_columns": 30
+  },
+  "1cbe52c1-0567-4188-9c18-9d7271c56055": {
+    "url": "https://datasets.cellxgene.cziscience.com/1cbe52c1-0567-4188-9c18-9d7271c56055.h5ad",
+    "group": "HCA CxG clean V6 - Kidney",
+    "n_cells": 172847,
+    "n_obs_columns": 41
+  },
+  "24c44ebe-c9c8-403b-9b55-6c8e4b46c69e": {
+    "url": "https://datasets.cellxgene.cziscience.com/24c44ebe-c9c8-403b-9b55-6c8e4b46c69e.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 55348,
+    "n_obs_columns": 37
+  },
+  "250192f0-94d8-4e26-91cb-afe7e360605e": {
+    "url": "https://datasets.cellxgene.cziscience.com/250192f0-94d8-4e26-91cb-afe7e360605e.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 384925,
+    "n_obs_columns": 38
+  },
+  "2e3f5af1-af1f-4828-aa82-5453a2fab7ea": {
+    "url": "https://datasets.cellxgene.cziscience.com/2e3f5af1-af1f-4828-aa82-5453a2fab7ea.h5ad",
+    "group": "HCA CxG clean V6 - Gut",
+    "n_cells": 57723,
+    "n_obs_columns": 27
+  },
+  "2f3fbea2-9d47-4d16-878d-863bee64ef49": {
+    "url": "https://datasets.cellxgene.cziscience.com/2f3fbea2-9d47-4d16-878d-863bee64ef49.h5ad",
+    "group": "HCA CxG clean V6 - Immune",
+    "n_cells": 1077879,
+    "n_obs_columns": 26
+  },
+  "325567b8-e698-48ab-9969-ab0b1a2bbb2f": {
+    "url": "https://datasets.cellxgene.cziscience.com/325567b8-e698-48ab-9969-ab0b1a2bbb2f.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 241077,
+    "n_obs_columns": 34
+  },
+  "3310476e-ee9d-4179-9446-df5d073f38d8": {
+    "url": "https://datasets.cellxgene.cziscience.com/3310476e-ee9d-4179-9446-df5d073f38d8.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 356213,
+    "n_obs_columns": 35
+  },
+  "36141ff7-ec4f-44cc-8bf3-ed9d9675d89a": {
+    "url": "https://datasets.cellxgene.cziscience.com/36141ff7-ec4f-44cc-8bf3-ed9d9675d89a.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 129905,
+    "n_obs_columns": 33
+  },
+  "37a13a09-e9aa-4d2a-900c-0862e13cfac3": {
+    "url": "https://datasets.cellxgene.cziscience.com/37a13a09-e9aa-4d2a-900c-0862e13cfac3.h5ad",
+    "group": "GutAtlas.Org Author Category JB V1 - Fetal and Pediatric Cell Atlas ",
+    "n_cells": 62849,
+    "n_obs_columns": 35
+  },
+  "43b216d8-b988-4ade-8263-55c45f1944db": {
+    "url": "https://datasets.cellxgene.cziscience.com/43b216d8-b988-4ade-8263-55c45f1944db.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 30022,
+    "n_obs_columns": 30
+  },
+  "443f7fb8-2a27-47c3-98f6-6a603c7a294e": {
+    "url": "https://datasets.cellxgene.cziscience.com/443f7fb8-2a27-47c3-98f6-6a603c7a294e.h5ad",
+    "group": "Curated_Lung_Data_KG_V1 - Sheet1",
+    "n_cells": 347970,
+    "n_obs_columns": 38
+  },
+  "460d368c-9147-4716-8674-76bf0795ba85": {
+    "url": "https://datasets.cellxgene.cziscience.com/460d368c-9147-4716-8674-76bf0795ba85.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 94243,
+    "n_obs_columns": 54
+  },
+  "47de6fa9-411b-429a-a04f-318930848a3c": {
+    "url": "https://datasets.cellxgene.cziscience.com/47de6fa9-411b-429a-a04f-318930848a3c.h5ad",
+    "group": "HCA CxG clean V6 - Kidney",
+    "n_cells": 19985,
+    "n_obs_columns": 35
+  },
+  "4d3469a7-339f-40b3-92a3-22f7043545f8": {
+    "url": "https://datasets.cellxgene.cziscience.com/4d3469a7-339f-40b3-92a3-22f7043545f8.h5ad",
+    "group": "Curated_Skin_Data_KG_Muzz_Group_V1 - KG",
+    "n_cells": 15243,
+    "n_obs_columns": 33
+  },
+  "4e2221b4-c204-4c28-bc6a-dcdb73c0d856": {
+    "url": "https://datasets.cellxgene.cziscience.com/4e2221b4-c204-4c28-bc6a-dcdb73c0d856.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 139054,
+    "n_obs_columns": 34
+  },
+  "50bbe1a2-5f27-47f5-a809-046459a4ae5e": {
+    "url": "https://datasets.cellxgene.cziscience.com/50bbe1a2-5f27-47f5-a809-046459a4ae5e.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 158978,
+    "n_obs_columns": 33
+  },
+  "526c1ebb-7d87-405d-8b64-5427105ba923": {
+    "url": "https://datasets.cellxgene.cziscience.com/526c1ebb-7d87-405d-8b64-5427105ba923.h5ad",
+    "group": "HCA CxG clean V6 - Immune",
+    "n_cells": 246964,
+    "n_obs_columns": 33
+  },
+  "5668bd32-5e84-4708-b976-af6a902ed9a4": {
+    "url": "https://datasets.cellxgene.cziscience.com/5668bd32-5e84-4708-b976-af6a902ed9a4.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 109995,
+    "n_obs_columns": 36
+  },
+  "5b8941a9-fef8-4348-876c-c333a87c0c3f": {
+    "url": "https://datasets.cellxgene.cziscience.com/5b8941a9-fef8-4348-876c-c333a87c0c3f.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 4062980,
+    "n_obs_columns": 41
+  },
+  "5d338c19-dae4-49e9-88e4-86c76c78a340": {
+    "url": "https://datasets.cellxgene.cziscience.com/5d338c19-dae4-49e9-88e4-86c76c78a340.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 116313,
+    "n_obs_columns": 33
+  },
+  "5f4efede-b295-4be4-aded-eb8b9a946382": {
+    "url": "https://datasets.cellxgene.cziscience.com/5f4efede-b295-4be4-aded-eb8b9a946382.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 59572,
+    "n_obs_columns": 47
+  },
+  "60b76da3-5490-4b61-a73f-38dc7b586465": {
+    "url": "https://datasets.cellxgene.cziscience.com/60b76da3-5490-4b61-a73f-38dc7b586465.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 20727,
+    "n_obs_columns": 63
+  },
+  "662c884d-add3-494d-b325-c13bc9f0b6ae": {
+    "url": "https://datasets.cellxgene.cziscience.com/662c884d-add3-494d-b325-c13bc9f0b6ae.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 33041,
+    "n_obs_columns": 26
+  },
+  "77a91ab6-4fcc-428d-b719-a3f1238df262": {
+    "url": "https://datasets.cellxgene.cziscience.com/77a91ab6-4fcc-428d-b719-a3f1238df262.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 49417,
+    "n_obs_columns": 39
+  },
+  "79772e00-00d5-497e-b8ff-f83af5ce59c1": {
+    "url": "https://datasets.cellxgene.cziscience.com/79772e00-00d5-497e-b8ff-f83af5ce59c1.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 45528,
+    "n_obs_columns": 50
+  },
+  "839cae6e-36e9-4aad-a0fd-99ffe8897c56": {
+    "url": "https://datasets.cellxgene.cziscience.com/839cae6e-36e9-4aad-a0fd-99ffe8897c56.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 92969,
+    "n_obs_columns": 34
+  },
+  "83bde98b-fc88-4147-a217-1f1ffa508dd2": {
+    "url": "https://datasets.cellxgene.cziscience.com/83bde98b-fc88-4147-a217-1f1ffa508dd2.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 406187,
+    "n_obs_columns": 32
+  },
+  "83c08c97-52c4-4045-b9ad-4eeeb4a3d606": {
+    "url": "https://datasets.cellxgene.cziscience.com/83c08c97-52c4-4045-b9ad-4eeeb4a3d606.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 22048,
+    "n_obs_columns": 26
+  },
+  "8f2e4a29-e397-4f33-bc9a-3181e06b64b0": {
+    "url": "https://datasets.cellxgene.cziscience.com/8f2e4a29-e397-4f33-bc9a-3181e06b64b0.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 1263676,
+    "n_obs_columns": 33
+  },
+  "926a6acd-6555-4d55-9ba5-6927c9884e96": {
+    "url": "https://datasets.cellxgene.cziscience.com/926a6acd-6555-4d55-9ba5-6927c9884e96.h5ad",
+    "group": "HCA CxG clean V6 - Immune",
+    "n_cells": 422220,
+    "n_obs_columns": 35
+  },
+  "95e49c50-3411-45f1-8c78-eb4732af7563": {
+    "url": "https://datasets.cellxgene.cziscience.com/95e49c50-3411-45f1-8c78-eb4732af7563.h5ad",
+    "group": "HCA CxG clean V6 - Immune",
+    "n_cells": 239696,
+    "n_obs_columns": 36
+  },
+  "9ad2790f-25e5-44d7-8828-ff5aadeba589": {
+    "url": "https://datasets.cellxgene.cziscience.com/9ad2790f-25e5-44d7-8828-ff5aadeba589.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 130908,
+    "n_obs_columns": 30
+  },
+  "9bb8be38-d63f-4c8c-bf31-5ba078713315": {
+    "url": "https://datasets.cellxgene.cziscience.com/9bb8be38-d63f-4c8c-bf31-5ba078713315.h5ad",
+    "group": "HCA CxG clean V6 - Immune",
+    "n_cells": 161764,
+    "n_obs_columns": 35
+  },
+  "9fd987e8-bf5f-42a1-ba2e-20d0b7b36228": {
+    "url": "https://datasets.cellxgene.cziscience.com/9fd987e8-bf5f-42a1-ba2e-20d0b7b36228.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 44721,
+    "n_obs_columns": 40
+  },
+  "aa4849b3-7178-4c8c-b079-a49ed03ab09d": {
+    "url": "https://datasets.cellxgene.cziscience.com/aa4849b3-7178-4c8c-b079-a49ed03ab09d.h5ad",
+    "group": "HCA CxG clean V6 - Gut",
+    "n_cells": 75695,
+    "n_obs_columns": 29
+  },
+  "ab149f9b-8fda-414a-a312-69279695f342": {
+    "url": "https://datasets.cellxgene.cziscience.com/ab149f9b-8fda-414a-a312-69279695f342.h5ad",
+    "group": "HCA CxG clean V6 - Immune",
+    "n_cells": 90957,
+    "n_obs_columns": 39
+  },
+  "ac818189-5c6b-48d2-8bf1-f7511de7b5a9": {
+    "url": "https://datasets.cellxgene.cziscience.com/ac818189-5c6b-48d2-8bf1-f7511de7b5a9.h5ad",
+    "group": "HCA CxG clean V6 - Immune",
+    "n_cells": 836148,
+    "n_obs_columns": 45
+  },
+  "b09dac61-836f-418a-ad0a-064d2bc5343d": {
+    "url": "https://datasets.cellxgene.cziscience.com/b09dac61-836f-418a-ad0a-064d2bc5343d.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 89637,
+    "n_obs_columns": 42
+  },
+  "b13072bd-9cb6-42ca-9f4f-01252baef273": {
+    "url": "https://datasets.cellxgene.cziscience.com/b13072bd-9cb6-42ca-9f4f-01252baef273.h5ad",
+    "group": "Curated_Lung_Data_KG_V1 - Sheet1",
+    "n_cells": 2282447,
+    "n_obs_columns": 71
+  },
+  "b1784014-d30f-4e3a-88d6-65110285d5e4": {
+    "url": "https://datasets.cellxgene.cziscience.com/b1784014-d30f-4e3a-88d6-65110285d5e4.h5ad",
+    "group": "HCA CxG clean V6 - Gut",
+    "n_cells": 152509,
+    "n_obs_columns": 29
+  },
+  "b1b7e4e0-d31d-47f5-ad35-1181fe2647d7": {
+    "url": "https://datasets.cellxgene.cziscience.com/b1b7e4e0-d31d-47f5-ad35-1181fe2647d7.h5ad",
+    "group": "HCA CxG clean V6 - Gut",
+    "n_cells": null,
+    "n_obs_columns": null
+  },
+  "b33ff5a3-527e-41c3-83ce-012a8ad2d2c1": {
+    "url": "https://datasets.cellxgene.cziscience.com/b33ff5a3-527e-41c3-83ce-012a8ad2d2c1.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 638941,
+    "n_obs_columns": 34
+  },
+  "b351804c-293e-4aeb-9c4c-043db67f4540": {
+    "url": "https://datasets.cellxgene.cziscience.com/b351804c-293e-4aeb-9c4c-043db67f4540.h5ad",
+    "group": "Curated_Lung_Data_KG_V1 - Sheet1",
+    "n_cells": 584944,
+    "n_obs_columns": 70
+  },
+  "bc335baf-8218-4db0-bdbf-efc3750f99a9": {
+    "url": "https://datasets.cellxgene.cziscience.com/bc335baf-8218-4db0-bdbf-efc3750f99a9.h5ad",
+    "group": "Curated_Skin_Data_KG_Muzz_Group_V1 - KG",
+    "n_cells": 68036,
+    "n_obs_columns": 31
+  },
+  "bc474348-6dbd-483a-acb7-f295d1521fa2": {
+    "url": "https://datasets.cellxgene.cziscience.com/bc474348-6dbd-483a-acb7-f295d1521fa2.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 636,
+    "n_obs_columns": 117
+  },
+  "bde8eef6-8bee-4bc1-8071-93335974bbf7": {
+    "url": "https://datasets.cellxgene.cziscience.com/bde8eef6-8bee-4bc1-8071-93335974bbf7.h5ad",
+    "group": "HCA CxG clean V6 - Gut",
+    "n_cells": 201072,
+    "n_obs_columns": 29
+  },
+  "bea5aacc-7625-4d7c-a3bd-88f9f9cdcec2": {
+    "url": "https://datasets.cellxgene.cziscience.com/bea5aacc-7625-4d7c-a3bd-88f9f9cdcec2.h5ad",
+    "group": "Curated_Skin_Data_KG_Muzz_Group_V1 - KG",
+    "n_cells": 15457,
+    "n_obs_columns": 40
+  },
+  "bffd503d-e488-44de-8512-0f3c01482adf": {
+    "url": "https://datasets.cellxgene.cziscience.com/bffd503d-e488-44de-8512-0f3c01482adf.h5ad",
+    "group": "HCA CxG clean V6 - Gut",
+    "n_cells": 154136,
+    "n_obs_columns": 29
+  },
+  "c588e5ee-0741-486e-9283-a8f0157a1406": {
+    "url": "https://datasets.cellxgene.cziscience.com/c588e5ee-0741-486e-9283-a8f0157a1406.h5ad",
+    "group": "HCA CxG clean V6 - Immune",
+    "n_cells": 59572,
+    "n_obs_columns": 47
+  },
+  "c662a5b4-2589-4829-965d-87f01f7b7c5f": {
+    "url": "https://datasets.cellxgene.cziscience.com/c662a5b4-2589-4829-965d-87f01f7b7c5f.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 135462,
+    "n_obs_columns": 34
+  },
+  "cece7dd6-cad7-450d-8b1c-841d49552cea": {
+    "url": "https://datasets.cellxgene.cziscience.com/cece7dd6-cad7-450d-8b1c-841d49552cea.h5ad",
+    "group": "HCA CxG clean V6 - Immune",
+    "n_cells": 1263676,
+    "n_obs_columns": 33
+  },
+  "d25fc11f-5790-4a62-af67-e6e58816194e": {
+    "url": "https://datasets.cellxgene.cziscience.com/d25fc11f-5790-4a62-af67-e6e58816194e.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 610719,
+    "n_obs_columns": 35
+  },
+  "d410890b-4646-4976-abde-1dec006cd76a": {
+    "url": "https://datasets.cellxgene.cziscience.com/d410890b-4646-4976-abde-1dec006cd76a.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 98068,
+    "n_obs_columns": 67
+  },
+  "d46da49f-9463-4d94-8157-44d449962f9d": {
+    "url": "https://datasets.cellxgene.cziscience.com/d46da49f-9463-4d94-8157-44d449962f9d.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 66719,
+    "n_obs_columns": 43
+  },
+  "d7d2718a-8a6a-4697-bded-6a4f00fa8d8c": {
+    "url": "https://datasets.cellxgene.cziscience.com/d7d2718a-8a6a-4697-bded-6a4f00fa8d8c.h5ad",
+    "group": "HCA CxG clean V6 - Gut",
+    "n_cells": 65088,
+    "n_obs_columns": 27
+  },
+  "d911082e-b5e2-40e6-8f08-fb53c7894622": {
+    "url": "https://datasets.cellxgene.cziscience.com/d911082e-b5e2-40e6-8f08-fb53c7894622.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 422220,
+    "n_obs_columns": 35
+  },
+  "dabd979f-cc50-4526-81f3-8bc6c673ca36": {
+    "url": "https://datasets.cellxgene.cziscience.com/dabd979f-cc50-4526-81f3-8bc6c673ca36.h5ad",
+    "group": "HCA CxG clean V6 - Kidney",
+    "n_cells": 27034,
+    "n_obs_columns": 39
+  },
+  "db34a663-a726-4404-9b50-bad19c607d0b": {
+    "url": "https://datasets.cellxgene.cziscience.com/db34a663-a726-4404-9b50-bad19c607d0b.h5ad",
+    "group": "HCA CxG clean V6 - Immune",
+    "n_cells": 27197,
+    "n_obs_columns": 35
+  },
+  "e48806af-87d1-45ae-843a-c7ee06eac672": {
+    "url": "https://datasets.cellxgene.cziscience.com/e48806af-87d1-45ae-843a-c7ee06eac672.h5ad",
+    "group": "CxG author category field names - Brain_CxG_Author_Category_Filtered",
+    "n_cells": 1679,
+    "n_obs_columns": 38
+  },
+  "e72d0170-3399-4aa0-8c56-da7b4f0ced6b": {
+    "url": "https://datasets.cellxgene.cziscience.com/e72d0170-3399-4aa0-8c56-da7b4f0ced6b.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 836148,
+    "n_obs_columns": 59
+  },
+  "ec22af38-8cea-45ee-9911-c54f16d8cfcd": {
+    "url": "https://datasets.cellxgene.cziscience.com/ec22af38-8cea-45ee-9911-c54f16d8cfcd.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 195632,
+    "n_obs_columns": 67
+  },
+  "f202ae56-b9b6-48bd-87cd-fda4561d9dc9": {
+    "url": "https://datasets.cellxgene.cziscience.com/f202ae56-b9b6-48bd-87cd-fda4561d9dc9.h5ad",
+    "group": "HCA CxG clean V6 - Kidney",
+    "n_cells": 304652,
+    "n_obs_columns": 61
+  },
+  "f697d6db-798b-41b4-95fc-15c739367a4d": {
+    "url": "https://datasets.cellxgene.cziscience.com/f697d6db-798b-41b4-95fc-15c739367a4d.h5ad",
+    "group": "Curated_data_KG_Mo_Group - KG",
+    "n_cells": 178815,
+    "n_obs_columns": 26
+  },
+  "fb995261-472e-4ebc-99b0-d1136e1fad8a": {
+    "url": "https://datasets.cellxgene.cziscience.com/fb995261-472e-4ebc-99b0-d1136e1fad8a.h5ad",
+    "group": "HCA CxG clean V6 - Immune",
+    "n_cells": 7274,
+    "n_obs_columns": 37
+  },
+  "fd9097cf-6b8c-434f-b797-e7d4c38a0911": {
+    "url": "https://datasets.cellxgene.cziscience.com/fd9097cf-6b8c-434f-b797-e7d4c38a0911.h5ad",
+    "group": "HCA CxG clean V6 - Kidney",
+    "n_cells": 68458,
+    "n_obs_columns": 42
+  },
+  "ffb3295a-710f-4759-9291-634af3707848": {
+    "url": "https://datasets.cellxgene.cziscience.com/ffb3295a-710f-4759-9291-634af3707848.h5ad",
+    "group": "HCA CxG clean V6 - Immune",
+    "n_cells": 125117,
+    "n_obs_columns": 33
+  }
+}
