@@ -155,6 +155,19 @@ Run those free, before spending anything:
 python3 -m pytest evals -q
 ```
 
+This is not hypothetical. On the suite's first real run, `read-obs-once` failed — not
+because the skill was wrong but because the skill was *right*: it listed
+`cell_type_ontology_term_id` among the columns it had rejected and why, which SKILL.md
+explicitly asks it to do, and a bare `answer_not_matches` on the column name marked that
+wrong. It was the one rejection check with no both-directions test. Every one has one
+now.
+
+## First run
+
+Run for the first time on **2026-09-29**, against atlas-tools 0.2.0: **5 of 6 cases
+clean, $2.02**. The sixth failed on a bad check of mine, not on the skill — see the
+section above. Re-running the whole suite costs about $2 and takes ten minutes.
+
 ## Brittleness
 
 The cases assert the **content of live third-party datasets**. A CELLxGENE

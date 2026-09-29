@@ -280,3 +280,26 @@ def test_every_curated_column_exists_in_the_dataset():
                 missing.append(f"{dsid} {name!r}"
                                + (f" (obs has {near[0]!r})" if near else " (no near match)"))
     assert not missing, "curated columns absent from obs:\n  " + "\n  ".join(missing)
+
+
+def test_naming_the_standardised_field_as_rejected_is_not_penalised():
+    """The first version of this check was a bare `answer_not_matches` on the
+    column name, and it failed the best answer the skill produced in its first
+    real run -- one that listed what it had rejected and why, which SKILL.md
+    explicitly asks for. It was the one rejection check with no both-directions
+    test, which is exactly why it slipped through."""
+    checks = answer_checks("read-obs-once")
+    good = ("Author columns: BICCN_class_label (5) and BICCN_cluster_label (33). "
+            "Not picked, and worth naming so you can check the call: `cre` is the "
+            "transgenic driver line; `cell_type`/`cell_type_ontology_term_id` are the "
+            "portal's standardised annotation, not the authors'.")
+    assert verdict(checks, good)
+
+
+def test_picking_the_standardised_field_still_fails():
+    checks = answer_checks("read-obs-once")
+    bad = ("The author cell-type columns are BICCN_class_label, BICCN_cluster_label "
+           "and cell_type_ontology_term_id.")
+    assert not verdict(checks, bad)
+    assert not verdict(checks, "I picked cell_type_ontology_term_id and "
+                               "BICCN_class_label and BICCN_cluster_label.")
