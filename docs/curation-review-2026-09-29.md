@@ -4,8 +4,19 @@
 CELLxGENE datasets.
 **Evidence:** `docs/benchmark-results.json`, obs column profiles in
 `evals/fixtures/profiles/`.
-**Ask:** decisions on the six items in "Policy questions", and the corrections in
-"Confirmed errors".
+**Ask:** decisions on the remaining items in "Policy questions". Sections 1 and 2 were
+reviewed on 2026-09-29 and are settled — see the status on each.
+
+> **Status after review.** Sections 1, 2.1 and 2.2 are **accepted and applied**; 2.3 and
+> 2.4 are **declined**. The accepted changes are applied on read in
+> `celltype_column_eval.curation` (`_CORRECTIONS`, `_ADDITIONS`) so the shipped CSVs stay
+> a faithful copy of the CL_KG sheets — **the sheets themselves still need updating**,
+> which is what this document is for. Section 3 is open.
+>
+> Re-scoring against the revised gold set moved the benchmark from Jaccard 0.926 to
+> **0.940** and precision from 0.944 to **0.958**. The frozen predecessor moved by the
+> same amount (0.815 → 0.829), so the delta between them is unchanged at +0.111 — the
+> correction favours neither, which is what a correction should do.
 
 The picker agrees exactly with curation on 62 of 73 datasets. This is about the other
 11. Most are not picker errors — they are columns the picker found that curation does
@@ -17,7 +28,7 @@ Sample values below are taken from the committed obs profiles, spread across the
 
 ## 1. Confirmed errors in the sheets
 
-### 1.1 Four capitalised column names that do not exist in obs
+### 1.1 Four capitalised column names that do not exist in obs — **ACCEPTED, applied**
 
 `ac818189-5c6b-48d2-8bf1-f7511de7b5a9` (HCA CxG clean V6 - Immune)
 
@@ -32,9 +43,12 @@ obs column names are case-sensitive, so as written these name nothing. Anyone us
 sheet to pull columns gets a `KeyError`.
 
 This was the only such fault across all 186 curated cell-type column names, which is a
-good hit rate for hand curation. It is worked around on read in
-`celltype_column_eval.curation._CORRECTIONS`, and a test now fails if another appears —
-but the sheet itself should be fixed.
+good hit rate for hand curation. Corrected on read in
+`celltype_column_eval.curation._CORRECTIONS`, and a test fails if another appears.
+**The sheet itself still needs fixing.**
+
+This alone took the dataset from Jaccard 0.18 to 0.44; the rest of its gap is the
+composite-column question in 3.1.
 
 ---
 
@@ -42,7 +56,7 @@ but the sheet itself should be fixed.
 
 Each of these holds per-cell values that read as cell-type labels, and none is listed.
 
-### 2.1 HLCA pre-harmonisation annotations
+### 2.1 HLCA pre-harmonisation annotations — **ACCEPTED, all seven added**
 
 `b13072bd-9cb6-42ca-9f4f-01252baef273`, `b351804c-293e-4aeb-9c4c-043db67f4540`
 
@@ -64,9 +78,12 @@ These are the contributing studies' own annotations, before harmonisation — ar
 *more* "author-provided" than the harmonised levels that are curated. Between them these
 two datasets account for a large share of the benchmark's remaining precision loss.
 
-**Suggested:** add all seven.
+**Accepted.** All seven added to both datasets. `b13072bd` went from Jaccard 0.32 to
+0.68 and `b351804c` from 0.43 to 0.93; between them this is most of the improvement in
+measured precision. Their residual gap is `scanvi_label` and `transf_ann_level_*`, which
+are section 3.2 and still open.
 
-### 2.2 An author-asserted CL label
+### 2.2 An author-asserted CL label — **ACCEPTED, added**
 
 `443f7fb8-2a27-47c3-98f6-6a603c7a294e` — `putative_CL_label`, 47 values:
 `serous secreting cell`, `mast cell`, `alveolar macrophage`, `basal cell`.
@@ -75,10 +92,11 @@ The authors' own CL assertion, distinct from the portal's `cell_type_ontology_te
 The picker's rules name this case explicitly, so rule and sheet currently disagree and
 one of them is wrong.
 
-**Suggested:** add, unless there is a reason author-asserted ontology labels are
-deliberately excluded — in which case the rule should say so.
+**Accepted.** Added; that dataset now scores 1.00. The picker's rule and the gold set
+agree again, which is the outcome that matters here — they were contradicting each
+other.
 
-### 2.3 A coarse transcriptomic family
+### 2.3 A coarse transcriptomic family — **DECLINED**
 
 `bc474348-6dbd-483a-acb7-f295d1521fa2` — `RNA family`, 9 values: `ET`, `IT`, `Pvalb`,
 `Vip`, `Lamp5`.
@@ -88,7 +106,7 @@ Standard cortical cell classes, sitting one level above the curated
 
 **Suggested:** add.
 
-### 2.4 A compartment column
+### 2.4 A compartment column — **DECLINED**
 
 `db34a663-a726-4404-9b50-bad19c607d0b` — `compartment`, 4 values: `stroma`,
 `endothelium`, `fetal_nephron`.
@@ -96,7 +114,10 @@ Standard cortical cell classes, sitting one level above the curated
 Broad lineage, varying per cell. Curated instead is `cell_state`, which has 2 values and
 is `na` for almost every cell — the less useful of the two is the one listed.
 
-**Suggested:** add `compartment`; consider whether `cell_state` earns its place.
+**Declined** on review: `compartment` is not added and `cell_state` stays. `db34a663`
+therefore remains at Jaccard 0.33 — the picker picks `compartment` (which rule 5 tells it
+to, being a varying lineage column) and skips `cell_state`. A known disagreement, not an
+open defect.
 
 ---
 
@@ -166,11 +187,27 @@ Not curation issues — listed so this document is a full account of the 11 disa
 
 ---
 
-## 5. What changes if these are accepted
+## 5. Where this leaves the numbers
 
-Around half the residual precision loss is items in section 2. If those are added,
-measured precision rises without the picker changing at all — which is the point of
-raising it: the current figure of 0.944 is a lower bound, and is being reported as such.
+Sections 1, 2.1 and 2.2 are applied: **Jaccard 0.940, precision 0.958**, up from 0.926
+and 0.944, with the picker unchanged. Ten datasets still disagree with curation:
+
+| dataset | J | why it still disagrees |
+|---|---|---|
+| `fb995261` | 0.00 | §3.4 open — sub-clusters in a single-population dataset |
+| `db34a663` | 0.33 | §2.4 declined — known disagreement |
+| `5b8941a9` | 0.40 | §3.1 and §3.2 open — composites and matched labels |
+| `ac818189` | 0.44 | §3.1 open — composite `*_source` columns |
+| `bea5aacc` | 0.50 | **picker error** (§4) — numeric cluster index |
+| `bc474348` | 0.67 | §2.3 declined — known disagreement |
+| `b13072bd` | 0.68 | §3.2 open — `scanvi_label`, `transf_ann_level_*` |
+| `18fb432a` | 0.80 | `dev_state`, unreviewed |
+| `f202ae56` | 0.83 | **picker error** (§4) — anatomical `structure` |
+| `b351804c` | 0.93 | §3.2 open — `scanvi_label` |
+
+So of the ten, two are picker errors, two are accepted disagreements, five hang on the
+open policy questions in section 3, and one (`dev_state`) has not been reviewed. Settling
+section 3 would resolve five of them at once, in one direction or the other.
 
 The two errors in section 4 are genuine and will be addressed in the picker's rules
 separately.

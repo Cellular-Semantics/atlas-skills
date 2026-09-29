@@ -125,8 +125,8 @@ portal's `cell_type`. A picked column with 33 values against a `cell_type` with
 ## Traps
 
 - **Show your working.** Benchmarked on 73 CELLxGENE datasets against CL_KG hand
-  curation: mean Jaccard 0.93, precision 0.94, recall 0.96, at least one correct
-  column in 72/73, and exact agreement on 62 of 73. Good, not settled — name the
+  curation: mean Jaccard 0.94, precision 0.96, recall 0.96, at least one correct
+  column in 72/73, and exact agreement on 63 of 73. Good, not settled — name the
   picked columns and their label counts in your answer so the user can see a
   spurious one, rather than presenting the list as fact.
 - **A numeric column with many categories is a cluster index, not a label** —

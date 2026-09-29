@@ -2,19 +2,19 @@
   "overall": {
     "n": 73,
     "jaccard": {
-      "mean": 0.8150456048797794,
-      "sd": 0.2583080572523943,
+      "mean": 0.8288987308453784,
+      "sd": 0.24871540290182387,
       "ci95": [
-        0.7546411691328778,
-        0.8719178082191781
+        0.7699728773989769,
+        0.8834094368340945
       ]
     },
     "precision": {
-      "mean": 0.829505270024376,
-      "sd": 0.2533282373169488,
+      "mean": 0.8433583959899749,
+      "sd": 0.24270415671308881,
       "ci95": [
-        0.7696312699557112,
-        0.8846053489889106
+        0.7851512342500085,
+        0.8956294846705806
       ]
     },
     "recall": {
@@ -463,11 +463,11 @@
     },
     {
       "dsid": "443f7fb8-2a27-47c3-98f6-6a603c7a294e",
-      "n_curated": 6,
+      "n_curated": 7,
       "n_picked": 7,
-      "n_intersect": 6,
-      "jaccard": 0.8571428571428571,
-      "precision": 0.8571428571428571,
+      "n_intersect": 7,
+      "jaccard": 1.0,
+      "precision": 1.0,
       "recall": 1.0,
       "hit": 1,
       "picks": [
@@ -485,12 +485,11 @@
         "celltype_level3",
         "celltype_level3_fullname",
         "lineage_level1",
-        "lineage_level2"
+        "lineage_level2",
+        "putative_CL_label"
       ],
       "missed_by_agent": [],
-      "agent_extras": [
-        "putative_CL_label"
-      ]
+      "agent_extras": []
     },
     {
       "dsid": "460d368c-9147-4716-8674-76bf0795ba85",
@@ -1100,11 +1099,11 @@
     },
     {
       "dsid": "b13072bd-9cb6-42ca-9f4f-01252baef273",
-      "n_curated": 6,
+      "n_curated": 13,
       "n_picked": 19,
-      "n_intersect": 6,
-      "jaccard": 0.3157894736842105,
-      "precision": 0.3157894736842105,
+      "n_intersect": 13,
+      "jaccard": 0.6842105263157895,
+      "precision": 0.6842105263157895,
       "recall": 1.0,
       "hit": 1,
       "picks": [
@@ -1129,22 +1128,22 @@
         "transf_ann_level_5_label"
       ],
       "curated": [
+        "ann_coarse_for_GWAS_and_modeling",
         "ann_finest_level",
         "ann_level_1",
         "ann_level_2",
         "ann_level_3",
         "ann_level_4",
-        "ann_level_5"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "ann_coarse_for_GWAS_and_modeling",
+        "ann_level_5",
         "original_ann_level_1",
         "original_ann_level_2",
         "original_ann_level_3",
         "original_ann_level_4",
         "original_ann_level_5",
-        "original_ann_nonharmonized",
+        "original_ann_nonharmonized"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": [
         "scanvi_label",
         "transf_ann_level_1_label",
         "transf_ann_level_2_label",
@@ -1200,11 +1199,11 @@
     },
     {
       "dsid": "b351804c-293e-4aeb-9c4c-043db67f4540",
-      "n_curated": 6,
+      "n_curated": 13,
       "n_picked": 14,
-      "n_intersect": 6,
-      "jaccard": 0.42857142857142855,
-      "precision": 0.42857142857142855,
+      "n_intersect": 13,
+      "jaccard": 0.9285714285714286,
+      "precision": 0.9285714285714286,
       "recall": 1.0,
       "hit": 1,
       "picks": [
@@ -1224,22 +1223,22 @@
         "scanvi_label"
       ],
       "curated": [
+        "ann_coarse_for_GWAS_and_modeling",
         "ann_finest_level",
         "ann_level_1",
         "ann_level_2",
         "ann_level_3",
         "ann_level_4",
-        "ann_level_5"
-      ],
-      "missed_by_agent": [],
-      "agent_extras": [
-        "ann_coarse_for_GWAS_and_modeling",
+        "ann_level_5",
         "original_ann_level_1",
         "original_ann_level_2",
         "original_ann_level_3",
         "original_ann_level_4",
         "original_ann_level_5",
-        "original_ann_nonharmonized",
+        "original_ann_nonharmonized"
+      ],
+      "missed_by_agent": [],
+      "agent_extras": [
         "scanvi_label"
       ]
     },
@@ -1729,7 +1728,7 @@
     }
   ],
   "_provenance": {
-    "note": "Rescored from the frozen n=73 picks against the curation snapshot as shipped. That snapshot differs from the sheets as originally scored in two ways: a CL_KG typo corrected upstream after the original run, and four capitalisation fixes applied on read (see curation._CORRECTIONS) for names that did not match any obs column. The picks are the original artefact and are untouched. Both figures are kept so the drift is visible rather than absorbed.",
+    "note": "Rescored from the frozen n=73 picks against the gold set as shipped. That gold set differs from the sheets as originally scored in three ways: a CL_KG typo corrected upstream after the original run; four capitalisation fixes for names matching no obs column; and the columns accepted in the 2026-09-29 curation review. The picks are the original artefact and are untouched. Every figure is kept so the drift is visible rather than absorbed.",
     "as_published": {
       "jaccard": 0.8079,
       "precision": 0.8204,
@@ -1745,8 +1744,8 @@
       ]
     },
     "rescored_against_corrected_curation": {
-      "jaccard": 0.815,
-      "precision": 0.8295,
+      "jaccard": 0.8289,
+      "precision": 0.8434,
       "recall": 0.9718
     }
   }

@@ -65,8 +65,8 @@ h5ad-obs obs.parquet --profile text   # free
 
 `author-celltype-columns` ships a sub-agent, `author-celltype-picker`, which
 makes the judgment call in a fresh context from a column profile. Benchmarked on
-73 CELLxGENE datasets against CL_KG hand curation: **Jaccard 0.93, precision
-0.94, recall 0.96**, exact agreement on 62 of 73. See
+73 CELLxGENE datasets against CL_KG hand curation: **Jaccard 0.94, precision
+0.96, recall 0.96**, exact agreement on 63 of 73. See
 [`docs/benchmark.md`](docs/benchmark.md) for what that does and does not mean —
 precision in particular is a lower bound.
 

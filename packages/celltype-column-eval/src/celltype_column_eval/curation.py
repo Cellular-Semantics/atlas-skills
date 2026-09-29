@@ -52,6 +52,42 @@ _CORRECTIONS: dict[str, dict[str, str]] = {
 }
 
 
+#: Cell-type columns the sheets do not list but that demonstrably hold author
+#: cell-type labels, accepted in review on 2026-09-29 (see
+#: docs/curation-review-2026-09-29.md, sections 2.1 and 2.2). Applied on read for
+#: the same reason as _CORRECTIONS: the CSVs stay a faithful copy of the CL_KG
+#: sheets, and the delta from upstream is visible in one place rather than
+#: buried in a diff of ten spreadsheets.
+#:
+#: Every name here is checked against the committed obs profiles by
+#: `evals/test_cases.py`, so an addition that names a nonexistent column fails
+#: the build rather than silently capping that dataset's score.
+#:
+#: NOT added, and still open: `scanvi_label` and `transf_ann_level_*` on the two
+#: HLCA datasets are model predictions rather than author assertions, and want a
+#: `Content` value of their own -- section 3.2 of the review.
+_HLCA_PRE_HARMONISATION = [
+    "ann_coarse_for_GWAS_and_modeling",
+    "original_ann_level_1",
+    "original_ann_level_2",
+    "original_ann_level_3",
+    "original_ann_level_4",
+    "original_ann_level_5",
+    "original_ann_nonharmonized",
+]
+
+_ADDITIONS: dict[str, list[str]] = {
+    # HLCA-derived lung atlases: the sheets curate the harmonised ann_level_*
+    # hierarchy but not the contributing studies' own annotations, which are
+    # arguably the more "author-provided" of the two.
+    "b13072bd-9cb6-42ca-9f4f-01252baef273": _HLCA_PRE_HARMONISATION,
+    "b351804c-293e-4aeb-9c4c-043db67f4540": _HLCA_PRE_HARMONISATION,
+    # An author-asserted CL label (47 values: 'serous secreting cell', 'mast
+    # cell'), distinct from the portal's cell_type_ontology_term_id.
+    "443f7fb8-2a27-47c3-98f6-6a603c7a294e": ["putative_CL_label"],
+}
+
+
 def parse_curation(curation_dir: str | Path | None = None, *,
                    filter_celltype: bool = True) -> dict[str, dict]:
     """Parse the curation sheets into ``{dataset_id: {...}}``.
@@ -96,6 +132,11 @@ def parse_curation(curation_dir: str | Path | None = None, *,
                 entry["groups"].add(group)
                 entry["columns"].add(col)
                 entry["rows"] += 1
+
+    if filter_celltype:
+        for dsid, extra in _ADDITIONS.items():
+            if dsid in by_dataset:
+                by_dataset[dsid]["columns"].update(extra)
 
     return {dsid: {"groups": sorted(v["groups"]), "columns": sorted(v["columns"]),
                    "rows": v["rows"]}

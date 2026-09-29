@@ -9,22 +9,28 @@ annotations, measured against hand curation.
 
 | | this skill | frozen predecessor, same datasets |
 |---|---|---|
-| mean Jaccard | **0.926** (95% CI 0.88–0.97) | 0.815 |
-| mean precision | 0.944 (0.90–0.98) | 0.830 |
+| mean Jaccard | **0.940** (95% CI 0.90–0.98) | 0.829 |
+| mean precision | 0.958 (0.92–0.99) | 0.843 |
 | mean recall | 0.964 (0.92–0.99) | 0.972 |
 | hit rate (≥1 correct column) | 72 / 73 | 72 / 73 |
 
-Exact agreement with curation on **62 of 73**. The full per-dataset breakdown — what was
+Exact agreement with curation on **63 of 73**. The full per-dataset breakdown — what was
 picked, what was curated, what was missed — is in
 [`benchmark-results.json`](benchmark-results.json), which also records the plugin
 version, commit and a hash of the agent definition that produced the picks.
 
-**Precision is a lower bound.** Reviewing the 11 imperfect datasets, most of the
-"spurious" picks are columns that do hold author cell-type labels and are simply not in
-the curation — seven pre-harmonisation HLCA annotations, an author-asserted CL label, a
-transcriptomic family. These are raised in
-[`curation-review-2026-09-29.md`](curation-review-2026-09-29.md). Two picks are genuine
-errors: a numeric cluster index, and an anatomical structure column.
+**Precision is still a lower bound.** The figures above already include the gold-set
+corrections accepted in review on 2026-09-29 — four column names that matched nothing in
+obs, seven pre-harmonisation HLCA annotations, and an author-asserted CL label. That
+took Jaccard from 0.926 to 0.940 and precision from 0.944 to 0.958 with the picker
+unchanged, and moved the predecessor by exactly the same amount, so the gap between them
+is unaffected.
+
+Of the ten datasets still disagreeing, **two are genuine picker errors** — a numeric
+cluster index, and an anatomical `structure` column — two are accepted disagreements,
+five hang on open questions about composite and model-predicted labels, and one is
+unreviewed. See [`curation-review-2026-09-29.md`](curation-review-2026-09-29.md), which
+lists all ten and what each is waiting on.
 
 ## What is measured
 
