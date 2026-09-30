@@ -25,6 +25,13 @@ with it.
 Inspecting and annotating what was retrieved is **phase 2**, deliberately
 postponed — including what it does and where it lives — and will be its own PR.
 
+For boundary purposes only, phase 2 is expected to be **limited inspection of
+contents by a cheap agent, plus choosing what to inspect**. That is recorded
+here not to design it but because it constrains one thing about this phase: the
+choosing has to be possible from the listing alone, without opening anything.
+See "What phase 1 owes phase 2" below. Everything else about phase 2 — what it
+looks for, what it writes, where it lives — is open.
+
 Status: planned, nothing written. Branch `feature/supplement-retrieval`, cut
 from `refactor/per-skill-plugins` (PR #3), which it depends on.
 
@@ -110,6 +117,42 @@ will ever exist for a supplement — publishers write things like "Supplementary
 Tables 1–40" or "Source Data Figs. 2 and 4", which no amount of looking at the
 bytes would recover. Capturing it now is cheap and it is not annotation. What
 it is *for* is a phase-2 question.
+
+## What phase 1 owes phase 2
+
+Phase 2 chooses what to inspect and then inspects a little of it with a cheap
+agent. Choosing is the part that reaches back into this phase: **it has to be
+possible from the record alone, with nothing opened.** Inspection is the
+expensive step, so anything that narrows it before a file is read pays for
+itself, and a selection that has to open forty workbooks to find out which one
+matters has already lost.
+
+The fields a selection can run on are exactly the ones this phase records
+anyway — so this is a constraint that happens to already be satisfied, which is
+worth stating rather than discovering later:
+
+| what a selector needs | where it comes from |
+|---|---|
+| what the authors say a file is | `description` + `description_source` |
+| what kind of thing it is | `media_type` |
+| whether it is cheap or costly to open | `size_bytes` |
+| what is inside an archive, without unpacking it | `members` — names, media types, sizes |
+| whether the bytes are even here | `status`, and `deferred` where a fetch was declined on size |
+
+Two obligations follow, and both are cheap now and expensive to retrofit:
+
+- **Record the member table even when nothing is extracted.** A zip's central
+  directory gives names, sizes and media types for free, and it is the only
+  thing that turns "one opaque 445 MB bundle" into a list a selector can reason
+  about. Unpacking is a separate decision from listing.
+- **Keep the caption attached to the file, not the paper.** A per-paper blob of
+  captions cannot be selected on.
+
+What phase 1 must *not* do for phase 2 is pre-judge. No relevance field, no
+content-type guess, no "probably a DEG table" — those are the selection, and
+putting a half-made one in a retrieval record would have phase 2 inherit a
+verdict nobody stands behind. The upstream schema hangs `relevance` on
+`SupplementFile`; this phase deliberately omits it.
 
 ## The waterfall
 
@@ -375,10 +418,12 @@ schema change is breaking, which the `schema_version` bump states.
 
 ## Open questions
 
-1. **Focus options are phase 2**, but if the retrieval listing should already
-   record enough for a later focus choice — the caption, the media type, the
-   size — then the schema needs to carry those from the start. I believe it
-   does; worth confirming against a phase-2 sketch before tagging.
+1. ~~Does the listing record enough for a later focus choice?~~ **Resolved.**
+   Phase 2 is limited inspection by a cheap agent plus choosing what to
+   inspect, and the inputs a chooser needs are the fields this phase records
+   anyway — see "What phase 1 owes phase 2". The two obligations that came out
+   of it: record an archive's member table even when nothing is extracted, and
+   keep each caption on its file rather than in a per-paper blob.
 2. **Does `report` belong per-paper or per-store?** Both are useful; a store-wide
    coverage table is probably what a corpus needs first.
 3. **Is a supplement worth a digest if it is never read?** Yes for change
