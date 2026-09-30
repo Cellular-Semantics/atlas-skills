@@ -51,22 +51,28 @@ Getting it wrong does not throw — it quietly produces a mature organ term for 
 embryo, which is the kind of wrong that validates.
 
 ```sh
-ONTOMAP="uvx --from git+https://github.com/Cellular-Semantics/atlas-skills@pkg-ontomap--v0.1.0#subdirectory=packages/ontomap ontomap"
+# A function, not a variable: zsh does not word-split an unquoted `$VAR`, so
+# `ONTOMAP="uvx --from ..."` followed by `$ONTOMAP extract` fails there with
+# "no such file or directory" naming the whole command line.
+ontomap() {
+  uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@pkg-ontomap--v0.1.0#subdirectory=packages/ontomap" \
+      ontomap "$@"
+}
 
 # 1. declared columns out of the sample table, units folded in, scope flagged
-$ONTOMAP extract samples.csv --config config.json --out extracted.json
+ontomap extract samples.csv --config config.json --out extracted.json
 
 # 2. the ladders, in dependency order. Tissue runs last and sees the rest.
-$ONTOMAP map extracted.json --config config.json --out mapped.json
+ontomap map extracted.json --config config.json --out mapped.json
 
 # 3. a dossier per unresolved value, biggest by sample count first
-$ONTOMAP dossier mapped.json --config config.json --limit 50 --out dossiers.json
+ontomap dossier mapped.json --config config.json --limit 50 --out dossiers.json
 
 # 4. -- you read dossiers.json and write judgements.json (schema below) --
 
-$ONTOMAP fold mapped.json --judgements judgements.json --out folded.json
-$ONTOMAP validate folded.json          # exit 2 on any failed gate: this blocks
-$ONTOMAP evaluate folded.json --gold gold.json
+ontomap fold mapped.json --judgements judgements.json --out folded.json
+ontomap validate folded.json          # exit 2 on any failed gate: this blocks
+ontomap evaluate folded.json --gold gold.json
 ```
 
 The first `map` run fetches every UBERON label and synonym once (~30 s) and
