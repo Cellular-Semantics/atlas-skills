@@ -1,7 +1,7 @@
 {
   "name": "atlas-tools",
-  "version": "0.3.0",
-  "description": "Convenience bundle: installs both h5ad tools together — read per-cell obs out of a remote h5ad over range requests, and find the author cell-type annotation columns in it. Carries no skills of its own; install the individual plugins instead if you only want one.",
+  "version": "0.4.0",
+  "description": "Convenience bundle: installs both h5ad tools together — read per-cell obs out of a remote h5ad over range requests, and find the author cell-type, tissue, developmental-stage and disease columns in it. Carries no skills of its own; install the individual plugins instead if you only want one.",
   "author": {
     "name": "Cellular Semantics",
     "url": "https://github.com/Cellular-Semantics"
@@ -17,6 +17,6 @@
   ],
   "dependencies": [
     "remote-h5ad-obs@atlas-skills",
-    "author-celltype-columns@atlas-skills"
+    "author-annotation-columns@atlas-skills"
   ]
 }

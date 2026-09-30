@@ -22,7 +22,7 @@ transfers ~27 MB in ~8-13 s.
 ## Command
 
 ```sh
-uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@v0.2.0#subdirectory=packages/h5ad-obs" \
+uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@v0.3.0#subdirectory=packages/h5ad-obs" \
     h5ad-obs <url> [options]
 ```
 
@@ -42,7 +42,7 @@ that added `--profile`.
 - `--no-preflight` — skip the range-support check.
 - `--profile [json|text]` — print a per-column summary (kind, cardinality,
   spread sample values) instead of reading obs. Also works on an obs table
-  already on disk, which costs nothing. The `author-celltype-columns` skill is
+  already on disk, which costs nothing. The `author-annotation-columns` skill is
   built on it, and installs separately.
 
 stdout is a JSON summary — row and column counts, skipped columns, and byte

@@ -20,7 +20,7 @@ Two stages, deliberately split:
 2. **Pick**, by dispatching the published `author-celltype-picker` sub-agent on
    each cached profile. This is the part under test.
 
-Scoring uses `celltype-column-eval`, so the numbers are comparable to the frozen
+Scoring uses `obs-column-eval`, so the numbers are comparable to the frozen
 n=73 baseline rather than to a fresh definition of correctness.
 """
 from __future__ import annotations
@@ -56,7 +56,7 @@ PROVENANCE = PROFILES / "PROVENANCE.json"
 #: cached locally, so an interrupted run costs only what is outstanding.
 PICKS_CACHE = HERE / ".cache" / "picks"
 
-TAG = "v0.2.0"
+TAG = "v0.3.0"
 GIT = "git+https://github.com/Cellular-Semantics/atlas-skills"
 
 
@@ -75,7 +75,7 @@ def _cli(env_var: str, package: str, entrypoint: str) -> list[str]:
 
 
 H5AD_OBS = _cli("H5AD_OBS_CMD", "h5ad-obs", "h5ad-obs")
-EVAL_CLI = _cli("CELLTYPE_COLUMN_EVAL_CMD", "celltype-column-eval", "celltype-column-eval")
+EVAL_CLI = _cli("OBS_COLUMN_EVAL_CMD", "obs-column-eval", "obs-column-eval")
 
 PICK_PROMPT = (
     "Use the author-celltype-picker subagent on the obs column profile at {path}. "
@@ -145,15 +145,15 @@ def _picker_provenance() -> dict:
     """
     out = {}
     listing = _run(["claude", "plugin", "list"]).stdout
-    match = re.search(r"author-celltype-columns@\S+\s+Version:\s*(\S+)\s+Scope:\s*(\S+)",
+    match = re.search(r"author-annotation-columns@\S+\s+Version:\s*(\S+)\s+Scope:\s*(\S+)",
                       listing, re.DOTALL)
     if match:
-        out["plugin"] = (f"author-celltype-columns {match.group(1)} "
+        out["plugin"] = (f"author-annotation-columns {match.group(1)} "
                          f"({match.group(2)} scope)")
     sha = _run(["git", "rev-parse", "--short", "HEAD"], cwd=HERE).stdout.strip()
     if sha:
         out["commit"] = sha
-    agent = HERE.parent / "plugins/author-celltype-columns/agents/author-celltype-picker.md"
+    agent = HERE.parent / "plugins/author-annotation-columns/agents/author-celltype-picker.md"
     if agent.exists():
         import hashlib
         out["agent_sha256"] = hashlib.sha256(agent.read_bytes()).hexdigest()[:12]
@@ -163,7 +163,7 @@ def _picker_provenance() -> dict:
 def datasets(all_: bool, only: list[str]) -> dict[str, dict]:
     out = _run([*EVAL_CLI, "datasets", *(["--all"] if all_ else [])])
     if out.returncode:
-        sys.exit(f"celltype-column-eval failed:\n{out.stderr}")
+        sys.exit(f"obs-column-eval failed:\n{out.stderr}")
     chosen = json.loads(out.stdout)
     if only:
         missing = [d for d in only if d not in chosen]
@@ -191,6 +191,62 @@ def profile(dsid: str, entry: dict, *, force: bool) -> pathlib.Path | None:
         return None
     path.write_text(out.stdout)
     return path
+
+
+def write_provenance(profiles: dict, unreadable: list[str]) -> None:
+    """Record what produced the committed profiles, right after producing them.
+
+    This used to be maintained by hand, which meant a regeneration left it
+    describing the previous reader while the .txt files described the new one --
+    and the staleness check reads exactly this file. Anything that must be kept
+    in sync with a generated artefact should be generated with it.
+
+    Human-written `missing` reasons are carried forward for datasets that are
+    still missing; a newly failing one gets a placeholder worth replacing.
+    """
+    import hashlib
+
+    old = json.loads(PROVENANCE.read_text()) if PROVENANCE.exists() else {}
+    old_missing = old.get("missing", {})
+
+    version = _run([*H5AD_OBS, "--version"])
+    captured_by = (version.stdout.strip() or version.stderr.strip()) or "unknown"
+    commit = _run(["git", "rev-parse", "--short", "HEAD"]).stdout.strip() or "unknown"
+
+    entries, total = {}, 0
+    for dsid, path in sorted(profiles.items()):
+        text = path.read_text()
+        header = text.splitlines()[1]        # "<n> rows x <m> columns; <k> rows scanned..."
+        n_rows, n_cols = int(header.split()[0]), int(header.split()[3])
+        n_scanned = int(header.split("; ")[1].split()[0])
+        size = path.stat().st_size
+        total += size
+        entries[dsid] = {
+            "n_rows": n_rows, "n_columns": n_cols, "n_scanned": n_scanned,
+            "bytes": size,
+            "sha256": hashlib.sha256(text.encode()).hexdigest()[:16],
+        }
+
+    PROVENANCE.write_text(json.dumps({
+        "what": old.get("what", "Text obs column profiles for the benchmark test "
+                        "set, captured once and committed so re-scoring the picker "
+                        "needs no network. Regenerate with `python3 evals/benchmark.py "
+                        "--all --profiles-only --force-profiles`."),
+        "captured": time.strftime("%Y-%m-%d"),
+        "captured_by": captured_by,
+        "commit": commit,
+        "n_datasets": len(entries),
+        "total_bytes": total,
+        "note": old.get("note", "The profile FORMAT is coupled to the h5ad-obs "
+                        "version above. If that changes what the picker sees -- new "
+                        "fields, different sampling, changed constant detection -- "
+                        "these must be regenerated and the benchmark re-scored. "
+                        "benchmark.py warns when the installed version differs."),
+        "missing": {d: old_missing.get(d, "profile failed at capture time; reason "
+                                          "not recorded -- rerun and replace this.")
+                    for d in sorted(unreadable)},
+        "profiles": entries,
+    }, indent=2) + "\n")
 
 
 def pick(dsid: str, path: pathlib.Path, timeout: int, *, force: bool = False,
@@ -286,6 +342,15 @@ def main() -> int:
                 print(f"  {dsid}  {cells:>9} cells  {path.stat().st_size:>6} B")
             else:
                 unreadable.append(dsid)
+    if args.force_profiles and args.all:
+        # Only a full run can rewrite the manifest: a partial one would drop
+        # every dataset it did not look at.
+        write_provenance(profiles, unreadable)
+        print(f"  provenance rewritten: {PROVENANCE}")
+    elif args.force_profiles:
+        print("  ! provenance NOT rewritten -- it describes the whole test set, so "
+              "only --all can regenerate it.")
+
     if args.profiles_only:
         print(f"\n{len(profiles)} profiles under {PROFILES}")
         if args.force_profiles:
@@ -333,6 +398,9 @@ def main() -> int:
     result = json.loads(scored.stdout)
     (out_dir / "scores.json").write_text(scored.stdout)
 
+    # This benchmark is cell-type only: it exists to stay comparable to the
+    # frozen n=73, and the frozen picks speak to no other field type.
+    result = result["by_field_type"]["cell_type"]
     overall = result["overall"]
     print(f"\n== n={overall['n']} ==")
     for metric in ("jaccard", "precision", "recall"):

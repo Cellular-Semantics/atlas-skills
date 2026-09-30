@@ -7,7 +7,7 @@ Works against any host honouring HTTP range requests — GCS, S3, Sanger COG,
 CELLxGENE's CDN, plain static hosts.
 
 ```sh
-uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@v0.2.0#subdirectory=packages/h5ad-obs" \
+uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@v0.3.0#subdirectory=packages/h5ad-obs" \
     h5ad-obs https://datasets.cellxgene.cziscience.com/<id>.h5ad --list-columns
 ```
 
@@ -16,9 +16,9 @@ stdout is a JSON summary including byte accounting; the obs table itself goes to
 
 ## Profiling
 
-`--profile` prints a per-column summary — storage kind, cardinality, and sample
-values — instead of reading obs. It is what an agent needs to decide *what a
-column is*.
+`--profile` prints a per-column summary — storage kind, cardinality, whether the
+column is a measurement, and sample values — instead of reading obs. It is what
+an agent needs to decide *what a column is*.
 
 ```sh
 h5ad-obs <url> --out obs.parquet       # one remote read
@@ -27,10 +27,11 @@ h5ad-obs <url> --profile               # JSON, straight off the wire
 ```
 
 ```
-name | kind | n_unique | sample values
-BICCN_cluster_label | categorical[33 cats] | 33 | 'Vip', 'L4', 'Ndnf', 'Pvalb', ...
-major_dissection | categorical[1 cats] | 1 (constant) | 'V1', 'V1', 'V1', ...
-total_reads | array int64 | 1679 | 23770190, 18388503, 20515208, ...
+name | kind | n_unique | measurement | sample values
+BICCN_cluster_label | categorical[33 cats] | 33 |  | 'Vip', 'L4', 'Ndnf', 'Pvalb', ...
+major_dissection | categorical[1 cats] | 1 (constant) |  | 'V1', 'V1', 'V1', ...
+total_reads | array int64 | ~1679 | continuous 1.1e6..4.2e7 | 23770190, 18388503, ...
+Gestational_age_pcw | categorical[29 cats] | 29 | bounded 5..21 (97% numeric) | 'Not applicable', '6', '11', ...
 ```
 
 Sample values are **spread across the table, not taken from the head**: obs is
@@ -38,6 +39,34 @@ routinely sorted by donor or cluster, and the first twenty rows of a sorted
 column show one value. `(constant)` means the cardinality is known exactly and
 is one — always determinable for a categorical, and for anything else only when
 every row was scanned (`--scan-rows`, default 2000).
+
+### Measurement
+
+The fourth column is blank unless most of the column's distinct values parse as
+numbers — strings included, because an age routinely arrives as numerals in a
+category table beside a sentinel (`'6'`, `'11'`, `'Not applicable'`), and a test
+that only looked at the dtype would call that text.
+
+`bounded` means the distinct count does not grow with the cell count, so the
+column is a property of a donor or a sample; `continuous` means it has roughly
+as many distinct values as rows, which is what a per-cell quantity looks like.
+That is the cheap thing separating a measure of age from a QC score — both are
+just numbers, but one has forty distinct values and the other has one per cell.
+
+It is a **filter, not a verdict**, and it errs in both directions. Batch
+indices, cluster indices and ordinal scores are all bounded numerics; the name
+and the range still decide. Going the other way, an age is `continuous` when
+there are enough donors to give one distinct value per cell — a Patch-seq set
+with one animal per cell, or a 2.3M-cell atlas. Measured over 73 CELLxGENE
+datasets: 133 bounded numeric columns were not donor-level facts, and 3 of 315
+continuous ones were real ages.
+
+Below roughly 500 rows the test weakens further, because an absolute floor (50
+distinct values) has to let small tables through.
+
+For a categorical the range is taken from the declared category table, so a
+category too rare to appear in the scan is still in it. For anything else it
+comes from the scanned rows.
 
 Profiling a URL reads less than a full obs read, but not by much, so it is
 rarely worth a second trip to the network:

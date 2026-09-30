@@ -1,7 +1,12 @@
 # The author cell-type column benchmark
 
-How well `author-celltype-columns` identifies the obs columns holding author cell-type
+How well `author-annotation-columns` identifies the obs columns holding author cell-type
 annotations, measured against hand curation.
+
+**Cell type only.** The same skill also picks tissue, developmental stage and disease,
+via a second agent that is *not* measured here and has no comparable number — see
+[`sample-fields.md`](sample-fields.md). Do not carry the figures below across to those
+field types.
 
 ## Latest result
 
@@ -49,7 +54,7 @@ alongside, because "found at least one" is unimpressive when a dataset has four
 cell-type columns out of forty.
 
 The gold set, the metrics and the frozen baseline all ship in
-[`packages/celltype-column-eval`](../packages/celltype-column-eval), so the numbers are
+[`packages/obs-column-eval`](../packages/obs-column-eval), so the numbers are
 reproducible rather than quoted.
 
 ## Reproducing it

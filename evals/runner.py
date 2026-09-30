@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the eval cases against the installed author-celltype-columns plugin.
+"""Run the eval cases against the installed author-annotation-columns plugin.
 
 This is scaffolding, not a product: `claude plugin eval` does this properly
 (including a no-plugin ablation arm and LLM graders) but is in early access and
@@ -106,10 +106,10 @@ def invoke(prompt: str, spec: dict, transcript_path: pathlib.Path) -> Run:
 #: Named explicitly rather than taken as "the repo's plugin": each skill now
 #: installs on its own, so a user with a different one installed would
 #: otherwise satisfy a guard that checks nothing relevant.
-REQUIRED_PLUGIN = "author-celltype-columns"
+REQUIRED_PLUGIN = "author-annotation-columns"
 
 #: What the cases need to be present. Bump alongside that plugin's version.
-EXPECTED_PLUGIN_VERSION = "0.3.0"
+EXPECTED_PLUGIN_VERSION = "0.4.0"
 
 INSTALL_HINT = (
     "  claude plugin marketplace add Cellular-Semantics/atlas-skills --scope user\n"

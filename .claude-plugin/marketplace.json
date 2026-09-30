@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Portal-agnostic agentic skills for working with published single-cell atlases and the literature behind them. Each skill installs on its own.",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   "plugins": [
     {
@@ -15,9 +15,9 @@
       "description": "Read the per-cell obs table out of a remote h5ad over HTTP range requests, without downloading the expression matrix."
     },
     {
-      "name": "author-celltype-columns",
-      "source": "./plugins/author-celltype-columns",
-      "description": "Find which obs columns hold the authors' own cell-type annotations, as opposed to the portal's standardised cell_type, cluster indices and QC."
+      "name": "author-annotation-columns",
+      "source": "./plugins/author-annotation-columns",
+      "description": "Find which obs columns hold the authors' own cell-type, tissue, developmental-stage and disease annotations, as opposed to the portal's standardised fields, cluster indices and QC."
     },
     {
       "name": "paper-access",
@@ -27,7 +27,7 @@
     {
       "name": "atlas-tools",
       "source": "./plugins/atlas-tools",
-      "description": "Convenience bundle: both h5ad tools together. Carries no skills of its own."
+      "description": "Convenience bundle: both h5ad plugins together. Carries no skills of its own."
     }
   ]
 }

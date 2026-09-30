@@ -7,6 +7,10 @@ read the result correctly and avoid the documented traps.
 
 Two arms, answering two different questions.
 
+Cases are tagged by field type as well as by skill: `--tag tissue`,
+`--tag development_stage`, `--tag disease` select the cases added for the
+sample-field picker, `--tag picker` selects every picking case.
+
 ## `runner.py` — does the skill behave
 
 ```sh
@@ -23,14 +27,14 @@ Needs the plugin installed **at user scope** — these cases test the
 
 ```sh
 claude plugin marketplace add Cellular-Semantics/atlas-skills --scope user
-claude plugin install author-celltype-columns@atlas-skills --scope user
+claude plugin install author-annotation-columns@atlas-skills --scope user
 ```
 
 Each case runs in a fresh temporary directory, so nothing but the user-scope
 plugin is in scope: no project `CLAUDE.md`, no `.claude/skills`. **A project- or
 local-scope install is therefore invisible here** — it lives in the repo and the
 temp directory does not — so `runner.py` checks the scope and the version, not
-just that something called `author-celltype-columns` exists. Matching on the name alone
+just that something called `author-annotation-columns` exists. Matching on the name alone
 waves through a setup whose cases would all fail for the wrong reason.
 
 Testing the published pin is the point, not an inconvenience: half of what these
@@ -63,10 +67,15 @@ python3 evals/benchmark.py --all           # all 74; slow, not free
 python3 evals/benchmark.py --profiles-only # refresh the profile cache, no agent
 ```
 
-Scored against the CL_KG gold set in `packages/celltype-column-eval`, and
-reported next to the frozen n=73 picker on the same datasets, so a change is
-visible as a delta rather than an absolute. See
+**Cell type only.** Scored against the CL_KG gold set in
+`packages/obs-column-eval`, and reported next to the frozen n=73 picker on the
+same datasets, so a change is visible as a delta rather than an absolute. See
 [`docs/benchmark.md`](../docs/benchmark.md).
+
+There is no equivalent arm for tissue, stage and disease yet — the gold set is
+one dataset. `obs-column-eval candidates evals/fixtures/profiles` narrows what
+to curate next; [`docs/sample-fields.md`](../docs/sample-fields.md) says what
+would have to happen to turn it into a number.
 
 Two stages, both cached under `evals/.cache/`. Profiling is deterministic and
 needs no agent, so a rerun costs no bandwidth; picks are cached too, so a spend
@@ -89,16 +98,16 @@ CLIs. And it inherits the cwd rather than isolating to a temp directory, so a
 
 ```sh
 claude plugin marketplace add "$PWD" --scope local
-claude plugin install author-celltype-columns@atlas-skills --scope local
+claude plugin install author-annotation-columns@atlas-skills --scope local
 
 H5AD_OBS_CMD="packages/h5ad-obs/.venv/bin/h5ad-obs" \
-CELLTYPE_COLUMN_EVAL_CMD="packages/celltype-column-eval/.venv/bin/celltype-column-eval" \
+OBS_COLUMN_EVAL_CMD="packages/obs-column-eval/.venv/bin/obs-column-eval" \
   python3 evals/benchmark.py --all --record docs/benchmark-results.json
 ```
 
 Local scope writes to `.claude/settings.local.json`, which is gitignored, and
 does not disturb whatever is installed at user scope. Remove it afterwards with
-`claude plugin uninstall author-celltype-columns@atlas-skills --scope local`.
+`claude plugin uninstall author-annotation-columns@atlas-skills --scope local`.
 
 So the accuracy number can be measured, reviewed and landed *before* a release
 is tagged; only the behaviour cases have to wait for one.

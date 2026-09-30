@@ -141,9 +141,9 @@ def test_plugin_list_is_parsed_into_name_version_scope(monkeypatch):
     bullet = "\u276f"  # the glyph the CLI actually prints, kept out of the source
     listing = "\n".join([
         "Installed plugins:", "",
-        f"  {bullet} author-celltype-columns@atlas-skills",
+        f"  {bullet} author-annotation-columns@atlas-skills",
         "    Version: 0.1.0", "    Scope: user", "    Status: enabled", "",
-        f"  {bullet} author-celltype-columns@atlas-skills",
+        f"  {bullet} author-annotation-columns@atlas-skills",
         "    Version: 0.2.0", "    Scope: local", "    Status: enabled", ""])
     monkeypatch.setattr(sp, "run", lambda *a, **k: sp.CompletedProcess(a, 0, listing, ""))
     rows = runner.installed_plugins()
@@ -154,7 +154,7 @@ def test_guard_rejects_a_local_only_install(monkeypatch):
     import runner
 
     monkeypatch.setattr(runner, "installed_plugins", lambda: [
-        {"name": "author-celltype-columns@atlas-skills", "version": "0.2.0", "scope": "local"}])
+        {"name": "author-annotation-columns@atlas-skills", "version": "0.2.0", "scope": "local"}])
     with pytest.raises(SystemExit) as exc:
         runner.check_plugin_installed()
     assert "temp directory" in str(exc.value)
@@ -166,7 +166,7 @@ def test_guard_rejects_a_stale_user_install(monkeypatch):
     import runner
 
     monkeypatch.setattr(runner, "installed_plugins", lambda: [
-        {"name": "author-celltype-columns@atlas-skills", "version": "0.1.0", "scope": "user"}])
+        {"name": "author-annotation-columns@atlas-skills", "version": "0.1.0", "scope": "user"}])
     with pytest.raises(SystemExit) as exc:
         runner.check_plugin_installed()
     assert runner.EXPECTED_PLUGIN_VERSION in str(exc.value)
@@ -176,7 +176,7 @@ def test_guard_accepts_the_expected_user_install(monkeypatch):
     import runner
 
     monkeypatch.setattr(runner, "installed_plugins", lambda: [
-        {"name": "author-celltype-columns@atlas-skills",
+        {"name": "author-annotation-columns@atlas-skills",
          "version": runner.EXPECTED_PLUGIN_VERSION, "scope": "user"}])
     runner.check_plugin_installed()
 
@@ -257,14 +257,14 @@ def test_every_curated_column_exists_in_the_dataset():
     """The gold set names obs columns; if one is not there, no picker can ever
     match it and the dataset's score is capped below 1 for no reason. Four such
     names were found on the first full run -- all capitalisation slips, now
-    corrected on read in `celltype_column_eval.curation`. This fails if another
+    corrected on read in `obs_column_eval.curation`. This fails if another
     appears, in the curation or after a profile regeneration."""
     import sys
 
     sys.path.insert(0, str(pathlib.Path(__file__).parent.parent
-                           / "packages/celltype-column-eval/src"))
+                           / "packages/obs-column-eval/src"))
     import benchmark
-    from celltype_column_eval import full, parse_curation
+    from obs_column_eval import full, parse_curation
 
     curation = parse_curation()
     missing = []
