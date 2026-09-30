@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Portal-agnostic agentic skills for working with published single-cell atlases and the literature behind them. Each skill installs on its own.",
-    "version": "0.4.0"
+    "version": "0.5.0"
   },
   "plugins": [
     {
@@ -23,6 +23,11 @@
       "name": "paper-access",
       "source": "./plugins/paper-access",
       "description": "Retrieve a list of papers as tagged article XML where it can be had, probe how much of each one a search index holds, and say honestly which papers nobody can reach."
+    },
+    {
+      "name": "ontology-mapping",
+      "source": "./plugins/ontology-mapping",
+      "description": "Map species, sex, developmental stage, disease and tissue strings onto NCBITaxon, PATO, HsapDv, MONDO and UBERON for human atlases, using the sample's age and sex to decide the tissue term, and refusing rather than guessing."
     },
     {
       "name": "atlas-tools",

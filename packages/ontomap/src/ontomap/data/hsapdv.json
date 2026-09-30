@@ -1,0 +1,2182 @@
+{
+ "built": "2026-09-30",
+ "source": "ubergraph",
+ "terms": {
+  "HsapDv:0000000": {
+   "definition": "A spatiotemporal region encompassing some part of the life cycle of an organism.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "life cycle stage",
+   "start_dpf": null,
+   "synonyms": [
+    "developmental stage"
+   ]
+  },
+  "HsapDv:0000001": {
+   "definition": "Temporal interval that defines human life from the prenatal stage until late adulthood.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "life cycle",
+   "start_dpf": 0.0,
+   "synonyms": []
+  },
+  "HsapDv:0000002": {
+   "definition": "Prenatal stage that starts with fertilization and ends with a fully formed embryo, before undergoing last development during the fetal stage.",
+   "end_dpf": 56.0,
+   "granular": false,
+   "label": "embryonic stage",
+   "start_dpf": 0.0,
+   "synonyms": []
+  },
+  "HsapDv:0000003": {
+   "definition": "Embryonic stage defined by a fertilized oocyte and presence of pronuclei.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 01",
+   "start_dpf": 0.0,
+   "synonyms": [
+    "CS01"
+   ]
+  },
+  "HsapDv:0000004": {
+   "definition": "Early stage of Carnegie stage 02 consisting of division of cells in the early embryo.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "cleavage stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000005": {
+   "definition": "Embryonic stage during which cell division occurs with reduction in cytoplasmic volume, and formation of inner and outer cell mass.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 02",
+   "start_dpf": 2.5,
+   "synonyms": [
+    "CS02"
+   ]
+  },
+  "HsapDv:0000006": {
+   "definition": "Embryonic stage that is an early stage of embryonic development in animals and is produced by cleavage of a fertilized ovum, with formation of a central fluid-filled cavity called the blastocoel.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "blastula stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000007": {
+   "definition": "Blastula stage with the loss of the zona pellucida and the definition of a free blastocyst.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 03",
+   "start_dpf": 4.5,
+   "synonyms": [
+    "CS03"
+   ]
+  },
+  "HsapDv:0000008": {
+   "definition": "Blastula stage during which the blastocyst becomes attached.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 04",
+   "start_dpf": 5.5,
+   "synonyms": [
+    "CS04"
+   ]
+  },
+  "HsapDv:0000009": {
+   "definition": "Blastula stage during which implantation occurs.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 05",
+   "start_dpf": 7.0,
+   "synonyms": [
+    "CS04"
+   ]
+  },
+  "HsapDv:0000010": {
+   "definition": "Embryonic stage defined by a complex and coordinated series of cellular movements that occurs at the end of cleavage.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "gastrula stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000011": {
+   "definition": "Gastrula stage during which the extraembryonic mesoderm and primitive streak appear.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 06",
+   "start_dpf": 13.0,
+   "synonyms": [
+    "CS06"
+   ]
+  },
+  "HsapDv:0000012": {
+   "definition": "Embryonic stage defined by the formation of a tube from the flat layer of ectodermal cells known as the neural plate.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "neurula stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000013": {
+   "definition": "Neurula stage during which the notochordal process appears, and gastrulation is continuing.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 07",
+   "start_dpf": 15.0,
+   "synonyms": [
+    "CS07"
+   ]
+  },
+  "HsapDv:0000014": {
+   "definition": "Neurula stage during which the primitive pit and the notochordal canal appear.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 08",
+   "start_dpf": 17.0,
+   "synonyms": [
+    "CS08"
+   ]
+  },
+  "HsapDv:0000015": {
+   "definition": "Embryonic stage at which the ectoderm, endoderm, and mesoderm develop into the internal organs of the organism.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "organogenesis stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000016": {
+   "definition": "Organogenesis stage during which somites 1-3 appear, and neural folds, cardiac primordium, and head fold are present.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 09",
+   "start_dpf": 19.0,
+   "synonyms": [
+    "CS09"
+   ]
+  },
+  "HsapDv:0000017": {
+   "definition": "Organogenesis stage during which somites 4-12 appear, and the neural fold fuses.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 10",
+   "start_dpf": 22.0,
+   "synonyms": [
+    "CS10"
+   ]
+  },
+  "HsapDv:0000018": {
+   "definition": "Organogenesis stage during which somites 13-20 appear, and the rostral neuropore closes.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 11",
+   "start_dpf": 23.0,
+   "synonyms": [
+    "CS11"
+   ]
+  },
+  "HsapDv:0000019": {
+   "definition": "Organogenesis stage during which somites 21-29 appear, and the caudal neuropore closes.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 12",
+   "start_dpf": 26.0,
+   "synonyms": [
+    "CS12"
+   ]
+  },
+  "HsapDv:0000020": {
+   "definition": "Organogenesis developmental stage during which somite 30 appears, and leg buds, lens placode, pharyngeal arches are present.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 13",
+   "start_dpf": 28.0,
+   "synonyms": [
+    "CS13"
+   ]
+  },
+  "HsapDv:0000021": {
+   "definition": "Organogenesis stage during which lens pit and optic cup appear.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 14",
+   "start_dpf": 31.0,
+   "synonyms": [
+    "CS14"
+   ]
+  },
+  "HsapDv:0000022": {
+   "definition": "Organogenesis stage during which lens vesicle, nasal pit, and hand plate appear.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 15",
+   "start_dpf": 35.0,
+   "synonyms": [
+    "CS15"
+   ]
+  },
+  "HsapDv:0000023": {
+   "definition": "Organogenesis stage during which nasal pits moved ventrally, and features are auricular hillocks, and foot plate.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 16",
+   "start_dpf": 37.0,
+   "synonyms": [
+    "CS16"
+   ]
+  },
+  "HsapDv:0000024": {
+   "definition": "Organogenesis stage during which finger rays become visible.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 17",
+   "start_dpf": 42.0,
+   "synonyms": [
+    "CS17"
+   ]
+  },
+  "HsapDv:0000025": {
+   "definition": "Organogenesis stage during which ossification commences.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 18",
+   "start_dpf": 44.0,
+   "synonyms": [
+    "CS18"
+   ]
+  },
+  "HsapDv:0000026": {
+   "definition": "Organogenesis stage during which the straightening of the trunk starts.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 19",
+   "start_dpf": 48.0,
+   "synonyms": [
+    "CS19"
+   ]
+  },
+  "HsapDv:0000027": {
+   "definition": "Organogenesis stage during which upper limbs are longer and bent at elbow.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 20",
+   "start_dpf": 51.0,
+   "synonyms": [
+    "CS20"
+   ]
+  },
+  "HsapDv:0000028": {
+   "definition": "Organogenesis stage during which hands and feet turned inward.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 21",
+   "start_dpf": 53.0,
+   "synonyms": [
+    "CS21"
+   ]
+  },
+  "HsapDv:0000029": {
+   "definition": "Organogenesis stage during which eyelids and external ears appear.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 22",
+   "start_dpf": 54.0,
+   "synonyms": [
+    "CS22"
+   ]
+  },
+  "HsapDv:0000030": {
+   "definition": "Organogenesis stage during which the head, the body, and the limbs are rounded structures.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 23",
+   "start_dpf": 56.0,
+   "synonyms": [
+    "CS23"
+   ]
+  },
+  "HsapDv:0000031": {
+   "definition": "Carnegie developmental stage 5 defined by a solid trophoblast.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 05a",
+   "start_dpf": null,
+   "synonyms": [
+    "CS05a"
+   ]
+  },
+  "HsapDv:0000032": {
+   "definition": "Carnegie developmental stage 5 defined by a trophoblastic lacunae.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 05b",
+   "start_dpf": null,
+   "synonyms": [
+    "CS05b"
+   ]
+  },
+  "HsapDv:0000033": {
+   "definition": "Carnegie developmental stage 5 defined by a lacunar vascular circle.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 05c",
+   "start_dpf": null,
+   "synonyms": [
+    "CS05c"
+   ]
+  },
+  "HsapDv:0000034": {
+   "definition": "Carnegie developmental stage 6 during which chorionic villi appear.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 06a",
+   "start_dpf": null,
+   "synonyms": [
+    "CS06a"
+   ]
+  },
+  "HsapDv:0000035": {
+   "definition": "Carnegie developmental stage 6 during which the primitive streak appears.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "Carnegie stage 06b",
+   "start_dpf": null,
+   "synonyms": [
+    "CS06b"
+   ]
+  },
+  "HsapDv:0000037": {
+   "definition": "Prenatal stage that starts with the fully formed embryo and ends at birth.",
+   "end_dpf": 266.0,
+   "granular": false,
+   "label": "fetal stage",
+   "start_dpf": 56.0,
+   "synonyms": []
+  },
+  "HsapDv:0000045": {
+   "definition": "Prenatal stage that starts with fertilization and ends at birth.",
+   "end_dpf": 266.0,
+   "granular": false,
+   "label": "prenatal stage",
+   "start_dpf": 0.0,
+   "synonyms": []
+  },
+  "HsapDv:0000046": {
+   "definition": "Fetal stage when the fetus is over 8 and under 9 weeks of development.",
+   "end_dpf": 63.0,
+   "granular": true,
+   "label": "9th week post-fertilization stage",
+   "start_dpf": 56.0,
+   "synonyms": []
+  },
+  "HsapDv:0000047": {
+   "definition": "Fetal stage when the fetus is over 9 and under 10 weeks of development.",
+   "end_dpf": 70.0,
+   "granular": true,
+   "label": "10th week post-fertilization stage",
+   "start_dpf": 63.0,
+   "synonyms": []
+  },
+  "HsapDv:0000048": {
+   "definition": "Fetal stage when the fetus is over 10 and under 11 weeks of development.",
+   "end_dpf": 77.0,
+   "granular": true,
+   "label": "11th week post-fertilization stage",
+   "start_dpf": 70.0,
+   "synonyms": []
+  },
+  "HsapDv:0000049": {
+   "definition": "Fetal stage when the fetus is over 11 and under 12 weeks of development.",
+   "end_dpf": 84.0,
+   "granular": true,
+   "label": "12th week post-fertilization stage",
+   "start_dpf": 77.0,
+   "synonyms": []
+  },
+  "HsapDv:0000050": {
+   "definition": "Fetal stage when the fetus is over 12 and under 13 weeks of development.",
+   "end_dpf": 91.0,
+   "granular": true,
+   "label": "13th week post-fertilization stage",
+   "start_dpf": 84.0,
+   "synonyms": []
+  },
+  "HsapDv:0000051": {
+   "definition": "Fetal stage when the fetus is over 13 and under 14 weeks of development.",
+   "end_dpf": 98.0,
+   "granular": true,
+   "label": "14th week post-fertilization stage",
+   "start_dpf": 91.0,
+   "synonyms": []
+  },
+  "HsapDv:0000052": {
+   "definition": "Fetal stage when the fetus is over 14 and under 15 weeks of development.",
+   "end_dpf": 105.0,
+   "granular": true,
+   "label": "15th week post-fertilization stage",
+   "start_dpf": 98.0,
+   "synonyms": []
+  },
+  "HsapDv:0000053": {
+   "definition": "Fetal stage when the fetus is over 15 and under 16 weeks of development.",
+   "end_dpf": 112.0,
+   "granular": true,
+   "label": "16th week post-fertilization stage",
+   "start_dpf": 105.0,
+   "synonyms": []
+  },
+  "HsapDv:0000054": {
+   "definition": "Fetal stage when the fetus is over 16 and under 17 weeks of development.",
+   "end_dpf": 119.0,
+   "granular": true,
+   "label": "17th week post-fertilization stage",
+   "start_dpf": 112.0,
+   "synonyms": []
+  },
+  "HsapDv:0000055": {
+   "definition": "Fetal stage when the fetus is over 17 and under 18 weeks of development.",
+   "end_dpf": 126.0,
+   "granular": true,
+   "label": "18th week post-fertilization stage",
+   "start_dpf": 119.0,
+   "synonyms": []
+  },
+  "HsapDv:0000056": {
+   "definition": "Fetal stage when the fetus is over 18 and under 19 weeks of development.",
+   "end_dpf": 133.0,
+   "granular": true,
+   "label": "19th week post-fertilization stage",
+   "start_dpf": 126.0,
+   "synonyms": []
+  },
+  "HsapDv:0000057": {
+   "definition": "Fetal stage when the fetus is over 19 and under 20 weeks of development.",
+   "end_dpf": 140.0,
+   "granular": true,
+   "label": "20th week post-fertilization stage",
+   "start_dpf": 133.0,
+   "synonyms": []
+  },
+  "HsapDv:0000058": {
+   "definition": "Fetal stage when the fetus is over 20 and under 21 weeks of development.",
+   "end_dpf": 147.0,
+   "granular": true,
+   "label": "21st week post-fertilization stage",
+   "start_dpf": 140.0,
+   "synonyms": []
+  },
+  "HsapDv:0000059": {
+   "definition": "Fetal stage when the fetus is over 21 and under 22 weeks of development.",
+   "end_dpf": 154.0,
+   "granular": true,
+   "label": "22nd week post-fertilization stage",
+   "start_dpf": 147.0,
+   "synonyms": []
+  },
+  "HsapDv:0000060": {
+   "definition": "Fetal stage when the fetus is over 22 and under 23 weeks of development.",
+   "end_dpf": 161.0,
+   "granular": true,
+   "label": "23rd week post-fertilization stage",
+   "start_dpf": 154.0,
+   "synonyms": []
+  },
+  "HsapDv:0000061": {
+   "definition": "Fetal stage when the fetus is over 23 and under 24 weeks of development.",
+   "end_dpf": 168.0,
+   "granular": true,
+   "label": "24th week post-fertilization stage",
+   "start_dpf": 161.0,
+   "synonyms": []
+  },
+  "HsapDv:0000062": {
+   "definition": "Fetal stage when the fetus is over 24 and under 25 weeks of development.",
+   "end_dpf": 175.0,
+   "granular": true,
+   "label": "25th week post-fertilization stage",
+   "start_dpf": 168.0,
+   "synonyms": []
+  },
+  "HsapDv:0000063": {
+   "definition": "Fetal stage when the fetus is over 25 and under 26 weeks of development.",
+   "end_dpf": 182.0,
+   "granular": true,
+   "label": "26th week post-fertilization stage",
+   "start_dpf": 175.0,
+   "synonyms": []
+  },
+  "HsapDv:0000064": {
+   "definition": "Fetal stage when the fetus is over 26 and under 27 weeks of development.",
+   "end_dpf": 189.0,
+   "granular": true,
+   "label": "27th week post-fertilization stage",
+   "start_dpf": 182.0,
+   "synonyms": []
+  },
+  "HsapDv:0000065": {
+   "definition": "Fetal stage when the fetus is over 27 and under 28 weeks of development.",
+   "end_dpf": 196.0,
+   "granular": true,
+   "label": "28th week post-fertilization stage",
+   "start_dpf": 189.0,
+   "synonyms": []
+  },
+  "HsapDv:0000066": {
+   "definition": "Fetal stage when the fetus is over 28 and under 29 weeks of development.",
+   "end_dpf": 203.0,
+   "granular": true,
+   "label": "29th week post-fertilization stage",
+   "start_dpf": 196.0,
+   "synonyms": []
+  },
+  "HsapDv:0000067": {
+   "definition": "Fetal stage when the fetus is over 29 and under 30 weeks of development.",
+   "end_dpf": 210.0,
+   "granular": true,
+   "label": "30th week post-fertilization stage",
+   "start_dpf": 203.0,
+   "synonyms": []
+  },
+  "HsapDv:0000068": {
+   "definition": "Fetal stage when the fetus is over 30 and under 31 weeks of development.",
+   "end_dpf": 217.0,
+   "granular": true,
+   "label": "31st week post-fertilization stage",
+   "start_dpf": 210.0,
+   "synonyms": []
+  },
+  "HsapDv:0000069": {
+   "definition": "Fetal stage when the fetus is over 31 and under 32 weeks of development.",
+   "end_dpf": 224.0,
+   "granular": true,
+   "label": "32nd week post-fertilization stage",
+   "start_dpf": 217.0,
+   "synonyms": []
+  },
+  "HsapDv:0000070": {
+   "definition": "Fetal stage when the fetus is over 32 and under 33 weeks of development.",
+   "end_dpf": 231.0,
+   "granular": true,
+   "label": "33rd week post-fertilization stage",
+   "start_dpf": 224.0,
+   "synonyms": []
+  },
+  "HsapDv:0000071": {
+   "definition": "Fetal stage when the fetus is over 33 and under 34 weeks of development.",
+   "end_dpf": 238.0,
+   "granular": true,
+   "label": "34th week post-fertilization stage",
+   "start_dpf": 231.0,
+   "synonyms": []
+  },
+  "HsapDv:0000072": {
+   "definition": "Fetal stage when the fetus is over 34 and under 35 weeks of development.",
+   "end_dpf": 245.0,
+   "granular": true,
+   "label": "35th week post-fertilization stage",
+   "start_dpf": 238.0,
+   "synonyms": []
+  },
+  "HsapDv:0000073": {
+   "definition": "Fetal stage when the fetus is over 35 and under 36 weeks of development.",
+   "end_dpf": 252.0,
+   "granular": true,
+   "label": "36th week post-fertilization stage",
+   "start_dpf": 245.0,
+   "synonyms": []
+  },
+  "HsapDv:0000074": {
+   "definition": "Fetal stage when the fetus is over 36 and under 37 weeks of development.",
+   "end_dpf": 259.0,
+   "granular": true,
+   "label": "37th week post-fertilization stage",
+   "start_dpf": 252.0,
+   "synonyms": []
+  },
+  "HsapDv:0000075": {
+   "definition": "Fetal stage when the fetus is over 37 weeks of development and until birth.",
+   "end_dpf": 266.0,
+   "granular": false,
+   "label": "38th week post-fertilization and over stage",
+   "start_dpf": 259.0,
+   "synonyms": []
+  },
+  "HsapDv:0000080": {
+   "definition": "Human developmental stage that covers the period from birth until 12 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "immature stage",
+   "start_dpf": null,
+   "synonyms": [
+    "0-12 years"
+   ]
+  },
+  "HsapDv:0000081": {
+   "definition": "Immature stage that refers to child who is over 2 and under 13 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "child stage",
+   "start_dpf": null,
+   "synonyms": [
+    "2-12 years"
+   ]
+  },
+  "HsapDv:0000082": {
+   "definition": "Immature stage that refers to a newborn who is under 32 days old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "newborn stage",
+   "start_dpf": null,
+   "synonyms": [
+    "0-1 month"
+   ]
+  },
+  "HsapDv:0000083": {
+   "definition": "Immature stage that refers to an infant who is over 31 days and is under 24 months old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "infant stage",
+   "start_dpf": null,
+   "synonyms": [
+    "1-23 months",
+    "infantile stage"
+   ]
+  },
+  "HsapDv:0000084": {
+   "definition": "Child stage that refers to a child who is over 24 months and under 6 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "2-5 year-old child stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000085": {
+   "definition": "Child stage that refers to a child who is over 6 and under 13 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "6-12 year-old child stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000086": {
+   "definition": "Mature stage that refers to an adolescent who is over 13 and under 19 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "adolescent stage",
+   "start_dpf": null,
+   "synonyms": [
+    "13-18 years"
+   ]
+  },
+  "HsapDv:0000087": {
+   "definition": "Human developmental stage that refers to an adult who is over 19.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "adult stage",
+   "start_dpf": null,
+   "synonyms": [
+    "19+ years"
+   ]
+  },
+  "HsapDv:0000088": {
+   "definition": "Adult stage that refers to an adult who is under 45.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "early adulthood stage",
+   "start_dpf": null,
+   "synonyms": [
+    "19-44 years"
+   ]
+  },
+  "HsapDv:0000089": {
+   "definition": "Early adulthood that refers to an adult who is under 25.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "young adult stage",
+   "start_dpf": null,
+   "synonyms": [
+    "19-24 years"
+   ]
+  },
+  "HsapDv:0000090": {
+   "definition": "Early adulthood that refers to an adult who is over 25 and under 45.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "25-44 year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000091": {
+   "definition": "Adult stage that refers to an adult who is over 45.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "late adulthood stage",
+   "start_dpf": null,
+   "synonyms": [
+    "45+ years"
+   ]
+  },
+  "HsapDv:0000092": {
+   "definition": "Late adulthood that refers to an adult who is over 45 and under 65.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "middle aged stage",
+   "start_dpf": null,
+   "synonyms": [
+    "45-64 years"
+   ]
+  },
+  "HsapDv:0000093": {
+   "definition": "Late adulthood that refers to an adult who is over 65.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "aged stage",
+   "start_dpf": null,
+   "synonyms": [
+    "65+ years"
+   ]
+  },
+  "HsapDv:0000094": {
+   "definition": "Aged stage that refers to an adult who is under 80.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "65-79 year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000095": {
+   "definition": "Aged stage that refers to an adult who is over 80 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "80 year-old and over stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000096": {
+   "definition": "Child stage that refers to a child who is over 2 and under 3 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "2-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000097": {
+   "definition": "Child stage that refers to a child who is over 3 and under 4 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "3-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000098": {
+   "definition": "Child stage that refers to a child who is over 4 and under 5 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "4-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000099": {
+   "definition": "Child stage that refers to a child who is over 5 and under 6 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "5-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000100": {
+   "definition": "Child stage that refers to a child who is over 6 and under 7 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "6-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000101": {
+   "definition": "Child stage that refers to a child who is over 7 and under 8 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "7-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000102": {
+   "definition": "Child stage that refers to a child who is over 8 and under 9 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "8-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000103": {
+   "definition": "Child stage that refers to a child who is over 9 and under 10 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "9-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000104": {
+   "definition": "Child stage that refers to a child who is over 10 and under 11 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "10-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000105": {
+   "definition": "Child stage that refers to a child who is over 11 and under 12 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "11-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000106": {
+   "definition": "Child stage that refers to a child who is over 12 and under 13 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "12-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000107": {
+   "definition": "Adolescent stage that refers to an adolescent who is over 13 and under 14 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "13-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000108": {
+   "definition": "Adolescent stage that refers to an adolescent who is over 14 and under 15 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "14-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000109": {
+   "definition": "Adolescent stage that refers to an adolescent who is over 15 and under 16 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "15-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000110": {
+   "definition": "Adolescent stage that refers to an adolescent who is over 16 and under 17 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "16-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000111": {
+   "definition": "Adolescent stage that refers to an adolescent who is over 17 and under 18 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "17-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000112": {
+   "definition": "Adolescent stage that refers to an adolescent who is over 18 and under 19 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "18-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000113": {
+   "definition": "Young adult stage that refers to an adult who is over 19 and under 20 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "19-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000114": {
+   "definition": "Young adult stage that refers to an adult who is over 20 and under 21 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "20-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000115": {
+   "definition": "Young adult stage that refers to an adult who is over 21 and under 22 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "21-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000116": {
+   "definition": "Young adult stage that refers to an adult who is over 22 and under 23 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "22-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000117": {
+   "definition": "Young adult stage that refers to an adult who is over 23 and under 24 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "23-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000118": {
+   "definition": "Young adult stage that refers to an adult who is over 24 and under 25 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "24-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000119": {
+   "definition": "Adult stage that refers to an adult who is over 25 and under 26 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "25-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000120": {
+   "definition": "Adult stage that refers to an adultwho is over 26 and under 27 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "26-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000121": {
+   "definition": "Adult stage that refers to an adult who is over 27 and under 28 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "27-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000122": {
+   "definition": "Adult stage that refers to an adult who is over 28 and under 29 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "28-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000123": {
+   "definition": "Adult stage that refers to an adult who is over 29 and under 30 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "29-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000124": {
+   "definition": "Adult stage that refers to an adult who is over 30 and under 31 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "30-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000125": {
+   "definition": "Adult stage that refers to an adult who is over 31 and under 32 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "31-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000126": {
+   "definition": "Adult stage that refers to an adult who is over 32 and under 33 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "32-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000127": {
+   "definition": "Adult stage that refers to an adult who is over 33 and under 34 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "33-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000128": {
+   "definition": "Adult stage that refers to an adult who is over 34 and under 35 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "34-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000129": {
+   "definition": "Adult stage that refers to an adult who is over 35 and under 36 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "35-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000130": {
+   "definition": "Adult stage that refers to an adult who is over 36 and under 37 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "36-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000131": {
+   "definition": "Adult stage that refers to an adult who is over 37 and under 38 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "37-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000132": {
+   "definition": "Adult stage that refers to an adult who is over 38 and under 39 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "38-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000133": {
+   "definition": "Adult stage that refers to an adult who is over 39 and under 40 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "39-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000134": {
+   "definition": "Adult stage that refers to an adult who is over 40 and under 41 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "40-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000135": {
+   "definition": "Adult stage that refers to an adult who is over 41 and under 42 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "41-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000136": {
+   "definition": "Adult stage that refers to an adult who is over 42 and under 43 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "42-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000137": {
+   "definition": "Adult stage that refers to an adult who is over 43 and under 44 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "43-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000138": {
+   "definition": "Adult stage that refers to an adult who is over 44 and under 45 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "44-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000139": {
+   "definition": "Middle aged stage that refers to an adult who is over 45 and under 46 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "45-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000140": {
+   "definition": "Middle aged stage that refers to an adult who is over 46 and under 47 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "46-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000141": {
+   "definition": "Middle aged stage that refers to an adult who is over 47 and under 48 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "47-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000142": {
+   "definition": "Middle aged stage that refers to an adult who is over 48 and under 49 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "48-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000143": {
+   "definition": "Middle aged stage that refers to an adult who is over 49 and under 50 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "49-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000144": {
+   "definition": "Middle aged stage that refers to an adult who is over 50 and under 51 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "50-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000145": {
+   "definition": "Middle aged stage that refers to an adult who is over 51 and under 52 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "51-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000146": {
+   "definition": "Middle aged stage that refers to an adult who is over 52 and under 53 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "52-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000147": {
+   "definition": "Middle aged stage that refers to an adult who is over 53 and under 54 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "53-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000148": {
+   "definition": "Middle aged stage that refers to an adult who is over 54 and under 55 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "54-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000149": {
+   "definition": "Middle aged stage that refers to an adult who is over 55 and under 56 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "55-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000150": {
+   "definition": "Middle aged stage that refers to an adult who is over 56 and under 57 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "56-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000151": {
+   "definition": "Middle aged stage that refers to an adult who is over 57 and under 58 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "57-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000152": {
+   "definition": "Middle aged stage that refers to an adult who is over 58 and under 59 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "58-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000153": {
+   "definition": "Middle aged stage that refers to an adult who is over 59 and under 60 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "59-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000154": {
+   "definition": "Middle aged stage that refers to an adult who is over 60 and under 61 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "60-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000155": {
+   "definition": "Middle aged stage that refers to an adult who is over 61 and under 62 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "61-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000156": {
+   "definition": "Middle aged stage that refers to an adult who is over 62 and under 63 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "62-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000157": {
+   "definition": "Middle aged stage that refers to an adult who is over 63 and under 64 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "63-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000158": {
+   "definition": "Middle aged stage that refers to an adult who is over 64 and under 65 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "64-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000159": {
+   "definition": "Adult stage that refers to an adult who is over 65 and under 66 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "65-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000160": {
+   "definition": "Adult stage that refers to an adult who is over 66 and under 67 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "66-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000161": {
+   "definition": "Adult stage that refers to an adult who is over 67 and under 68 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "67-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000162": {
+   "definition": "Adult stage that refers to an adult who is over 68 and under 69 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "68-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000163": {
+   "definition": "Adult stage that refers to an adult who is over 69 and under 70 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "69-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000164": {
+   "definition": "Adult stage that refers to an adult who is over 70 and under 71 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "70-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000165": {
+   "definition": "Adult stage that refers to an adult who is over 71 and under 72 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "71-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000166": {
+   "definition": "Adult stage that refers to an adult who is over 72 and under 73 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "72-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000167": {
+   "definition": "Adult stage that refers to an adult who is over 73 and under 74 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "73-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000168": {
+   "definition": "Adult stage that refers to an adult who is over 74 and under 75 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "74-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000169": {
+   "definition": "Adult stage that refers to an adult who is over 75 and under 76 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "75-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000170": {
+   "definition": "Adult stage that refers to an adult who is over 76 and under 77 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "76-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000171": {
+   "definition": "Adult stage that refers to an adult who is over 77 and under 78 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "77-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000172": {
+   "definition": "Adult stage that refers to an adult who is over 78 and under 79 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "78-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000173": {
+   "definition": "Adult stage that refers to an adult who is over 79 and under 80 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "79-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000174": {
+   "definition": "Infant stage that refers to an infant who is over 1 and under 2 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "1-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000175": {
+   "definition": "Infant stage that refers to an infant who is over 2 and under 3 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "2-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000176": {
+   "definition": "Infant stage that refers to an infant who is over 3 and under 4 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "3-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000177": {
+   "definition": "Infant stage that refers to an infant who is over 4 and under 5 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "4-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000178": {
+   "definition": "Infant stage that refers to an infant who is over 5 and under 6 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "5-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000179": {
+   "definition": "Infant stage that refers to an infant who is over 6 and under 7 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "6-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000180": {
+   "definition": "Infant stage that refers to an infant who is over 7 and under 8 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "7-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000181": {
+   "definition": "Infant stage that refers to an infant who is over 8 and under 9 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "8-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000182": {
+   "definition": "Infant stage that refers to an infant who is over 9 and under 10 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "9-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000183": {
+   "definition": "Infant stage that refers to an infant who is over 10 and under 11 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "10-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000184": {
+   "definition": "Infant stage that refers to an infant who is over 11 and under 12 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "11-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000185": {
+   "definition": "Infant stage that refers to an infant who is over 12 and under 13 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "12-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000186": {
+   "definition": "Infant stage that refers to an infant who is over 13 and under 14 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "13-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000187": {
+   "definition": "Infant stage that refers to an infant who is over 14 and under 15 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "14-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000188": {
+   "definition": "Infant stage that refers to an infant who is over 15 and under 16 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "15-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000189": {
+   "definition": "Infant stage that refers to an infant who is over 16 and under 17 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "16-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000190": {
+   "definition": "Infant stage that refers to an infant who is over 17 and under 18 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "17-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000191": {
+   "definition": "Infant stage that refers to an infant who is over 18 and under 19 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "18-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000192": {
+   "definition": "Infant stage that refers to an infant who is over 19 and under 20 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "19-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000193": {
+   "definition": "Infant stage that refers to an infant who is over 20 and under 21 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "20-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000194": {
+   "definition": "Infant stage that refers to an infant who is over 21 and under 22 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "21-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000195": {
+   "definition": "Infant stage that refers to an infant who is over 22 and under 23 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "22-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000196": {
+   "definition": "Infant stage that refers to an infant who is over 23 and under 24 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "23-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000197": {
+   "definition": "Fetal stage that refers to the third month of gestation starting from the last menstrual period (LMP).",
+   "end_dpf": 77.0,
+   "granular": false,
+   "label": "third LMP month stage",
+   "start_dpf": 56.0,
+   "synonyms": []
+  },
+  "HsapDv:0000198": {
+   "definition": "Fetal stage that refers to the fourth month of gestation starting from the last menstrual period (LMP).",
+   "end_dpf": 105.0,
+   "granular": false,
+   "label": "fourth LMP month stage",
+   "start_dpf": 77.0,
+   "synonyms": []
+  },
+  "HsapDv:0000199": {
+   "definition": "Fetal stage that refers to the fifth month of gestation starting from the last menstrual period (LMP).",
+   "end_dpf": 133.0,
+   "granular": false,
+   "label": "fifth LMP month stage",
+   "start_dpf": 105.0,
+   "synonyms": []
+  },
+  "HsapDv:0000200": {
+   "definition": "Fetal stage that refers to the sixth month of gestation starting from the last menstrual period (LMP).",
+   "end_dpf": 168.0,
+   "granular": false,
+   "label": "sixth LMP month stage",
+   "start_dpf": 133.0,
+   "synonyms": []
+  },
+  "HsapDv:0000201": {
+   "definition": "Fetal stage that refers to the seventh month of gestation starting from the last menstrual period (LMP).",
+   "end_dpf": 196.0,
+   "granular": false,
+   "label": "seventh LMP month stage",
+   "start_dpf": 168.0,
+   "synonyms": []
+  },
+  "HsapDv:0000202": {
+   "definition": "Fetal stage that refers to the eighth month of gestation starting from the last menstrual period (LMP).",
+   "end_dpf": 231.0,
+   "granular": false,
+   "label": "eighth LMP month stage",
+   "start_dpf": 196.0,
+   "synonyms": []
+  },
+  "HsapDv:0000203": {
+   "definition": "Fetal stage that refers to the ninth month of gestation starting from the last menstrual period (LMP).",
+   "end_dpf": 266.0,
+   "granular": false,
+   "label": "ninth LMP month stage",
+   "start_dpf": 231.0,
+   "synonyms": []
+  },
+  "HsapDv:0000204": {
+   "definition": "Human developmental stage that refers to a sexually mature human.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "mature stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000205": {
+   "definition": "The morula stage is the later part of Carnegie stage 02 when the cells have coalesced into a mass but the blastocystic cavity has not formed. Formation of the cavity marks the beginning of Carnegie stage 03.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "morula stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000206": {
+   "definition": "Aged stage that refers to an adult who is over 80 and under 81 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "80-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000207": {
+   "definition": "Aged stage that refers to an adult who is over 81 and under 82 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "81-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000208": {
+   "definition": "Aged stage that refers to an adult who is over 82 and under 83 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "82-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000209": {
+   "definition": "Aged stage that refers to an adult who is over 83 and under 84 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "83-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000210": {
+   "definition": "Aged stage that refers to an adult who is over 84 and under 85 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "84-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000211": {
+   "definition": "Aged stage that refers to an adult who is over 85 and under 86 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "85-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000212": {
+   "definition": "Aged stage that refers to an adult who is over 86 and under 87 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "86-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000213": {
+   "definition": "Aged stage that refers to an adult who is over 87 and under 88 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "87-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000214": {
+   "definition": "Aged stage that refers to an adult who is over 88 and under 89 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "88-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000215": {
+   "definition": "Aged stage that refers to an adult who is over 89 and under 90 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "89-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000216": {
+   "definition": "Aged stage that refers to an adult who is over 90 and under 91 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "90-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000217": {
+   "definition": "Aged stage that refers to an adult who is over 91 and under 92 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "91-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000218": {
+   "definition": "Aged stage that refers to an adult who is over 92 and under 93 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "92-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000219": {
+   "definition": "Aged stage that refers to an adult who is over 93 and under 94 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "93-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000220": {
+   "definition": "Aged stage that refers to an adult who is over 94 and under 95 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "94-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000221": {
+   "definition": "Aged stage that refers to an adult who is over 95 and under 96 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "95-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000222": {
+   "definition": "Aged stage that refers to an adult who is over 96 and under 97 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "96-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000223": {
+   "definition": "Aged stage that refers to an adult who is over 97 and under 98 yers old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "97-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000224": {
+   "definition": "Aged stage that refers to an adult who is over 98 and under 99.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "98-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000225": {
+   "definition": "Aged stage that refers to an adult who is over 99 and under 100 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "99-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000226": {
+   "definition": "A life cycle stage that starts at sexual maturity of the human adult, and ends before senescence.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "prime adult stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000227": {
+   "definition": "Late adult stage that refers to an individu who is over 60 and starts to have some age-related impairments.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "late adult stage",
+   "start_dpf": null,
+   "synonyms": [
+    "60+ years"
+   ]
+  },
+  "HsapDv:0000228": {
+   "definition": "Aged stage that refers to an adult who is over 100 and under 101 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "100-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000229": {
+   "definition": "Aged stage that refers to an adult who is over 101 and under 102 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "101-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000230": {
+   "definition": "Aged stage that refers to an adult who is over 102 and under 103 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "102-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000231": {
+   "definition": "Aged stage that refers to an adult who is over 103 and under 104 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "103-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000232": {
+   "definition": "Aged stage that refers to an adult who is over 104 and under 105 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "104-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000233": {
+   "definition": "Aged stage that refers to an adult who is over 105 and under 106 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "105-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000234": {
+   "definition": "Aged stage that refers to an adult who is over 106 and under 107 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "106-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000235": {
+   "definition": "Human stage that refers to an individual who is over 0 and under 10 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "first decade stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000236": {
+   "definition": "Human stage that refers to an individual who is over 10 and under 20 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "second decade stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000237": {
+   "definition": "Human stage that refers to an individual who is over 20 and under 30 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "third decade stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000238": {
+   "definition": "Human stage that refers to an individual who is over 30 and under 40 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "fourth decade stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000239": {
+   "definition": "Human stage that refers to an individual who is over 40 and under 50 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "fifth decade stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000240": {
+   "definition": "Human stage that refers to an individual who is over 50 and under 60 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "sixth decade stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000241": {
+   "definition": "Human stage that refers to an individual who is over 60 and under 70 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "seventh decade stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000242": {
+   "definition": "Human stage that refers to an individual who is over 70 and under 80 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "eighth decade stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000243": {
+   "definition": "Human stage that refers to an individual who is over 80 and under 90 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "ninth decade stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000244": {
+   "definition": "Human stage that refers to an individual who is over 90 and under 100 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "tenth decade stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000245": {
+   "definition": "Human stage that refers to a human who is over 100 and under 110 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "eleventh decade stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000246": {
+   "definition": "Child stage that refers to a child who is over 12 and under 24 months old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "1-year-old stage",
+   "start_dpf": null,
+   "synonyms": [
+    "12-23 months"
+   ]
+  },
+  "HsapDv:0000247": {
+   "definition": "Aged stage that refers to an adult who is over 100 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "centenarian stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000248": {
+   "definition": "Aged stage that refers to an adult who is over 107 and under 108 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "107-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000249": {
+   "definition": "Aged stage that refers to an adult who is over 108 and under 109 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "108-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000250": {
+   "definition": "Aged stage that refers to an adult who is over 109 and under 110 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "109-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000251": {
+   "definition": "Aged stage that refers to an adult who is over 110 and under 111 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "110-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000252": {
+   "definition": "Aged stage that refers to an adult who is over 111 and under 112 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "111-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000253": {
+   "definition": "Aged stage that refers to an adult who is over 112 and under 113 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "112-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000254": {
+   "definition": "Aged stage that refers to an adult who is over 113 and under 114 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "113-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000255": {
+   "definition": "Aged stage that refers to an adult who is over 114 and under 115 years old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "114-year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000256": {
+   "definition": "Infant stage that refers to an infant who is over 31 days and is under 12 months old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "under-1-year-old stage",
+   "start_dpf": null,
+   "synonyms": [
+    "1-11 months"
+   ]
+  },
+  "HsapDv:0000258": {
+   "definition": "Human developmental stage that refers to a sexually mature human.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "adult stage",
+   "start_dpf": null,
+   "synonyms": [
+    "mature stage"
+   ]
+  },
+  "HsapDv:0000260": {
+   "definition": "Human developmental stage that covers the first period from birth, with breast feeding and/or bottled substitute, and that stops at language acquisition.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "nursing stage (0-11 months)",
+   "start_dpf": null,
+   "synonyms": [
+    "under 1 year old"
+   ]
+  },
+  "HsapDv:0000261": {
+   "definition": "Immature stage that refers to an infant who is over 28 days and is under 12 months old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "infant stage",
+   "start_dpf": null,
+   "synonyms": [
+    "infantile stage",
+    "under-1-year-old stage"
+   ]
+  },
+  "HsapDv:0000262": {
+   "definition": "Immature stage that refers to a human newborn within the first 28 days of life.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "newborn stage (0-28 days)",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000264": {
+   "definition": "Human developmental stage that covers the period from newborn stage and until 14 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "pediatric stage",
+   "start_dpf": null,
+   "synonyms": [
+    "immature stage"
+   ]
+  },
+  "HsapDv:0000265": {
+   "definition": "Human stage that refers to a child who is over 12 months and under 5 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "child stage (1-4 yo)",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000266": {
+   "definition": "A prime adult stage that refers to an adult who is under 40 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "young adult stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000267": {
+   "definition": "Late adulthood that refers to an adult who is over 40 and under 60 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "middle aged stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000268": {
+   "definition": "A young adult stage that refers to an adult who is over 15 and under 20 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "15-19 year-old",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000270": {
+   "definition": "Child stage that refers to a child who is over 2 and under 5 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "2-4 year-old child stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000271": {
+   "definition": "Pediatric stage that refers to a human who is over 5 and under 15 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "juvenile stage (5-14 yo)",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000272": {
+   "definition": "Late adult stage that refers to an adult who is under 80 years old.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "60-79 year-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000273": {
+   "definition": "Infant stage that refers to an infant who is over 28 days and under 2 months old.",
+   "end_dpf": null,
+   "granular": true,
+   "label": "1-month-old stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0000274": {
+   "definition": "Human stage that refers to an adult who is over 90.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "90 year-old and over stage",
+   "start_dpf": null,
+   "synonyms": []
+  },
+  "HsapDv:0010000": {
+   "definition": "Human developmental stage that covers the whole of human life post birth.",
+   "end_dpf": null,
+   "granular": false,
+   "label": "postnatal stage",
+   "start_dpf": null,
+   "synonyms": []
+  }
+ }
+}
