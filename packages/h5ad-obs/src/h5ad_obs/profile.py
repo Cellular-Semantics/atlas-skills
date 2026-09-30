@@ -17,6 +17,7 @@ Two sources, one output shape:
 """
 from __future__ import annotations
 
+import math
 import time
 from pathlib import Path
 
@@ -39,6 +40,24 @@ DEFAULT_SCAN_N = 2000
 
 #: How many of those values to show. Enough to tell a label from an index.
 DEFAULT_SAMPLE_N = 20
+
+#: A column is *bounded* when its distinct values do not grow with the number of
+#: cells: ages, tissues, diseases and batches are properties of a donor or a
+#: sample, so however many cells you read you see the same few dozen values. A
+#: per-cell quantity -- percent_mito, a doublet score, n_genes -- has roughly as
+#: many distinct values as rows. The two are orders of magnitude apart in
+#: practice, so the threshold does not need to be delicate.
+CARDINALITY_RATIO = 0.1
+
+#: ...but on a very small table the ratio alone is useless -- 8 distinct ages in
+#: 60 rows is 13%. The floor lets small tables through on absolute count. Below
+#: roughly 500 rows the test weakens and a continuous column can pass it; the
+#: values are in the profile either way.
+CARDINALITY_FLOOR = 50
+
+#: How many distinct values to inspect when deciding whether a column is
+#: numeric. Bounds the work on a categorical with a category per barcode.
+MAX_VOCAB = 5000
 
 
 def _spread(n: int, k: int) -> np.ndarray:
@@ -84,9 +103,72 @@ def _values_to_python(values) -> list:
     return out
 
 
+def _as_number(v) -> float | None:
+    """The value as a *finite* float, or None if it is not one.
+
+    Strings count. Age is routinely stored as a categorical of numerals beside a
+    sentinel -- ``'6'``, ``'11'``, ``'Not applicable'`` -- and a test that only
+    looked at the dtype would call that column text and stop there.
+
+    Finiteness is not a detail. ``float('nan')`` succeeds, and obs categoricals
+    routinely carry a literal ``'nan'`` category from a stringified missing
+    value; letting it through put a NaN in the range and took the text profile
+    down with a ValueError on a fifth of CELLxGENE.
+    """
+    if isinstance(v, (bool, np.bool_)):
+        return None                      # True is not a measurement
+    if isinstance(v, (int, float, np.integer, np.floating)):
+        n = float(v)
+    elif isinstance(v, str):
+        try:
+            n = float(v.strip())
+        except ValueError:
+            return None
+    else:
+        return None
+    return n if math.isfinite(n) else None
+
+
+def _numeric_summary(vocabulary: list) -> dict | None:
+    """Characterise a column's vocabulary as a measurement, or not at all.
+
+    Returns None when fewer than half the distinct values are numbers -- that is
+    a text column that happens to contain a few numerals, and a range over it
+    would be noise. Otherwise reports the fraction that parsed and the range,
+    which together are what separates an age from a score: both are numbers, but
+    ``Gestational_age_pcw`` runs 6..40 and ``percent_mito`` runs 0..1.
+    """
+    vocab = vocabulary[:MAX_VOCAB]
+    if not vocab:
+        return None
+    numbers = [n for n in (_as_number(v) for v in vocab) if n is not None]
+    if len(numbers) * 2 < len(vocab):
+        return None
+    numbers.sort()
+    mid = len(numbers) // 2
+    return {
+        "fraction": round(len(numbers) / len(vocab), 4),
+        "min": numbers[0],
+        "max": numbers[-1],
+        "median": numbers[mid] if len(numbers) % 2 else
+                  (numbers[mid - 1] + numbers[mid]) / 2,
+    }
+
+
+def _is_bounded(n_unique: int, population: int) -> bool:
+    """Whether the distinct count is small relative to where it was counted.
+
+    `population` is the number of values the count describes: every row for a
+    categorical, whose category table is exact, and the scanned rows for
+    anything sampled.
+    """
+    return n_unique <= max(CARDINALITY_FLOOR, CARDINALITY_RATIO * population)
+
+
 def _summarise(name: str, kind: str, dtype: str, scanned: list, *,
                n_rows: int, n_scanned: int, sample_n: int,
-               n_categories: int | None = None) -> dict:
+               n_categories: int | None = None,
+               categories: list | None = None) -> dict:
     """Assemble one column's entry from the values actually looked at."""
     present = [v for v in scanned if v is not None]
     scanned_everything = n_scanned >= n_rows
@@ -96,6 +178,20 @@ def _summarise(name: str, kind: str, dtype: str, scanned: list, *,
         n_unique, estimated = n_categories, False
     else:
         n_unique, estimated = len(set(present)), not scanned_everything
+    # The vocabulary to characterise: the declared categories when there are
+    # some, otherwise the distinct values actually seen. Sorting keeps the
+    # output stable across runs for the same input.
+    if categories is not None:
+        vocabulary = list(categories)
+    else:
+        # Normalise first. The remote path hands `present` raw numpy scalars,
+        # and np.int64 is not a Python int -- reading the vocabulary straight
+        # off it silently classified every numeric column in every remote
+        # profile as "not a number", while the local path, which goes through
+        # .tolist(), was fine. The two must agree.
+        vocabulary = sorted({repr(v): v for v in _values_to_python(present)}.values(),
+                            key=repr)
+    population = n_rows if n_categories is not None else n_scanned
     return {
         "name": name,
         "kind": kind,
@@ -112,6 +208,14 @@ def _summarise(name: str, kind: str, dtype: str, scanned: list, *,
         # Conservative by design: a 2-category column using only one of them is
         # not flagged, because the categories are declared, not observed.
         "constant": bool(not estimated and n_unique <= 1),
+        # Bounded columns are the donor- and sample-level ones: tissue, disease,
+        # age, batch. The flag earns its keep on numeric columns, where it is
+        # the only cheap thing separating a measure of age from a QC score --
+        # both are just numbers, but one has 40 distinct values and the other
+        # has one per cell. It is a filter, not a verdict: batch indices and
+        # ordinal scores pass it too, and the name and range still decide.
+        "bounded": _is_bounded(n_unique, population),
+        "numeric": _numeric_summary(vocabulary),
         # Spread again, for the same reason the scan is spread: the head of a
         # sorted column is not a sample of it.
         "sample": _take_spread(_values_to_python(present or scanned), sample_n),
@@ -129,7 +233,8 @@ def _profile_h5_column(obs, name: str, idx: np.ndarray, n_rows: int,
             scanned = [cats[c] if 0 <= c < len(cats) else None for c in codes]
             return _summarise(name, "categorical", str(node["codes"].dtype), scanned,
                               n_rows=n_rows, n_scanned=len(idx), sample_n=sample_n,
-                              n_categories=len(cats))
+                              n_categories=len(cats),
+                              categories=_values_to_python(cats[:MAX_VOCAB]))
         if {"values", "mask"} <= keys:
             values = list(node["values"][idx])
             mask = node["mask"][idx]
@@ -138,7 +243,7 @@ def _profile_h5_column(obs, name: str, idx: np.ndarray, n_rows: int,
                               n_rows=n_rows, n_scanned=len(idx), sample_n=sample_n)
         return {"name": name, "kind": "unknown", "dtype": None, "n_categories": None,
                 "n_unique": None, "n_unique_estimated": None, "n_null": None,
-                "constant": None, "sample": []}
+                "constant": None, "bounded": None, "numeric": None, "sample": []}
     scanned = list(decode(node[idx]))
     kind = "string" if node.dtype.kind in ("S", "O", "U") else "array"
     return _summarise(name, kind, str(node.dtype), scanned,
@@ -196,7 +301,9 @@ def profile_frame(df: pd.DataFrame, *, source: str = "<dataframe>",
             columns.append(_summarise(
                 str(name), "categorical", str(series.dtype.categories.dtype),
                 _values_to_python(taken.tolist()), n_rows=n_rows, n_scanned=len(idx),
-                sample_n=sample_n, n_categories=len(series.dtype.categories)))
+                sample_n=sample_n, n_categories=len(series.dtype.categories),
+                categories=_values_to_python(
+                    series.dtype.categories[:MAX_VOCAB].tolist())))
             continue
         kind = "string" if series.dtype == object else "array"
         columns.append(_summarise(str(name), kind, str(series.dtype),
@@ -233,6 +340,30 @@ def _envelope(source: str, source_kind: str, n_rows: int, n_scanned: int,
     }
 
 
+def _fmt_number(x: float) -> str:
+    """Short enough to sit in a table cell, precise enough to tell 0.03 from 30."""
+    if x == int(x) and abs(x) < 1e15:
+        return str(int(x))
+    return f"{x:.4g}"
+
+
+def _numeric_cell(col: dict) -> str:
+    """The measurement column of the text profile.
+
+    Blank for anything that is not a number, so text columns stay quiet. For a
+    number, says whether the distinct values grow with the cell count and what
+    range they span -- the two facts that separate an age from a QC score.
+    """
+    num = col.get("numeric")
+    if not num:
+        return ""
+    shape = "bounded" if col.get("bounded") else "continuous"
+    span = f"{_fmt_number(num['min'])}..{_fmt_number(num['max'])}"
+    if num["fraction"] < 1.0:
+        span += f" ({num['fraction']:.0%} numeric)"
+    return f"{shape} {span}"
+
+
 def as_text(prof: dict, *, sample_n: int = 10) -> str:
     """The profile as a table. This is what an agent reads.
 
@@ -245,7 +376,7 @@ def as_text(prof: dict, *, sample_n: int = 10) -> str:
         f"{prof['n_rows']} rows x {prof['n_columns']} columns; "
         f"{prof['n_scanned']} rows scanned per column.",
         "",
-        "name | kind | n_unique | sample values",
+        "name | kind | n_unique | measurement | sample values",
     ]
     for col in prof["columns"]:
         if col["kind"] == "categorical":
@@ -262,5 +393,6 @@ def as_text(prof: dict, *, sample_n: int = 10) -> str:
         preview = ", ".join(repr(v) for v in sample)
         if len(col["sample"]) > sample_n:
             preview += ", ..."
-        lines.append(f"{col['name']} | {kind} | {nu} | {preview}")
+        lines.append(
+            f"{col['name']} | {kind} | {nu} | {_numeric_cell(col)} | {preview}")
     return "\n".join(lines)

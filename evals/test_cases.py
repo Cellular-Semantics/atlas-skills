@@ -257,14 +257,14 @@ def test_every_curated_column_exists_in_the_dataset():
     """The gold set names obs columns; if one is not there, no picker can ever
     match it and the dataset's score is capped below 1 for no reason. Four such
     names were found on the first full run -- all capitalisation slips, now
-    corrected on read in `celltype_column_eval.curation`. This fails if another
+    corrected on read in `obs_column_eval.curation`. This fails if another
     appears, in the curation or after a profile regeneration."""
     import sys
 
     sys.path.insert(0, str(pathlib.Path(__file__).parent.parent
-                           / "packages/celltype-column-eval/src"))
+                           / "packages/obs-column-eval/src"))
     import benchmark
-    from celltype_column_eval import full, parse_curation
+    from obs_column_eval import full, parse_curation
 
     curation = parse_curation()
     missing = []

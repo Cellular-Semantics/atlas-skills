@@ -1,6 +1,6 @@
 # Curation review: cell-type column coverage in the CL_KG sheets
 
-**Raised from:** the `author-celltype-columns` benchmark, full run 2026-09-29, n=73
+**Raised from:** the `author-annotation-columns` benchmark, full run 2026-09-29, n=73
 CELLxGENE datasets.
 **Evidence:** `docs/benchmark-results.json`, obs column profiles in
 `evals/fixtures/profiles/`.
@@ -9,7 +9,7 @@ reviewed on 2026-09-29 and are settled — see the status on each.
 
 > **Status after review.** Sections 1, 2.1 and 2.2 are **accepted and applied**; 2.3 and
 > 2.4 are **declined**. The accepted changes are applied on read in
-> `celltype_column_eval.curation` (`_CORRECTIONS`, `_ADDITIONS`) so the shipped CSVs stay
+> `obs_column_eval.curation` (`_CORRECTIONS`, `_ADDITIONS`) so the shipped CSVs stay
 > a faithful copy of the CL_KG sheets — **the sheets themselves still need updating**,
 > which is what this document is for. Section 3 is open.
 >
@@ -44,7 +44,7 @@ sheet to pull columns gets a `KeyError`.
 
 This was the only such fault across all 186 curated cell-type column names, which is a
 good hit rate for hand curation. Corrected on read in
-`celltype_column_eval.curation._CORRECTIONS`, and a test fails if another appears.
+`obs_column_eval.curation._CORRECTIONS`, and a test fails if another appears.
 **The sheet itself still needs fixing.**
 
 This alone took the dataset from Jaccard 0.18 to 0.44; the rest of its gap is the

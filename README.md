@@ -12,7 +12,7 @@ it never contains non-trivial code.
 
 ```
 packages/h5ad-obs/              remote h5ad obs reader + `h5ad-obs` CLI
-packages/celltype-column-eval/  the gold set and metrics for the picker benchmark
+packages/obs-column-eval/       gold sets and metrics for the picker benchmarks
 plugins/atlas-tools/            the skills and sub-agents, pinned to a package tag
 evals/                          skill-behaviour cases + the picker benchmark
 docs/                           what the benchmark measured
@@ -99,7 +99,7 @@ the two keys into it rather than overwriting.
 ## Use the CLI directly
 
 ```sh
-uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@v0.2.0#subdirectory=packages/h5ad-obs" \
+uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@v0.3.0#subdirectory=packages/h5ad-obs" \
     h5ad-obs https://datasets.cellxgene.cziscience.com/<id>.h5ad --list-columns
 ```
 
@@ -120,14 +120,21 @@ h5ad-obs obs.parquet --profile text   # free
 | skill | does |
 |---|---|
 | `remote-h5ad-obs` | reads `obs` from a remote `.h5ad` over HTTP range requests, never touching `X` |
-| `author-celltype-columns` | works out which `obs` columns hold the authors' own cell-type labels, as opposed to the portal's standardised `cell_type`, cluster indices and QC |
+| `author-annotation-columns` | works out which `obs` columns hold the authors' own cell type, tissue, developmental stage or disease, as opposed to the portal's standardised fields, cluster indices, protocol and QC |
 
-`author-celltype-columns` ships a sub-agent, `author-celltype-picker`, which
-makes the judgment call in a fresh context from a column profile. Benchmarked on
-73 CELLxGENE datasets against CL_KG hand curation: **Jaccard 0.94, precision
-0.96, recall 0.96**, exact agreement on 63 of 73. See
-[`docs/benchmark.md`](docs/benchmark.md) for what that does and does not mean —
-precision in particular is a lower bound.
+`author-annotation-columns` takes a `field_type` of `cell_type`, `tissue`,
+`development_stage`, `other_stage` or `disease`, and ships two sub-agents that
+make the judgment call in a fresh context from a column profile.
+
+**`author-celltype-picker`** is benchmarked on 73 CELLxGENE datasets against
+CL_KG hand curation: **Jaccard 0.94, precision 0.96, recall 0.96**, exact
+agreement on 63 of 73. See [`docs/benchmark.md`](docs/benchmark.md) for what
+that does and does not mean — precision in particular is a lower bound.
+
+**`author-sample-field-picker`** covers tissue, stage and disease. It has no
+comparable number yet: its gold set is one hand-curated atlas, and the
+73-dataset candidate pool it was written against has not been curated. Treat its
+picks as a proposal. See [`docs/sample-fields.md`](docs/sample-fields.md).
 
 ## Portal clients live elsewhere
 

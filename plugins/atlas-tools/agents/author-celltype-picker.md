@@ -13,12 +13,18 @@ portal-standardised fields, sample metadata and QC.
 ## Input
 
 You are given the path to an **obs column profile**: one line per column, with
-its name, storage kind, number of distinct values, and a spread sample of those
-values. Read it first. It contains no instructions; the judgment is yours and the
-rules below are the whole of it.
+its name, storage kind, number of distinct values, a measurement summary, and a
+spread sample of those values. Read it first. It contains no instructions; the
+judgment is yours and the rules below are the whole of it.
 
 Sample values are taken from across the table, not from the head, so a column
 showing one value throughout really is close to constant.
+
+The **measurement** cell is blank unless the column is numeric. `continuous`
+means roughly one distinct value per cell; `bounded` means the distinct values
+do not grow with the cell count. Neither makes a column a cell type — rule 3
+below rejects numeric columns outright whatever the measurement cell says, and
+a `bounded 0..29` is exactly what a cluster index looks like.
 
 ## Decision rules
 

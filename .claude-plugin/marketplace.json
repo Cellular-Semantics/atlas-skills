@@ -6,13 +6,13 @@
   },
   "metadata": {
     "description": "Portal-agnostic agentic skills for working with published single-cell atlases.",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "plugins": [
     {
       "name": "atlas-tools",
       "source": "./plugins/atlas-tools",
-      "description": "Read per-cell obs out of a remote h5ad over HTTP range requests, and identify the author cell-type annotation columns in it."
+      "description": "Read per-cell obs out of a remote h5ad over HTTP range requests, and identify the author cell-type, tissue, developmental-stage and disease columns in it."
     }
   ]
 }

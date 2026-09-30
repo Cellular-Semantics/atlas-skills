@@ -10,8 +10,8 @@ import subprocess
 import sys
 
 import pytest
-from celltype_column_eval import full, parse_curation, score_picks, subset, with_ground_truth
-from celltype_column_eval.cli import FROZEN_PICKS, main
+from obs_column_eval import full, parse_curation, score_picks, subset, with_ground_truth
+from obs_column_eval.cli import FROZEN_PICKS, main
 
 FROZEN_SCORES = FROZEN_PICKS.parent / "n73_scores.json"
 
@@ -28,7 +28,7 @@ def test_celltype_filter_drops_the_other_author_categories():
     """The sheets also record clonotypes, donor ids and demographics. Scoring
     against those would inflate the denominator with things no picker should
     ever pick."""
-    from celltype_column_eval.curation import _ADDITIONS
+    from obs_column_eval.curation import _ADDITIONS
 
     filtered = parse_curation()
     unfiltered = parse_curation(filter_celltype=False)
@@ -153,19 +153,20 @@ def test_cli_score_baseline_is_like_for_like(capsys):
     picks = FROZEN_PICKS.parent / "n73_picks.json"
     main(["score", str(picks), "--baseline"])
     payload = json.loads(capsys.readouterr().out)
-    assert payload["baseline"]["n_shared_datasets"] == payload["overall"]["n"]
+    scored = payload["by_field_type"]["cell_type"]
+    assert payload["baseline"]["n_shared_datasets"] == scored["overall"]["n"]
 
 
 def test_cli_version():
-    out = subprocess.run([sys.executable, "-m", "celltype_column_eval.cli", "--version"],
+    out = subprocess.run([sys.executable, "-m", "obs_column_eval.cli", "--version"],
                          capture_output=True, text=True)
-    assert "celltype-column-eval" in out.stdout
+    assert "obs-column-eval" in out.stdout
 
 
 def test_known_transcription_fixes_are_applied():
     """Four curated names capitalise a column that is lowercase in obs. Applied
     on read so the shipped CSVs stay a faithful copy of the CL_KG sheets."""
-    from celltype_column_eval.curation import _CORRECTIONS
+    from obs_column_eval.curation import _CORRECTIONS
 
     columns = set(parse_curation()["ac818189-5c6b-48d2-8bf1-f7511de7b5a9"]["columns"])
     for wrong, right in _CORRECTIONS["ac818189-5c6b-48d2-8bf1-f7511de7b5a9"].items():
@@ -176,7 +177,7 @@ def test_known_transcription_fixes_are_applied():
 def test_reviewed_additions_are_applied():
     """Columns accepted in the 2026-09-29 curation review. Applied on read so
     the shipped CSVs stay a faithful copy of the CL_KG sheets."""
-    from celltype_column_eval.curation import _ADDITIONS
+    from obs_column_eval.curation import _ADDITIONS
 
     curation = parse_curation()
     for dsid, extra in _ADDITIONS.items():
@@ -186,7 +187,7 @@ def test_reviewed_additions_are_applied():
 def test_additions_do_not_leak_into_the_unfiltered_view():
     """The unfiltered view is 'what the sheets say', full stop. Adding to it
     would make the raw snapshot unrecoverable."""
-    from celltype_column_eval.curation import _ADDITIONS
+    from obs_column_eval.curation import _ADDITIONS
 
     unfiltered = parse_curation(filter_celltype=False)
     dsid = "443f7fb8-2a27-47c3-98f6-6a603c7a294e"
@@ -203,3 +204,133 @@ def test_predicted_label_columns_are_still_out():
         cols = curation[dsid]["columns"]
         assert "scanvi_label" not in cols
         assert not [c for c in cols if c.startswith("transf_ann_level_")]
+
+
+# --- field types and the generalised gold set --------------------------------
+
+def test_gold_set_keys_every_field_type_it_was_asked_for():
+    from obs_column_eval.gold import FIELD_TYPES, gold_set
+
+    g = gold_set()
+    repro = g["HCA_reproductive_atlas_v1"]
+    assert set(repro["columns"]) == set(FIELD_TYPES)
+    assert repro["columns"]["tissue"] == ["Organ", "Organ_part", "Tissue_ROI"]
+
+
+def test_gold_set_restricted_to_one_field_type_carries_only_that():
+    from obs_column_eval.gold import gold_set
+
+    g = gold_set(("tissue",))
+    assert set(g) == {"HCA_reproductive_atlas_v1"}
+    assert set(g["HCA_reproductive_atlas_v1"]["columns"]) == {"tissue"}
+
+
+def test_cell_type_eligibility_is_the_whole_sweep_not_just_the_hits():
+    """A dataset the CL_KG curators recorded no cell-type field for expects
+    `[]`, which is a real answer. Scoring only the datasets with a hit would
+    change the denominator the frozen baseline was measured against."""
+    from obs_column_eval.gold import gold_set
+    from obs_column_eval.manifest import full
+
+    g = gold_set(("cell_type",))
+    assert set(full()) <= set(g)
+    assert any(not e["columns"]["cell_type"] for e in g.values())
+
+
+def test_an_unknown_field_type_is_refused():
+    from obs_column_eval.gold import gold_set
+
+    with pytest.raises(ValueError, match="Unknown field type"):
+        gold_set(("karyotype",))
+
+
+def test_scoring_skips_datasets_never_curated_for_a_field_type():
+    """Otherwise every correct tissue pick on a cell-type-only dataset counts
+    as a false positive, and the score measures gold-set coverage rather than
+    the agent."""
+    from obs_column_eval.gold import gold_set
+    from obs_column_eval.score import score_by_field_type
+
+    g = gold_set()
+    picks = {"HCA_reproductive_atlas_v1": {"tissue": ["Organ"]},
+             "e48806af-87d1-45ae-843a-c7ee06eac672": {"tissue": ["Bogus"]}}
+    out = score_by_field_type(picks, g, ["tissue"])
+    assert out["tissue"]["n_scored"] == 1
+    assert out["tissue"]["per_dataset"][0]["dsid"] == "HCA_reproductive_atlas_v1"
+
+
+def test_a_flat_picks_file_is_still_read_as_cell_type():
+    """Every picks file written before field types existed, including the
+    frozen baseline, is a bare list. Those must keep scoring."""
+    from obs_column_eval.gold import flatten
+
+    assert flatten({"d": ["A", "B"]}, "cell_type") == {"d": ["A", "B"]}
+    assert flatten({"d": ["A", "B"]}, "tissue") == {}
+
+
+def test_notes_explain_the_awkward_calls():
+    from obs_column_eval.gold import notes
+
+    n = notes()["HCA_reproductive_atlas_v1"]
+    assert "institution" in n["Collection_site"]
+
+
+# --- candidate mining --------------------------------------------------------
+
+PROFILE = """obs profile: x
+100 rows x 6 columns; 100 rows scanned per column.
+
+name | kind | n_unique | measurement | sample values
+Organ | categorical[2 cats] | 2 |  | 'Uterus', 'Ovary'
+tissue_ontology_term_id | categorical[2 cats] | 2 |  | 'UBERON:1', 'UBERON:2'
+Postnatal_age_years | array int64 | 5 | bounded 20..70 | 20, 70
+Smoker | categorical[2 cats] | 2 |  | 'yes', 'no'
+n_genes | array int64 | ~100 | continuous 500..9000 | 900, 8000
+"""
+
+
+def test_candidate_mining_groups_by_field_type(tmp_path):
+    from obs_column_eval.candidates import mine
+
+    (tmp_path / "ds1.txt").write_text(PROFILE)
+    out = mine(tmp_path)
+    tissue = [r["column"] for r in out["candidates"]["tissue"]]
+    stage = [r["column"] for r in out["candidates"]["development_stage"]]
+    assert "Organ" in tissue
+    assert "Postnatal_age_years" in stage
+
+
+def test_candidate_mining_drops_the_portal_fields(tmp_path):
+    """`tissue_ontology_term_id` matches the tissue pattern and is never a
+    pick. Leaving it in would put the same five rejects at the top of every
+    dataset's candidate list."""
+    from obs_column_eval.candidates import mine
+
+    (tmp_path / "ds1.txt").write_text(PROFILE)
+    out = mine(tmp_path)
+    everything = [r["column"] for rows in out["candidates"].values() for r in rows]
+    assert "tissue_ontology_term_id" not in everything
+
+
+def test_candidate_mining_reports_what_it_missed(tmp_path):
+    """`Smoker` matches no pattern and is exactly the kind of column a curator
+    must still see, so the complement is part of the output, not a leftover."""
+    from obs_column_eval.candidates import mine
+
+    (tmp_path / "ds1.txt").write_text(PROFILE)
+    out = mine(tmp_path)
+    assert "Smoker" in [r["column"] for r in out["unmatched"]]
+
+
+def test_candidate_mining_says_it_is_not_ground_truth(tmp_path):
+    from obs_column_eval.candidates import mine
+
+    (tmp_path / "ds1.txt").write_text(PROFILE)
+    assert "Not ground truth" in mine(tmp_path)["warning"]
+
+
+def test_candidate_mining_needs_profiles(tmp_path):
+    from obs_column_eval.candidates import mine
+
+    with pytest.raises(FileNotFoundError):
+        mine(tmp_path)
