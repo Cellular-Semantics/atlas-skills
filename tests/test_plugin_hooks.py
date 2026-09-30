@@ -165,3 +165,11 @@ def test_every_command_in_the_manifest_points_at_a_script_that_exists():
                 assert "${CLAUDE_PLUGIN_ROOT}" in command
                 name = command.rsplit("/", 1)[-1].rstrip('"')
                 assert (HOOKS / name).is_file(), name
+
+
+def test_a_record_carrying_supplements_is_denied_just_the_same():
+    """The supplements block lives inside availability.json, so retrieval is
+    protected by the ban already shipped — but only if the match is on the
+    filename rather than on anything about the contents."""
+    result = run(DENY, write_of("/x/10.1038_y/availability.json"))
+    assert result.returncode == 2

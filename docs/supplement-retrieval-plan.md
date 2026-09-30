@@ -32,9 +32,10 @@ choosing has to be possible from the listing alone, without opening anything.
 See "What phase 1 owes phase 2" below. Everything else about phase 2 — what it
 looks for, what it writes, where it lives — is open.
 
-Status: planned, nothing written. Branch `feature/supplement-retrieval`, cut
-from `main` at 3680cc9, which is where the per-skill plugin split and the
-`paper-access` package landed (PR #3).
+Status: **implemented**. Branch `feature/supplement-retrieval`, cut from `main`
+at 3680cc9, where the per-skill plugin split and the `paper-access` package
+landed (PR #3). See "What implementation changed" at the end for the three
+places reality did not match this plan.
 
 ## Why this belongs in paper-access
 
@@ -226,6 +227,9 @@ So this phase makes it a **pre-flight check with a threshold**:
    and the flag that proceeds. Record the attempt as `deferred` — a fourth
    outcome, distinct from `unavailable`, meaning nothing was learnt because
    nobody was asked yet.
+
+   *As implemented this reads `Content-Length` from a streamed `GET` rather
+   than a `HEAD`; see below.*
 4. `--max-bundle-bytes N` raises or lowers the threshold; `--yes-large`
    proceeds for this run; `--skip-large` records the deferral and moves on to
    the next paper without stopping the batch.
@@ -450,3 +454,61 @@ schema change is breaking, which the `schema_version` bump states.
 5. Wire the CLI group; verify against a real corpus including the preprint and
    the 445 MB case.
 6. Tag, test from GitHub in the testbed, PR.
+
+## What implementation changed
+
+Three things the plan got wrong, all found by running it against real hosts
+rather than by reading it.
+
+### `HEAD` does not work, so the size comes from the `GET`
+
+The plan offered "a `HEAD`, or the `Content-Length` of a `GET` abandoned after
+the headers" as equivalent options, and the first was implemented. Europe PMC's
+`supplementaryFiles` endpoint **does not answer `HEAD` at all** — it hangs until
+the client times out — while `GET` returns the zip perfectly well. Worse, the
+resulting `ReadTimeout` was recorded as `unavailable`, so a paper with a
+perfectly good bundle came back as having none.
+
+The size decision now reads the headers of a streamed `GET` and abandons the
+body unread when the answer is no. No `HEAD` is sent at all, and a test pins
+that.
+
+### An undeclared size cannot mean "refuse"
+
+The plan said an absent `Content-Length` should defer, on the grounds that a
+host which will not say how big something is has told us nothing. True in
+principle and useless in practice: Europe PMC streams the bundle chunked and
+declares no length **for every paper**, so that rule disabled the route
+entirely.
+
+The fallback the plan named for this case is the right one and is what now
+happens: the download runs against the threshold and is abandoned the moment it
+passes it. The cost of finding out is bounded by the threshold; the benefit is
+that the 768 KB case, which is most of them, simply works.
+
+### A deliberate skip is not a missing file
+
+The plan had four statuses and no place for "the bundle had it and we chose to
+leave it". Figure images are skipped on purpose, and with nowhere to record that
+they were swept into `missing` — each one growing a gap asking somebody to go
+and find a file nobody wanted.
+
+A skipped file now stays `listed`, which is exactly what `listed` means: known
+to exist, bytes not fetched. What distinguishes it from a file no rung ever
+reached is that its `retrieval.route` is set, and the missing-sweep keys on
+that.
+
+### And one trap the plan missed
+
+Alongside the empty-body and non-zip cases, a route can hand back bytes that are
+the wrong size and unopenable. Europe PMC's bundle for one paper carries a
+truncated copy of a workbook the publisher serves whole; separately, a publisher
+served 5.5 MB claiming to be a workbook that no zip reader can open — observed
+live while testing this. Kept with a digest, either looks authoritative and
+fails much later.
+
+Every retrieved file is now checked against its claimed format — a header, or a
+zip's central directory, never the payload — and discarded rather than stored if
+it fails. That check also exposed a counting bug: the rung reported "19 of 19"
+while 18 had arrived, because it counted downloads rather than files that
+survived.

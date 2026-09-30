@@ -1,7 +1,7 @@
 {
   "name": "paper-access",
-  "version": "0.1.0",
-  "description": "Get the text of a list of papers and say honestly what arrived. Resolves DOIs, PMIDs, PMCIDs or rough citations to confirmed identifiers, walks JATS XML then an ASTA index probe then an open-access PDF, writes tagged article XML to disk beside a per-paper availability record, and names the papers a person has to find by hand.",
+  "version": "0.2.0",
+  "description": "Get the text of a list of papers and their supplementary material, and say honestly what arrived. Resolves DOIs, PMIDs, PMCIDs or rough citations to confirmed identifiers, walks JATS XML then an ASTA index probe then an open-access PDF, reads the supplement list and captions out of the article XML, fetches the files without quietly downloading half a gigabyte, and names what a person has to find by hand.",
   "author": {
     "name": "Cellular Semantics",
     "url": "https://github.com/Cellular-Semantics"
@@ -15,6 +15,7 @@
     "europepmc",
     "open-access",
     "semantic-scholar",
-    "paper-retrieval"
+    "paper-retrieval",
+    "supplementary-material"
   ]
 }

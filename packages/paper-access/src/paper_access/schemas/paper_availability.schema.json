@@ -2,16 +2,16 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://cellular-semantics.org/atlas-skills/paper_availability.schema.json",
   "title": "PaperAvailability",
-  "description": "What is known about one paper's text: which identifiers it has and where each came from, what the retrieval waterfall tried, what arrived on disk, and how much of it ASTA's snippet index holds. Written by the `paper-access` CLI and by nothing else — an agent that edits this file is writing an identifier or a title that no API returned, which is the failure mode this record exists to make impossible. A paper reachable only through ASTA is a legitimate outcome with no bytes on disk, so `route` and `local_source` are separate: the first says where the usable content is, the second says what is here.",
+  "description": "What is known about one paper's text: which identifiers it has and where each came from, what the retrieval waterfall tried, what arrived on disk, and how much of it ASTA's snippet index holds. Written by the `paper-access` CLI and by nothing else \u2014 an agent that edits this file is writing an identifier or a title that no API returned, which is the failure mode this record exists to make impossible. A paper reachable only through ASTA is a legitimate outcome with no bytes on disk, so `route` and `local_source` are separate: the first says where the usable content is, the second says what is here.",
   "type": "object",
   "properties": {
     "schema_version": {
-      "description": "Version of this schema the record was written against. A consumer that does not recognise it should refuse to read the record rather than guess at missing fields.",
+      "description": "Version of this schema the record was written against. A consumer that does not recognise it must refuse the record rather than guess at missing fields \u2014 an absent `supplements` block in a version that has one would otherwise read as 'this paper has no supplementary material', which is a claim nobody made.",
       "type": "integer",
       "minimum": 1
     },
     "input": {
-      "description": "What the caller actually supplied, verbatim — a DOI, a PMID, a PMCID, or a free-text citation. Kept so that a record can be traced back to the line of the input file that produced it, including when resolution turned it into something quite different.",
+      "description": "What the caller actually supplied, verbatim \u2014 a DOI, a PMID, a PMCID, or a free-text citation. Kept so that a record can be traced back to the line of the input file that produced it, including when resolution turned it into something quite different.",
       "type": "string"
     },
     "ids": {
@@ -19,16 +19,23 @@
       "$ref": "#/$defs/Identifiers"
     },
     "route": {
-      "description": "Where this paper's usable content is. 'europepmc' = tagged article XML from Europe PMC's fullTextXML. 'preprint_server' = the JATS a preprint server hosts. 'unpaywall' = an open-access PDF an open-access resolver named. 'manual' = a file a person supplied, taken in by `adopt`. 'asta' = nothing was retrievable, but ASTA's snippet index holds enough of the paper to be queried — there are no bytes on disk and no figure legends. 'none' = no route produced anything; the paper has to be asked for.",
+      "description": "Where this paper's usable content is. 'europepmc' = tagged article XML from Europe PMC's fullTextXML. 'preprint_server' = the JATS a preprint server hosts. 'unpaywall' = an open-access PDF an open-access resolver named. 'manual' = a file a person supplied, taken in by `adopt`. 'asta' = nothing was retrievable, but ASTA's snippet index holds enough of the paper to be queried \u2014 there are no bytes on disk and no figure legends. 'none' = no route produced anything; the paper has to be asked for.",
       "type": "string",
-      "enum": ["europepmc", "preprint_server", "unpaywall", "manual", "asta", "none"]
+      "enum": [
+        "europepmc",
+        "preprint_server",
+        "unpaywall",
+        "manual",
+        "asta",
+        "none"
+      ]
     },
     "local_source": {
       "description": "The bytes on disk, when there are any. Absent for route 'asta' and route 'none', which is why this is a separate object rather than fields on the record: a consumer that needs a file must test for this rather than for a successful-looking route.",
       "$ref": "#/$defs/LocalSource"
     },
     "asta": {
-      "description": "What ASTA's snippet index holds for this paper, measured rather than assumed. Present whenever the probe ran, including when a JATS route had already succeeded — the band is a fact about the paper worth recording once, and it is what tells a later multi-paper search which papers it can actually reach.",
+      "description": "What ASTA's snippet index holds for this paper, measured rather than assumed. Present whenever the probe ran, including when a JATS route had already succeeded \u2014 the band is a fact about the paper worth recording once, and it is what tells a later multi-paper search which papers it can actually reach.",
       "$ref": "#/$defs/AstaIndexing"
     },
     "metadata": {
@@ -38,19 +45,23 @@
     "attempts": {
       "description": "Every rung the waterfall reached, in order, including rungs that ran and found nothing and rungs that could not run at all. A rung absent from this list was never tried, which is a different claim from a rung that tried and failed.",
       "type": "array",
-      "items": { "$ref": "#/$defs/Attempt" }
+      "items": {
+        "$ref": "#/$defs/Attempt"
+      }
     },
     "oa_candidates": {
       "description": "Every open-access location a resolver named, kept whether or not one was used. Whether a location is the published paper or a preprint of it is a judgement that cannot be made after the fact from a URL alone.",
       "type": "array",
-      "items": { "$ref": "#/$defs/OaLocation" }
+      "items": {
+        "$ref": "#/$defs/OaLocation"
+      }
     },
     "gap": {
       "description": "What could not be retrieved and what would fix it. Present when route is 'none'.",
       "$ref": "#/$defs/Gap"
     },
     "notes": {
-      "description": "Free text for a human or an agent to record something the CLI cannot know — that a PDF is the accepted manuscript, that the DOI resolves to a correction. The only field outside the CLI's control, and deliberately the only one: it cannot be mistaken for an identifier or for publisher metadata.",
+      "description": "Free text for a human or an agent to record something the CLI cannot know \u2014 that a PDF is the accepted manuscript, that the DOI resolves to a correction. The only field outside the CLI's control, and deliberately the only one: it cannot be mistaken for an identifier or for publisher metadata.",
       "type": "string"
     },
     "fetched_at": {
@@ -62,18 +73,34 @@
       "description": "When the waterfall last ran. With `attempts`, this is the negative cache: a paper no route could produce is not re-attempted on every later pass unless a retry is asked for.",
       "type": "string",
       "format": "date-time"
+    },
+    "supplements": {
+      "description": "A paper's supplementary material: what files it has, where each came from, and what could not be got. Retrieval only \u2014 nothing here says what a file *contains*. A `description` is harvested verbatim from a caption, a bundle manifest or a preprint server's label, with its source named; it is a fact the publisher stated, not a judgement anybody made. Deciding what a file is for, and whether it bears on a question, is a separate job against a separate artefact, and a relevance field is deliberately absent so that 'not yet judged' can never be read as 'judged irrelevant'.",
+      "$ref": "#/$defs/Supplements"
     }
   },
-  "required": ["schema_version", "input", "ids", "route", "attempts"],
+  "required": [
+    "schema_version",
+    "input",
+    "ids",
+    "route",
+    "attempts"
+  ],
   "additionalProperties": false,
   "$defs": {
     "Identifiers": {
       "type": "object",
       "description": "At least one identifier must be present and confirmed. A record whose only identifier is a candidate has not been resolved and cannot be fetched.",
       "properties": {
-        "doi": { "$ref": "#/$defs/Identifier" },
-        "pmid": { "$ref": "#/$defs/Identifier" },
-        "pmcid": { "$ref": "#/$defs/Identifier" }
+        "doi": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "pmid": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "pmcid": {
+          "$ref": "#/$defs/Identifier"
+        }
       },
       "minProperties": 1,
       "additionalProperties": false
@@ -89,7 +116,14 @@
         "from": {
           "description": "'input' = supplied by the caller and taken as given. Otherwise the API that returned it: 'europepmc', 'idconv' (the NCBI ID converter), 'crossref', 'unpaywall', 'asta'. 'inferred' is deliberately not a value.",
           "type": "string",
-          "enum": ["input", "europepmc", "idconv", "crossref", "unpaywall", "asta"]
+          "enum": [
+            "input",
+            "europepmc",
+            "idconv",
+            "crossref",
+            "unpaywall",
+            "asta"
+          ]
         },
         "at": {
           "description": "When the API returned it. Absent for `from: input`, which has no lookup behind it.",
@@ -102,7 +136,10 @@
           "default": true
         }
       },
-      "required": ["value", "from"],
+      "required": [
+        "value",
+        "from"
+      ],
       "additionalProperties": false
     },
     "LocalSource": {
@@ -112,7 +149,10 @@
         "kind": {
           "description": "'jats' = tagged article XML, which carries reference markup, document order, and figure and table legends. 'pdf' = a PDF, whose text has to be recovered first and which carries none of those guarantees.",
           "type": "string",
-          "enum": ["jats", "pdf"]
+          "enum": [
+            "jats",
+            "pdf"
+          ]
         },
         "path": {
           "description": "The stored source, relative to this record.",
@@ -141,24 +181,42 @@
           "$ref": "#/$defs/TextQuality"
         }
       },
-      "required": ["kind", "path", "sha256", "bytes"],
+      "required": [
+        "kind",
+        "path",
+        "sha256",
+        "bytes"
+      ],
       "additionalProperties": false
     },
     "AstaIndexing": {
       "type": "object",
-      "description": "The measured depth of ASTA's snippet index for this paper. Being in Semantic Scholar's metadata graph says nothing about being in the snippet index, and no API field reports coverage — probing is the only instrument. Bands are calibrated on section-name and refMention counts, which separate cleanly and are not finely tuned.",
+      "description": "The measured depth of ASTA's snippet index for this paper. Being in Semantic Scholar's metadata graph says nothing about being in the snippet index, and no API field reports coverage \u2014 probing is the only instrument. Bands are calibrated on section-name and refMention counts, which separate cleanly and are not finely tuned.",
       "properties": {
         "band": {
           "description": "'full' = body text indexed; quotable, and reference mentions are positioned. 'partial' = body text present but below the full-text floor. 'abstract_only' = title and abstract only; citation edges may still exist via the graph API but carry no offsets. 'unindexed' = in Semantic Scholar, absent from the snippet index. 'not_in_s2' = no Semantic Scholar record. 'skipped' = the probe could not run, most often no ASTA_API_KEY; nothing was learnt, which is not the same as `unindexed`.",
           "type": "string",
-          "enum": ["full", "partial", "abstract_only", "unindexed", "not_in_s2", "skipped"]
+          "enum": [
+            "full",
+            "partial",
+            "abstract_only",
+            "unindexed",
+            "not_in_s2",
+            "skipped"
+          ]
         },
         "corpus_id": {
           "description": "Semantic Scholar CorpusId, as `CorpusId:NNNNN`. Absent when the paper is not in Semantic Scholar.",
           "type": "string"
         },
-        "n_snippets": { "type": "integer", "minimum": 0 },
-        "n_chars": { "type": "integer", "minimum": 0 },
+        "n_snippets": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "n_chars": {
+          "type": "integer",
+          "minimum": 0
+        },
         "n_sections": {
           "description": "Distinct section names across the returned snippets. Zero means no body text: one of the two decisive band signals.",
           "type": "integer",
@@ -178,28 +236,44 @@
           "type": "integer",
           "minimum": 1
         },
-        "probed_at": { "type": "string", "format": "date-time" },
+        "probed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
         "reason": {
           "description": "Why the band is what it is, in a sentence. Carries the error text for 'skipped' and 'not_in_s2'.",
           "type": "string"
         }
       },
-      "required": ["band", "probed_at"],
+      "required": [
+        "band",
+        "probed_at"
+      ],
       "additionalProperties": false
     },
     "Metadata": {
       "type": "object",
       "description": "Publication metadata as one API returned it, kept together with the name of that API rather than merged from several. A blended record cannot be checked against anything.",
       "properties": {
-        "title": { "type": "string" },
+        "title": {
+          "type": "string"
+        },
         "authors": {
           "description": "Author names as the API gave them, in order, unparsed.",
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
-        "year": { "type": "integer" },
-        "journal": { "type": "string" },
-        "publisher": { "type": "string" },
+        "year": {
+          "type": "integer"
+        },
+        "journal": {
+          "type": "string"
+        },
+        "publisher": {
+          "type": "string"
+        },
         "license": {
           "description": "The licence the source declares, where it declares one. Absent is common and means unknown, never 'closed'.",
           "type": "string"
@@ -207,11 +281,23 @@
         "source_api": {
           "description": "Which API produced every field in this block.",
           "type": "string",
-          "enum": ["europepmc", "crossref", "unpaywall", "asta", "idconv"]
+          "enum": [
+            "europepmc",
+            "crossref",
+            "unpaywall",
+            "asta",
+            "idconv"
+          ]
         },
-        "retrieved_at": { "type": "string", "format": "date-time" }
+        "retrieved_at": {
+          "type": "string",
+          "format": "date-time"
+        }
       },
-      "required": ["source_api", "retrieved_at"],
+      "required": [
+        "source_api",
+        "retrieved_at"
+      ],
       "additionalProperties": false
     },
     "Attempt": {
@@ -221,40 +307,62 @@
         "route": {
           "description": "The rung. 'local' is the cache check that runs first and is not a route: where it succeeds the existing record stands, so a paper supplied by hand last week still reads as supplied. 'asta_probe' always runs and records a band; it becomes the route only when no rung produced bytes and the band is 'full'.",
           "type": "string",
-          "enum": ["local", "europepmc", "preprint_server", "asta_probe", "unpaywall", "manual"]
+          "enum": [
+            "local",
+            "europepmc",
+            "preprint_server",
+            "asta_probe",
+            "unpaywall",
+            "manual"
+          ]
         },
         "outcome": {
-          "description": "'ok' = produced what this record carries. 'unavailable' = the rung ran and this paper is not reachable by it. 'failed' = the rung ran and broke, so it is worth retrying. 'skipped' = the rung could not run at all — a missing dependency, no contact address, no API key — and nothing was learnt about the paper.",
+          "description": "'ok' = produced what this record carries. 'unavailable' = the rung ran and this paper is not reachable by it. 'failed' = the rung ran and broke, so it is worth retrying. 'skipped' = the rung could not run at all \u2014 a missing dependency, no contact address, no API key \u2014 and nothing was learnt about the paper.",
           "type": "string",
-          "enum": ["ok", "unavailable", "failed", "skipped"]
+          "enum": [
+            "ok",
+            "unavailable",
+            "failed",
+            "skipped"
+          ]
         },
         "note": {
           "description": "What happened, in enough detail to act on.",
           "type": "string"
         },
-        "at": { "type": "string", "format": "date-time" }
+        "at": {
+          "type": "string",
+          "format": "date-time"
+        }
       },
-      "required": ["route", "outcome"],
+      "required": [
+        "route",
+        "outcome"
+      ],
       "additionalProperties": false
     },
     "OaLocation": {
       "type": "object",
       "description": "One open-access location as the resolver described it. The resolver's own vocabulary is kept verbatim rather than mapped onto ours, so a value it adds later does not read as invalid.",
       "properties": {
-        "url": { "type": "string" },
+        "url": {
+          "type": "string"
+        },
         "url_for_pdf": {
           "description": "A direct link to the PDF where the resolver has one. Frequently absent even for a genuinely open location, leaving only a landing page.",
           "type": "string"
         },
         "host_type": {
-          "description": "Whose host it is, as the resolver says — typically the publisher or a repository.",
+          "description": "Whose host it is, as the resolver says \u2014 typically the publisher or a repository.",
           "type": "string"
         },
         "version": {
           "description": "Which version, as the resolver says. A submitted version is the manuscript before review: the science is usually the same but the text is not the published text, so a quote from it may not appear in the article a reader opens.",
           "type": "string"
         },
-        "used": { "type": "boolean" }
+        "used": {
+          "type": "boolean"
+        }
       },
       "additionalProperties": false
     },
@@ -267,7 +375,10 @@
           "type": "integer",
           "minimum": 0
         },
-        "n_chars": { "type": "integer", "minimum": 0 },
+        "n_chars": {
+          "type": "integer",
+          "minimum": 0
+        },
         "mean_chars_per_segment": {
           "description": "A page of scanned images extracts to a handful of very short segments, which this separates from prose.",
           "type": "number",
@@ -278,7 +389,10 @@
           "type": "string"
         }
       },
-      "required": ["n_segments", "n_chars"],
+      "required": [
+        "n_segments",
+        "n_chars"
+      ],
       "additionalProperties": false
     },
     "Gap": {
@@ -298,7 +412,276 @@
           "type": "string"
         }
       },
-      "required": ["what", "reason"],
+      "required": [
+        "what",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "Supplements": {
+      "type": "object",
+      "properties": {
+        "files": {
+          "description": "Every supplementary file known for this paper, whether or not it was retrieved. One entry per file as the publisher packages it; an archive's contents are in `members`, not here.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SupplementFile"
+          }
+        },
+        "listing_sources": {
+          "description": "Where the knowledge that these files exist came from, in the order tried. A listing is worth having even when no bytes follow: it is the difference between 'eleven supplements nobody could get' and 'this paper appears to have none'.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SupplementAttempt"
+          }
+        },
+        "attempts": {
+          "description": "Every byte-fetching rung reached, in order, including rungs that ran and found nothing and rungs that could not run. A rung absent from this list was never tried.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SupplementAttempt"
+          }
+        },
+        "gaps": {
+          "description": "What could not be retrieved and what would fix it \u2014 a closed-access file to ask for, a bundle declined on size, or a data-availability statement pointing at a repository this tool deliberately does not scrape.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SupplementGap"
+          }
+        },
+        "listed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "fetched_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "attempted_at": {
+          "description": "When the byte rungs last ran. With `attempts`, the negative cache: a file nobody can get is not re-requested on every pass unless a retry is asked for.",
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "files"
+      ],
+      "additionalProperties": false
+    },
+    "SupplementFile": {
+      "type": "object",
+      "description": "One supplementary file as the publisher packages it.",
+      "properties": {
+        "file_id": {
+          "description": "Stable identifier within this paper, normally the publisher's filename. Unique across `files`.",
+          "type": "string"
+        },
+        "filename": {
+          "description": "The name the publisher gave it, where that differs from `file_id`.",
+          "type": "string"
+        },
+        "media_type": {
+          "description": "What kind of file, guessed from the extension. A guess about the container, never about the contents.",
+          "type": "string"
+        },
+        "label": {
+          "description": "The publisher's short label, e.g. 'Supplementary Table 3'. Verbatim.",
+          "type": "string"
+        },
+        "description": {
+          "description": "What the authors or publisher say this file is. Harvested verbatim and never composed, paraphrased, summarised or merged across sources. Requires `description_source`.",
+          "type": "string"
+        },
+        "description_source": {
+          "description": "Where the description was copied from. 'jats_caption' = the <supplementary-material> caption in the article XML. 'bundle_manifest' = a manifest, index or README inside the bundle that maps filenames to the authors' labels. 'biorxiv_label' = the label on the preprint server's supplement page. There is deliberately no value meaning 'written by a reader'.",
+          "type": "string",
+          "enum": [
+            "jats_caption",
+            "bundle_manifest",
+            "biorxiv_label"
+          ]
+        },
+        "size_bytes": {
+          "description": "Size in bytes: of the stored file where it is here, otherwise as the listing or the host declared it.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "description": "Digest of the stored bytes. Absent where the file is not here, or where hashing was skipped on size \u2014 which is recorded in `retrieval.note` rather than left to be inferred.",
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "path": {
+          "description": "The stored file, relative to the directory holding this record. Present only for status 'present'.",
+          "type": "string"
+        },
+        "status": {
+          "description": "'listed' = known to exist, bytes not fetched. 'present' = on disk. 'deferred' = a fetch was declined, so far only on size; nothing was learnt about whether it can be got, and this must never be read as 'unavailable'. 'missing' = every route ran and none produced it.",
+          "type": "string",
+          "enum": [
+            "listed",
+            "present",
+            "deferred",
+            "missing"
+          ]
+        },
+        "retrieval": {
+          "$ref": "#/$defs/SupplementRetrieval"
+        },
+        "members": {
+          "description": "An archive's contents, from its own member table. Recorded whether or not anything was extracted, because it is what turns one opaque bundle into a list worth reasoning about \u2014 and it costs nothing, being already in the zip's central directory.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ArchiveMember"
+          }
+        }
+      },
+      "required": [
+        "file_id",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "SupplementRetrieval": {
+      "type": "object",
+      "description": "How one file arrived, or why it did not. A file supplied by hand is a first-class route, and for a closed-access paper it is the only one.",
+      "properties": {
+        "route": {
+          "description": "'jats_listing' = known from the article XML, bytes not fetched by this route. 'europepmc_bundle' = extracted from the article's supplement zip. 'publisher_direct' = fetched from the publisher's static host. 'biorxiv' = fetched from the preprint server. 'manual' = supplied by a person. 'none' = no route produced it.",
+          "type": "string",
+          "enum": [
+            "jats_listing",
+            "europepmc_bundle",
+            "publisher_direct",
+            "biorxiv",
+            "manual",
+            "none"
+          ]
+        },
+        "url": {
+          "type": "string"
+        },
+        "retrieved_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "attempted_at": {
+          "description": "When a route last ran and did not produce bytes.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "note": {
+          "description": "Why a route was skipped, how it failed, or what was capped. Free text, and the only place a skipped digest or an abandoned download is explained.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "route"
+      ],
+      "additionalProperties": false
+    },
+    "ArchiveMember": {
+      "type": "object",
+      "description": "One entry in an archive's member table. Listing a member is not extracting it: `extracted` says which happened.",
+      "properties": {
+        "member_path": {
+          "type": "string"
+        },
+        "media_type": {
+          "type": "string"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "path": {
+          "description": "Where it was unpacked to, relative to this record. Absent when it was not unpacked.",
+          "type": "string"
+        },
+        "extracted": {
+          "type": "boolean"
+        },
+        "note": {
+          "description": "Why a member was not extracted \u2014 over the size cap, or a figure image skipped deliberately.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "member_path",
+        "extracted"
+      ],
+      "additionalProperties": false
+    },
+    "SupplementAttempt": {
+      "type": "object",
+      "description": "One rung and what it did.",
+      "properties": {
+        "route": {
+          "description": "A listing rung ('jats_listing', 'local_text_scan', 'asta_scan', 'biorxiv_page') or a byte rung ('europepmc_bundle', 'publisher_direct', 'biorxiv', 'manual').",
+          "type": "string",
+          "enum": [
+            "jats_listing",
+            "local_text_scan",
+            "asta_scan",
+            "biorxiv_page",
+            "europepmc_bundle",
+            "publisher_direct",
+            "biorxiv",
+            "manual"
+          ]
+        },
+        "outcome": {
+          "description": "'ok' = produced something. 'unavailable' = the rung ran and this paper is not reachable by it. 'failed' = the rung ran and broke, so it is worth retrying. 'skipped' = it could not run at all, so nothing was learnt. 'deferred' = it could have run and was declined, so far only on size; nothing was learnt either, and this is not 'unavailable'.",
+          "type": "string",
+          "enum": [
+            "ok",
+            "unavailable",
+            "failed",
+            "skipped",
+            "deferred"
+          ]
+        },
+        "note": {
+          "type": "string"
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "route",
+        "outcome"
+      ],
+      "additionalProperties": false
+    },
+    "SupplementGap": {
+      "type": "object",
+      "description": "Something missing, said in terms a person can act on.",
+      "properties": {
+        "what": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "action": {
+          "description": "What would fix it: where a free copy is, the flag that proceeds, or the command to take a supplied file in.",
+          "type": "string"
+        },
+        "url": {
+          "description": "Where the material is, where a listing named somewhere. A data-availability statement pointing at a repository is recorded here rather than scraped.",
+          "type": "string"
+        },
+        "file_id": {
+          "description": "The file this gap is about, where it is about one.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "what",
+        "reason"
+      ],
       "additionalProperties": false
     }
   }

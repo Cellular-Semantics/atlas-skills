@@ -21,8 +21,9 @@ from typing import Any
 
 from .errors import PaperAccessError
 from .ids import Identifier
+from .supplements import Supplements, cross_check_supplements
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 SCHEMA_NAME = "paper_availability.schema.json"
 
 #: Routes that put bytes on disk. 'asta' and 'none' do not, which is the whole
@@ -215,6 +216,7 @@ class Availability:
     oa_candidates: list[dict[str, Any]] = field(default_factory=list)
     gap: dict[str, str] | None = None
     notes: str | None = None
+    supplements: Supplements | None = None
     fetched_at: str | None = None
     attempted_at: str | None = None
 
@@ -271,6 +273,8 @@ class Availability:
             out["gap"] = self.gap
         if self.notes:
             out["notes"] = self.notes
+        if self.supplements is not None:
+            out["supplements"] = self.supplements.to_dict()
         for key in ("fetched_at", "attempted_at"):
             value = getattr(self, key)
             if value:
@@ -299,6 +303,11 @@ class Availability:
             oa_candidates=list(payload.get("oa_candidates") or []),
             gap=payload.get("gap"),
             notes=payload.get("notes"),
+            supplements=(
+                Supplements.from_dict(payload["supplements"])
+                if payload.get("supplements") is not None
+                else None
+            ),
             fetched_at=payload.get("fetched_at"),
             attempted_at=payload.get("attempted_at"),
         )
@@ -401,6 +410,12 @@ def cross_check(payload: dict[str, Any]) -> list[str]:
     for kind, found in ids.items():
         if found.get("from") == "input" and found.get("at"):
             problems.append(f"{kind} came from the caller but carries a lookup time")
+
+    supplements = payload.get("supplements")
+    if supplements is not None:
+        problems.extend(
+            f"supplements: {problem}" for problem in cross_check_supplements(supplements)
+        )
 
     used = [loc for loc in payload.get("oa_candidates") or [] if loc.get("used")]
     if len(used) > 1:

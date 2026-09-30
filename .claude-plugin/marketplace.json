@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Portal-agnostic agentic skills for working with published single-cell atlases and the literature behind them. Each skill installs on its own.",
-    "version": "0.4.0"
+    "version": "0.5.0"
   },
   "plugins": [
     {
@@ -22,7 +22,7 @@
     {
       "name": "paper-access",
       "source": "./plugins/paper-access",
-      "description": "Retrieve a list of papers as tagged article XML where it can be had, probe how much of each one a search index holds, and say honestly which papers nobody can reach."
+      "description": "Retrieve papers as tagged article XML where it can be had, probe how much of each a search index holds, fetch their supplementary material, and say honestly which papers and files nobody can reach."
     },
     {
       "name": "atlas-tools",

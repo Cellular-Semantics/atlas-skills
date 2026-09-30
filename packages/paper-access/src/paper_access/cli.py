@@ -16,11 +16,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from . import __version__, refs, waterfall
+from . import __version__, refs, supp_flow, waterfall
 from . import record as record_module
 from .errors import PaperAccessError
 from .store import read as read_record
 from .store import read_all
+from .store import write as write_record
 
 
 def _emit(payload: Any) -> None:
@@ -190,6 +191,139 @@ def cmd_papers(args: argparse.Namespace) -> int:
 
 
 # ----------------------------------------------------------------------
+# Supplementary material
+# ----------------------------------------------------------------------
+
+
+def _needs_record(args: argparse.Namespace):
+    found = read_record(args.store, args.id)
+    if found is None:
+        raise PaperAccessError(
+            f"no record for {args.id} in {args.store}; fetch the paper first — "
+            "the article XML is where the supplement filenames and captions live"
+        )
+    return found
+
+
+def cmd_supp_list(args: argparse.Namespace) -> int:
+    record = _needs_record(args)
+    record.supplements = supp_flow.list_supplements(
+        record, args.store, asta_key=args.asta_key
+    )
+    write_record(args.store, record)
+    _emit({"supplements": record.supplements.to_dict()})
+    return 0
+
+
+def cmd_supp_fetch(args: argparse.Namespace) -> int:
+    record = _needs_record(args)
+    if record.supplements is None or not record.supplements.files:
+        record.supplements = supp_flow.list_supplements(
+            record, args.store, asta_key=args.asta_key
+        )
+    record.supplements = supp_flow.fetch_supplements(
+        record,
+        args.store,
+        retry=args.retry,
+        use_bundle=not args.no_bundle,
+        large_bytes=args.large_bytes,
+        max_bytes=args.max_bundle_bytes,
+        allow_large=args.yes_large,
+        skip_large=args.skip_large,
+    )
+    write_record(args.store, record)
+    payload = record.supplements.to_dict()
+    _emit({"supplements": payload})
+    deferred = [f for f in record.supplements.files if f.status == "deferred"]
+    # Exit 2 asks the caller to decide, unless they said carry on. A batch that
+    # stopped on the first big bundle would be worse than one that capped.
+    return 2 if deferred and not args.skip_large else 0
+
+
+def cmd_supp_unpack(args: argparse.Namespace) -> int:
+    record = _needs_record(args)
+    record.supplements = supp_flow.unpack(record, args.store)
+    write_record(args.store, record)
+    _emit({"supplements": record.supplements.to_dict()})
+    return 0
+
+
+def cmd_supp_adopt(args: argparse.Namespace) -> int:
+    record = _needs_record(args)
+    record.supplements, unmatched = supp_flow.adopt(record, args.store, args.incoming)
+    write_record(args.store, record)
+    _emit({"supplements": record.supplements.to_dict(), "unmatched": unmatched})
+    return 0
+
+
+def cmd_supp_show(args: argparse.Namespace) -> int:
+    record = _needs_record(args)
+    if record.supplements is None:
+        _emit({"error": f"nothing recorded about supplements for {args.id}"})
+        return 1
+    payload = record.to_dict()
+    problems = record_module.check(payload)
+    _emit({"supplements": payload["supplements"], "problems": problems})
+    return 2 if problems else 0
+
+
+def cmd_supp_report(args: argparse.Namespace) -> int:
+    rows = []
+    for record in read_all(args.store):
+        try:
+            _, value = record.primary_id
+        except PaperAccessError:
+            continue
+        found = record.supplements
+        row = {"id": value, "listed": 0, "present": 0, "deferred": 0, "missing": 0}
+        if found is None:
+            row["status"] = "not looked at"
+        else:
+            row.update(found.counts)
+            row["status"] = "looked at"
+            row["gaps"] = len(found.gaps)
+        rows.append(row)
+    if args.json:
+        _emit({"papers": rows})
+        return 0
+    _print_supp_report(rows)
+    return 0
+
+
+def _print_supp_report(rows: list[dict[str, Any]]) -> None:
+    if not rows:
+        print("no papers in this store")
+        return
+    width = max(len(str(r["id"])) for r in rows)
+    print(f"{'id'.ljust(width)}  present  listed  deferred  missing  gaps")
+    for row in rows:
+        print(
+            f"{str(row['id']).ljust(width)}  "
+            f"{row.get('present', 0):>7}  "
+            f"{row.get('listed', 0):>6}  "
+            f"{row.get('deferred', 0):>8}  "
+            f"{row.get('missing', 0):>7}  "
+            f"{row.get('gaps', 0):>4}"
+        )
+    unlooked = [r for r in rows if r.get("status") == "not looked at"]
+    if unlooked:
+        print(
+            f"\n{len(unlooked)} paper(s) have not been looked at, which is not the "
+            "same as having no supplements:"
+        )
+        for row in unlooked:
+            print(f"  {row['id']}")
+    deferred = [r for r in rows if r.get("deferred")]
+    if deferred:
+        print(
+            f"\n{len(deferred)} paper(s) have files nobody has agreed to download yet. "
+            "Nothing was learnt about whether they can be got:"
+        )
+        for row in deferred:
+            print(f"  {row['id']}: {row['deferred']} file(s) — see `supplements show`")
+
+
+# ----------------------------------------------------------------------
 # Wiring
 # ----------------------------------------------------------------------
 
@@ -270,7 +404,56 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--store", required=True)
     p.set_defaults(func=cmd_papers)
 
+    supp = subs.add_parser(
+        "supplements", help="A paper's supplementary material: list, fetch, unpack"
+    ).add_subparsers(dest="supp_command", required=True)
+
+    def with_store_id(sub: argparse.ArgumentParser) -> None:
+        sub.add_argument("--store", required=True)
+        sub.add_argument("--id", required=True)
+
+    s = supp.add_parser("list", help="What supplementary files this paper has")
+    with_store_id(s)
+    s.add_argument("--asta-key", help="ASTA API key (default: ASTA_API_KEY)")
+    s.set_defaults(func=cmd_supp_list)
+
+    s = supp.add_parser("fetch", help="Fetch the listed files")
+    with_store_id(s)
+    s.add_argument("--retry", action="store_true",
+                   help="Try again for files recorded as missing or deferred")
+    s.add_argument("--no-bundle", action="store_true",
+                   help="Skip the Europe PMC bundle route")
+    s.add_argument("--large-bytes", type=int, default=supp_flow.DEFAULT_LARGE_BYTES,
+                   help="Defer a download over this size (default 50 MB)")
+    s.add_argument("--max-bundle-bytes", type=int, default=supp_flow.DEFAULT_MAX_BYTES,
+                   help="Never exceed this, even with --yes-large")
+    s.add_argument("--yes-large", action="store_true",
+                   help="Proceed with a download over --large-bytes")
+    s.add_argument("--skip-large", action="store_true",
+                   help="Record the deferral and exit 0, so a batch keeps going")
+    s.add_argument("--asta-key", help="ASTA API key (default: ASTA_API_KEY)")
+    s.set_defaults(func=cmd_supp_fetch)
+
+    s = supp.add_parser("unpack", help="Expand stored archives, recording members")
+    with_store_id(s)
+    s.set_defaults(func=cmd_supp_unpack)
+
+    s = supp.add_parser("adopt", help="Take in files a person dropped")
+    with_store_id(s)
+    s.add_argument("--incoming", required=True)
+    s.set_defaults(func=cmd_supp_adopt)
+
+    s = supp.add_parser("show", help="One paper's supplements, with problems flagged")
+    with_store_id(s)
+    s.set_defaults(func=cmd_supp_show)
+
+    s = supp.add_parser("report", help="Supplement coverage across the store")
+    s.add_argument("--store", required=True)
+    s.add_argument("--json", action="store_true")
+    s.set_defaults(func=cmd_supp_report)
+
     return parser
+
 
 
 def main(argv: list[str] | None = None) -> int:
