@@ -112,7 +112,7 @@ the two keys into it rather than overwriting.
 ## Use the CLI directly
 
 ```sh
-uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@v0.3.0#subdirectory=packages/h5ad-obs" \
+uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@pkg-h5ad-obs--v0.3.0#subdirectory=packages/h5ad-obs" \
     h5ad-obs https://datasets.cellxgene.cziscience.com/<id>.h5ad --list-columns
 ```
 

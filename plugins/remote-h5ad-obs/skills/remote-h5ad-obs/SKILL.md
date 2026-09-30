@@ -22,7 +22,7 @@ transfers ~27 MB in ~8-13 s.
 ## Command
 
 ```sh
-uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@v0.3.0#subdirectory=packages/h5ad-obs" \
+uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@pkg-h5ad-obs--v0.3.0#subdirectory=packages/h5ad-obs" \
     h5ad-obs <url> [options]
 ```
 
