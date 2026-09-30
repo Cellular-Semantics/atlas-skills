@@ -205,9 +205,15 @@ claude plugin tag plugins/remote-h5ad-obs     # remote-h5ad-obs--v0.3.0
 ```
 
 `claude plugin tag` checks that `plugin.json` and the marketplace entry agree
-before it writes the tag. Package tags follow the same shape by hand —
-`h5ad-obs--v0.3.0` — and are what the `uvx --from …@<tag>` lines in the skills
-pin to.
+before it writes the tag, and its format is fixed: `<plugin-name>--v<version>`.
+
+**Package tags carry a `pkg-` prefix** — `pkg-paper-access--v0.1.0` — and are
+what the `uvx --from …@<tag>` lines in the skills pin to. The prefix is not
+decoration: a plugin and the package it calls may share a name, and where they
+do, an unprefixed package tag would collide with the plugin tag at the same
+version number. One tag cannot mean two things, and the collision only bites
+when the two versions happen to coincide, which is exactly when nobody is
+looking for it.
 
 ## Rules for changes
 

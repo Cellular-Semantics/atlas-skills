@@ -30,7 +30,7 @@ from pathlib import Path
 
 PACKAGE = (
     "git+https://github.com/Cellular-Semantics/atlas-skills"
-    "@paper-access--v0.1.0#subdirectory=packages/paper-access"
+    "@pkg-paper-access--v0.1.0#subdirectory=packages/paper-access"
 )
 
 CHECKED_SUFFIXES = {".md", ".markdown", ".txt", ".json", ".yaml", ".yml"}

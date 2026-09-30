@@ -4,8 +4,8 @@ Retrieve the text of a list of papers and record honestly what arrived.
 
 **Status: implemented, not yet released.** 139 unit tests, all offline —
 every rung runs through an `httpx` MockTransport. The `uvx --from` lines in the
-skill and its hooks pin to `paper-access--v0.1.0`, which does not exist until
-the tag is pushed; until then use an editable install or a local path.
+skill and its hooks pin to `pkg-paper-access--v0.1.0`, which does not exist
+until the tag is pushed; until then use an editable install or a local path.
 
 ## The waterfall
 
