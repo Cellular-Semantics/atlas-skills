@@ -1,7 +1,28 @@
 # Plan: supplementary-material retrieval
 
 **Phase 1 of two.** This phase gets the bytes and records honestly what arrived.
-Inspecting and annotating what was retrieved is phase 2, deliberately
+
+## Content annotation is not an aim of this phase
+
+Stated first because it is the constraint everything else follows from, and
+because it is easy to drift across by accident.
+
+Nothing here reads what a supplement *says*. No spreadsheet is opened, no
+sheet outlined, no prose extracted, no relevance judged, no table
+characterised. A retrieved file is an opaque blob with a label on it. If a
+question can only be answered by looking inside a data file, it is not this
+phase's question.
+
+**What is recorded is what the publisher already told us**: the filename, the
+media type, the size, the archive members, and any description the authors or
+the publisher wrote. That last one is worth being precise about, because
+"description" sounds like annotation and is not: a caption lifted verbatim out
+of the article XML is a machine fact, copied, with its source named. It is not
+a judgement anybody made about the contents. See "What gets recorded about each
+file" below for exactly where a description may come from and what may be done
+with it.
+
+Inspecting and annotating what was retrieved is **phase 2**, deliberately
 postponed — including what it does and where it lives — and will be its own PR.
 
 Status: planned, nothing written. Branch `feature/supplement-retrieval`, cut
@@ -50,12 +71,45 @@ for what no route reached.
 
 **Out, and left to phase 2:** reading any supplement's *contents* — no
 spreadsheet outlines, no prose extraction, no triage, no relevance verdicts, no
-`tables`/`prose` sections. A retrieved file is an opaque blob with a caption.
+`tables`/`prose` sections. A retrieved file is an opaque blob with a label.
 
 **Out, permanently:** fetching from arbitrary external repositories. Where a
 data-availability statement points at Zenodo, figshare, GEO or Dryad, that
 pointer is recorded as a gap with its URL. Scraping unknown hosts is fragile,
 and a named pointer is already actionable.
+
+## What gets recorded about each file
+
+Per file, and per archive member: `filename`, `media_type`, `size_bytes`,
+`sha256`, where it came from, and a `description` with a `description_source`.
+
+The description is **harvested, never composed**. Three places it may come
+from, and the record says which:
+
+| `description_source` | where it comes from |
+|---|---|
+| `jats_caption` | the `<supplementary-material>` caption in the article XML |
+| `bundle_manifest` | a manifest, index or README *inside* the bundle that maps filenames to the authors' own labels |
+| `biorxiv_label` | the label the preprint server's supplement page carries |
+
+Two rules keep this on the right side of the line:
+
+- **Verbatim or absent.** A harvested description is copied, not paraphrased,
+  not summarised, not merged across sources. Where two sources disagree, keep
+  the article XML's and record the other in a note; a blended description
+  cannot be checked against anything.
+- **A bundle manifest may be read; a data file may not.** Reading a file whose
+  job is to describe the bundle is retrieval — it is a listing, the same kind of
+  thing as the archive's own member table. Opening a spreadsheet of results to
+  see what is in it is annotation, and it is phase 2. The distinction is what
+  the file is *for*, and it is testable: a manifest is recognised by name
+  (`manifest`, `index`, `README`, `contents`, `file_list`) and by being small.
+
+This is worth the care because a caption is often the best description that
+will ever exist for a supplement — publishers write things like "Supplementary
+Tables 1–40" or "Source Data Figs. 2 and 4", which no amount of looking at the
+bytes would recover. Capturing it now is cheap and it is not annotation. What
+it is *for* is a phase-2 question.
 
 ## The waterfall
 
@@ -111,6 +165,49 @@ XML served 14 of 22.
   uses a 250 MB bundle cap, an 80 MB per-member cap and a 512 MB cap for
   tabular members.
 
+## Large bundles: ask before downloading, do not cap silently
+
+A 445 MB download is a decision about somebody's disk, time and possibly
+tethered connection. Upstream handles it with a default cap, which turns a
+question into a silent truncation — the paper ends up recorded as partially
+retrieved because of a limit nobody was told about.
+
+So this phase makes it a **pre-flight check with a threshold**:
+
+1. Before fetching a bundle, ask the host for its size — a `HEAD`, or the
+   `Content-Length` of a `GET` abandoned after the headers.
+2. Under the threshold (proposed default **50 MB**): fetch without comment.
+3. Over it: **do not fetch.** Exit 2, print the size, what is in the bundle if
+   the listing already says (the video is usually identifiable by media type),
+   and the flag that proceeds. Record the attempt as `deferred` — a fourth
+   outcome, distinct from `unavailable`, meaning nothing was learnt because
+   nobody was asked yet.
+4. `--max-bundle-bytes N` raises or lowers the threshold; `--yes-large`
+   proceeds for this run; `--skip-large` records the deferral and moves on to
+   the next paper without stopping the batch.
+
+Two consequences worth designing for:
+
+- **A batch must not block on a prompt.** Over a 22-paper corpus this has to be
+  a non-interactive decision: the default is defer-and-continue, and the
+  operator re-runs with a flag for the ones they want. A CLI that waits for a
+  keystroke halfway through a corpus is worse than one that caps.
+- **`Content-Length` is often absent** on a chunked response. Then the size
+  cannot be known in advance, so fall back to streaming with the cap and abort
+  on exceeding it — recording `deferred` with a note that the size was not
+  declared, not `unavailable`. A host that will not say how big something is
+  has told us nothing about whether the file exists.
+
+Where the listing already carries per-file sizes — the article XML sometimes
+does — a bundle can be skipped in favour of fetching only the wanted files
+publisher-direct, which is both smaller and more precise. Worth doing where the
+template exists.
+
+This is also the first thing the *skill* has to exercise judgement about:
+reporting "this paper's supplements are 445 MB, most of it one video" and
+letting a person decide is the useful behaviour, and quietly fetching 250 MB of
+it is not.
+
 ## What changes in the record
 
 The upstream manifest already splits along this phase boundary, which is the
@@ -143,6 +240,7 @@ paper store:
 paper-access supplements list    --store <s> --id <id>          what files exist, from the listing
 paper-access supplements fetch   --store <s> --id <id> [--retry] walk the byte rungs
                                  [--no-bundle] [--max-bundle-bytes N]
+                                 [--yes-large | --skip-large]
 paper-access supplements unpack  --store <s> --id <id>           expand archives, record members
 paper-access supplements adopt   --store <s> --id <id> --incoming <dir>
 paper-access supplements show    --store <s> --id <id>           the supplements block
@@ -196,6 +294,14 @@ Judgement the new skill owns, and which is the reason it is a skill at all:
 
 - **A listing with no bytes is a result, not a failure.** Report the count and
   the gaps; do not round eleven unreachable supplements down to "none found".
+- **Whether a large bundle is worth fetching.** The record says how big and, if
+  the listing is good enough, what makes it big. Put that in front of the user
+  with the flag to proceed rather than deciding for them; and where only one
+  table is wanted out of 445 MB, say that fetching it publisher-direct is an
+  option.
+- **A deferral is not an absence.** A paper whose bundle was skipped on size
+  has supplements nobody has fetched yet, and a report that lists it beside a
+  paper with none is wrong.
 - **Which dropped file is which supplement.** The `adopt` route needs a person's
   filenames matched to the publisher's labels, and the same warning applies as
   for papers: a convincing-looking title is not a match.
@@ -220,6 +326,13 @@ own agent-written artefact.
 - **The traps get named tests.** An empty-body bundle recorded as
   `unavailable`; a capped member recorded as a gap naming its size; a listing
   that survives a total byte failure.
+- **The size gate gets its own.** Over-threshold defers rather than truncating;
+  `deferred` never reads as `unavailable`; a missing `Content-Length` defers
+  rather than claiming the file is not there; `--skip-large` keeps a batch
+  moving; and a harvested description survives a deferral, because the listing
+  is what makes a deferral reportable.
+- **Descriptions stay verbatim.** A test that a caption is byte-identical to the
+  article XML, and that a bundle manifest never overwrites one.
 - **Hook contract.** Already covered by `tests/test_plugin_hooks.py`; add a case
   that a write to an `availability.json` carrying a supplements block is denied
   just the same.
@@ -251,8 +364,14 @@ schema change is breaking, which the `schema_version` bump states.
   data-availability statement found in a snippet may name an accession rather
   than a file. That is still worth recording as a pointer; if it turns out to
   add nothing over the other rungs on a real corpus, drop it and say so.
-- **Size caps and honesty.** The 445 MB case means a default cap will bite on
-  real papers. Every cap needs its trace tested, not just implemented.
+- **Size caps and honesty.** The 445 MB case means a threshold will bite on
+  real papers. Every cap and every deferral needs its trace tested, not just
+  implemented.
+- **The description line gets crossed by accident.** "Read the bundle manifest
+  but not the data files" is a rule somebody will overstep while adding a
+  publisher, because a manifest and a small results table look alike from the
+  outside. The recognition rule — named like an index, and small — should be one
+  function with its own tests, not a condition spread across the fetchers.
 
 ## Open questions
 
@@ -265,6 +384,14 @@ schema change is breaking, which the `schema_version` bump states.
 3. **Is a supplement worth a digest if it is never read?** Yes for change
    detection, but hashing a 445 MB video costs real time. Possibly cap hashing
    by size and record that the digest was skipped.
+4. **Is 50 MB the right threshold?** It sits above the observed 14–28 MB
+   typical case and below the 60 MB PNAS paper, so on the reference corpus it
+   would defer two papers out of 22. That feels about right for a default that
+   is meant to be noticed rather than endured, but it is a guess until it runs
+   on a corpus somebody is waiting for.
+5. **Does a deferral need re-probing?** A deferred bundle's size is recorded, so
+   a later run could decide without another `HEAD`. Cheap either way; the
+   question is whether a stale size is worse than an extra request.
 
 ## Sequence
 
