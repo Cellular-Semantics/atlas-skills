@@ -33,7 +33,8 @@ See "What phase 1 owes phase 2" below. Everything else about phase 2 — what it
 looks for, what it writes, where it lives — is open.
 
 Status: planned, nothing written. Branch `feature/supplement-retrieval`, cut
-from `refactor/per-skill-plugins` (PR #3), which it depends on.
+from `main` at 3680cc9, which is where the per-skill plugin split and the
+`paper-access` package landed (PR #3).
 
 ## Why this belongs in paper-access
 
