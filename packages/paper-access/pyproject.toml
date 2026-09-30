@@ -1,0 +1,45 @@
+[project]
+name = "paper-access"
+version = "0.1.0"
+description = "Retrieve the text of a list of papers and record honestly what arrived: JATS XML, an ASTA index probe, an open-access PDF, or an ask."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Cellular Semantics" }]
+dependencies = [
+    "httpx>=0.27",
+    "jsonschema>=4.22",
+]
+
+[project.optional-dependencies]
+# Getting past hosts that fingerprint the client, and reading PDFs. Separate
+# from the base install because a caller who only wants Europe PMC's XML should
+# not have to build PyMuPDF to get it.
+text-access = [
+    "curl-cffi>=0.7.0",
+    "pymupdf4llm>=0.0.17",
+]
+test = [
+    "pytest>=8.0",
+    "pytest-cov>=4.1",
+]
+
+[project.scripts]
+paper-access = "paper_access.cli:main"
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+paper_access = ["schemas/*.schema.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "live: hits a real API; deselected by default",
+]
+addopts = "-m 'not live'"

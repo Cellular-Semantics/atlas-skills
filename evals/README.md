@@ -27,14 +27,14 @@ Needs the plugin installed **at user scope** — these cases test the
 
 ```sh
 claude plugin marketplace add Cellular-Semantics/atlas-skills --scope user
-claude plugin install atlas-tools@atlas-skills --scope user
+claude plugin install author-annotation-columns@atlas-skills --scope user
 ```
 
 Each case runs in a fresh temporary directory, so nothing but the user-scope
 plugin is in scope: no project `CLAUDE.md`, no `.claude/skills`. **A project- or
 local-scope install is therefore invisible here** — it lives in the repo and the
 temp directory does not — so `runner.py` checks the scope and the version, not
-just that something called `atlas-tools` exists. Matching on the name alone
+just that something called `author-annotation-columns` exists. Matching on the name alone
 waves through a setup whose cases would all fail for the wrong reason.
 
 Testing the published pin is the point, not an inconvenience: half of what these
@@ -98,7 +98,7 @@ CLIs. And it inherits the cwd rather than isolating to a temp directory, so a
 
 ```sh
 claude plugin marketplace add "$PWD" --scope local
-claude plugin install atlas-tools@atlas-skills --scope local
+claude plugin install author-annotation-columns@atlas-skills --scope local
 
 H5AD_OBS_CMD="packages/h5ad-obs/.venv/bin/h5ad-obs" \
 OBS_COLUMN_EVAL_CMD="packages/obs-column-eval/.venv/bin/obs-column-eval" \
@@ -107,7 +107,7 @@ OBS_COLUMN_EVAL_CMD="packages/obs-column-eval/.venv/bin/obs-column-eval" \
 
 Local scope writes to `.claude/settings.local.json`, which is gitignored, and
 does not disturb whatever is installed at user scope. Remove it afterwards with
-`claude plugin uninstall atlas-tools@atlas-skills --scope local`.
+`claude plugin uninstall author-annotation-columns@atlas-skills --scope local`.
 
 So the accuracy number can be measured, reviewed and landed *before* a release
 is tagged; only the behaviour cases have to wait for one.
@@ -173,7 +173,7 @@ now.
 
 ## First run
 
-Run for the first time on **2026-09-29**, against atlas-tools 0.2.0: **5 of 6 cases
+Run for the first time on **2026-09-29**, against atlas-tools 0.2.0 (the bundle these skills shipped in before they were split into per-skill plugins): **5 of 6 cases
 clean, $2.02**. The sixth failed on a bad check of mine, not on the skill — see the
 section above. Re-running the whole suite costs about $2 and takes ten minutes.
 

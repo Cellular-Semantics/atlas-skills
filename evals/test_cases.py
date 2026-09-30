@@ -141,9 +141,9 @@ def test_plugin_list_is_parsed_into_name_version_scope(monkeypatch):
     bullet = "\u276f"  # the glyph the CLI actually prints, kept out of the source
     listing = "\n".join([
         "Installed plugins:", "",
-        f"  {bullet} atlas-tools@atlas-skills",
+        f"  {bullet} author-annotation-columns@atlas-skills",
         "    Version: 0.1.0", "    Scope: user", "    Status: enabled", "",
-        f"  {bullet} atlas-tools@atlas-skills",
+        f"  {bullet} author-annotation-columns@atlas-skills",
         "    Version: 0.2.0", "    Scope: local", "    Status: enabled", ""])
     monkeypatch.setattr(sp, "run", lambda *a, **k: sp.CompletedProcess(a, 0, listing, ""))
     rows = runner.installed_plugins()
@@ -154,7 +154,7 @@ def test_guard_rejects_a_local_only_install(monkeypatch):
     import runner
 
     monkeypatch.setattr(runner, "installed_plugins", lambda: [
-        {"name": "atlas-tools@atlas-skills", "version": "0.2.0", "scope": "local"}])
+        {"name": "author-annotation-columns@atlas-skills", "version": "0.2.0", "scope": "local"}])
     with pytest.raises(SystemExit) as exc:
         runner.check_plugin_installed()
     assert "temp directory" in str(exc.value)
@@ -166,7 +166,7 @@ def test_guard_rejects_a_stale_user_install(monkeypatch):
     import runner
 
     monkeypatch.setattr(runner, "installed_plugins", lambda: [
-        {"name": "atlas-tools@atlas-skills", "version": "0.1.0", "scope": "user"}])
+        {"name": "author-annotation-columns@atlas-skills", "version": "0.1.0", "scope": "user"}])
     with pytest.raises(SystemExit) as exc:
         runner.check_plugin_installed()
     assert runner.EXPECTED_PLUGIN_VERSION in str(exc.value)
@@ -176,7 +176,7 @@ def test_guard_accepts_the_expected_user_install(monkeypatch):
     import runner
 
     monkeypatch.setattr(runner, "installed_plugins", lambda: [
-        {"name": "atlas-tools@atlas-skills",
+        {"name": "author-annotation-columns@atlas-skills",
          "version": runner.EXPECTED_PLUGIN_VERSION, "scope": "user"}])
     runner.check_plugin_installed()
 

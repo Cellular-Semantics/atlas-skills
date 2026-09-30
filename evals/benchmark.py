@@ -145,14 +145,15 @@ def _picker_provenance() -> dict:
     """
     out = {}
     listing = _run(["claude", "plugin", "list"]).stdout
-    match = re.search(r"atlas-tools@\S+\s+Version:\s*(\S+)\s+Scope:\s*(\S+)",
+    match = re.search(r"author-annotation-columns@\S+\s+Version:\s*(\S+)\s+Scope:\s*(\S+)",
                       listing, re.DOTALL)
     if match:
-        out["plugin"] = f"atlas-tools {match.group(1)} ({match.group(2)} scope)"
+        out["plugin"] = (f"author-annotation-columns {match.group(1)} "
+                         f"({match.group(2)} scope)")
     sha = _run(["git", "rev-parse", "--short", "HEAD"], cwd=HERE).stdout.strip()
     if sha:
         out["commit"] = sha
-    agent = HERE.parent / "plugins/atlas-tools/agents/author-celltype-picker.md"
+    agent = HERE.parent / "plugins/author-annotation-columns/agents/author-celltype-picker.md"
     if agent.exists():
         import hashlib
         out["agent_sha256"] = hashlib.sha256(agent.read_bytes()).hexdigest()[:12]

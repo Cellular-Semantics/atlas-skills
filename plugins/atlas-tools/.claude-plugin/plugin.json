@@ -1,7 +1,7 @@
 {
   "name": "atlas-tools",
-  "version": "0.3.0",
-  "description": "Portal-agnostic tools for working with published single-cell atlases: read per-cell obs out of a remote h5ad over range requests without downloading the expression matrix, and find the author cell-type, tissue, developmental-stage and disease columns in it.",
+  "version": "0.4.0",
+  "description": "Convenience bundle: installs both h5ad tools together — read per-cell obs out of a remote h5ad over range requests, and find the author cell-type, tissue, developmental-stage and disease columns in it. Carries no skills of its own; install the individual plugins instead if you only want one.",
   "author": {
     "name": "Cellular Semantics",
     "url": "https://github.com/Cellular-Semantics"
@@ -13,16 +13,10 @@
     "single-cell",
     "cell-atlas",
     "anndata",
-    "h5ad",
-    "cell-annotation",
-    "author-annotations",
-    "tissue",
-    "development-stage",
-    "disease"
+    "h5ad"
   ],
-  "skills": "./skills/",
-  "agents": [
-    "./agents/author-celltype-picker.md",
-    "./agents/author-sample-field-picker.md"
+  "dependencies": [
+    "remote-h5ad-obs@atlas-skills",
+    "author-annotation-columns@atlas-skills"
   ]
 }

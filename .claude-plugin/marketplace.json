@@ -5,14 +5,29 @@
     "url": "https://github.com/Cellular-Semantics"
   },
   "metadata": {
-    "description": "Portal-agnostic agentic skills for working with published single-cell atlases.",
-    "version": "0.3.0"
+    "description": "Portal-agnostic agentic skills for working with published single-cell atlases and the literature behind them. Each skill installs on its own.",
+    "version": "0.4.0"
   },
   "plugins": [
     {
+      "name": "remote-h5ad-obs",
+      "source": "./plugins/remote-h5ad-obs",
+      "description": "Read the per-cell obs table out of a remote h5ad over HTTP range requests, without downloading the expression matrix."
+    },
+    {
+      "name": "author-annotation-columns",
+      "source": "./plugins/author-annotation-columns",
+      "description": "Find which obs columns hold the authors' own cell-type, tissue, developmental-stage and disease annotations, as opposed to the portal's standardised fields, cluster indices and QC."
+    },
+    {
+      "name": "paper-access",
+      "source": "./plugins/paper-access",
+      "description": "Retrieve a list of papers as tagged article XML where it can be had, probe how much of each one a search index holds, and say honestly which papers nobody can reach."
+    },
+    {
       "name": "atlas-tools",
       "source": "./plugins/atlas-tools",
-      "description": "Read per-cell obs out of a remote h5ad over HTTP range requests, and identify the author cell-type, tissue, developmental-stage and disease columns in it."
+      "description": "Convenience bundle: both h5ad plugins together. Carries no skills of its own."
     }
   ]
 }
