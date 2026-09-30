@@ -38,6 +38,8 @@ jobs:
       # pure functions and are: a rejection check that fails a correct answer
       # makes a green suite meaningless.
       - run: uv run pytest evals -q
+      # The plugin hooks, invoked as subprocesses the way the harness calls them.
+      - run: uv run pytest tests -q
 
   install-from-git:
     # The published contract: what a user gets from the SKILL.md command.

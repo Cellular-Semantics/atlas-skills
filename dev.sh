@@ -21,3 +21,7 @@ packages/celltype-column-eval/.venv/bin/python -m pytest packages/celltype-colum
 # The grader unit tests are free and offline: they keep a rejection check from
 # quietly failing the answers it is supposed to pass.
 packages/celltype-column-eval/.venv/bin/python -m pytest evals "$@"
+# The plugin hooks, run as the harness runs them. A hook with its exit codes
+# backwards either wrecks a session or silently disables itself, and nothing
+# else would catch either.
+packages/paper-access/.venv/bin/python -m pytest tests "$@"
