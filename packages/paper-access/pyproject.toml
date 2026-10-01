@@ -1,6 +1,6 @@
 [project]
 name = "paper-access"
-version = "0.1.0"
+version = "0.3.0"
 description = "Retrieve the text of a list of papers and record honestly what arrived: JATS XML, an ASTA index probe, an open-access PDF, or an ask."
 readme = "README.md"
 requires-python = ">=3.11"

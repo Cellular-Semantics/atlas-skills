@@ -135,6 +135,7 @@ h5ad-obs obs.parquet --profile text   # free
 | `remote-h5ad-obs` | `remote-h5ad-obs` | reads `obs` from a remote `.h5ad` over HTTP range requests, never touching `X` |
 | `author-annotation-columns` | `author-annotation-columns` | works out which `obs` columns hold the authors' own cell type, tissue, developmental stage or disease, as opposed to the portal's standardised fields, cluster indices, protocol and QC |
 | `paper-access` | `paper-access` | retrieves a list of papers as tagged article XML where it can be had, probes how much of each a search index holds, and names the papers nobody can reach |
+| `paper-access` | `retrieve-supplements` | fetches a paper's supplementary files, reading the list and the publisher's captions out of the article XML, and refuses to download half a gigabyte without asking |
 
 `author-annotation-columns` takes a `field_type` of `cell_type`, `tissue`,
 `development_stage`, `other_stage` or `disease`, and ships two sub-agents that
@@ -166,8 +167,21 @@ enforce it: a direct write to an `availability.json` is denied, and with
 `PAPER_ACCESS_STORE` set, identifiers quoted in a written document are checked
 against the store.
 
-Supplementary material is deliberately a separate job, and will be a separate
-plugin.
+### retrieve-supplements
+
+The same plugin's second skill. Reads a paper's supplement list and the
+publisher's captions out of the article XML already on disk, then fetches from
+the publisher's host, Europe PMC's bundle or the preprint server. A download
+over 50 MB is **deferred** rather than capped: the record carries its size and
+the flag that would proceed, because a limit nobody was told about looks like a
+paper with fewer supplements than it has.
+
+It does not look inside anything. No spreadsheet is opened and no relevance
+judged; a retrieved file is an opaque blob with a label. Working out which file
+answers a question is a separate job, and a retrieval record deliberately has no
+relevance field so that "not yet judged" cannot be read as "judged
+irrelevant". See
+[`docs/supplement-retrieval-plan.md`](docs/supplement-retrieval-plan.md).
 
 ## Portal clients live elsewhere
 
