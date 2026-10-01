@@ -13,3 +13,6 @@ build/
 # the picker needs no network.
 evals/.cache/
 evals/results/
+
+# per-package dev venvs
+packages/*/.venv/

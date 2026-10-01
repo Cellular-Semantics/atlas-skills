@@ -1,0 +1,10 @@
+{
+  "name": "ontology-mapping",
+  "version": "0.1.0",
+  "description": "Map author-recorded species, sex, developmental stage, disease and tissue strings onto ontology terms for human single-cell atlases. Parses ages to days post-fertilization and resolves them against HsapDv day windows, uses the stage and sex fields to decide between a mature organ term and its embryonic precursor, checks every structural claim against the ontology, and refuses rather than guessing.",
+  "author": { "name": "Cellular Semantics", "url": "https://github.com/Cellular-Semantics" },
+  "homepage": "https://github.com/Cellular-Semantics/atlas-skills",
+  "repository": "https://github.com/Cellular-Semantics/atlas-skills",
+  "license": "MIT",
+  "keywords": ["ontology", "uberon", "hsapdv", "mondo", "cellxgene", "curation", "ubergraph"]
+}
