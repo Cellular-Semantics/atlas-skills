@@ -23,7 +23,14 @@ from .errors import PaperAccessError
 from .ids import Identifier
 from .supplements import Supplements, cross_check_supplements
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
+
+#: The oldest record this build will read. An older record is not wrong — it was
+#: written before a field existed — and refusing one would mean re-fetching every
+#: corpus anybody holds on every schema change. Upgrading is lossless in both
+#: steps so far: v1 and v2 records simply lack blocks that are optional in v3,
+#: and an absent `supplements` block already means "nobody has looked".
+MIN_SCHEMA_VERSION = 1
 SCHEMA_NAME = "paper_availability.schema.json"
 
 #: Routes that put bytes on disk. 'asta' and 'none' do not, which is the whole
@@ -284,10 +291,17 @@ class Availability:
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> Availability:
         version = payload.get("schema_version")
-        if version != SCHEMA_VERSION:
+        if not isinstance(version, int) or version < MIN_SCHEMA_VERSION:
             raise PaperAccessError(
-                f"record is schema_version {version!r}, this build writes "
-                f"{SCHEMA_VERSION}; refusing to guess at the difference"
+                f"record is schema_version {version!r}, which this build does not "
+                f"recognise; the oldest it reads is {MIN_SCHEMA_VERSION}"
+            )
+        if version > SCHEMA_VERSION:
+            # Guessing at fields that did not exist yet is how a record starts
+            # lying, so a record from the future is refused rather than read.
+            raise PaperAccessError(
+                f"record is schema_version {version}, newer than the {SCHEMA_VERSION} "
+                "this build writes; upgrade paper-access rather than reading it"
             )
         local = payload.get("local_source")
         asta = payload.get("asta")
@@ -316,6 +330,23 @@ class Availability:
 # ----------------------------------------------------------------------
 # Validation
 # ----------------------------------------------------------------------
+
+
+def upgraded(payload: dict[str, Any]) -> dict[str, Any]:
+    """An older record in the current shape, or the same record unchanged.
+
+    Both upgrades so far are additive: nothing has to be moved or converted,
+    because the blocks v3 added are optional and their absence already carries
+    the right meaning. The function exists so that the next upgrade has
+    somewhere to live and a test to sit against, rather than being discovered
+    halfway through a migration.
+    """
+    version = payload.get("schema_version")
+    if version == SCHEMA_VERSION:
+        return payload
+    out = dict(payload)
+    out["schema_version"] = SCHEMA_VERSION
+    return out
 
 
 def validate(payload: dict[str, Any]) -> None:

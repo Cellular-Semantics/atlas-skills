@@ -9,6 +9,7 @@ returns.
 from __future__ import annotations
 
 import io
+import time
 import zipfile
 
 import httpx
@@ -17,6 +18,7 @@ import pytest
 from paper_access import store, supp_flow, supp_sources
 from paper_access.ids import Identifier
 from paper_access.record import Attempt, Availability, LocalSource, Metadata
+from paper_access.supplements import SupplementFile, Supplements
 
 DOI = "10.1038/s41586-023-06812-z"
 PMCID = "PMC10719114"
@@ -219,7 +221,9 @@ def test_a_big_bundle_is_deferred_not_truncated(paper, monkeypatch):
             record, root, client=http, large_bytes=50 * 1024 * 1024
         )
 
-    assert all(f.status == "deferred" for f in found.files)
+    # The media policy has already taken the video and the figure out, so what
+    # the bundle decision touches is what remains.
+    assert {f.status for f in found.files} == {"deferred", "skipped"}
     bundle = next(a for a in found.attempts if a.route == "europepmc_bundle")
     assert bundle.outcome == "deferred"
     assert "500 MB" in bundle.note and "not downloaded without being asked" in bundle.note
@@ -276,7 +280,11 @@ def test_an_undeclared_size_that_turns_out_huge_is_abandoned(paper, monkeypatch)
     bundle = next(a for a in found.attempts if a.route == "europepmc_bundle")
     assert bundle.outcome == "deferred"
     assert "while downloading" in bundle.note
-    assert all(f.status == "deferred" for f in found.files)
+    # The bytes read are a lower bound, and the note says so rather than
+    # presenting them as the bundle's size.
+    assert "having read" in bundle.note
+    assert "real size is not known" in bundle.note
+    assert "deferred" in {f.status for f in found.files}
 
 
 def test_yes_large_proceeds(paper, monkeypatch):
@@ -357,7 +365,7 @@ def test_a_truncated_workbook_is_discarded_rather_than_recorded(paper, monkeypat
 # -- what gets extracted ------------------------------------------------
 
 
-def test_figure_images_are_listed_but_not_extracted(paper, monkeypatch):
+def test_figures_are_skipped_by_media_type_before_any_transfer(paper, monkeypatch):
     record, root = paper
     monkeypatch.delenv("ASTA_API_KEY", raising=False)
     record.supplements = supp_flow.list_supplements(record, root)
@@ -374,11 +382,11 @@ def test_figure_images_are_listed_but_not_extracted(paper, monkeypatch):
         found = supp_flow.fetch_supplements(record, root, client=http)
 
     png = found.by_id("41586_2023_6812_MOESM3_ESM.png")
-    assert png.status != "present"
-    assert "figure image" in png.retrieval.note
-    # But it is still on the record: a skip a reader cannot see is
-    # indistinguishable from a file that was never there.
-    assert png.size_bytes == 104
+    assert png.status == "skipped"
+    assert "not wanted at any size" in png.retrieval.note
+    # Still on the record: a skip a reader cannot see is indistinguishable from
+    # a file that was never there.
+    assert png.media_type == "png"
 
 
 def test_an_oversized_member_is_deferred_with_a_gap(paper, monkeypatch):
@@ -391,10 +399,11 @@ def test_an_oversized_member_is_deferred_with_a_gap(paper, monkeypatch):
         head=httpx.Response(200, headers={"content-length": str(len(body))}),
         get=httpx.Response(200, content=body))
 
-    monkeypatch.setattr(supp_flow, "TABULAR_MEMBER_CAP_BYTES", 1)
-    monkeypatch.setattr(supp_flow, "MEMBER_CAP_BYTES", 1)
     with client_for(handler) as http:
-        found = supp_flow.fetch_supplements(record, root, client=http)
+        # One limit, applied the same way on every route.
+        found = supp_flow.fetch_supplements(
+            record, root, client=http, max_bytes=1, allow_large=True
+        )
     entry = found.by_id("41586_2023_6812_MOESM1_ESM.xlsx")
     assert entry.status == "deferred"
     assert any(g.get("file_id") == entry.file_id for g in found.gaps)
@@ -534,7 +543,7 @@ def test_unpack_records_the_member_table_and_extracts_what_it_can(paper, monkeyp
     assert members["tables/deg.csv"].path
     # Listed but not extracted, and the record says which.
     assert not members["figs/f1.png"].extracted
-    assert "figure image" in members["figs/f1.png"].note
+    assert "not wanted at any size" in members["figs/f1.png"].note
 
 
 # -- adopting ------------------------------------------------------------
@@ -645,11 +654,186 @@ def test_a_deliberately_skipped_figure_is_not_reported_as_missing(paper, monkeyp
         found = supp_flow.fetch_supplements(record, root, client=http)
 
     png = found.by_id("41586_2023_6812_MOESM3_ESM.png")
-    assert png.status == "listed"
-    assert "deliberately not extracted" in png.retrieval.note
+    assert png.status == "skipped"
+    assert "not wanted at any size" in png.retrieval.note
     assert not [g for g in found.gaps if g.get("file_id") == png.file_id]
 
-    # A file no rung ever reached is still missing, and still gets a gap.
-    absent = found.by_id("41586_2023_6812_MOESM2_ESM.mp4")
-    assert absent.status == "missing"
-    assert [g for g in found.gaps if g.get("file_id") == absent.file_id]
+    # Nothing the policy passed over produces a gap: a gap is a question for a
+    # person, and nobody needs to be asked about a file we did not want.
+    skipped = [f for f in found.files if f.status == "skipped"]
+    assert {f.media_type for f in skipped} == {"png", "mp4"}
+    assert not [g for g in found.gaps if g.get("file_id") in
+                {f.file_id for f in skipped}]
+    assert found.by_id("41586_2023_6812_MOESM1_ESM.xlsx").status == "present"
+
+
+# -- wall-clock deadlines ------------------------------------------------
+
+
+def test_a_slow_trickle_is_a_timeout_not_a_silence(paper, monkeypatch):
+    """httpx's timeout is per-operation, so a host sending one chunk every
+    170s never trips a 180s read timeout. One such request held a serial sweep
+    for 17 minutes having transferred nothing."""
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+
+    def trickle(request):
+        def chunks():
+            for _ in range(20):
+                time.sleep(0.02)
+                yield b"x" * 8
+        return httpx.Response(200, content=chunks())
+
+    with client_for(bundle_only(on_get=trickle)) as http:
+        found = supp_flow.fetch_supplements(
+            record, root, client=http, allow_large=True, file_timeout=0.05,
+            paper_timeout=0.05,
+        )
+    outcomes = [a.outcome for a in found.attempts if a.route == "europepmc_bundle"]
+    assert "timeout" in outcomes
+    note = next(a.note for a in found.attempts
+                if a.route == "europepmc_bundle" and a.outcome == "timeout")
+    assert "gave up after" in note or "budget ran out" in note
+
+
+def test_a_paper_budget_stops_the_remaining_routes(paper, monkeypatch):
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+    with client_for(lambda r: httpx.Response(404)) as http:
+        found = supp_flow.fetch_supplements(
+            record, root, client=http, paper_timeout=-1.0
+        )
+    assert any(a.outcome == "timeout" for a in found.attempts)
+
+
+# -- honest sizes --------------------------------------------------------
+
+
+def test_a_declared_oversize_file_is_not_transferred(paper, monkeypatch):
+    """The publisher routes do answer HEAD, which is the only place a size
+    decision can be made before transferring rather than during."""
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+    methods: list[str] = []
+
+    def handler(request):
+        methods.append(request.method)
+        if request.method == "HEAD":
+            return httpx.Response(200, headers={"content-length": str(900_000_000)})
+        raise AssertionError("must not download a file declared over the limit")
+
+    with client_for(handler) as http:
+        found = supp_flow.fetch_supplements(
+            record, root, client=http, use_bundle=False, max_bytes=1_000_000
+        )
+    entry = found.by_id("41586_2023_6812_MOESM1_ESM.xlsx")
+    assert entry.status == "deferred"
+    assert entry.size_bytes == 900_000_000
+    assert "HEAD" in methods
+
+
+def test_an_abandoned_transfer_records_bytes_not_a_size():
+    """53477376 is what was read before giving up. Recording it as the
+    bundle's size states something false about the file."""
+    def endless(request):
+        return httpx.Response(200, content=iter([b"x" * 4096] * 64))
+
+    with client_for(endless) as http:
+        result = supp_sources.fetch_bundle(
+            http, PMCID, large_bytes=1024, max_bytes=10**9, allow_large=False
+        )
+    assert result.outcome == "deferred"
+    assert result.size_bytes is None
+    assert result.transferred and result.transferred > 1024
+    assert "real size is not known" in result.note
+
+
+# -- captions ------------------------------------------------------------
+
+
+def test_an_author_manuscript_records_why_it_has_no_captions(tmp_path, monkeypatch):
+    """A caption is often the best description a supplement will ever have, so
+    an absence is attributed rather than left blank."""
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    xml = (
+        '<article xmlns:xlink="http://www.w3.org/1999/xlink"><back><sec>'
+        '<supplementary-material xlink:href="nihms-1610745-f0008.gif">'
+        "<label>Supplementary Figure 8</label></supplementary-material>"
+        "</sec></back></article>"
+    )
+    record = Availability(
+        input=DOI, ids={"doi": Identifier.given(DOI)}, route="europepmc",
+        local_source=LocalSource(kind="jats", path="source/paper.jats.xml",
+                                 sha256="a" * 64, bytes=len(xml)),
+        attempts=[Attempt("europepmc", "ok")],
+        fetched_at="2026-01-01T00:00:00+00:00",
+    )
+    store.write(tmp_path, record)
+    store.store_bytes(tmp_path, record, "jats", xml.encode())
+
+    found = supp_flow.list_supplements(record, tmp_path)
+    assert found.caption_source == "none_in_jats"
+    note = next(a.note for a in found.listing_sources if a.route == "jats_listing")
+    assert "author manuscript" in note
+
+
+def test_captions_present_are_recorded_as_such(paper, monkeypatch):
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    found = supp_flow.list_supplements(record, root)
+    assert found.caption_source == "jats"
+
+
+# -- a write failure cannot strand a paper -------------------------------
+
+
+def test_an_unwritable_record_still_lands_so_the_paper_can_be_retried(paper):
+    """The real severity of the blocker: the record could not be written, so
+    every later run died at the same point and --retry was powerless."""
+    record, root = paper
+    record.supplements = Supplements(files=[
+        SupplementFile(file_id="broken.xlsx", status="present", path=None,
+                       size_bytes=None)
+    ])
+    path, note = store.write_or_note(root, record)
+    assert path is not None and path.is_file()
+    assert "did not validate" in note
+    reread = store.read(root, DOI)
+    assert "did not validate" in (reread.notes or "")
+
+
+def test_a_file_the_bundle_did_not_contain_says_so(tmp_path, monkeypatch):
+    """Publishers name a file one way in the article XML and another inside the
+    bundle often enough that a bare `missing` is unhelpful. Observed on an
+    author-manuscript paper whose listed zip was not in its bundle.
+
+    Uses a publisher with no URL template, so nothing earlier has already put
+    a more specific note on the file.
+    """
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    doi = "10.1016/j.celrep.2020.01.007"
+    record = Availability(
+        input=doi,
+        ids={"doi": Identifier.given(doi),
+             "pmcid": Identifier.returned(PMCID, "europepmc")},
+        route="europepmc",
+        local_source=LocalSource(kind="jats", path="source/paper.jats.xml",
+                                 sha256="a" * 64, bytes=len(JATS)),
+        attempts=[Attempt("europepmc", "ok")],
+        fetched_at="2026-01-01T00:00:00+00:00",
+    )
+    store.write(tmp_path, record)
+    store.store_bytes(tmp_path, record, "jats", JATS.encode())
+    root = tmp_path
+    record.supplements = supp_flow.list_supplements(record, root)
+    # A bundle holding something else entirely.
+    body = make_zip({"unrelated.csv": b"a,b\n"})
+    with client_for(bundle_only(get=httpx.Response(200, content=body))) as http:
+        found = supp_flow.fetch_supplements(record, root, client=http)
+
+    listed = found.by_id("41586_2023_6812_MOESM1_ESM.xlsx")
+    assert listed.status == "missing"
+    assert "does not contain a file of this name" in listed.retrieval.note

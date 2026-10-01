@@ -21,6 +21,7 @@ four-hundred-megabyte one waits for a decision.
 from __future__ import annotations
 
 import logging
+import time
 from pathlib import Path
 from typing import Any
 
@@ -30,8 +31,8 @@ from . import store, supp_sources
 from .ids import now
 from .record import Availability
 from .supplements import (
-    FIGURE_MEDIA,
-    TABULAR_MEDIA,
+    MAX_FILE_BYTES,
+    SKIP_MEDIA,
     ArchiveMember,
     SupplementFile,
     SupplementRetrieval,
@@ -40,25 +41,31 @@ from .supplements import (
     looks_like_manifest,
     media_type,
     pointer_gap,
+    strip_markup,
 )
 
 logger = logging.getLogger(__name__)
 
 SUPPLEMENTS_DIR = "supplements"
 
-#: Over this, a bundle is not downloaded without being asked for. Above the
-#: observed 14-28 MB typical case and below the 60 MB outlier, so on a real
-#: corpus it defers the few papers worth a decision rather than all of them.
-DEFAULT_LARGE_BYTES = 50 * 1024 * 1024
+#: Over this, a bundle is not downloaded without being asked for. Raised from
+#: 50 MB, which cut straight through the middle of normal: the observed
+#: distribution is 14-28 MB typical, 60 MB for a 34-file paper and 445 MB for
+#: one carrying a video, and a 46-table paper was abandoned at 53 MB. The
+#: backstop against the pathological case is now the media policy, not this.
+DEFAULT_LARGE_BYTES = 250 * 1024 * 1024
 
 #: Hard ceiling on a single download once it has been agreed to, so a host that
-#: streams forever cannot fill a disk.
-DEFAULT_MAX_BYTES = 2 * 1024 * 1024 * 1024
+#: streams forever cannot fill a disk. One number, applied on every route —
+#: see :data:`paper_access.supplements.MAX_FILE_BYTES`.
+DEFAULT_MAX_BYTES = MAX_FILE_BYTES
 
-#: Per-member extraction caps. A results table legitimately runs to hundreds of
-#: megabytes, and a 445 MB video does not.
-MEMBER_CAP_BYTES = 80 * 1024 * 1024
-TABULAR_MEMBER_CAP_BYTES = 512 * 1024 * 1024
+#: Wall-clock budgets we enforce ourselves. httpx's `timeout` is per-operation,
+#: not total, so a host that trickles one chunk every 170 s never trips a 180 s
+#: read timeout — which is how a single ScienceDirect request held a serial
+#: sweep for 17 minutes having transferred nothing.
+DEFAULT_FILE_TIMEOUT = 120.0
+DEFAULT_PAPER_TIMEOUT = 600.0
 
 #: Above this, a digest costs real time for no benefit a reader will notice.
 #: Skipping is recorded, never silent.
@@ -106,16 +113,31 @@ def list_supplements(
         else:
             for entry in listed:
                 found.add(entry)
+            # A caption is often the best description a supplement will ever
+            # have, so an absence is worth attributing. An author-manuscript
+            # deposit's XML carries no <supplementary-material> captions at
+            # all, which is a property of the source rather than a failure to
+            # look, and without recording that the two are indistinguishable.
+            found.caption_source = (
+                "jats" if any(e.description for e in listed) else "none_in_jats"
+            )
+            note = (
+                f"{len(listed)} file(s) declared in the article XML"
+                if listed
+                else "the article XML declares no supplementary material"
+            )
+            if listed and found.caption_source == "none_in_jats":
+                note += (
+                    "; none of them captioned — this XML is an author manuscript, "
+                    "which carries no supplementary captions"
+                )
             found.listing_sources.append(
                 supp_sources.attempt(
-                    "jats_listing",
-                    "ok" if listed else "unavailable",
-                    f"{len(listed)} file(s) declared in the article XML"
-                    if listed
-                    else "the article XML declares no supplementary material",
+                    "jats_listing", "ok" if listed else "unavailable", note
                 )
             )
     else:
+        found.caption_source = "no_jats"
         found.listing_sources.append(
             supp_sources.attempt(
                 "jats_listing", "skipped", "no article XML on disk for this paper"
@@ -171,15 +193,20 @@ def _local_text(store_root: str | Path, record: Availability) -> str:
     if base is None:
         return ""
     directory = base.parent.parent
+    # Recovered text first: it is already prose. The article XML is a fallback
+    # and gets its markup stripped, because a quoted "sentence" taken raw came
+    # back as `(2019)</xref> <ext-link xmlns:xlink=...` inside a gap somebody
+    # was being asked to act on.
     for relative in (record.local_source.text_file, record.local_source.path):
         if not relative:
             continue
         path = directory / relative
         if path.is_file() and path.suffix.lower() in (".txt", ".xml"):
             try:
-                return path.read_text(encoding="utf-8", errors="replace")
+                raw = path.read_text(encoding="utf-8", errors="replace")
             except OSError:
                 continue
+            return strip_markup(raw) if path.suffix.lower() == ".xml" else raw
     return ""
 
 
@@ -262,6 +289,9 @@ def fetch_supplements(
     max_bytes: int = DEFAULT_MAX_BYTES,
     allow_large: bool = False,
     skip_large: bool = False,
+    include_media: bool = False,
+    file_timeout: float | None = DEFAULT_FILE_TIMEOUT,
+    paper_timeout: float | None = DEFAULT_PAPER_TIMEOUT,
     client: httpx.Client | None = None,
 ) -> Supplements:
     """Fetch what the listing named, deferring anything too big to fetch quietly.
@@ -271,12 +301,25 @@ def fetch_supplements(
         skip_large: Record the deferral and move on without stopping a batch.
             Differs from ``allow_large=False`` only in what the caller does
             afterwards; both leave the same record.
+        include_media: Fetch figures and video too. Off by default: size is a
+            poor proxy for whether a file is wanted, and a 226 MB video was
+            fetched on size grounds while 46 small tables were refused.
+        file_timeout: Wall-clock budget for one file, enforced against a
+            monotonic clock rather than left to httpx, whose timeout is
+            per-operation and so never fires on a slow trickle.
+        paper_timeout: Wall-clock budget for everything this paper does, so one
+            unresponsive host cannot hold a sweep.
     """
     found = record.supplements or Supplements()
     found.attempted_at = now()
     directory = supplements_dir(store_root, record) / "files"
     owned = client is None
-    active = client or httpx.Client(timeout=180, follow_redirects=True)
+    active = client or httpx.Client(timeout=60, follow_redirects=True)
+    skip_media: set[str] = set() if include_media else set(SKIP_MEDIA)
+    deadline = time.monotonic() + paper_timeout if paper_timeout else None
+
+    def out_of_time() -> bool:
+        return deadline is not None and time.monotonic() > deadline
 
     try:
         wanted = [f for f in found.files if _should_attempt(f, retry)]
@@ -290,24 +333,50 @@ def fetch_supplements(
             )
             return found
 
+        # The media policy runs before any transfer: a file nobody wants should
+        # not be downloaded and then discarded, and on the per-file routes this
+        # is the whole of the fix for a 226 MB video arriving.
+        _apply_media_policy(found, skip_media)
+
         # Publisher-direct first where we know the template: it fetches one
-        # 122 KB workbook where the bundle fetches everything around it.
+        # 122 KB workbook where the bundle fetches everything around it, and it
+        # is the only route that can decide on size before transferring.
+        wanted = [f for f in found.files if _should_attempt(f, retry)]
         doi = record.ids.get("doi")
-        if doi is not None:
-            _try_publisher_direct(found, wanted, doi.value, directory, active, max_bytes)
+        if doi is not None and wanted:
+            _try_publisher_direct(
+                found, wanted, doi.value, directory, active, max_bytes,
+                file_timeout=file_timeout, deadline=deadline,
+            )
 
         wanted = [f for f in found.files if _should_attempt(f, retry)]
-        if wanted and use_bundle:
+        if wanted and use_bundle and not out_of_time():
             _try_bundle(
                 found, record, directory, active,
                 large_bytes=large_bytes, max_bytes=max_bytes,
                 allow_large=allow_large, skip_large=skip_large,
+                skip_media=skip_media, max_file_bytes=max_bytes,
+                deadline=deadline,
             )
 
         wanted = [f for f in found.files if _should_attempt(f, retry)]
-        if wanted:
+        if wanted and not out_of_time():
             _try_biorxiv(found, wanted, directory, max_bytes)
 
+        if out_of_time():
+            found.attempts.append(
+                supp_sources.attempt(
+                    "europepmc_bundle",
+                    "timeout",
+                    f"this paper's {paper_timeout:.0f}s budget ran out; what is "
+                    "recorded is what arrived before then",
+                )
+            )
+
+        # A rung that *answered*, which is not the same as one that produced a
+        # file: a bundle whose every member was skipped by policy still tells
+        # us the bundle did not contain the file we were looking for.
+        answered = {a.route for a in found.attempts if a.outcome in ("ok", "unavailable")}
         for entry in found.files:
             # Only a file no byte rung ever touched is missing. One a rung saw
             # and deliberately passed over — a figure image — stays `listed`:
@@ -318,6 +387,15 @@ def fetch_supplements(
             if entry.status == "listed" and entry.retrieval.route in ("jats_listing", "none"):
                 entry.status = "missing"
                 entry.retrieval.attempted_at = now()
+                if not entry.retrieval.note and "europepmc_bundle" in answered:
+                    # The bundle arrived and this file was not in it, which is
+                    # a different thing from no route having run. Publishers
+                    # name a file one way in the article XML and another inside
+                    # the bundle often enough to be worth saying.
+                    entry.retrieval.note = (
+                        "the bundle was fetched and does not contain a file of this "
+                        "name; the publisher may name it differently inside it"
+                    )
                 _gap_for_missing(found, entry, record)
     finally:
         if owned:
@@ -328,8 +406,26 @@ def fetch_supplements(
     return found
 
 
+def _apply_media_policy(found: Supplements, skip_media: set[str]) -> None:
+    """Mark the files the policy does not want, before anything is transferred."""
+    for entry in found.files:
+        if entry.status != "listed":
+            continue
+        kind = entry.media_type or media_type(entry.file_id)
+        if kind and kind in skip_media:
+            entry.status = "skipped"
+            entry.media_type = kind
+            entry.retrieval = SupplementRetrieval(
+                route=entry.retrieval.route,
+                note=f"{kind} is not wanted at any size; --include-media overrides",
+            )
+
+
 def _should_attempt(entry: SupplementFile, retry: bool) -> bool:
     if entry.status == "present":
+        return False
+    if entry.status == "skipped":
+        # Somebody decided. Retrying does not change a decision.
         return False
     if entry.status == "missing" and not retry:
         return False
@@ -343,6 +439,9 @@ def _try_publisher_direct(
     directory: Path,
     client: httpx.Client,
     max_bytes: int,
+    *,
+    file_timeout: float | None = None,
+    deadline: float | None = None,
 ) -> None:
     urls = {e.file_id: supp_sources.publisher_direct_url(doi, e.file_id) for e in wanted}
     if not any(urls.values()):
@@ -357,15 +456,38 @@ def _try_publisher_direct(
         return
 
     got = 0
+    timed_out = 0
     for entry in wanted:
         url = urls.get(entry.file_id)
         if not url:
             continue
+        # The one route that can answer the size question before transferring.
+        declared = supp_sources.declared_size(client, url)
+        if declared is not None:
+            entry.size_bytes = declared
+            if declared > max_bytes:
+                entry.status = "deferred"
+                entry.retrieval = SupplementRetrieval(
+                    route="publisher_direct", url=url, attempted_at=now(),
+                    note=f"the host declares {declared} bytes, over the "
+                         f"{max_bytes}-byte limit; not downloaded",
+                )
+                found.gaps.append({
+                    "what": entry.label or entry.file_id,
+                    "reason": entry.retrieval.note,
+                    "action": "raise the limit with --max-bundle-bytes if it is wanted",
+                    "file_id": entry.file_id,
+                })
+                continue
         target = directory / entry.file_id
-        ok, note = supp_sources.fetch_one_file(client, url, target, max_bytes)
+        ok, note = supp_sources.fetch_one_file(
+            client, url, target, max_bytes, timeout=file_timeout, deadline=deadline
+        )
         if not ok:
             entry.retrieval.attempted_at = now()
             entry.retrieval.note = note
+            if note.startswith("timeout:"):
+                timed_out += 1
             continue
         _accept(entry, target, directory, "publisher_direct", url)
         # A file that failed its integrity check was discarded, so it did not
@@ -375,8 +497,9 @@ def _try_publisher_direct(
     found.attempts.append(
         supp_sources.attempt(
             "publisher_direct",
-            "ok" if got else "unavailable",
-            f"{got} of {len(wanted)} file(s) from the publisher's host",
+            "ok" if got else ("timeout" if timed_out else "unavailable"),
+            f"{got} of {len(wanted)} file(s) from the publisher's host"
+            + (f"; {timed_out} timed out" if timed_out else ""),
         )
     )
 
@@ -391,6 +514,9 @@ def _try_bundle(
     max_bytes: int,
     allow_large: bool,
     skip_large: bool,
+    skip_media: set[str],
+    max_file_bytes: int,
+    deadline: float | None = None,
 ) -> None:
     pmcid = supp_sources.pmcid_of(record)
     if not pmcid:
@@ -404,6 +530,7 @@ def _try_bundle(
     result = supp_sources.fetch_bundle(
         client, pmcid,
         large_bytes=large_bytes, max_bytes=max_bytes, allow_large=allow_large,
+        deadline=deadline,
     )
     try:
         if result.outcome == "deferred":
@@ -414,7 +541,10 @@ def _try_bundle(
                 supp_sources.attempt("europepmc_bundle", result.outcome, result.note)
             )
             return
-        got = _take_from_bundle(found, result, directory)
+        got = _take_from_bundle(
+            found, result, skip_media=skip_media, max_file_bytes=max_file_bytes,
+            directory=directory,
+        )
         found.attempts.append(
             supp_sources.attempt(
                 "europepmc_bundle",
@@ -466,7 +596,12 @@ def _defer_bundle(
 
 
 def _take_from_bundle(
-    found: Supplements, result: supp_sources.BundleResult, directory: Path
+    found: Supplements,
+    result: supp_sources.BundleResult,
+    directory: Path,
+    *,
+    skip_media: set[str],
+    max_file_bytes: int,
 ) -> int:
     """Extract the wanted members, and record the member table either way."""
     archive = result.archive
@@ -500,19 +635,19 @@ def _take_from_bundle(
             continue
 
         kind = media_type(name)
-        if kind in FIGURE_MEDIA:
-            # Listed, not missing: the bundle had it and we chose to leave it.
-            # Recording the route is what tells the missing-sweep that this
-            # file was seen rather than never reached.
-            entry.status = "listed"
+        if kind in skip_media:
+            # Somebody's decision, not an absence: the bundle had it and the
+            # policy passed it over. `skipped` says whose decision it was,
+            # which `listed` could not.
+            entry.status = "skipped"
             entry.size_bytes = info.file_size
             entry.media_type = kind
             entry.retrieval = SupplementRetrieval(
                 route="europepmc_bundle",
-                note="a figure image; deliberately not extracted",
+                note=f"{kind} is not wanted at any size; deliberately not extracted",
             )
             continue
-        cap = TABULAR_MEMBER_CAP_BYTES if kind in TABULAR_MEDIA else MEMBER_CAP_BYTES
+        cap = max_file_bytes
         if info.file_size > cap:
             entry.status = "deferred"
             entry.size_bytes = info.file_size
@@ -671,8 +806,8 @@ def unpack(
     record: Availability,
     store_root: str | Path,
     *,
-    member_cap: int = MEMBER_CAP_BYTES,
-    tabular_cap: int = TABULAR_MEMBER_CAP_BYTES,
+    skip_media: set[str] | None = None,
+    max_file_bytes: int = MAX_FILE_BYTES,
 ) -> Supplements:
     """Expand stored archives, recording the member table either way.
 
@@ -705,9 +840,9 @@ def unpack(
                         size_bytes=info.file_size,
                         extracted=False,
                     )
-                    cap = tabular_cap if kind in TABULAR_MEDIA else member_cap
-                    if kind in FIGURE_MEDIA:
-                        member.note = "a figure image; not extracted"
+                    cap = max_file_bytes
+                    if kind in (skip_media if skip_media is not None else SKIP_MEDIA):
+                        member.note = f"{kind} is not wanted at any size; not extracted"
                     elif info.file_size > cap:
                         member.note = (
                             f"{info.file_size} bytes, over the {cap}-byte limit; "

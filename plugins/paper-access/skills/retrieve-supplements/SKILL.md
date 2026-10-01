@@ -38,7 +38,7 @@ record for is a paper to fetch, not a paper with no supplements.
 ## The mechanical half
 
 ```bash
-alias paper-access='uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@pkg-paper-access--v0.2.0#subdirectory=packages/paper-access" paper-access'
+alias paper-access='uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@pkg-paper-access--v0.3.0#subdirectory=packages/paper-access" paper-access'
 
 # What files does this paper have? Free: reads the XML already on disk.
 paper-access supplements list --store <store> --id <id>
@@ -47,8 +47,16 @@ paper-access supplements list --store <store> --id <id>
 paper-access supplements fetch --store <store> --id <id> [--retry]
 #   --yes-large          proceed with a download over the threshold
 #   --skip-large         record the deferral and exit 0, so a batch keeps going
-#   --large-bytes N      move the threshold (default 50 MB)
+#   --large-bytes N      move the bundle threshold (default 250 MB)
+#   --include-media      fetch figures and video too; off at any size
+#   --file-timeout N     wall-clock seconds per file (default 120)
+#   --paper-timeout N    wall-clock seconds per paper (default 600)
 #   --no-bundle          skip the Europe PMC bundle route
+
+# A corpus, not one paper at a time. Every command below takes these.
+paper-access supplements fetch --store <store> --all --concurrency 4
+paper-access supplements fetch --store <store> --input ids.txt
+paper-access supplements list  --store <store> --all
 
 # Expand archives, recording the member table either way.
 paper-access supplements unpack --store <store> --id <id>
@@ -66,6 +74,12 @@ paper-access supplements report --store <store> [--json]
 `fetch` runs `list` for you if nothing has been listed yet, and is cheap to
 re-run: a file already here is not re-fetched, and one recorded as missing or
 deferred is left alone until `--retry`.
+
+**Use `--all` or `--input` for a corpus.** A sweep reports per paper with a
+summary naming what errored and what needs a decision, and its exit code is
+about the sweep rather than one paper: 0 if everything was attempted and
+nothing waits on you, 2 if something does, 1 if a paper errored. Hand-rolling
+the loop in a shell is how the timeouts go missing.
 
 ## How the files are found, and why in that order
 
@@ -98,16 +112,34 @@ not get any of them" and "this paper appears to have none" are completely
 different findings, and a report that blurs them is worse than no report. `list`
 succeeding and `fetch` failing is a normal, informative outcome.
 
+### What is wanted is a question of kind, not size
+
+Figures and video are **skipped at any size**, because size is a poor proxy for
+whether a file is wanted: on one paper a 226 MB video was fetched while 46 small
+tables were refused, which is wrong on both counts. `--include-media` overrides.
+The byte limit that remains is a backstop at 200 MB per file, applied the same
+way on every route.
+
+A skipped file is `skipped`, not `missing`, and gets no gap. The difference is
+whose decision it was, and nobody needs asking about a file we did not want.
+
 ### Whether a large download is worth it
 
-A bundle over the threshold is **deferred**, not fetched: the record carries its
-size and the flag that would proceed. Put that in front of the user rather than
-deciding for them — half a gigabyte is their disk and their time, and in one
-real case 445 MB of it was a supplementary video.
+A bundle over the threshold is **deferred**, not fetched. Two things to know
+when you report one:
 
-Where the listing gives per-file sizes and the publisher's template is known,
-say so: fetching the one 2 MB table directly beats fetching a 445 MB bundle
-around it.
+- **A bundle cannot be partly transferred.** A zip's member table is at the end
+  of the file, so no member can be read without fetching the whole archive.
+  Media-type policy governs what is *extracted* and what the per-file routes
+  fetch; it cannot make a bundle smaller. If you are tempted to say "we only
+  need the one table so fetch just that", it is only true where the publisher's
+  template is known.
+- **Europe PMC declares no size for a bundle** — not by `HEAD`, `GET` or a
+  `Range` request. So its size is genuinely unknown until it has been
+  transferred, and where a transfer was abandoned the record carries
+  `bytes_transferred`, which is a lower bound, and *not* `size_bytes`. Do not
+  quote the one as the other. On the publisher routes a size is declared and the
+  decision is made before anything moves.
 
 **`deferred` is not `unavailable`.** Nothing was learnt about whether a deferred
 file could have been got — nobody has asked yet. Reporting it as missing is a
@@ -122,6 +154,15 @@ Both are checked and discarded rather than stored with a digest, because a
 corrupt file recorded as present looks authoritative and fails much later. Where
 `retrieval.note` says something was discarded, that file is worth asking for by
 hand.
+
+### Why a description is missing
+
+`caption_source` says which: `jats` where the article XML captioned them,
+`none_in_jats` where it carried none — an author-manuscript deposit never does —
+and `no_jats` where there was no article XML to read. A bundle of uncaptioned
+files is a property of the source, not a failure to look, and a caption is often
+the best description a supplement will ever have. Say which case it is rather
+than leaving a blank column.
 
 ### Which dropped file is which supplement
 
@@ -140,6 +181,11 @@ gaps, each with what would fix it. Two failures to avoid:
 - **Treating "not looked at" as "none".** A paper nobody has run `list` on has
   unknown supplements, and `report` distinguishes that from a paper with none.
   Keep the distinction when you summarise.
+- **Counting a skip as a loss.** `skipped` files were not wanted. Report them
+  separately from `missing` or not at all, never as a shortfall.
+- **Quoting a timeout as an absence.** A `timeout` outcome means a host was too
+  slow, which says nothing about whether the file exists. It is worth retrying;
+  `unavailable` is not.
 
 For a store-wide sweep, `report` gives you the table. Name the papers that need
 a size decision separately from the ones that need a person to find a file: they

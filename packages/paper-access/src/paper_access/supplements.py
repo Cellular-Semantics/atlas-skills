@@ -41,17 +41,36 @@ MEDIA_TYPES = {
     ".pdf": "pdf", ".docx": "docx", ".doc": "doc", ".zip": "zip", ".gz": "gz",
     ".tar": "tar", ".json": "json", ".xml": "xml", ".html": "html",
     ".png": "png", ".jpg": "jpg", ".jpeg": "jpg", ".tif": "tif", ".tiff": "tif",
+    ".gif": "gif", ".bmp": "bmp", ".webp": "webp",
     ".eps": "eps", ".svg": "svg", ".mp4": "mp4", ".mov": "mov", ".avi": "avi",
+    ".mkv": "mkv", ".wmv": "wmv", ".m4v": "m4v",
     ".h5ad": "h5ad", ".h5": "h5", ".rds": "rds", ".mtx": "mtx",
 }
 
-#: Figure images bloat a bundle and are not evidence about cell types. Skipped
-#: on extraction, but still listed as members: a skip a reader cannot see is
-#: indistinguishable from a file that was never there.
-FIGURE_MEDIA = {"png", "jpg", "tif", "eps", "svg"}
+#: Not wanted, at any size. Size is a poor proxy for "do I want this": a 226 MB
+#: video was fetched while 46 small tables were refused, which is the wrong way
+#: round on both counts. So the policy is about what a file *is*, and the byte
+#: limit below is only a backstop against something unforeseen.
+#:
+#: One set, applied identically on every route. Three divergent caps — 80 MB per
+#: member, 512 MB for tabular members, 2 GB per download — meant the same file
+#: was wanted or not depending on how it happened to arrive.
+SKIP_MEDIA = {
+    # Figures: a stream of axis labels and panel tags, not evidence. `gif` is
+    # here because an author-manuscript bundle is mostly figure GIFs, and a
+    # media type absent from the table above is skipped by nothing at all.
+    "png", "jpg", "tif", "gif", "bmp", "webp", "eps", "svg",
+    # Video: never small, never a table.
+    "mp4", "mov", "avi", "mkv", "wmv", "m4v",
+}
 
-#: Media types large enough to be worth a generous per-member cap, because a
-#: results table legitimately runs to hundreds of megabytes.
+#: The backstop. Deliberately generous: a results table legitimately runs to
+#: hundreds of megabytes, and the thing that should stop a 226 MB video is its
+#: media type, not its size.
+MAX_FILE_BYTES = 200 * 1024 * 1024
+
+#: Retained for the media types a reader may want to treat as tabular. No longer
+#: used to vary a size limit.
 TABULAR_MEDIA = {"csv", "tsv", "txt", "xlsx", "xls", "mtx"}
 
 #: Names a bundle's own index goes by. Matched case-insensitively against the
@@ -195,6 +214,7 @@ class SupplementFile:
     description: str | None = None
     description_source: str | None = None
     size_bytes: int | None = None
+    bytes_transferred: int | None = None
     sha256: str | None = None
     path: str | None = None
     retrieval: SupplementRetrieval = field(default_factory=SupplementRetrieval)
@@ -230,6 +250,8 @@ class SupplementFile:
                 out[key] = value
         if self.size_bytes is not None:
             out["size_bytes"] = self.size_bytes
+        if self.bytes_transferred is not None:
+            out["bytes_transferred"] = self.bytes_transferred
         out["retrieval"] = self.retrieval.to_dict()
         if self.members:
             out["members"] = [m.to_dict() for m in self.members]
@@ -246,6 +268,7 @@ class SupplementFile:
             description=payload.get("description"),
             description_source=payload.get("description_source"),
             size_bytes=payload.get("size_bytes"),
+            bytes_transferred=payload.get("bytes_transferred"),
             sha256=payload.get("sha256"),
             path=payload.get("path"),
             retrieval=SupplementRetrieval.from_dict(payload.get("retrieval") or {}),
@@ -261,6 +284,7 @@ class Supplements:
     listing_sources: list[SupplementAttempt] = field(default_factory=list)
     attempts: list[SupplementAttempt] = field(default_factory=list)
     gaps: list[dict[str, Any]] = field(default_factory=list)
+    caption_source: str | None = None
     listed_at: str | None = None
     fetched_at: str | None = None
     attempted_at: str | None = None
@@ -302,6 +326,8 @@ class Supplements:
             out["attempts"] = [a.to_dict() for a in self.attempts]
         if self.gaps:
             out["gaps"] = self.gaps
+        if self.caption_source:
+            out["caption_source"] = self.caption_source
         for key in ("listed_at", "fetched_at", "attempted_at"):
             value = getattr(self, key)
             if value:
@@ -317,6 +343,7 @@ class Supplements:
             ],
             attempts=[SupplementAttempt.from_dict(a) for a in payload.get("attempts") or []],
             gaps=list(payload.get("gaps") or []),
+            caption_source=payload.get("caption_source"),
             listed_at=payload.get("listed_at"),
             fetched_at=payload.get("fetched_at"),
             attempted_at=payload.get("attempted_at"),
@@ -344,9 +371,14 @@ def cross_check_supplements(payload: dict[str, Any]) -> list[str]:
         retrieval = entry.get("retrieval") or {}
 
         if status == "present":
-            for key in ("path", "size_bytes"):
-                if not entry.get(key):
-                    problems.append(f"{file_id}: status is 'present' but {key} is missing")
+            # `is None`, not truthiness. A zero-byte supplement is a real thing
+            # a publisher serves — an author-manuscript bundle had one — and
+            # `not 0` made it fail a check meant to catch absence, which left
+            # the record unwritable and the paper unable to be re-attempted.
+            if entry.get("path") is None:
+                problems.append(f"{file_id}: status is 'present' but path is missing")
+            if entry.get("size_bytes") is None:
+                problems.append(f"{file_id}: status is 'present' but size_bytes is missing")
             if retrieval.get("route") in (None, "none", "jats_listing"):
                 problems.append(
                     f"{file_id}: status is 'present' but no route is recorded as having "
@@ -357,6 +389,11 @@ def cross_check_supplements(payload: dict[str, Any]) -> list[str]:
                 problems.append(f"{file_id}: status is {status!r} but a stored path is set")
             if entry.get("sha256"):
                 problems.append(f"{file_id}: status is {status!r} but a digest is set")
+
+        if status == "skipped" and not retrieval.get("note"):
+            problems.append(
+                f"{file_id}: status is 'skipped' but nothing says why it was passed over"
+            )
 
         if status == "deferred" and not retrieval.get("note"):
             problems.append(
@@ -382,6 +419,8 @@ def cross_check_supplements(payload: dict[str, Any]) -> list[str]:
                     f"{file_id}/{member.get('member_path')}: not extracted but has a path"
                 )
 
+    # A skip is somebody's decision and needs no gap; a deferral is a question
+    # nobody has answered and does.
     deferred = [f for f in files if f.get("status") == "deferred"]
     gap_ids = {g.get("file_id") for g in payload.get("gaps") or []}
     for entry in deferred:
@@ -424,12 +463,15 @@ def find_pointers(text: str) -> list[dict[str, str]]:
     is kept because an accession on its own rarely says which of a paper's
     datasets it is.
     """
+    text = strip_markup(text)
     out: list[dict[str, str]] = []
     seen: set[tuple[str, str]] = set()
     for sentence in re.split(r"(?<=[.!?])\s+", text):
-        if len(sentence) > 600:
-            sentence = sentence[:600]
         for name, pattern in REPOSITORY_PATTERNS:
+            # Matched against the whole sentence, before any clipping. Clipping
+            # first truncated an accession mid-string and produced a shorter one
+            # that still looked real: `E-MTAB-10039` came back as `E-MTAB-100`,
+            # indistinguishable from a genuine hit sitting beside forty of them.
             for match in pattern.finditer(sentence):
                 key = (name, match.group(0))
                 if key in seen:
@@ -438,7 +480,7 @@ def find_pointers(text: str) -> list[dict[str, str]]:
                 out.append({
                     "repository": name,
                     "accession": match.group(0),
-                    "context": " ".join(sentence.split()),
+                    "context": clip(sentence),
                 })
     if not out:
         return out
@@ -448,6 +490,37 @@ def find_pointers(text: str) -> list[dict[str, str]]:
         for entry in out:
             entry["note"] = "no data-availability wording nearby; accession found in passing"
     return out
+
+
+_TAG = re.compile(r"<[^>]+>")
+_ENTITY = re.compile(r"&(?:#\d+|#x[0-9a-fA-F]+|[a-zA-Z]+);")
+
+#: How much of a sentence is kept as context. Applied on a word boundary.
+CONTEXT_MAX_CHARS = 600
+
+
+def strip_markup(text: str) -> str:
+    """Tags and entities out, so a scanned sentence is prose.
+
+    The text scanned for accessions is whatever is on disk, and for most papers
+    that is the article XML. Left as-is, a quoted "sentence" came back as
+    ``(2019)</xref> <ext-link xmlns:xlink="http://www.w3.org/1999/xlink" …`` —
+    markup in a gap a person is being asked to act on.
+    """
+    if "<" not in text and "&" not in text:
+        return text
+    without = _TAG.sub(" ", text)
+    without = _ENTITY.sub(" ", without)
+    return without
+
+
+def clip(sentence: str, limit: int = CONTEXT_MAX_CHARS) -> str:
+    """A sentence shortened on a word boundary, with an ellipsis if shortened."""
+    flat = " ".join(sentence.split())
+    if len(flat) <= limit:
+        return flat
+    cut = flat[:limit].rsplit(" ", 1)[0]
+    return f"{cut}…"
 
 
 def pointer_gap(pointer: dict[str, str]) -> dict[str, Any]:

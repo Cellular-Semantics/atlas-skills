@@ -15,6 +15,7 @@ from __future__ import annotations
 import logging
 import re
 import tempfile
+import time
 import urllib.parse
 import xml.etree.ElementTree as ET
 import zipfile
@@ -202,6 +203,8 @@ class BundleResult:
     outcome: str = "unavailable"
     size_bytes: int | None = None
     buffer: BinaryIO | None = None
+    #: Bytes read before giving up. A lower bound on the size, never the size.
+    transferred: int | None = None
 
     def close(self) -> None:
         if self.archive is not None:
@@ -217,6 +220,8 @@ def fetch_bundle(
     large_bytes: int,
     max_bytes: int,
     allow_large: bool,
+    timeout: float | None = None,
+    deadline: float | None = None,
 ) -> BundleResult:
     """Stream the article's supplement bundle, deciding on size from the headers.
 
@@ -247,6 +252,14 @@ def fetch_bundle(
     """
     url = f"{EUROPEPMC_BASE}/{pmcid}/supplementaryFiles"
     buffer = tempfile.SpooledTemporaryFile(max_size=SPOOL_TO_DISK_BYTES)  # noqa: SIM115
+    started = time.monotonic()
+    budget = timeout if timeout is not None else float("inf")
+
+    def out_of_time() -> bool:
+        if time.monotonic() - started > budget:
+            return True
+        return deadline is not None and time.monotonic() > deadline
+
     try:
         with client.stream("GET", url) as response:
             if response.status_code == 404:
@@ -281,19 +294,41 @@ def fetch_bundle(
 
             cap = max_bytes if allow_large else large_bytes
             for chunk in response.iter_bytes(1 << 20):
-                buffer.write(chunk)
-                if buffer.tell() > cap:
-                    size = buffer.tell()
+                if out_of_time():
+                    read = buffer.tell()
                     buffer.close()
                     return BundleResult(
                         None,
-                        f"the bundle passed the {cap}-byte limit while downloading "
-                        f"(at {size} bytes); abandoned",
+                        f"timeout: gave up after {time.monotonic() - started:.0f}s "
+                        f"having read {read} bytes",
+                        "timeout",
+                        None,
+                        transferred=read,
+                    )
+                buffer.write(chunk)
+                if buffer.tell() > cap:
+                    read = buffer.tell()
+                    buffer.close()
+                    # `read` is how much was transferred before giving up, which
+                    # is a lower bound on the size and not the size. Europe PMC
+                    # declares no length by HEAD, GET or Range, so for this host
+                    # the size is simply not knowable in advance — and recording
+                    # the abandonment point as one would state something false.
+                    return BundleResult(
+                        None,
+                        f"the bundle passed the {cap}-byte limit while downloading, "
+                        f"having read {read} bytes; abandoned. Europe PMC declares no "
+                        "size for a bundle, so its real size is not known",
                         "deferred",
-                        size,
+                        None,
+                        transferred=read,
                     )
     except httpx.HTTPError as exc:
         buffer.close()
+        if out_of_time():
+            return BundleResult(
+                None, f"timeout: {type(exc).__name__} after {budget:.0f}s", "timeout"
+            )
         return BundleResult(None, f"{type(exc).__name__}: {exc}", "failed")
 
     size = buffer.tell()
@@ -344,16 +379,67 @@ def publisher_direct_url(doi: str, filename: str) -> str | None:
     return builder(doi, filename) if builder else None
 
 
-def fetch_one_file(client: httpx.Client, url: str, dest: Path, cap: int) -> tuple[bool, str]:
-    """Download one file, refusing to keep going past ``cap``."""
+def declared_size(client: httpx.Client, url: str, timeout: float = 20.0) -> int | None:
+    """What the host says a file's size is, without fetching it.
+
+    Worth asking even though Europe PMC's bundle endpoint answers nothing
+    useful: the publisher hosts do answer, and this is the only way those
+    routes get a size decision *before* transferring rather than during.
+    """
+    try:
+        response = client.head(url, timeout=timeout, follow_redirects=True)
+    except httpx.HTTPError:
+        return None
+    if response.status_code >= 400:
+        return None
+    raw = response.headers.get("content-length")
+    return int(raw) if raw and raw.isdigit() else None
+
+
+def fetch_one_file(
+    client: httpx.Client,
+    url: str,
+    dest: Path,
+    cap: int,
+    *,
+    timeout: float | None = None,
+    deadline: float | None = None,
+) -> tuple[bool, str]:
+    """Download one file, bounded by a byte cap and by wall-clock time.
+
+    The time bound is enforced here rather than left to httpx, whose `timeout`
+    is per-operation: a host that sends one chunk every 170 seconds never trips
+    a 180-second read timeout, and one such request held a serial sweep for 17
+    minutes having transferred nothing.
+
+    Returns:
+        ``(ok, note)``. The note begins ``timeout:`` where time ran out, which
+        the caller records as a distinct outcome — a host that answers slowly is
+        a different problem from one that answers wrongly.
+    """
     dest.parent.mkdir(parents=True, exist_ok=True)
+    started = time.monotonic()
+    budget = timeout if timeout is not None else float("inf")
     written = 0
+
+    def out_of_time() -> bool:
+        if time.monotonic() - started > budget:
+            return True
+        return deadline is not None and time.monotonic() > deadline
+
     try:
         with client.stream("GET", url, follow_redirects=True) as response:
             if response.status_code != 200:
                 return False, f"HTTP {response.status_code}"
             with dest.open("wb") as handle:
                 for chunk in response.iter_bytes(1 << 20):
+                    if out_of_time():
+                        handle.close()
+                        dest.unlink(missing_ok=True)
+                        return False, (
+                            f"timeout: gave up after {time.monotonic() - started:.0f}s "
+                            f"having read {written} bytes"
+                        )
                     written += len(chunk)
                     if written > cap:
                         handle.close()
@@ -362,6 +448,8 @@ def fetch_one_file(client: httpx.Client, url: str, dest: Path, cap: int) -> tupl
                     handle.write(chunk)
     except httpx.HTTPError as exc:
         dest.unlink(missing_ok=True)
+        if out_of_time():
+            return False, f"timeout: {type(exc).__name__} after {budget:.0f}s"
         return False, f"{type(exc).__name__}: {exc}"
     return True, "ok"
 

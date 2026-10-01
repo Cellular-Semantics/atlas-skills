@@ -6,6 +6,8 @@ import pytest
 
 from paper_access.supplements import (
     MANIFEST_MAX_BYTES,
+    MAX_FILE_BYTES,
+    SKIP_MEDIA,
     ArchiveMember,
     SupplementFile,
     SupplementRetrieval,
@@ -15,6 +17,7 @@ from paper_access.supplements import (
     looks_like_manifest,
     media_type,
     pointer_gap,
+    strip_markup,
 )
 
 
@@ -248,3 +251,124 @@ def test_media_type_guesses_the_container_only():
     assert media_type("x.xlsx") == "xlsx"
     assert media_type("x.XLSX") == "xlsx"
     assert media_type("x.unknownext") == ""
+
+
+# -- the blocker: numbers are not booleans ------------------------------
+
+
+def test_a_zero_byte_supplement_is_present_not_missing():
+    """A zero-byte member of an author-manuscript bundle made the record
+    unwritable, so every later run died at the same write and the paper could
+    not be re-attempted. `not 0` is not `is None`."""
+    entry = present("f0008.gif")
+    entry.size_bytes = 0
+    assert cross_check_supplements(Supplements(files=[entry]).to_dict()) == []
+
+
+@pytest.mark.parametrize("field_name", ["size_bytes", "bytes_transferred"])
+def test_every_numeric_field_tolerates_zero(field_name):
+    """The guard that matters more than the fix: the next numeric field will be
+    written the same way."""
+    entry = present()
+    setattr(entry, field_name, 0)
+    payload = Supplements(files=[entry]).to_dict()
+    assert field_name in payload["files"][0]
+    assert cross_check_supplements(payload) == []
+
+
+def test_a_missing_size_is_still_caught():
+    entry = present()
+    entry.size_bytes = None
+    assert any("size_bytes is missing" in p
+               for p in cross_check_supplements(Supplements(files=[entry]).to_dict()))
+
+
+# -- skipped is a decision, not an absence ------------------------------
+
+
+def test_a_skip_must_say_why():
+    entry = SupplementFile(file_id="fig.png", status="skipped")
+    problems = cross_check_supplements(Supplements(files=[entry]).to_dict())
+    assert any("nothing says why it was passed over" in p for p in problems)
+
+
+def test_a_skip_needs_no_gap():
+    """A gap is a question for a person, and nobody needs asking about a file
+    we did not want."""
+    entry = SupplementFile(
+        file_id="fig.png", status="skipped",
+        retrieval=SupplementRetrieval(route="europepmc_bundle",
+                                      note="png is not wanted at any size"),
+    )
+    assert cross_check_supplements(Supplements(files=[entry]).to_dict()) == []
+
+
+# -- accessions and markup ----------------------------------------------
+
+
+def test_an_accession_is_not_truncated_by_the_context_clip():
+    """Reproduced from testing: a block of E-MTAB-10000..10059 yielded
+    `E-MTAB-100`, truncated from `E-MTAB-10039` and indistinguishable from a
+    real hit sitting beside forty of them."""
+    block = ("Arrays are in ArrayExpress under accessions "
+             + ", ".join(f"E-MTAB-{n}" for n in range(10000, 10060))
+             + " and were processed.")
+    found = [p["accession"] for p in find_pointers(block)]
+    assert len(found) == 60
+    assert all(len(a.rsplit("-", 1)[1]) == 5 for a in found), [
+        a for a in found if len(a.rsplit("-", 1)[1]) != 5
+    ]
+
+
+def test_context_is_clipped_on_a_word_boundary():
+    long_tail = " ".join(["word"] * 400)
+    found = find_pointers(f"Data availability: GSE123456 and then {long_tail}.")
+    context = found[0]["context"]
+    assert context.endswith("…")
+    assert "wor…" not in context
+
+
+def test_markup_never_reaches_a_gap():
+    """Observed from testing: an action string carried
+    `(2019)</xref> <ext-link xmlns:xlink="http://www.w3.org/1999/xlink" ...`."""
+    xml = ('<p>Sequences were deposited (Smith <xref ref-type="bibr" rid="b1">2019</xref>) '
+           'in GEO under GSE123456 <ext-link xmlns:xlink="http://www.w3.org/1999/xlink" '
+           'xlink:href="http://x">here</ext-link>.</p>')
+    pointer = find_pointers(xml)[0]
+    for forbidden in ("<", ">", "xmlns:", "ext-link", "xref"):
+        assert forbidden not in pointer["context"], pointer["context"]
+    assert "deposited" in pointer["context"]
+    assert forbidden not in pointer_gap(pointer)["action"]
+
+
+def test_entities_are_stripped_too():
+    assert "&amp;" not in strip_markup("Smith &amp; Jones deposited GSE1 here.")
+
+
+# -- one media policy ----------------------------------------------------
+
+
+def test_video_and_figures_are_not_wanted_at_any_size():
+    for kind in ("mp4", "mov", "avi", "png", "jpg", "tif", "eps", "svg"):
+        assert kind in SKIP_MEDIA
+
+
+def test_tables_are_wanted_however_large():
+    for kind in ("csv", "tsv", "xlsx", "xls", "mtx", "h5ad"):
+        assert kind not in SKIP_MEDIA
+
+
+def test_the_byte_limit_is_a_backstop_not_the_policy():
+    """A 226 MB video was fetched on size grounds while 46 small tables were
+    refused. The limit is generous because media type is what decides."""
+    assert MAX_FILE_BYTES >= 200 * 1024 * 1024
+
+
+def test_every_figure_and_video_extension_resolves_to_a_skipped_media_type():
+    """A media type absent from the table is skipped by nothing: an
+    author-manuscript bundle is mostly GIFs, and `.gif` was not in it."""
+    for suffix in (".png", ".jpg", ".jpeg", ".tif", ".tiff", ".gif", ".bmp",
+                   ".webp", ".eps", ".svg", ".mp4", ".mov", ".avi", ".mkv"):
+        kind = media_type(f"figure{suffix}")
+        assert kind, suffix
+        assert kind in SKIP_MEDIA, suffix

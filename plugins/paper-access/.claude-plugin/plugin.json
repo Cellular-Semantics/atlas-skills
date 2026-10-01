@@ -1,6 +1,6 @@
 {
   "name": "paper-access",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Get the text of a list of papers and their supplementary material, and say honestly what arrived. Resolves DOIs, PMIDs, PMCIDs or rough citations to confirmed identifiers, walks JATS XML then an ASTA index probe then an open-access PDF, reads the supplement list and captions out of the article XML, fetches the files without quietly downloading half a gigabyte, and names what a person has to find by hand.",
   "author": {
     "name": "Cellular Semantics",

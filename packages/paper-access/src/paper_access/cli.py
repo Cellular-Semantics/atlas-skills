@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
@@ -20,7 +21,7 @@ from . import __version__, refs, supp_flow, waterfall
 from . import record as record_module
 from .errors import PaperAccessError
 from .store import read as read_record
-from .store import read_all
+from .store import read_all, write_or_note
 from .store import write as write_record
 
 
@@ -195,57 +196,182 @@ def cmd_papers(args: argparse.Namespace) -> int:
 # ----------------------------------------------------------------------
 
 
-def _needs_record(args: argparse.Namespace):
-    found = read_record(args.store, args.id)
+def _supp_targets(args: argparse.Namespace) -> list[str]:
+    """Which papers a supplements command was asked about.
+
+    A corpus is the actual use case, and before this the commands took a single
+    `--id` while `paper-access fetch` already took a list — so every sweep was
+    a hand-rolled shell loop, which is where the concurrency and the timeouts
+    went missing.
+    """
+    if getattr(args, "all", False):
+        out = []
+        for found in read_all(args.store):
+            try:
+                _, value = found.primary_id
+            except PaperAccessError:
+                continue
+            out.append(value)
+        if not out:
+            raise PaperAccessError(f"no papers in {args.store}")
+        return out
+    ids: list[str] = list(getattr(args, "id", None) or [])
+    if getattr(args, "input", None):
+        path = Path(args.input)
+        if not path.is_file():
+            raise PaperAccessError(f"no such file: {path}")
+        for line in path.read_text(encoding="utf-8").splitlines():
+            text = line.strip()
+            if text and not text.startswith("#"):
+                ids.append(text)
+    if not ids:
+        raise PaperAccessError("nothing to do: pass --id, --input or --all")
+    return ids
+
+
+def _sweep(args: argparse.Namespace, work) -> int:
+    """Run one job per paper, concurrently, and report per paper.
+
+    Exit codes are about the sweep rather than about one paper: 0 when every
+    paper was attempted and nothing is waiting on a decision, 2 when something
+    needs one, 1 when a paper errored outright. A sweep that stopped on the
+    first large bundle would be worse than one that capped.
+    """
+    targets = _supp_targets(args)
+    workers = max(1, min(getattr(args, "concurrency", 1) or 1, len(targets)))
+    results: dict[str, Any] = {}
+
+    def run_one(identifier: str) -> tuple[str, dict[str, Any]]:
+        try:
+            return identifier, work(identifier)
+        except PaperAccessError as exc:
+            return identifier, {"error": str(exc)}
+
+    if workers == 1:
+        rows = [run_one(i) for i in targets]
+    else:
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            rows = list(pool.map(run_one, targets))
+    for identifier, payload in rows:
+        results[identifier] = payload
+
+    errored = [i for i, r in results.items() if r.get("error")]
+    needs_decision = [
+        i for i, r in results.items()
+        if any(f.get("status") == "deferred" for f in (r.get("files") or []))
+    ]
+    _emit({
+        "papers": results,
+        "summary": {
+            "attempted": len(targets),
+            "errored": errored,
+            "needs_decision": needs_decision,
+        },
+    })
+    if errored:
+        return 1
+    if needs_decision and not getattr(args, "skip_large", False):
+        return 2
+    return 0
+
+
+def _needs_record(args: argparse.Namespace, identifier: str | None = None):
+    found = read_record(args.store, identifier or args.id)
     if found is None:
         raise PaperAccessError(
-            f"no record for {args.id} in {args.store}; fetch the paper first — "
-            "the article XML is where the supplement filenames and captions live"
+            f"no record for {identifier or args.id} in {args.store}; fetch the paper "
+            "first — the article XML is where the supplement filenames and captions live"
         )
     return found
 
 
 def cmd_supp_list(args: argparse.Namespace) -> int:
-    record = _needs_record(args)
-    record.supplements = supp_flow.list_supplements(
-        record, args.store, asta_key=args.asta_key
-    )
-    write_record(args.store, record)
-    _emit({"supplements": record.supplements.to_dict()})
-    return 0
-
-
-def cmd_supp_fetch(args: argparse.Namespace) -> int:
-    record = _needs_record(args)
-    if record.supplements is None or not record.supplements.files:
+    def work(identifier: str) -> dict[str, Any]:
+        record = _needs_record(args, identifier)
         record.supplements = supp_flow.list_supplements(
             record, args.store, asta_key=args.asta_key
         )
-    record.supplements = supp_flow.fetch_supplements(
-        record,
-        args.store,
-        retry=args.retry,
-        use_bundle=not args.no_bundle,
-        large_bytes=args.large_bytes,
-        max_bytes=args.max_bundle_bytes,
-        allow_large=args.yes_large,
-        skip_large=args.skip_large,
-    )
-    write_record(args.store, record)
-    payload = record.supplements.to_dict()
-    _emit({"supplements": payload})
-    deferred = [f for f in record.supplements.files if f.status == "deferred"]
-    # Exit 2 asks the caller to decide, unless they said carry on. A batch that
-    # stopped on the first big bundle would be worse than one that capped.
-    return 2 if deferred and not args.skip_large else 0
+        _, note = write_or_note(args.store, record)
+        payload = record.supplements.to_dict()
+        if note:
+            payload["write_problem"] = note
+        return payload
+
+    return _sweep(args, work)
+
+
+def cmd_supp_fetch(args: argparse.Namespace) -> int:
+    def work(identifier: str) -> dict[str, Any]:
+        record = _needs_record(args, identifier)
+        if record.supplements is None or not record.supplements.files:
+            record.supplements = supp_flow.list_supplements(
+                record, args.store, asta_key=args.asta_key
+            )
+        record.supplements = supp_flow.fetch_supplements(
+            record,
+            args.store,
+            retry=args.retry,
+            use_bundle=not args.no_bundle,
+            large_bytes=args.large_bytes,
+            max_bytes=args.max_bundle_bytes,
+            allow_large=args.yes_large,
+            skip_large=args.skip_large,
+            include_media=args.include_media,
+            file_timeout=args.file_timeout,
+            paper_timeout=args.paper_timeout,
+        )
+        # A record that will not validate is written anyway with the problems
+        # noted, so one bad file cannot strand the paper for every later run.
+        _, note = write_or_note(args.store, record)
+        payload = record.supplements.to_dict()
+        if note:
+            payload["write_problem"] = note
+        return payload
+
+    return _sweep(args, work)
 
 
 def cmd_supp_unpack(args: argparse.Namespace) -> int:
-    record = _needs_record(args)
-    record.supplements = supp_flow.unpack(record, args.store)
-    write_record(args.store, record)
-    _emit({"supplements": record.supplements.to_dict()})
-    return 0
+    def work(identifier: str) -> dict[str, Any]:
+        record = _needs_record(args, identifier)
+        record.supplements = supp_flow.unpack(record, args.store)
+        _, note = write_or_note(args.store, record)
+        payload = record.supplements.to_dict()
+        if note:
+            payload["write_problem"] = note
+        return payload
+
+    return _sweep(args, work)
+
+
+def cmd_migrate(args: argparse.Namespace) -> int:
+    """Bring every record in a store up to the current schema, without fetching.
+
+    Reading tolerates an older version, so this is only needed to stop the
+    upgrade happening lazily one paper at a time — but it is what makes a
+    schema bump something other than "re-fetch your whole corpus".
+    """
+    from .record import SCHEMA_VERSION
+
+    changed, failed = [], []
+    for path in sorted(Path(args.store).glob("*/availability.json")):
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            failed.append({"path": str(path), "error": str(exc)})
+            continue
+        was = payload.get("schema_version")
+        if was == SCHEMA_VERSION:
+            continue
+        try:
+            record = record_module.Availability.from_dict(payload)
+            write_record(args.store, record)
+        except PaperAccessError as exc:
+            failed.append({"path": str(path), "from": was, "error": str(exc)})
+            continue
+        changed.append({"path": str(path), "from": was, "to": SCHEMA_VERSION})
+    _emit({"migrated": changed, "failed": failed, "schema_version": SCHEMA_VERSION})
+    return 1 if failed else 0
 
 
 def cmd_supp_adopt(args: argparse.Namespace) -> int:
@@ -400,6 +526,12 @@ def build_parser() -> argparse.ArgumentParser:
     p = subs.add_parser("schema", help="Print the record schema")
     p.set_defaults(func=cmd_schema)
 
+    p = subs.add_parser(
+        "migrate", help="Bring a store's records up to the current schema"
+    )
+    p.add_argument("--store", required=True)
+    p.set_defaults(func=cmd_migrate)
+
     p = subs.add_parser("papers", help="Identifiers in a store, one per line")
     p.add_argument("--store", required=True)
     p.set_defaults(func=cmd_papers)
@@ -409,8 +541,14 @@ def build_parser() -> argparse.ArgumentParser:
     ).add_subparsers(dest="supp_command", required=True)
 
     def with_store_id(sub: argparse.ArgumentParser) -> None:
+        """Store plus a set of papers: one, a file of them, or all of them."""
         sub.add_argument("--store", required=True)
-        sub.add_argument("--id", required=True)
+        sub.add_argument("--id", action="append", help="An identifier (repeatable)")
+        sub.add_argument("--input", help="A file with one identifier per line")
+        sub.add_argument("--all", action="store_true",
+                         help="Every paper in the store")
+        sub.add_argument("--concurrency", type=int, default=4,
+                         help="Papers at a time (default 4)")
 
     s = supp.add_parser("list", help="What supplementary files this paper has")
     with_store_id(s)
@@ -421,6 +559,12 @@ def build_parser() -> argparse.ArgumentParser:
     with_store_id(s)
     s.add_argument("--retry", action="store_true",
                    help="Try again for files recorded as missing or deferred")
+    s.add_argument("--include-media", action="store_true",
+                   help="Fetch figures and video too; off by default at any size")
+    s.add_argument("--file-timeout", type=float, default=supp_flow.DEFAULT_FILE_TIMEOUT,
+                   help="Wall-clock seconds for one file (default 120)")
+    s.add_argument("--paper-timeout", type=float, default=supp_flow.DEFAULT_PAPER_TIMEOUT,
+                   help="Wall-clock seconds for one paper (default 600)")
     s.add_argument("--no-bundle", action="store_true",
                    help="Skip the Europe PMC bundle route")
     s.add_argument("--large-bytes", type=int, default=supp_flow.DEFAULT_LARGE_BYTES,
@@ -439,12 +583,14 @@ def build_parser() -> argparse.ArgumentParser:
     s.set_defaults(func=cmd_supp_unpack)
 
     s = supp.add_parser("adopt", help="Take in files a person dropped")
-    with_store_id(s)
+    s.add_argument("--store", required=True)
+    s.add_argument("--id", required=True)
     s.add_argument("--incoming", required=True)
     s.set_defaults(func=cmd_supp_adopt)
 
     s = supp.add_parser("show", help="One paper's supplements, with problems flagged")
-    with_store_id(s)
+    s.add_argument("--store", required=True)
+    s.add_argument("--id", required=True)
     s.set_defaults(func=cmd_supp_show)
 
     s = supp.add_parser("report", help="Supplement coverage across the store")

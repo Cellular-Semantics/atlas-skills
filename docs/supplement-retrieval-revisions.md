@@ -4,6 +4,19 @@ Follow-up to [`supplement-retrieval-plan.md`](supplement-retrieval-plan.md),
 from a real corpus sweep of ~30 papers. Three of the reported diagnoses are
 corrected below, with evidence; the rest go in as reported.
 
+**Status: all implemented**, including batch mode, which the plan put in a
+second PR. It moved here because the next round of testing is a corpus sweep,
+and a hand-rolled shell loop would muddy the results with the loop's own bugs
+rather than the fixes'. Package and plugin 0.3.0, record schema 3.
+
+One further bug the implementation found, not in the report: **`.gif` was absent
+from the media table entirely**, so nothing skipped it — and an
+author-manuscript bundle is mostly figure GIFs. The zero-byte GIF that stranded
+`sridhar_2020_retina` was therefore being extracted in the first place. Added
+`gif`, `bmp`, `webp`, `mkv`, `wmv`, `m4v`, with a test that every figure and
+video extension resolves to a type the policy skips — the failure mode is an
+extension nobody listed, so the test enumerates rather than spot-checks.
+
 ## Corrections to the diagnosis
 
 ### The blocker is a truthiness bug, not a missing write

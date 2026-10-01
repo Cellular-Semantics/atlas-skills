@@ -6,7 +6,7 @@
   "type": "object",
   "properties": {
     "schema_version": {
-      "description": "Version of this schema the record was written against. A consumer that does not recognise it must refuse the record rather than guess at missing fields \u2014 an absent `supplements` block in a version that has one would otherwise read as 'this paper has no supplementary material', which is a claim nobody made.",
+      "description": "Version of this schema the record was written against. A reader accepts any version it knows and upgrades on write: an older record is not wrong, it was written before a field existed, and refusing it would mean re-fetching every corpus anybody holds on every schema change. A version from the future is refused, because guessing at fields that did not exist yet is how a record starts lying.",
       "type": "integer",
       "minimum": 1
     },
@@ -461,6 +461,15 @@
           "description": "When the byte rungs last ran. With `attempts`, the negative cache: a file nobody can get is not re-requested on every pass unless a retry is asked for.",
           "type": "string",
           "format": "date-time"
+        },
+        "caption_source": {
+          "description": "Why descriptions are absent, where they are. An author-manuscript deposit's XML carries no <supplementary-material> captions at all, so a bundle of files with no descriptions is a property of the source rather than a failure to look \u2014 and a caption is often the best description a supplement will ever have, so the difference is worth recording.",
+          "type": "string",
+          "enum": [
+            "jats",
+            "none_in_jats",
+            "no_jats"
+          ]
         }
       },
       "required": [
@@ -502,7 +511,7 @@
           ]
         },
         "size_bytes": {
-          "description": "Size in bytes: of the stored file where it is here, otherwise as the listing or the host declared it.",
+          "description": "The file's size: measured from the stored bytes where it is here, otherwise as the listing or the host declared it. Absent means nobody has said \u2014 notably for a Europe PMC bundle, which declares no length by any means, so its size is not knowable before it is transferred. Never the number of bytes read before giving up; that is `bytes_transferred`.",
           "type": "integer",
           "minimum": 0
         },
@@ -516,11 +525,12 @@
           "type": "string"
         },
         "status": {
-          "description": "'listed' = known to exist, bytes not fetched. 'present' = on disk. 'deferred' = a fetch was declined, so far only on size; nothing was learnt about whether it can be got, and this must never be read as 'unavailable'. 'missing' = every route ran and none produced it.",
+          "description": "'listed' = known to exist, no route has reached it yet. 'present' = on disk. 'skipped' = a route had it and the media policy passed it over, so it was never wanted rather than never found. 'deferred' = a fetch was declined on size; nothing was learnt about whether it could be got, and this must never be read as 'unavailable'. 'missing' = every route ran and none produced it. The difference between 'skipped' and 'missing' is whose decision it was.",
           "type": "string",
           "enum": [
             "listed",
             "present",
+            "skipped",
             "deferred",
             "missing"
           ]
@@ -534,6 +544,11 @@
           "items": {
             "$ref": "#/$defs/ArchiveMember"
           }
+        },
+        "bytes_transferred": {
+          "description": "How much was read before a transfer was abandoned. A lower bound on the real size and not the size itself, which is why it is a separate field: recording an abandonment point as a size states something false about the file.",
+          "type": "integer",
+          "minimum": 0
         }
       },
       "required": [
@@ -631,14 +646,15 @@
           ]
         },
         "outcome": {
-          "description": "'ok' = produced something. 'unavailable' = the rung ran and this paper is not reachable by it. 'failed' = the rung ran and broke, so it is worth retrying. 'skipped' = it could not run at all, so nothing was learnt. 'deferred' = it could have run and was declined, so far only on size; nothing was learnt either, and this is not 'unavailable'.",
+          "description": "'ok' = produced something. 'unavailable' = the rung ran and this paper is not reachable by it. 'failed' = the rung ran and broke, so it is worth retrying. 'skipped' = it could not run at all, so nothing was learnt. 'deferred' = it could have run and was declined, so far only on size; nothing was learnt either, and this is not 'unavailable'. 'timeout' = it ran out of time, which is a kind of failure but a separate one, because a host that answers slowly is a different problem from a host that answers wrongly.",
           "type": "string",
           "enum": [
             "ok",
             "unavailable",
             "failed",
             "skipped",
-            "deferred"
+            "deferred",
+            "timeout"
           ]
         },
         "note": {
