@@ -33,9 +33,19 @@ Two things to avoid, because they are the failure modes this exists to replace:
 
 ## The tool
 
+Every invocation looks like this. Keep the quotes — an unquoted command in a
+variable does not word-split under zsh, which is the default shell on macOS:
+
 ```
-OQ="uvx --from git+https://github.com/Cellular-Semantics/atlas-skills@pkg-onto-query--v0.2.0#subdirectory=packages/onto-query oq"
+uvx --from "${OQ_FROM:-git+https://github.com/Cellular-Semantics/atlas-skills@pkg-onto-query--v0.2.0#subdirectory=packages/onto-query}" oq <command>
 ```
+
+That default is the pinned release and is what you should normally run. If
+`$OQ_BIN` is set in the environment, run `"$OQ_BIN" <command>` instead — a
+project developing `onto-query` points it at a local build. In that case
+`oq --version` reports something other than the pinned version, and any
+behaviour you record is that build's rather than the release's, so say which
+you ran.
 
 Every command prints one JSON object:
 `{tool, version, command, backend, params, warnings, result}`.
