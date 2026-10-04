@@ -1,0 +1,27 @@
+{
+ "kind": "sparql",
+ "payload": "\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX oio: <http://www.geneontology.org/formats/oboInOwl#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?info ?viri WHERE {\n  GRAPH <http://purl.obolibrary.org/obo/life-stages/components/hsapdv.owl> {\n    ?s a owl:Ontology .\n    OPTIONAL { ?s owl:versionInfo ?info }\n    OPTIONAL { ?s owl:versionIRI ?viri }\n  }\n}",
+ "response": {
+  "head": {
+   "vars": [
+    "info",
+    "viri"
+   ]
+  },
+  "results": {
+   "bindings": [
+    {
+     "info": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "2025-01-23"
+     },
+     "viri": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/life-stages/releases/2025-01-23/components/hsapdv.owl"
+     }
+    }
+   ]
+  }
+ }
+}

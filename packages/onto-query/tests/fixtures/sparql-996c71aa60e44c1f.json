@@ -1,0 +1,136 @@
+{
+ "kind": "sparql",
+ "payload": "\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX oio: <http://www.geneontology.org/formats/oboInOwl#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?p ?o WHERE {\n  VALUES ?s { <http://purl.obolibrary.org/obo/MONDO_0007739> }\n  VALUES ?p { skos:exactMatch skos:closeMatch skos:broadMatch skos:narrowMatch\n              skos:relatedMatch owl:equivalentClass }\n  GRAPH <http://reasoner.renci.org/ontology> { ?s ?p ?o . FILTER(isIRI(?o)) }\n}",
+ "response": {
+  "head": {
+   "vars": [
+    "p",
+    "o"
+   ]
+  },
+  "results": {
+   "bindings": [
+    {
+     "p": {
+      "type": "uri",
+      "value": "http://www.w3.org/2004/02/skos/core#closeMatch"
+     },
+     "o": {
+      "type": "uri",
+      "value": "http://identifiers.org/meddra/10070668"
+     }
+    },
+    {
+     "p": {
+      "type": "uri",
+      "value": "http://www.w3.org/2004/02/skos/core#exactMatch"
+     },
+     "o": {
+      "type": "uri",
+      "value": "http://id.who.int/icd/entity/2132180242"
+     }
+    },
+    {
+     "p": {
+      "type": "uri",
+      "value": "http://www.w3.org/2004/02/skos/core#exactMatch"
+     },
+     "o": {
+      "type": "uri",
+      "value": "http://identifiers.org/medgen/5654"
+     }
+    },
+    {
+     "p": {
+      "type": "uri",
+      "value": "http://www.w3.org/2004/02/skos/core#exactMatch"
+     },
+     "o": {
+      "type": "uri",
+      "value": "http://identifiers.org/mesh/D006816"
+     }
+    },
+    {
+     "p": {
+      "type": "uri",
+      "value": "http://www.w3.org/2004/02/skos/core#exactMatch"
+     },
+     "o": {
+      "type": "uri",
+      "value": "http://identifiers.org/snomedct/58756001"
+     }
+    },
+    {
+     "p": {
+      "type": "uri",
+      "value": "http://www.w3.org/2004/02/skos/core#exactMatch"
+     },
+     "o": {
+      "type": "uri",
+      "value": "http://linkedlifedata.com/resource/umls/id/C0020179"
+     }
+    },
+    {
+     "p": {
+      "type": "uri",
+      "value": "http://www.w3.org/2004/02/skos/core#exactMatch"
+     },
+     "o": {
+      "type": "uri",
+      "value": "http://purl.bioontology.org/ontology/ICD10CM/G10"
+     }
+    },
+    {
+     "p": {
+      "type": "uri",
+      "value": "http://www.w3.org/2004/02/skos/core#exactMatch"
+     },
+     "o": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/DOID_12858"
+     }
+    },
+    {
+     "p": {
+      "type": "uri",
+      "value": "http://www.w3.org/2004/02/skos/core#exactMatch"
+     },
+     "o": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/NCIT_C82342"
+     }
+    },
+    {
+     "p": {
+      "type": "uri",
+      "value": "http://www.w3.org/2004/02/skos/core#exactMatch"
+     },
+     "o": {
+      "type": "uri",
+      "value": "http://www.orpha.net/ORDO/Orphanet_399"
+     }
+    },
+    {
+     "p": {
+      "type": "uri",
+      "value": "http://www.w3.org/2004/02/skos/core#exactMatch"
+     },
+     "o": {
+      "type": "uri",
+      "value": "https://icd.who.int/browse10/2019/en#/G10"
+     }
+    },
+    {
+     "p": {
+      "type": "uri",
+      "value": "http://www.w3.org/2004/02/skos/core#exactMatch"
+     },
+     "o": {
+      "type": "uri",
+      "value": "https://omim.org/entry/143100"
+     }
+    }
+   ]
+  }
+ }
+}

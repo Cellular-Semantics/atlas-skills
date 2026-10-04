@@ -1,0 +1,62 @@
+{
+ "kind": "ols4-ontology",
+ "payload": "ehdaa2",
+ "response": {
+  "languages": [
+   "en"
+  ],
+  "lang": "en",
+  "ontologyId": "ehdaa2",
+  "loaded": "2026-09-30T11:49:33.747495857",
+  "updated": "2026-09-30T11:49:33.747495857",
+  "status": "LOADED",
+  "message": "",
+  "version": null,
+  "fileHash": null,
+  "loadAttempts": 0,
+  "numberOfTerms": 2743,
+  "numberOfProperties": 30,
+  "numberOfIndividuals": 0,
+  "config": {
+   "id": "ehdaa2",
+   "versionIri": "http://purl.obolibrary.org/obo/ehdaa2/releases/2024-01-11/ehdaa2.owl",
+   "namespace": "ehdaa2",
+   "preferredPrefix": null,
+   "title": "Human developmental anatomy, abstract",
+   "description": "A structured controlled vocabulary of stage-specific anatomical structures of the developing human.",
+   "homepage": "https://github.com/obophenotype/human-developmental-anatomy-ontology",
+   "version": null,
+   "mailingList": null,
+   "tracker": "https://github.com/obophenotype/human-developmental-anatomy-ontology/issues",
+   "logo": null,
+   "creators": [],
+   "annotations": null,
+   "fileLocation": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+   "oboSlims": false,
+   "labelProperty": "http://www.w3.org/2000/01/rdf-schema#label",
+   "definitionProperties": [],
+   "synonymProperties": [],
+   "hierarchicalProperties": [],
+   "baseUris": [],
+   "hiddenProperties": [],
+   "preferredRootTerms": [],
+   "isSkos": false,
+   "allowDownload": false
+  },
+  "baseUris": [],
+  "_links": {
+   "self": {
+    "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2?lang=en"
+   },
+   "terms": {
+    "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms"
+   },
+   "properties": {
+    "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/properties"
+   },
+   "individuals": {
+    "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/individuals"
+   }
+  }
+ }
+}

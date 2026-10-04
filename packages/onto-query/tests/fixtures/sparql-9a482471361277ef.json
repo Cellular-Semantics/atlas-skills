@@ -1,0 +1,15 @@
+{
+ "kind": "sparql",
+ "payload": "\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX oio: <http://www.geneontology.org/formats/oboInOwl#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?p ?o WHERE {\n  VALUES ?s { <http://purl.obolibrary.org/obo/UBERON_0010409> }\n  VALUES ?p { skos:exactMatch skos:closeMatch skos:broadMatch skos:narrowMatch\n              skos:relatedMatch owl:equivalentClass }\n  GRAPH <http://reasoner.renci.org/ontology> { ?s ?p ?o . FILTER(isIRI(?o)) }\n}",
+ "response": {
+  "head": {
+   "vars": [
+    "p",
+    "o"
+   ]
+  },
+  "results": {
+   "bindings": []
+  }
+ }
+}

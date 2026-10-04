@@ -1,0 +1,47 @@
+{
+ "kind": "sparql",
+ "payload": "\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX oio: <http://www.geneontology.org/formats/oboInOwl#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?s ?label ?src WHERE {\n  GRAPH <http://reasoner.renci.org/ontology> {\n    ?s oio:hasDbXref \"EMAPA:16846\"^^xsd:string .\n    \n    ?s rdfs:label ?label ; rdfs:isDefinedBy ?src .\n    FILTER NOT EXISTS { ?s owl:deprecated true }\n  }\n}",
+ "response": {
+  "head": {
+   "vars": [
+    "s",
+    "label",
+    "src"
+   ]
+  },
+  "results": {
+   "bindings": [
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0002107"
+     },
+     "src": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/uberon.owl"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "liver"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/MA_0000358"
+     },
+     "src": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/ma.owl"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "liver"
+     }
+    }
+   ]
+  }
+ }
+}

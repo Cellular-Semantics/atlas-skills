@@ -1,0 +1,1565 @@
+{
+ "kind": "ols4-hierarchy",
+ "payload": "ehdaa2|http://purl.obolibrary.org/obo/EHDAA2_0000997|hierarchicalAncestors|1000|0",
+ "response": {
+  "_embedded": {
+   "terms": [
+    {
+     "iri": "http://purl.obolibrary.org/obo/AEO_0000093",
+     "lang": "en",
+     "description": [
+      "An anatomical group whose component structures share a common function."
+     ],
+     "synonyms": [],
+     "annotation": {
+      "database_cross_reference": [
+       "FBbt:00007278"
+      ],
+      "has_obo_namespace": [
+       "http://www.xspan.org/obo.owl#"
+      ],
+      "id": [
+       "AEO:0000093"
+      ]
+     },
+     "label": "non-connected functional system",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "AEO_0000093",
+     "obo_id": "AEO:0000093",
+     "in_subset": null,
+     "obo_definition_citation": [
+      {
+       "definition": "An anatomical group whose component structures share a common function.",
+       "oboXrefs": [
+        {
+         "database": "AEO",
+         "id": "JB",
+         "description": null,
+         "url": null
+        }
+       ]
+      }
+     ],
+     "obo_xref": [
+      {
+       "database": "FBbt",
+       "id": "00007278",
+       "description": null,
+       "url": "http://flybase.org/cgi-bin/fbcvq.html?query=FBbt:00007278"
+      }
+     ],
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000093?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000093/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000093/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000093/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000093/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000093/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000093/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000093/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000093/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000093/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000093/graph"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/AEO_0000096",
+     "lang": "en",
+     "description": [
+      "A multi-tissue structure that produces a secretion for use elsewhere in the body."
+     ],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "http://www.xspan.org/obo.owl#"
+      ],
+      "id": [
+       "AEO:0000096"
+      ]
+     },
+     "label": "gland",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "AEO_0000096",
+     "obo_id": "AEO:0000096",
+     "in_subset": null,
+     "obo_definition_citation": [
+      {
+       "definition": "A multi-tissue structure that produces a secretion for use elsewhere in the body.",
+       "oboXrefs": [
+        {
+         "database": "AEO",
+         "id": "JB",
+         "description": null,
+         "url": null
+        }
+       ]
+      }
+     ],
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000096?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000096/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000096/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000096/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000096/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000096/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000096/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000096/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000096/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000096/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000096/graph"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/AEO_0000097",
+     "lang": "en",
+     "description": [
+      "A gland that releases its secretion through a duct."
+     ],
+     "synonyms": [
+      "exocrine gland."
+     ],
+     "annotation": {
+      "has_obo_namespace": [
+       "http://www.xspan.org/obo.owl#"
+      ],
+      "id": [
+       "AEO:0000097"
+      ]
+     },
+     "label": "ducted gland",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "AEO_0000097",
+     "obo_id": "AEO:0000097",
+     "in_subset": null,
+     "obo_definition_citation": [
+      {
+       "definition": "A gland that releases its secretion through a duct.",
+       "oboXrefs": [
+        {
+         "database": "AEO",
+         "id": "JB",
+         "description": null,
+         "url": null
+        }
+       ]
+      }
+     ],
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000097?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000097/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000097/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000097/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000097/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000097/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000097/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000097/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000097/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000097/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000097/graph"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/AEO_0000098",
+     "lang": "en",
+     "description": [
+      "A gland that releases its secretion directly into the bloodstream, or equivalent for an invertebrate."
+     ],
+     "synonyms": [
+      "endocrine gland."
+     ],
+     "annotation": {
+      "has_obo_namespace": [
+       "http://www.xspan.org/obo.owl#"
+      ],
+      "id": [
+       "AEO:0000098"
+      ]
+     },
+     "label": "ductless gland",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "AEO_0000098",
+     "obo_id": "AEO:0000098",
+     "in_subset": null,
+     "obo_definition_citation": [
+      {
+       "definition": "A gland that releases its secretion directly into the bloodstream, or equivalent for an invertebrate.",
+       "oboXrefs": [
+        {
+         "database": "AEO",
+         "id": "JB",
+         "description": null,
+         "url": null
+        }
+       ]
+      }
+     ],
+     "obo_xref": null,
+     "obo_synonym": [
+      {
+       "name": "endocrine gland.",
+       "scope": "hasRelatedSynonym",
+       "type": null,
+       "xrefs": [
+        {
+         "database": "AEO",
+         "id": "JB",
+         "description": null,
+         "url": null
+        }
+       ]
+      }
+     ],
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000098?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000098/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000098/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000098/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000098/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000098/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000098/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000098/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000098/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000098/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000098/graph"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/AEO_0000103",
+     "lang": "en",
+     "description": [
+      "The region of the organism associated with the visceral organs."
+     ],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "http://www.xspan.org/obo.owl#"
+      ],
+      "id": [
+       "AEO:0000103"
+      ]
+     },
+     "label": "body",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "AEO_0000103",
+     "obo_id": "AEO:0000103",
+     "in_subset": null,
+     "obo_definition_citation": [
+      {
+       "definition": "The region of the organism associated with the visceral organs.",
+       "oboXrefs": [
+        {
+         "database": "AEO",
+         "id": "JB",
+         "description": null,
+         "url": null
+        }
+       ]
+      }
+     ],
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000103?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000103/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000103/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000103/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000103/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000103/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000103/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000103/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000103/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000103/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FAEO_0000103/graph"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/CARO_0000000",
+     "lang": "en",
+     "description": [
+      "Biological entity that is either an individual member of a biological species or constitutes the structural organization of an individual member of a biological species."
+     ],
+     "synonyms": [],
+     "annotation": {
+      "database_cross_reference": [
+       "UBERON:0001062"
+      ],
+      "has_obo_namespace": [
+       "http://www.xspan.org/obo.owl#"
+      ],
+      "id": [
+       "CARO:0000000"
+      ]
+     },
+     "label": "anatomical entity",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": true,
+     "short_form": "CARO_0000000",
+     "obo_id": "CARO:0000000",
+     "in_subset": null,
+     "obo_definition_citation": [
+      {
+       "definition": "Biological entity that is either an individual member of a biological species or constitutes the structural organization of an individual member of a biological species.",
+       "oboXrefs": [
+        {
+         "database": "CARO",
+         "id": "MAH",
+         "description": null,
+         "url": "http://purl.obolibrary.org/obo/CARO_MAH"
+        }
+       ]
+      }
+     ],
+     "obo_xref": [
+      {
+       "database": "UBERON",
+       "id": "0001062",
+       "description": null,
+       "url": "http://purl.obolibrary.org/obo/UBERON_0001062"
+      }
+     ],
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000000?lang=en"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000000/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000000/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000000/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000000/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000000/graph"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/CARO_0000003",
+     "lang": "en",
+     "description": [
+      "Material anatomical entity that has inherent 3D shape and is generated by coordinated expression of the organism's own genome."
+     ],
+     "synonyms": [],
+     "annotation": {
+      "database_cross_reference": [
+       "UBERON:0000061"
+      ],
+      "has_obo_namespace": [
+       "http://www.xspan.org/obo.owl#"
+      ],
+      "id": [
+       "CARO:0000003"
+      ]
+     },
+     "label": "anatomical structure",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "CARO_0000003",
+     "obo_id": "CARO:0000003",
+     "in_subset": null,
+     "obo_definition_citation": [
+      {
+       "definition": "Material anatomical entity that has inherent 3D shape and is generated by coordinated expression of the organism's own genome.",
+       "oboXrefs": [
+        {
+         "database": "CARO",
+         "id": "MAH",
+         "description": null,
+         "url": "http://purl.obolibrary.org/obo/CARO_MAH"
+        }
+       ]
+      }
+     ],
+     "obo_xref": [
+      {
+       "database": "UBERON",
+       "id": "0000061",
+       "description": null,
+       "url": "http://purl.obolibrary.org/obo/UBERON_0000061"
+      }
+     ],
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000003?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000003/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000003/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000003/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000003/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000003/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000003/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000003/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000003/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000003/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000003/graph"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/CARO_0000006",
+     "lang": "en",
+     "description": [
+      "Anatomical entity that has mass."
+     ],
+     "synonyms": [],
+     "annotation": {
+      "database_cross_reference": [
+       "UBERON:0000465"
+      ],
+      "has_obo_namespace": [
+       "http://www.xspan.org/obo.owl#"
+      ],
+      "id": [
+       "CARO:0000006"
+      ]
+     },
+     "label": "material anatomical entity",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "CARO_0000006",
+     "obo_id": "CARO:0000006",
+     "in_subset": null,
+     "obo_definition_citation": [
+      {
+       "definition": "Anatomical entity that has mass.",
+       "oboXrefs": [
+        {
+         "database": "CARO",
+         "id": "MAH",
+         "description": null,
+         "url": "http://purl.obolibrary.org/obo/CARO_MAH"
+        }
+       ]
+      }
+     ],
+     "obo_xref": [
+      {
+       "database": "UBERON",
+       "id": "0000465",
+       "description": null,
+       "url": "http://purl.obolibrary.org/obo/UBERON_0000465"
+      }
+     ],
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000006?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000006/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000006/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000006/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000006/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000006/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000006/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000006/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000006/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000006/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000006/graph"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/CARO_0000011",
+     "lang": "en",
+     "description": [
+      "Anatomical group that is has as its parts distinct anatomical structures interconnected by anatomical structures at a lower level of granularity."
+     ],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "http://www.xspan.org/obo.owl#"
+      ],
+      "id": [
+       "CARO:0000011"
+      ]
+     },
+     "label": "anatomical system",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "CARO_0000011",
+     "obo_id": "CARO:0000011",
+     "in_subset": null,
+     "obo_definition_citation": [
+      {
+       "definition": "Anatomical group that is has as its parts distinct anatomical structures interconnected by anatomical structures at a lower level of granularity.",
+       "oboXrefs": [
+        {
+         "database": "CARO",
+         "id": "MAH",
+         "description": null,
+         "url": "http://purl.obolibrary.org/obo/CARO_MAH"
+        }
+       ]
+      }
+     ],
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000011?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000011/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000011/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000011/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000011/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000011/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000011/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000011/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000011/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000011/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000011/graph"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/CARO_0000024",
+     "lang": "en",
+     "description": [
+      "Anatomical structure that has as its parts two or more multi-tissue structures of at least two different types and which through specific morphogenetic processes forms a single distinct structural unit demarcated by bona fide boundaries from other distinct anatomical structures of different types."
+     ],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "http://www.xspan.org/obo.owl#"
+      ],
+      "id": [
+       "CARO:0000024"
+      ]
+     },
+     "label": "compound organ",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "CARO_0000024",
+     "obo_id": "CARO:0000024",
+     "in_subset": null,
+     "obo_definition_citation": [
+      {
+       "definition": "Anatomical structure that has as its parts two or more multi-tissue structures of at least two different types and which through specific morphogenetic processes forms a single distinct structural unit demarcated by bona fide boundaries from other distinct anatomical structures of different types.",
+       "oboXrefs": [
+        {
+         "database": "CARO",
+         "id": "MAH",
+         "description": null,
+         "url": "http://purl.obolibrary.org/obo/CARO_MAH"
+        }
+       ]
+      }
+     ],
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000024?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000024/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000024/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000024/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000024/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000024/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000024/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000024/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000024/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000024/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000024/graph"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/CARO_0000032",
+     "lang": "en",
+     "description": [
+      "Anatomical structure which is a primary subdivision of whole organism. The mereological sum of these is the whole organism."
+     ],
+     "synonyms": [],
+     "annotation": {
+      "database_cross_reference": [
+       "UBERON:0000475"
+      ],
+      "has_obo_namespace": [
+       "http://www.xspan.org/obo.owl#"
+      ],
+      "id": [
+       "CARO:0000032"
+      ]
+     },
+     "label": "organism subdivision",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "CARO_0000032",
+     "obo_id": "CARO:0000032",
+     "in_subset": null,
+     "obo_definition_citation": [
+      {
+       "definition": "Anatomical structure which is a primary subdivision of whole organism. The mereological sum of these is the whole organism.",
+       "oboXrefs": [
+        {
+         "database": "CARO",
+         "id": "MAH",
+         "description": null,
+         "url": "http://purl.obolibrary.org/obo/CARO_MAH"
+        }
+       ]
+      }
+     ],
+     "obo_xref": [
+      {
+       "database": "UBERON",
+       "id": "0000475",
+       "description": null,
+       "url": "http://purl.obolibrary.org/obo/UBERON_0000475"
+      }
+     ],
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000032?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000032/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000032/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000032/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000032/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000032/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000032/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000032/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000032/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000032/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000032/graph"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/CARO_0000041",
+     "lang": "en",
+     "description": [
+      "Anatomical group that has its parts adjacent to one another. Anatomical structure, which has as its parts a heterogeneous collection of organs, organ parts, cells or body part subdivisions that are adjacent to, or continuous with one another; does not constitute an organ, organ system or organ system subdivision, or body part or body part subdivision."
+     ],
+     "synonyms": [],
+     "annotation": {
+      "database_cross_reference": [
+       "UBERON:0000477"
+      ],
+      "has_obo_namespace": [
+       "http://www.xspan.org/obo.owl#"
+      ],
+      "id": [
+       "CARO:0000041"
+      ]
+     },
+     "label": "anatomical cluster",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "CARO_0000041",
+     "obo_id": "CARO:0000041",
+     "in_subset": null,
+     "obo_definition_citation": [
+      {
+       "definition": "Anatomical group that has its parts adjacent to one another. Anatomical structure, which has as its parts a heterogeneous collection of organs, organ parts, cells or body part subdivisions that are adjacent to, or continuous with one another; does not constitute an organ, organ system or organ system subdivision, or body part or body part subdivision.",
+       "oboXrefs": [
+        {
+         "database": "CARO",
+         "id": "MAH",
+         "description": null,
+         "url": "http://purl.obolibrary.org/obo/CARO_MAH"
+        }
+       ]
+      }
+     ],
+     "obo_xref": [
+      {
+       "database": "UBERON",
+       "id": "0000477",
+       "description": null,
+       "url": "http://purl.obolibrary.org/obo/UBERON_0000477"
+      }
+     ],
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000041?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000041/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000041/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000041/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000041/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000041/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000041/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000041/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000041/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000041/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000041/graph"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/CARO_0000054",
+     "lang": "en",
+     "description": [
+      "Anatomical structure consisting of at least two non-overlapping organs, multi-tissue aggregates or portion of tissues or cells of different types that does not constitute an organism, organ, multi-tissue aggregate, or portion of tissue."
+     ],
+     "synonyms": [],
+     "annotation": {
+      "database_cross_reference": [
+       "UBERON:0000480"
+      ],
+      "has_obo_namespace": [
+       "http://www.xspan.org/obo.owl#"
+      ],
+      "id": [
+       "CARO:0000054"
+      ]
+     },
+     "label": "anatomical group",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "CARO_0000054",
+     "obo_id": "CARO:0000054",
+     "in_subset": null,
+     "obo_definition_citation": [
+      {
+       "definition": "Anatomical structure consisting of at least two non-overlapping organs, multi-tissue aggregates or portion of tissues or cells of different types that does not constitute an organism, organ, multi-tissue aggregate, or portion of tissue.",
+       "oboXrefs": [
+        {
+         "database": "CARO",
+         "id": "MAH",
+         "description": null,
+         "url": "http://purl.obolibrary.org/obo/CARO_MAH"
+        }
+       ]
+      }
+     ],
+     "obo_xref": [
+      {
+       "database": "UBERON",
+       "id": "0000480",
+       "description": null,
+       "url": "http://purl.obolibrary.org/obo/UBERON_0000480"
+      }
+     ],
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000054?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000054/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000054/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000054/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000054/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000054/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000054/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000054/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000054/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000054/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000054/graph"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/CARO_0000055",
+     "lang": "en",
+     "description": [
+      "Anatomical structure that has as its parts two or more portions of tissue of at least two different types and which through specific morphogenetic processes forms a single distinct structural unit demarcated by bona-fide boundaries from other distinct structural units of different types."
+     ],
+     "synonyms": [],
+     "annotation": {
+      "database_cross_reference": [
+       "UBERON:0000481"
+      ],
+      "has_obo_namespace": [
+       "http://www.xspan.org/obo.owl#"
+      ],
+      "id": [
+       "CARO:0000055"
+      ]
+     },
+     "label": "multi-tissue structure",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "CARO_0000055",
+     "obo_id": "CARO:0000055",
+     "in_subset": null,
+     "obo_definition_citation": [
+      {
+       "definition": "Anatomical structure that has as its parts two or more portions of tissue of at least two different types and which through specific morphogenetic processes forms a single distinct structural unit demarcated by bona-fide boundaries from other distinct structural units of different types.",
+       "oboXrefs": [
+        {
+         "database": "CARO",
+         "id": "MAH",
+         "description": null,
+         "url": "http://purl.obolibrary.org/obo/CARO_MAH"
+        }
+       ]
+      }
+     ],
+     "obo_xref": [
+      {
+       "database": "UBERON",
+       "id": "0000481",
+       "description": null,
+       "url": "http://purl.obolibrary.org/obo/UBERON_0000481"
+      }
+     ],
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000055?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000055/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000055/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000055/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000055/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000055/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000055/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000055/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000055/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000055/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCARO_0000055/graph"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0000998",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0000998"
+      ]
+     },
+     "label": "liver and biliary system",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "EHDAA2_0000998",
+     "obo_id": "EHDAA2:0000998",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000998?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000998/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000998/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000998/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000998/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000998/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000998/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000998/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000998/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000998/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000998/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000998/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "located_in": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000998/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0001025"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000998/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001330",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0001330"
+      ]
+     },
+     "label": "organ system group",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "EHDAA2_0001330",
+     "obo_id": "EHDAA2:0001330",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001330?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001330/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001330/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001330/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001330/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001330/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001330/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001330/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001330/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001330/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001330/graph"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001330/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0002223",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0002223"
+      ]
+     },
+     "label": "glandular system",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "EHDAA2_0002223",
+     "obo_id": "EHDAA2:0002223",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002223?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002223/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002223/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002223/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002223/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002223/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002223/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002223/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002223/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002223/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002223/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002223/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002223/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0002224",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0002224"
+      ]
+     },
+     "label": "endocrine glandular system",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "EHDAA2_0002224",
+     "obo_id": "EHDAA2:0002224",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002224?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002224/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002224/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002224/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002224/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002224/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002224/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002224/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002224/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002224/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002224/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002224/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002224/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0002225",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0002225"
+      ]
+     },
+     "label": "exocrine glandular system",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "EHDAA2_0002225",
+     "obo_id": "EHDAA2:0002225",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002225?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002225/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002225/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002225/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002225/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002225/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002225/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002225/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002225/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002225/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002225/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002225/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0002225/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    }
+   ]
+  },
+  "_links": {
+   "self": {
+    "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000997/hierarchicalAncestors?page=0&size=1000"
+   }
+  },
+  "page": {
+   "size": 1000,
+   "totalElements": 19,
+   "totalPages": 1,
+   "number": 0
+  }
+ }
+}

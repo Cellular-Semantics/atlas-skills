@@ -1,0 +1,2352 @@
+{
+ "kind": "ols4",
+ "payload": "{\"fieldList\": \"obo_id,iri,label,description,synonym,exact_synonyms,broad_synonyms,narrow_synonyms,related_synonyms\", \"local\": \"true\", \"obsoletes\": \"false\", \"ontology\": \"uberon\", \"q\": \"skin\", \"queryFields\": \"label,synonym\", \"rows\": \"200\"}",
+ "response": {
+  "response": {
+   "docs": [
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0003530",
+     "synonym": [
+      "digit of foot skin",
+      "digit of terminal segment of free lower limb skin",
+      "digitus pedis skin",
+      "foot digit skin",
+      "foot digit skin",
+      "hind limb digit skin",
+      "skin of digit of foot",
+      "skin of digit of terminal segment of free lower limb",
+      "skin of digitus pedis",
+      "skin of foot digit",
+      "skin of terminal segment of free lower limb digit",
+      "skin of toe",
+      "terminal segment of free lower limb digit skin",
+      "toe skin"
+     ],
+     "description": [
+      "A zone of skin that is part of a toe [Automatically generated definition]."
+     ],
+     "narrow_synonyms": [
+      "foot digit skin"
+     ],
+     "label": "pedal digit skin",
+     "obo_id": "UBERON:0003530",
+     "exact_synonyms": [
+      "digit of foot skin",
+      "digit of terminal segment of free lower limb skin",
+      "digitus pedis skin",
+      "foot digit skin",
+      "hind limb digit skin",
+      "skin of digit of foot",
+      "skin of digit of terminal segment of free lower limb",
+      "skin of digitus pedis",
+      "skin of foot digit",
+      "skin of terminal segment of free lower limb digit",
+      "skin of toe",
+      "terminal segment of free lower limb digit skin",
+      "toe skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0003533",
+     "synonym": [
+      "digit of hand skin",
+      "digit of terminal segment of free upper limb skin",
+      "digitus manus skin",
+      "finger skin",
+      "fore limb digit skin",
+      "hand digit skin",
+      "hand digit skin",
+      "skin of digit of hand",
+      "skin of digit of terminal segment of free upper limb",
+      "skin of digitus manus",
+      "skin of finger",
+      "skin of hand digit",
+      "skin of terminal segment of free upper limb digit",
+      "terminal segment of free upper limb digit skin"
+     ],
+     "description": [
+      "A zone of skin that is part of a finger [Automatically generated definition]."
+     ],
+     "narrow_synonyms": [
+      "hand digit skin"
+     ],
+     "label": "manual digit skin",
+     "obo_id": "UBERON:0003533",
+     "exact_synonyms": [
+      "digit of hand skin",
+      "digit of terminal segment of free upper limb skin",
+      "digitus manus skin",
+      "finger skin",
+      "fore limb digit skin",
+      "hand digit skin",
+      "skin of digit of hand",
+      "skin of digit of terminal segment of free upper limb",
+      "skin of digitus manus",
+      "skin of finger",
+      "skin of hand digit",
+      "skin of terminal segment of free upper limb digit",
+      "terminal segment of free upper limb digit skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001868",
+     "synonym": [
+      "chest skin",
+      "anterior thoracic region zone of skin",
+      "anterolateral part of thorax zone of skin",
+      "chest zone of skin",
+      "front of thorax zone of skin",
+      "zone of skin of anterior chest",
+      "zone of skin of anterior part of thorax",
+      "zone of skin of anterior thoracic region",
+      "zone of skin of anterolateral part of thorax",
+      "zone of skin of chest",
+      "zone of skin of front of thorax",
+      "zone of skin of pectoral part of chest"
+     ],
+     "related_synonyms": [
+      "zone of skin of pectoral part of chest"
+     ],
+     "description": [
+      "A zone of skin that is part of a chest [Automatically generated definition]."
+     ],
+     "label": "skin of chest",
+     "obo_id": "UBERON:0001868",
+     "exact_synonyms": [
+      "chest skin",
+      "anterior thoracic region zone of skin",
+      "anterolateral part of thorax zone of skin",
+      "chest zone of skin",
+      "front of thorax zone of skin",
+      "zone of skin of anterior chest",
+      "zone of skin of anterior part of thorax",
+      "zone of skin of anterior thoracic region",
+      "zone of skin of anterolateral part of thorax",
+      "zone of skin of chest",
+      "zone of skin of front of thorax"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0003605",
+     "synonym": [
+      "camera-type eye skin gland",
+      "camera-type eye skin glands set",
+      "camera-type eye skin glands",
+      "skin gland of camera-type eye",
+      "skin gland of vertebrate eye",
+      "skin glands of camera-type eye",
+      "skin glands of vertebrate eye",
+      "skin glands set of camera-type eye",
+      "skin glands set of vertebrate eye",
+      "vertebrate eye skin gland",
+      "vertebrate eye skin glands set",
+      "vertebrate eye skin glands"
+     ],
+     "description": [
+      "A skin gland that is part of a camera-type eye [Automatically generated definition]."
+     ],
+     "label": "eye skin gland",
+     "obo_id": "UBERON:0003605",
+     "exact_synonyms": [
+      "camera-type eye skin gland",
+      "camera-type eye skin glands set",
+      "camera-type eye skin glands",
+      "skin gland of camera-type eye",
+      "skin gland of vertebrate eye",
+      "skin glands of camera-type eye",
+      "skin glands of vertebrate eye",
+      "skin glands set of camera-type eye",
+      "skin glands set of vertebrate eye",
+      "vertebrate eye skin gland",
+      "vertebrate eye skin glands set",
+      "vertebrate eye skin glands"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001459",
+     "synonym": [
+      "ear skin",
+      "external ear skin",
+      "auricular region of head zone of skin",
+      "auricular region zone of skin",
+      "external ear zone of skin",
+      "outer ear zone of skin",
+      "zone of skin of auricular region of head",
+      "zone of skin of auricular region",
+      "zone of skin of external ear",
+      "zone of skin of outer ear"
+     ],
+     "description": [
+      "A zone of skin that is part of a external ear [Automatically generated definition]."
+     ],
+     "label": "skin of external ear",
+     "obo_id": "UBERON:0001459",
+     "exact_synonyms": [
+      "ear skin",
+      "external ear skin",
+      "auricular region of head zone of skin",
+      "auricular region zone of skin",
+      "external ear zone of skin",
+      "outer ear zone of skin",
+      "zone of skin of auricular region of head",
+      "zone of skin of auricular region",
+      "zone of skin of external ear",
+      "zone of skin of outer ear"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001554",
+     "synonym": [
+      "hip skin",
+      "hip region zone of skin",
+      "hip zone of skin",
+      "regio coxae zone of skin",
+      "zone of skin of hip region",
+      "zone of skin of hip",
+      "zone of skin of regio coxae"
+     ],
+     "description": [
+      "A zone of skin that is part of a hip region."
+     ],
+     "label": "skin of hip",
+     "obo_id": "UBERON:0001554",
+     "exact_synonyms": [
+      "hip skin",
+      "hip region zone of skin",
+      "hip zone of skin",
+      "regio coxae zone of skin",
+      "zone of skin of hip region",
+      "zone of skin of hip",
+      "zone of skin of regio coxae"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0003403",
+     "synonym": [
+      "forearm skin",
+      "lower arm skin",
+      "lower segment of arm skin",
+      "skin of antebrachial region",
+      "skin of lower arm",
+      "skin of lower segment of arm",
+      "skin of zeugopod of arm"
+     ],
+     "description": [
+      "A zone of skin that is part of a lower arm [Automatically generated definition]."
+     ],
+     "label": "skin of forearm",
+     "obo_id": "UBERON:0003403",
+     "exact_synonyms": [
+      "forearm skin",
+      "lower arm skin",
+      "lower segment of arm skin",
+      "skin of antebrachial region",
+      "skin of lower arm",
+      "skin of lower segment of arm",
+      "skin of zeugopod of arm"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0003531",
+     "synonym": [
+      "anteriormost limb skin",
+      "fore limb skin",
+      "skin of fore limb",
+      "skin of forelimb",
+      "skin of upper limb",
+      "upper limb skin",
+      "wing skin"
+     ],
+     "description": [
+      "A zone of skin that is part of a forelimb [Automatically generated definition]."
+     ],
+     "narrow_synonyms": [
+      "wing skin"
+     ],
+     "label": "forelimb skin",
+     "obo_id": "UBERON:0003531",
+     "exact_synonyms": [
+      "anteriormost limb skin",
+      "fore limb skin",
+      "skin of fore limb",
+      "skin of forelimb",
+      "skin of upper limb",
+      "upper limb skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001084",
+     "synonym": [
+      "head skin",
+      "adult head zone of skin",
+      "head zone of skin",
+      "zone of skin of adult head",
+      "zone of skin of head"
+     ],
+     "description": [
+      "EDITOR_NOTE TODO - distinguish between entire skin of region and arbitrary zone of skin on region",
+      "A zone of skin that is part of a head [Automatically generated definition]."
+     ],
+     "label": "skin of head",
+     "obo_id": "UBERON:0001084",
+     "exact_synonyms": [
+      "head skin",
+      "adult head zone of skin",
+      "head zone of skin",
+      "zone of skin of adult head",
+      "zone of skin of head"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001085",
+     "synonym": [
+      "trunk skin",
+      "torso zone of skin",
+      "trunk zone of skin",
+      "zone of skin of torso",
+      "zone of skin of trunk"
+     ],
+     "description": [
+      "EDITOR_NOTE TODO - distinguish between entire skin of region and arbitrary zone of skin on region",
+      "A zone of skin that is part of a trunk [Automatically generated definition]."
+     ],
+     "label": "skin of trunk",
+     "obo_id": "UBERON:0001085",
+     "exact_synonyms": [
+      "trunk skin",
+      "torso zone of skin",
+      "trunk zone of skin",
+      "zone of skin of torso",
+      "zone of skin of trunk"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0003532",
+     "synonym": [
+      "hind limb skin",
+      "lower limb skin",
+      "skin of hind limb",
+      "skin of hindlimb",
+      "skin of lower extremity",
+      "skin of lower limb"
+     ],
+     "description": [
+      "A zone of skin that is part of a hindlimb [Automatically generated definition]."
+     ],
+     "label": "hindlimb skin",
+     "obo_id": "UBERON:0003532",
+     "exact_synonyms": [
+      "hind limb skin",
+      "lower limb skin",
+      "skin of hind limb",
+      "skin of hindlimb",
+      "skin of lower extremity",
+      "skin of lower limb"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8410021",
+     "synonym": [
+      "groin skin",
+      "inguinal skin",
+      "skin of groin",
+      "skin of inguinal region",
+      "zone of skin of groin",
+      "zone of skin of inguinal region"
+     ],
+     "description": [
+      "The skin covering the inguinal region between the abdomen and the thigh on either side of the pubic bone."
+     ],
+     "label": "inguinal region skin",
+     "obo_id": "UBERON:8410021",
+     "exact_synonyms": [
+      "groin skin",
+      "inguinal skin",
+      "skin of groin",
+      "skin of inguinal region",
+      "zone of skin of groin",
+      "zone of skin of inguinal region"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001068",
+     "synonym": [
+      "back skin",
+      "back zone of skin",
+      "skin, dorsal region",
+      "zone of skin of back"
+     ],
+     "description": [
+      "EDITOR_NOTE TODO - distinguish between entire skin of region and arbitrary zone of skin on region",
+      "A zone of skin that is part of a back [Automatically generated definition]."
+     ],
+     "label": "skin of back",
+     "obo_id": "UBERON:0001068",
+     "exact_synonyms": [
+      "back skin",
+      "back zone of skin",
+      "skin, dorsal region",
+      "zone of skin of back"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001416",
+     "synonym": [
+      "abdomen skin",
+      "abdominal skin",
+      "abdomen zone of skin",
+      "skin of abdomen proper",
+      "zone of skin of abdomen"
+     ],
+     "description": [
+      "A zone of skin that is part of an abdomen [Automatically generated definition]."
+     ],
+     "label": "skin of abdomen",
+     "obo_id": "UBERON:0001416",
+     "exact_synonyms": [
+      "abdomen skin",
+      "abdominal skin",
+      "abdomen zone of skin",
+      "skin of abdomen proper",
+      "zone of skin of abdomen"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001417",
+     "synonym": [
+      "neck skin",
+      "neck (volume) zone of skin",
+      "neck zone of skin",
+      "zone of skin of neck (volume)",
+      "zone of skin of neck"
+     ],
+     "description": [
+      "A zone of skin that is part of a neck [Automatically generated definition]."
+     ],
+     "label": "skin of neck",
+     "obo_id": "UBERON:0001417",
+     "exact_synonyms": [
+      "neck skin",
+      "neck (volume) zone of skin",
+      "neck zone of skin",
+      "zone of skin of neck (volume)",
+      "zone of skin of neck"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001418",
+     "synonym": [
+      "thoracic skin",
+      "thorax skin",
+      "upper body skin",
+      "thorax zone of skin",
+      "zone of skin of thorax"
+     ],
+     "related_synonyms": [
+      "upper body skin"
+     ],
+     "description": [
+      "A zone of skin that is part of a thorax [Automatically generated definition]."
+     ],
+     "label": "skin of thorax",
+     "obo_id": "UBERON:0001418",
+     "exact_synonyms": [
+      "thoracic skin",
+      "thorax skin",
+      "thorax zone of skin",
+      "zone of skin of thorax"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001457",
+     "synonym": [
+      "eyelid skin",
+      "blepharon zone of skin",
+      "eyelid zone of skin",
+      "zone of skin of blepharon",
+      "zone of skin of eyelid"
+     ],
+     "description": [
+      "A zone of skin that is part of a eyelid [Automatically generated definition]."
+     ],
+     "label": "skin of eyelid",
+     "obo_id": "UBERON:0001457",
+     "exact_synonyms": [
+      "eyelid skin",
+      "blepharon zone of skin",
+      "eyelid zone of skin",
+      "zone of skin of blepharon",
+      "zone of skin of eyelid"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001517",
+     "synonym": [
+      "elbow skin",
+      "cubital region zone of skin",
+      "elbow zone of skin",
+      "zone of skin of cubital region",
+      "zone of skin of elbow"
+     ],
+     "description": [
+      "A zone of skin that is part of a elbow [Automatically generated definition]."
+     ],
+     "label": "skin of elbow",
+     "obo_id": "UBERON:0001517",
+     "exact_synonyms": [
+      "elbow skin",
+      "cubital region zone of skin",
+      "elbow zone of skin",
+      "zone of skin of cubital region",
+      "zone of skin of elbow"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001518",
+     "synonym": [
+      "wrist skin",
+      "carpal region zone of skin",
+      "wrist zone of skin",
+      "zone of skin of carpal region",
+      "zone of skin of wrist"
+     ],
+     "description": [
+      "A zone of skin that is part of a wrist [Automatically generated definition]."
+     ],
+     "label": "skin of wrist",
+     "obo_id": "UBERON:0001518",
+     "exact_synonyms": [
+      "wrist skin",
+      "carpal region zone of skin",
+      "wrist zone of skin",
+      "zone of skin of carpal region",
+      "zone of skin of wrist"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0004262",
+     "synonym": [
+      "hind limb stylopod skin",
+      "hindlimb stylopod skin",
+      "skin of thigh",
+      "skin of upper leg",
+      "thigh skin"
+     ],
+     "related_synonyms": [
+      "skin of thigh",
+      "thigh skin"
+     ],
+     "description": [
+      "A zone of skin that is part of a hindlimb stylopod [Automatically generated definition]."
+     ],
+     "label": "upper leg skin",
+     "obo_id": "UBERON:0004262",
+     "exact_synonyms": [
+      "hind limb stylopod skin",
+      "hindlimb stylopod skin",
+      "skin of upper leg"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8300000",
+     "synonym": [
+      "adult scalp zone of skin",
+      "scalp skin",
+      "scalp zone of skin",
+      "zone of skin of adult scalp",
+      "zone of skin of scalp"
+     ],
+     "description": [
+      "A zone of skin that is part of a scalp."
+     ],
+     "label": "skin of scalp",
+     "obo_id": "UBERON:8300000",
+     "exact_synonyms": [
+      "adult scalp zone of skin",
+      "scalp skin",
+      "scalp zone of skin",
+      "zone of skin of adult scalp",
+      "zone of skin of scalp"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0000014",
+     "synonym": [
+      "portion of skin",
+      "region of skin",
+      "skin region",
+      "skin zone",
+      "skin"
+     ],
+     "description": [
+      "Any portion of the organ that covers that body and consists of a layer of epidermis and a layer of dermis."
+     ],
+     "label": "zone of skin",
+     "obo_id": "UBERON:0000014",
+     "exact_synonyms": [
+      "portion of skin",
+      "region of skin",
+      "skin region",
+      "skin zone",
+      "skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001331",
+     "synonym": [
+      "penis skin",
+      "penile skin",
+      "penis zone of skin",
+      "zone of skin of penis"
+     ],
+     "description": [
+      "A zone of skin that is part of a penis [Automatically generated definition]."
+     ],
+     "label": "skin of penis",
+     "obo_id": "UBERON:0001331",
+     "exact_synonyms": [
+      "penis skin",
+      "penile skin",
+      "penis zone of skin",
+      "zone of skin of penis"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001415",
+     "synonym": [
+      "pelvic skin",
+      "pelvis skin",
+      "pelvis zone of skin",
+      "zone of skin of pelvis"
+     ],
+     "description": [
+      "A zone of skin that is part of a pelvis [Automatically generated definition]."
+     ],
+     "label": "skin of pelvis",
+     "obo_id": "UBERON:0001415",
+     "exact_synonyms": [
+      "pelvic skin",
+      "pelvis skin",
+      "pelvis zone of skin",
+      "zone of skin of pelvis"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001458",
+     "synonym": [
+      "lip skin",
+      "lip zone of skin",
+      "skin of lips",
+      "zone of skin of lip"
+     ],
+     "related_synonyms": [
+      "skin of lips"
+     ],
+     "description": [
+      "A zone of skin that is part of a lip [Automatically generated definition]."
+     ],
+     "label": "skin of lip",
+     "obo_id": "UBERON:0001458",
+     "exact_synonyms": [
+      "lip skin",
+      "lip zone of skin",
+      "zone of skin of lip"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001512",
+     "synonym": [
+      "ankle skin",
+      "ankle zone of skin",
+      "tarsal region skin",
+      "zone of skin of ankle"
+     ],
+     "description": [
+      "A zone of skin that is part of an ankle [Automatically generated definition]."
+     ],
+     "label": "skin of ankle",
+     "obo_id": "UBERON:0001512",
+     "exact_synonyms": [
+      "ankle skin",
+      "ankle zone of skin",
+      "tarsal region skin",
+      "zone of skin of ankle"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001519",
+     "synonym": [
+      "manus skin",
+      "hand skin",
+      "skin of fore-paw",
+      "skin of hand"
+     ],
+     "description": [
+      "A zone of skin that is part of a manus [Automatically generated definition]."
+     ],
+     "narrow_synonyms": [
+      "skin of fore-paw"
+     ],
+     "label": "skin of manus",
+     "obo_id": "UBERON:0001519",
+     "exact_synonyms": [
+      "manus skin",
+      "hand skin",
+      "skin of hand"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0004790",
+     "synonym": [
+      "mucous gland of entire skin",
+      "mucous gland of skin of body",
+      "skin mucus gland",
+      "skin of body mucous gland"
+     ],
+     "description": [
+      "A mucous gland that is part of the skin."
+     ],
+     "label": "skin mucous gland",
+     "obo_id": "UBERON:0004790",
+     "exact_synonyms": [
+      "mucous gland of entire skin",
+      "mucous gland of skin of body",
+      "skin mucus gland",
+      "skin of body mucous gland"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0010854",
+     "synonym": [
+      "skin of throat",
+      "skin of anterior neck",
+      "skin of anterior part of neck",
+      "skin of anterior portion of neck"
+     ],
+     "description": [
+      "A skin of neck that is part of a throat."
+     ],
+     "label": "skin of front of neck",
+     "obo_id": "UBERON:0010854",
+     "exact_synonyms": [
+      "skin of throat",
+      "skin of anterior neck",
+      "skin of anterior part of neck",
+      "skin of anterior portion of neck"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0019200",
+     "synonym": [
+      "anterior chest skin",
+      "skin of anterior part of thorax",
+      "skin of ventral chest",
+      "ventral chest skin"
+     ],
+     "description": [
+      "Zone of skin that is part of the anterior region of the chest."
+     ],
+     "label": "skin of anterior chest",
+     "obo_id": "UBERON:0019200",
+     "exact_synonyms": [
+      "anterior chest skin",
+      "skin of anterior part of thorax",
+      "skin of ventral chest",
+      "ventral chest skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0013778",
+     "synonym": [
+      "plantar skin of foot",
+      "skin of plantar part of foot",
+      "skin of sole of foot"
+     ],
+     "description": [
+      "A zone of skin that is part of a skin of pes."
+     ],
+     "label": "skin of sole of pes",
+     "obo_id": "UBERON:0013778",
+     "exact_synonyms": [
+      "plantar skin of foot",
+      "skin of plantar part of foot",
+      "skin of sole of foot"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001419",
+     "synonym": [
+      "limb skin",
+      "limb zone of skin",
+      "zone of skin of limb"
+     ],
+     "description": [
+      "A zone of skin that is part of a limb [Automatically generated definition]."
+     ],
+     "label": "skin of limb",
+     "obo_id": "UBERON:0001419",
+     "exact_synonyms": [
+      "limb skin",
+      "limb zone of skin",
+      "zone of skin of limb"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001483",
+     "synonym": [
+      "shoulder skin",
+      "shoulder zone of skin",
+      "zone of skin of shoulder"
+     ],
+     "description": [
+      "A zone of skin that is part of a shoulder region."
+     ],
+     "label": "skin of shoulder",
+     "obo_id": "UBERON:0001483",
+     "exact_synonyms": [
+      "shoulder skin",
+      "shoulder zone of skin",
+      "zone of skin of shoulder"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001510",
+     "synonym": [
+      "knee skin",
+      "knee zone of skin",
+      "zone of skin of knee"
+     ],
+     "description": [
+      "A zone of skin that is part of a knee [Automatically generated definition]."
+     ],
+     "label": "skin of knee",
+     "obo_id": "UBERON:0001510",
+     "exact_synonyms": [
+      "knee skin",
+      "knee zone of skin",
+      "zone of skin of knee"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001511",
+     "synonym": [
+      "leg skin",
+      "leg zone of skin",
+      "zone of skin of leg"
+     ],
+     "description": [
+      "A zone of skin that is part of a leg [Automatically generated definition]."
+     ],
+     "label": "skin of leg",
+     "obo_id": "UBERON:0001511",
+     "exact_synonyms": [
+      "leg skin",
+      "leg zone of skin",
+      "zone of skin of leg"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001513",
+     "synonym": [
+      "foot skin",
+      "skin of foot",
+      "skin of hind-paw"
+     ],
+     "description": [
+      "A zone of skin that is part of a pes [Automatically generated definition]."
+     ],
+     "narrow_synonyms": [
+      "skin of hind-paw"
+     ],
+     "label": "skin of pes",
+     "obo_id": "UBERON:0001513",
+     "exact_synonyms": [
+      "foot skin",
+      "skin of foot"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0002419",
+     "synonym": [
+      "glandulae cutis",
+      "set of skin glands",
+      "skin glands set",
+      "skin glands"
+     ],
+     "related_synonyms": [
+      "set of skin glands",
+      "skin glands set",
+      "skin glands"
+     ],
+     "description": [
+      "A gland that is part of a skin of body [Automatically generated definition]."
+     ],
+     "label": "skin gland",
+     "obo_id": "UBERON:0002419",
+     "exact_synonyms": [
+      "glandulae cutis"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0003534",
+     "synonym": [
+      "post-vent region skin",
+      "skin of post-vent region",
+      "skin of tail"
+     ],
+     "description": [
+      "A zone of skin that is part of a tail [Automatically generated definition]."
+     ],
+     "label": "tail skin",
+     "obo_id": "UBERON:0003534",
+     "exact_synonyms": [
+      "post-vent region skin",
+      "skin of post-vent region",
+      "skin of tail"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0004263",
+     "synonym": [
+      "arm stylopod skin",
+      "skin of arm stylopod",
+      "skin of upper arm"
+     ],
+     "description": [
+      "A zone of skin that is part of a forelimb stylopod [Automatically generated definition]."
+     ],
+     "label": "upper arm skin",
+     "obo_id": "UBERON:0004263",
+     "exact_synonyms": [
+      "arm stylopod skin",
+      "skin of arm stylopod",
+      "skin of upper arm"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0004264",
+     "synonym": [
+      "hind limb middle limb segment skin",
+      "hind limb zeugopod skin",
+      "hindlimb zeugopod skin"
+     ],
+     "description": [
+      "A zone of skin that is part of a lower leg [Automatically generated definition]."
+     ],
+     "label": "lower leg skin",
+     "obo_id": "UBERON:0004264",
+     "exact_synonyms": [
+      "hind limb middle limb segment skin",
+      "hind limb zeugopod skin",
+      "hindlimb zeugopod skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0005276",
+     "synonym": [
+      "dorsal finger skin",
+      "skin of dorsal part of finger",
+      "subdivision of skin of dorsal part of finger"
+     ],
+     "description": [
+      "A dorsal skin of digit that is part of a manual digit."
+     ],
+     "label": "dorsal skin of finger",
+     "obo_id": "UBERON:0005276",
+     "exact_synonyms": [
+      "dorsal finger skin",
+      "skin of dorsal part of finger",
+      "subdivision of skin of dorsal part of finger"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0005277",
+     "synonym": [
+      "dorsal toe skin",
+      "skin of dorsal part of toe",
+      "subdivision of skin of dorsal part of toe"
+     ],
+     "description": [
+      "A dorsal skin of digit that is part of a pedal digit."
+     ],
+     "label": "dorsal skin of toe",
+     "obo_id": "UBERON:0005277",
+     "exact_synonyms": [
+      "dorsal toe skin",
+      "skin of dorsal part of toe",
+      "subdivision of skin of dorsal part of toe"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0006535",
+     "synonym": [
+      "skin fluid",
+      "skin substance",
+      "skin fluid/secretion"
+     ],
+     "related_synonyms": [
+      "skin fluid",
+      "skin substance"
+     ],
+     "description": [
+      "A portion of organism substance that secreted_by a zone of skin."
+     ],
+     "label": "skin secretion",
+     "obo_id": "UBERON:0006535",
+     "exact_synonyms": [
+      "skin fluid/secretion"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0015474",
+     "synonym": [
+      "axillary skin",
+      "skin of armpit",
+      "skin of axilla"
+     ],
+     "description": [
+      "A zone of skin that is part of a axilla."
+     ],
+     "label": "axilla skin",
+     "obo_id": "UBERON:0015474",
+     "exact_synonyms": [
+      "axillary skin",
+      "skin of armpit",
+      "skin of axilla"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0015476",
+     "synonym": [
+      "external nasal skin",
+      "skin of external nose",
+      "skin of nose"
+     ],
+     "description": [
+      "A zone of skin that is part of a external nose."
+     ],
+     "label": "nose skin",
+     "obo_id": "UBERON:0015476",
+     "exact_synonyms": [
+      "external nasal skin",
+      "skin of external nose",
+      "skin of nose"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0002097",
+     "synonym": [
+      "entire integument",
+      "entire skin",
+      "integument",
+      "integumental organ",
+      "pelt",
+      "skin organ",
+      "skin"
+     ],
+     "related_synonyms": [
+      "entire integument",
+      "integument",
+      "integumental organ",
+      "pelt",
+      "skin"
+     ],
+     "description": [
+      "The organ covering the body that consists of the dermis and epidermis."
+     ],
+     "label": "skin of body",
+     "obo_id": "UBERON:0002097",
+     "exact_synonyms": [
+      "entire skin",
+      "skin organ"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0002427",
+     "synonym": [
+      "brachial region skin",
+      "skin of arm"
+     ],
+     "related_synonyms": [
+      "brachial region skin"
+     ],
+     "description": [
+      "A zone of skin that is part of an arm [Automatically generated definition]."
+     ],
+     "label": "arm skin",
+     "obo_id": "UBERON:0002427",
+     "exact_synonyms": [
+      "skin of arm"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0003836",
+     "synonym": [
+      "abdominal segment of trunk skin",
+      "skin of abdominal segment of trunk"
+     ],
+     "description": [
+      "A skin of body that is part of an abdominal segment of trunk [Automatically generated definition]."
+     ],
+     "label": "abdominal segment skin",
+     "obo_id": "UBERON:0003836",
+     "exact_synonyms": [
+      "abdominal segment of trunk skin",
+      "skin of abdominal segment of trunk"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0004253",
+     "synonym": [
+      "integumental system muscle",
+      "muscle of integumental system",
+      "muscle organ of skin",
+      "skin muscle organ"
+     ],
+     "description": [
+      "Any muscle organ that is part of a skin of body [Automatically generated definition]."
+     ],
+     "label": "skin muscle",
+     "obo_id": "UBERON:0004253",
+     "exact_synonyms": [
+      "integumental system muscle",
+      "muscle of integumental system",
+      "muscle organ of skin",
+      "skin muscle organ"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0013777",
+     "synonym": [
+      "skin of palmar area of hand",
+      "palmar skin of hand"
+     ],
+     "description": [
+      "A zone of skin that is part of a palmar part of manus."
+     ],
+     "label": "skin of palm of manus",
+     "obo_id": "UBERON:0013777",
+     "exact_synonyms": [
+      "skin of palmar area of hand",
+      "palmar skin of hand"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0015479",
+     "synonym": [
+      "scrotal skin",
+      "skin of scrotum"
+     ],
+     "description": [
+      "A zone of skin that is part of a scrotum."
+     ],
+     "label": "scrotum skin",
+     "obo_id": "UBERON:0015479",
+     "exact_synonyms": [
+      "scrotal skin",
+      "skin of scrotum"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_1000021",
+     "synonym": [
+      "facial skin",
+      "face skin"
+     ],
+     "related_synonyms": [
+      "facial skin"
+     ],
+     "description": [
+      "A zone of skin that is part of the face."
+     ],
+     "label": "skin of face",
+     "obo_id": "UBERON:1000021",
+     "exact_synonyms": [
+      "face skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0005275",
+     "synonym": [
+      "dorsal digit skin",
+      "skin of dorsal part of digit"
+     ],
+     "description": [],
+     "label": "dorsal skin of digit",
+     "obo_id": "UBERON:0005275",
+     "exact_synonyms": [
+      "dorsal digit skin",
+      "skin of dorsal part of digit"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0007121",
+     "synonym": [
+      "dermatome segment of skin",
+      "dermatome",
+      "dermatomic area",
+      "peripheral nerve field"
+     ],
+     "related_synonyms": [
+      "dermatome segment of skin",
+      "dermatome",
+      "dermatomic area",
+      "peripheral nerve field"
+     ],
+     "description": [
+      "Examples: V1, V2 and V3 distributions of the trigeminal nerve; the zone of skin innervated by S2",
+      "A zone of skin that is mainly innervated by a single sensory nerve. A nerve field innervated by exactly one dorsal root is called a dermatome."
+     ],
+     "label": "skin nerve field",
+     "obo_id": "UBERON:0007121"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001003",
+     "synonym": [
+      "epidermis",
+      "skin",
+      "vertebrate epidermis"
+     ],
+     "broad_synonyms": [
+      "epidermis",
+      "skin"
+     ],
+     "description": [
+      "The outer epithelial layer of the skin that is superficial to the dermis."
+     ],
+     "label": "skin epidermis",
+     "obo_id": "UBERON:0001003",
+     "exact_synonyms": [
+      "vertebrate epidermis"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001471",
+     "synonym": [
+      "foreskin of penis",
+      "penis foreskin",
+      "preputial skin"
+     ],
+     "description": [
+      "The loose fold of skin that covers the penis."
+     ],
+     "label": "skin of prepuce of penis",
+     "obo_id": "UBERON:0001471",
+     "exact_synonyms": [
+      "foreskin of penis",
+      "penis foreskin",
+      "preputial skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0005298",
+     "synonym": [
+      "clitoris skin"
+     ],
+     "description": [
+      "A zone of skin that is part of a clitoris [Automatically generated definition]."
+     ],
+     "label": "skin of clitoris",
+     "obo_id": "UBERON:0005298",
+     "exact_synonyms": [
+      "clitoris skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0008803",
+     "synonym": [
+      "cheek skin"
+     ],
+     "description": [
+      "A zone of skin that is part of a cheek."
+     ],
+     "label": "skin of cheek",
+     "obo_id": "UBERON:0008803",
+     "exact_synonyms": [
+      "cheek skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0011375",
+     "synonym": [
+      "preputial skin of clitoris"
+     ],
+     "description": [
+      "A zone of skin that is part of a prepuce of clitoris."
+     ],
+     "label": "skin of prepuce of clitoris",
+     "obo_id": "UBERON:0011375",
+     "exact_synonyms": [
+      "preputial skin of clitoris"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0011817",
+     "synonym": [
+      "cutaneous appendage follicle placode",
+      "skin follicle placode"
+     ],
+     "description": [
+      "An ectodermal placode that gives rise to any of the cutaneous appendages that protrude from the skin epidermis (heair, feathers, epidermal scales)."
+     ],
+     "label": "skin appendage placode",
+     "obo_id": "UBERON:0011817",
+     "exact_synonyms": [
+      "cutaneous appendage follicle placode",
+      "skin follicle placode"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0012336",
+     "synonym": [
+      "skin of perianal area"
+     ],
+     "description": [
+      "A zone of skin that is part of the area surrounding the anus."
+     ],
+     "label": "perianal skin",
+     "obo_id": "UBERON:0012336",
+     "exact_synonyms": [
+      "skin of perianal area"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0015790",
+     "synonym": [
+      "paw skin"
+     ],
+     "related_synonyms": [
+      "paw skin"
+     ],
+     "description": [
+      "A zone of skin that is part of a autopod region."
+     ],
+     "label": "autopod skin",
+     "obo_id": "UBERON:0015790"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0015873",
+     "synonym": [
+      "skin of heel"
+     ],
+     "description": [
+      "A zone of skin that is part of a heel."
+     ],
+     "label": "heel skin",
+     "obo_id": "UBERON:0015873",
+     "exact_synonyms": [
+      "skin of heel"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0016462",
+     "synonym": [
+      "skin of orbital part of face"
+     ],
+     "description": [
+      "A zone of skin in the periorbital region of the face."
+     ],
+     "label": "periorbital skin",
+     "obo_id": "UBERON:0016462",
+     "exact_synonyms": [
+      "skin of orbital part of face"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0016475",
+     "synonym": [
+      "forehead skin"
+     ],
+     "description": [
+      "A zone of skin that is part of a forehead."
+     ],
+     "label": "skin of forehead",
+     "obo_id": "UBERON:0016475",
+     "exact_synonyms": [
+      "forehead skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0018150",
+     "synonym": [
+      "lower lip skin"
+     ],
+     "description": [
+      "A zone of skin that is part of a lower lip."
+     ],
+     "label": "skin of lower lip",
+     "obo_id": "UBERON:0018150",
+     "exact_synonyms": [
+      "lower lip skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0018151",
+     "synonym": [
+      "upper lip skin"
+     ],
+     "description": [
+      "A zone of skin that is part of a upper lip."
+     ],
+     "label": "skin of upper lip",
+     "obo_id": "UBERON:0018151",
+     "exact_synonyms": [
+      "upper lip skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0036149",
+     "synonym": [
+      "hypogastric skin"
+     ],
+     "related_synonyms": [
+      "hypogastric skin"
+     ],
+     "description": [
+      "Area of skin in the hypoastric region of the abdomen."
+     ],
+     "label": "suprapubic skin",
+     "obo_id": "UBERON:0036149"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0036150",
+     "synonym": [
+      "cutaneous appendage follicle",
+      "follicle",
+      "skin follicle"
+     ],
+     "broad_synonyms": [
+      "follicle"
+     ],
+     "description": [
+      "An organ subunit in the skin that gives rise to cutaneous appendage."
+     ],
+     "label": "skin appendage follicle",
+     "obo_id": "UBERON:0036150",
+     "exact_synonyms": [
+      "cutaneous appendage follicle",
+      "skin follicle"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_1000015",
+     "synonym": [
+      "snout skin"
+     ],
+     "description": [
+      "A zone of skin that is part of the snout."
+     ],
+     "label": "skin of snout",
+     "obo_id": "UBERON:1000015",
+     "exact_synonyms": [
+      "snout skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8480023",
+     "synonym": [
+      "skin of flank"
+     ],
+     "description": [
+      "A zone of skin that is part of the lateral lumbar region of abdomen."
+     ],
+     "label": "skin of lateral lumbar region of abdomen",
+     "obo_id": "UBERON:8480023",
+     "exact_synonyms": [
+      "skin of flank"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8480026",
+     "synonym": [
+      "skin of posterior iliac crest region"
+     ],
+     "broad_synonyms": [
+      "skin of posterior iliac crest region"
+     ],
+     "description": [
+      "A zone of skin that is above the iliac crest in the pelvic girdle bone/zone."
+     ],
+     "label": "skin of iliac crest region",
+     "obo_id": "UBERON:8480026"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8480050",
+     "synonym": [
+      "skin of posterior part of leg"
+     ],
+     "description": [
+      "Skin of the back of the lower leg."
+     ],
+     "label": "skin of calf",
+     "obo_id": "UBERON:8480050",
+     "exact_synonyms": [
+      "skin of posterior part of leg"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8480071",
+     "synonym": [
+      "fluke skin"
+     ],
+     "description": [
+      "A zone of skin that is part of the lobe tail."
+     ],
+     "narrow_synonyms": [
+      "fluke skin"
+     ],
+     "label": "skin of lobe of tail",
+     "obo_id": "UBERON:8480071"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0003487",
+     "synonym": [
+      "cutaneous sebaceous gland",
+      "sebaceous gland of skin"
+     ],
+     "description": [
+      "A holocrine gland of the dermis that secretes sebum into hair follicles."
+     ],
+     "label": "skin sebaceous gland",
+     "obo_id": "UBERON:0003487",
+     "exact_synonyms": [
+      "cutaneous sebaceous gland",
+      "sebaceous gland of skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0006003",
+     "synonym": [
+      "skin adnexal structure",
+      "adnexae cutis",
+      "body hair or bristle",
+      "skin adnexa",
+      "skin appendage"
+     ],
+     "related_synonyms": [
+      "skin adnexal structure",
+      "adnexae cutis",
+      "skin adnexa",
+      "skin appendage"
+     ],
+     "description": [
+      "Anatomical structure embedded in or located in the integument that is part of the integumental system. Examples: hair, follicles, skin glands, claws, nails, feathers."
+     ],
+     "narrow_synonyms": [
+      "body hair or bristle"
+     ],
+     "label": "integumentary adnexa",
+     "obo_id": "UBERON:0006003"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0010152",
+     "synonym": [
+      "skin mucous",
+      "epidermal mucus"
+     ],
+     "related_synonyms": [
+      "skin mucous",
+      "epidermal mucus"
+     ],
+     "description": [
+      "A mucous secretion that is produced by glands in the epidermis."
+     ],
+     "label": "skin mucus",
+     "obo_id": "UBERON:0010152"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0011272",
+     "synonym": [
+      "basal cell layer of skin",
+      "outer epithelium of body"
+     ],
+     "related_synonyms": [
+      "basal cell layer of skin",
+      "outer epithelium of body"
+     ],
+     "description": [],
+     "label": "embryonic skin basal layer",
+     "obo_id": "UBERON:0011272"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0012177",
+     "synonym": [],
+     "description": [
+      "Note that 'skin apocrine gland' does not cover 'apocrine sweat gland': in the former, \"apocrine\" refers to the type of secretion mechanism, while in the latter it refers to a structural feature.",
+      "An apocrine gland that is part of a skin of body."
+     ],
+     "label": "skin apocrine gland",
+     "obo_id": "UBERON:0012177"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0019243",
+     "synonym": [
+      "skin groove"
+     ],
+     "related_synonyms": [
+      "skin groove"
+     ],
+     "description": [],
+     "label": "skin crease",
+     "obo_id": "UBERON:0019243"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0019246",
+     "synonym": [
+      "skin crease of palmar part of manus"
+     ],
+     "description": [],
+     "label": "palmar skin crease",
+     "obo_id": "UBERON:0019246",
+     "exact_synonyms": [
+      "skin crease of palmar part of manus"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0019247",
+     "synonym": [
+      "skin crease of plantar part of pes"
+     ],
+     "description": [],
+     "label": "plantar skin crease",
+     "obo_id": "UBERON:0019247",
+     "exact_synonyms": [
+      "skin crease of plantar part of pes"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0002199",
+     "synonym": [
+      "dermis plus epidermis plus hypodermis",
+      "skin and subcutaneous tissue",
+      "skin plus hypodermis",
+      "skin",
+      "vertebrate integument",
+      "dermal system",
+      "dermoid system",
+      "integumentum commune",
+      "tegument",
+      "the integument"
+     ],
+     "related_synonyms": [
+      "skin",
+      "vertebrate integument",
+      "dermal system",
+      "dermoid system",
+      "tegument"
+     ],
+     "description": [
+      "The dermis, epidermis and hypodermis."
+     ],
+     "label": "integument",
+     "obo_id": "UBERON:0002199",
+     "exact_synonyms": [
+      "dermis plus epidermis plus hypodermis",
+      "skin and subcutaneous tissue",
+      "skin plus hypodermis",
+      "integumentum commune",
+      "the integument"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0009014",
+     "synonym": [],
+     "description": [
+      "A zone of skin that is part of a lower back."
+     ],
+     "label": "lower back skin",
+     "obo_id": "UBERON:0009014"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0009015",
+     "synonym": [],
+     "description": [
+      "A zone of skin that is part of a dorsal thoracic segment of trunk."
+     ],
+     "label": "upper back skin",
+     "obo_id": "UBERON:0009015"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0010855",
+     "synonym": [],
+     "description": [
+      "A zone of skin that is part of a forelimb wing."
+     ],
+     "label": "skin of forelimb wing",
+     "obo_id": "UBERON:0010855"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0012180",
+     "synonym": [],
+     "description": [
+      "A zone of skin that is part of a craniocervical region."
+     ],
+     "label": "head or neck skin",
+     "obo_id": "UBERON:0012180"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0013776",
+     "synonym": [],
+     "description": [
+      "A zone of skin that is part of a palmar/plantar part of autopod."
+     ],
+     "label": "skin of palmar/plantar part of autopod",
+     "obo_id": "UBERON:0013776"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0014481",
+     "synonym": [],
+     "description": [
+      "An area of skin adjacent to the female external genitals of various lower primates that undergo marked alteration in turgidity and often in color during estrus."
+     ],
+     "label": "sex skin",
+     "obo_id": "UBERON:0014481"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0014931",
+     "synonym": [
+      "periungual area",
+      "periungual region"
+     ],
+     "related_synonyms": [
+      "periungual area",
+      "periungual region"
+     ],
+     "description": [
+      "A zone of skin adjacent to a nail or claw."
+     ],
+     "label": "periungual skin",
+     "obo_id": "UBERON:0014931"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0015249",
+     "synonym": [],
+     "description": [
+      "A zone of skin that is part of a digit [Automatically generated definition]."
+     ],
+     "label": "digit skin",
+     "obo_id": "UBERON:0015249"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0016852",
+     "synonym": [
+      "cutaneous scent gland"
+     ],
+     "description": [
+      "A scent gland that is part of the skin."
+     ],
+     "label": "skin scent gland",
+     "obo_id": "UBERON:0016852",
+     "exact_synonyms": [
+      "cutaneous scent gland"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0017163",
+     "synonym": [
+      "bony tubercle",
+      "bony tubercles"
+     ],
+     "related_synonyms": [
+      "bony tubercles"
+     ],
+     "broad_synonyms": [
+      "bony tubercle"
+     ],
+     "description": [
+      "A bony structure embedded in skin, roughly equivalent to osteoderms."
+     ],
+     "label": "skin bony tubercle",
+     "obo_id": "UBERON:0017163"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0019204",
+     "synonym": [],
+     "description": [
+      "Any region of epithelium that is part of a skin region."
+     ],
+     "label": "skin epithelium",
+     "obo_id": "UBERON:0019204"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0034765",
+     "synonym": [
+      "glabella"
+     ],
+     "broad_synonyms": [
+      "glabella"
+     ],
+     "description": [
+      "The zone of skin that overlaps with the glabella region."
+     ],
+     "label": "glabella skin",
+     "obo_id": "UBERON:0034765"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_2001951",
+     "synonym": [],
+     "description": [
+      "Surface structure that is a portion of skin that projects or hangs from the body."
+     ],
+     "label": "skin flap",
+     "obo_id": "UBERON:2001951"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8480014",
+     "synonym": [],
+     "description": [
+      "A zone of skin that is part of the buttock."
+     ],
+     "label": "skin of buttock",
+     "obo_id": "UBERON:8480014"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8480024",
+     "synonym": [],
+     "description": [
+      "A zone of skin that is part of the sacral region."
+     ],
+     "label": "skin of sacral region",
+     "obo_id": "UBERON:8480024"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8480025",
+     "synonym": [],
+     "description": [
+      "A zone of skin that is above the clavicle zone in the pectoral girdle region."
+     ],
+     "label": "skin of clavicle region",
+     "obo_id": "UBERON:8480025"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8480028",
+     "synonym": [],
+     "description": [
+      "A zone of skin that is part of the temple."
+     ],
+     "label": "skin of temple",
+     "obo_id": "UBERON:8480028"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8480029",
+     "synonym": [],
+     "description": [
+      "A zone of skin that is part of the external genitalia."
+     ],
+     "label": "skin of external genitalia",
+     "obo_id": "UBERON:8480029"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8480030",
+     "synonym": [],
+     "description": [
+      "A zone of skin that is part of the breast."
+     ],
+     "label": "skin of breast",
+     "obo_id": "UBERON:8480030"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8480052",
+     "synonym": [],
+     "description": [
+      "A zone of skin that is part of the thoracolumbar junction."
+     ],
+     "label": "skin of thoracolumbar junction",
+     "obo_id": "UBERON:8480052"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8480053",
+     "synonym": [],
+     "description": [
+      "A zone of skin that is part of the umbilicus and the periumbilical region."
+     ],
+     "label": "skin of umbilical area",
+     "obo_id": "UBERON:8480053"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8480072",
+     "synonym": [],
+     "description": [
+      "A zone of skin on the front hindlimb zeugopod."
+     ],
+     "label": "skin of shin",
+     "obo_id": "UBERON:8480072"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8480073",
+     "synonym": [],
+     "description": [
+      "A zone of skin that is above the scapula in the upper back region."
+     ],
+     "label": "skin of scapula region",
+     "obo_id": "UBERON:8480073"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_8480074",
+     "synonym": [],
+     "description": [
+      "A zone of skin part of some gonad."
+     ],
+     "label": "skin of gonad",
+     "obo_id": "UBERON:8480074"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0035549",
+     "synonym": [
+      "dermis vasculature",
+      "hypodermis vasculature",
+      "skin vasculature",
+      "subcutaneous vasculature",
+      "superficial part of circulatory system",
+      "superficial vasculature",
+      "vasculature of skin"
+     ],
+     "related_synonyms": [
+      "skin vasculature",
+      "subcutaneous vasculature",
+      "vasculature of skin"
+     ],
+     "description": [
+      "The part of the circulatory system that lies within the subcutaneous tissue layers close to the surface of the skin."
+     ],
+     "narrow_synonyms": [
+      "dermis vasculature",
+      "hypodermis vasculature"
+     ],
+     "label": "vasculature of integument",
+     "obo_id": "UBERON:0035549",
+     "exact_synonyms": [
+      "superficial part of circulatory system",
+      "superficial vasculature"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_3010006",
+     "synonym": [],
+     "description": [],
+     "label": "dorsal skin texture",
+     "obo_id": "UBERON:3010006"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_3010010",
+     "synonym": [],
+     "description": [],
+     "label": "ventral skin texture",
+     "obo_id": "UBERON:3010010"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0013754",
+     "synonym": [
+      "layer of skin",
+      "skin layer"
+     ],
+     "description": [
+      "An organ component layer that is part of a integumental system."
+     ],
+     "narrow_synonyms": [
+      "layer of skin",
+      "skin layer"
+     ],
+     "label": "integumentary system layer",
+     "obo_id": "UBERON:0013754"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0000021",
+     "synonym": [
+      "epidermal appendage",
+      "epidermal growth",
+      "skin appendage"
+     ],
+     "related_synonyms": [
+      "epidermal growth"
+     ],
+     "description": [
+      "Anatomical projection that protrudes from the skin. Examples: hair, nail, feather, claw, hoof, horn, wattle, spur, beak, antler, bristle and some scales."
+     ],
+     "narrow_synonyms": [
+      "epidermal appendage"
+     ],
+     "label": "cutaneous appendage",
+     "obo_id": "UBERON:0000021",
+     "exact_synonyms": [
+      "skin appendage"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0010880",
+     "synonym": [
+      "gular sac",
+      "gular skin",
+      "throat sac"
+     ],
+     "related_synonyms": [
+      "gular sac",
+      "gular skin",
+      "throat sac"
+     ],
+     "description": [
+      "A transverse fold of skin across the throat (Peters 1964)."
+     ],
+     "label": "gular fold",
+     "obo_id": "UBERON:0010880"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0015484",
+     "synonym": [
+      "foot pad skin"
+     ],
+     "related_synonyms": [
+      "foot pad skin"
+     ],
+     "description": [
+      "A zone of skin that is part of a metapodial pad."
+     ],
+     "label": "epidermis of metapodial pad",
+     "obo_id": "UBERON:0015484"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0018134",
+     "synonym": [
+      "folded ridge of skin of scrotum",
+      "scrotal rugae"
+     ],
+     "description": [
+      "A folded ridge of skin that is part of a scrotum superficial to the dartos muscle."
+     ],
+     "label": "rugal fold of scrotum",
+     "obo_id": "UBERON:0018134",
+     "exact_synonyms": [
+      "folded ridge of skin of scrotum",
+      "scrotal rugae"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0000412",
+     "synonym": [
+      "hair papilla",
+      "dermal papilla cell",
+      "dermal papillae",
+      "follicular papilla",
+      "hair follicle dermal papilla",
+      "papilla corii",
+      "papilla dermatis",
+      "papilla dermis",
+      "papilla of corium",
+      "papillae dermis",
+      "skin papilla"
+     ],
+     "related_synonyms": [
+      "hair papilla",
+      "dermal papilla cell",
+      "hair follicle dermal papilla",
+      "papilla corii",
+      "papilla dermatis",
+      "papilla dermis",
+      "papilla of corium",
+      "papillae dermis",
+      "skin papilla"
+     ],
+     "description": [
+      "A mesodermal signaling center of the hair follicle consisting of closely packed specialized mesenchymal fibroblasts. Framed by the enlarged bulb matrix in anagen."
+     ],
+     "label": "dermal papilla",
+     "obo_id": "UBERON:0000412",
+     "exact_synonyms": [
+      "dermal papillae",
+      "follicular papilla"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001089",
+     "synonym": [
+      "skin exudate"
+     ],
+     "related_synonyms": [
+      "skin exudate"
+     ],
+     "description": [
+      "Secretion produced by a sweat gland."
+     ],
+     "label": "sweat",
+     "obo_id": "UBERON:0001089"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0002025",
+     "synonym": [
+      "basal cell layer of skin",
+      "basal layer of epidermis",
+      "epidermis basal layer",
+      "epidermis stratum basale",
+      "epidermis stratum germinativum",
+      "rete Malpighii",
+      "stratum basale",
+      "stratum basalis of epidermis",
+      "stratum germinativum",
+      "stratum germinosum of epidermis",
+      "stratum germinosum",
+      "Malpighian layer",
+      "basal cell layer of epidermis",
+      "basal epidermal layer",
+      "epidermal basal stratum",
+      "epidermis sensorial layer",
+      "rete Malphighii",
+      "stratum Malpighi"
+     ],
+     "related_synonyms": [
+      "basal cell layer of skin",
+      "basal layer of epidermis",
+      "epidermis basal layer",
+      "epidermis stratum germinativum",
+      "epidermis sensorial layer"
+     ],
+     "broad_synonyms": [
+      "rete Malpighii",
+      "stratum basale",
+      "stratum germinosum",
+      "Malpighian layer",
+      "rete Malphighii",
+      "stratum Malpighi"
+     ],
+     "description": [
+      "The deepest layer of the epidermis, which is composed of dividing stem cells and anchoring cells."
+     ],
+     "label": "stratum basale of epidermis",
+     "obo_id": "UBERON:0002025",
+     "exact_synonyms": [
+      "epidermis stratum basale",
+      "stratum basalis of epidermis",
+      "stratum germinativum",
+      "stratum germinosum of epidermis",
+      "basal cell layer of epidermis",
+      "basal epidermal layer",
+      "epidermal basal stratum"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0010402",
+     "synonym": [
+      "suprabasal cell layer of skin",
+      "suprabasal layer of epidermis",
+      "suprabasal layer"
+     ],
+     "broad_synonyms": [
+      "suprabasal layer"
+     ],
+     "description": [
+      "Any layer of the epidermis that is superior to the stratum basale."
+     ],
+     "label": "epidermis suprabasal layer",
+     "obo_id": "UBERON:0010402",
+     "exact_synonyms": [
+      "suprabasal cell layer of skin",
+      "suprabasal layer of epidermis"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0013703",
+     "synonym": [
+      "skin projection"
+     ],
+     "description": [
+      "Anatomical projection that is part of the integumentl system."
+     ],
+     "narrow_synonyms": [
+      "skin projection"
+     ],
+     "label": "integumentary projection",
+     "obo_id": "UBERON:0013703"
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0019307",
+     "synonym": [
+      "epithelium of skin of external nose"
+     ],
+     "description": [
+      "Epithelial layer that is part of the external part of the nose."
+     ],
+     "label": "epithelium of external nose",
+     "obo_id": "UBERON:0019307",
+     "exact_synonyms": [
+      "epithelium of skin of external nose"
+     ]
+    }
+   ],
+   "numFound": 121,
+   "start": 0
+  },
+  "responseHeader": {
+   "QTime": 0,
+   "status": 0
+  },
+  "facet_counts": {
+   "facet_fields": {
+    "ontologyPreferredPrefix": [
+     "UBERON",
+     "121"
+    ],
+    "isDefiningOntology": [
+     "true",
+     "121",
+     "false",
+     "19"
+    ],
+    "ontologyId": [
+     "snomed",
+     "5199",
+     "ncit",
+     "1439",
+     "foodon",
+     "570",
+     "upheno",
+     "521",
+     "ncbitaxon",
+     "381",
+     "mondo",
+     "312",
+     "hp",
+     "253",
+     "dron",
+     "188",
+     "mesh",
+     "147",
+     "doid",
+     "122",
+     "uberon",
+     "121",
+     "oae",
+     "115",
+     "emapa",
+     "105",
+     "mp",
+     "89",
+     "clo",
+     "84",
+     "ordo",
+     "70",
+     "oba",
+     "62",
+     "pr",
+     "59",
+     "xpo",
+     "58",
+     "ror",
+     "53",
+     "ma",
+     "51",
+     "pbpko",
+     "48",
+     "omit",
+     "44",
+     "gaz",
+     "42",
+     "cmo",
+     "24",
+     "efo",
+     "23",
+     "vt",
+     "22",
+     "vto",
+     "21",
+     "gsso",
+     "15",
+     "maxo",
+     "15",
+     "symp",
+     "15",
+     "ohmi",
+     "14",
+     "cl",
+     "13",
+     "bto",
+     "12",
+     "hgnc",
+     "10",
+     "chebi",
+     "9",
+     "eupath",
+     "8",
+     "obi",
+     "8",
+     "zp",
+     "8",
+     "xco",
+     "7",
+     "mmo",
+     "6",
+     "vo",
+     "6",
+     "go",
+     "5",
+     "xao",
+     "5",
+     "tfo",
+     "4",
+     "pw",
+     "4",
+     "mpath",
+     "3",
+     "scdo",
+     "3",
+     "envo",
+     "3",
+     "zfa",
+     "3",
+     "opl",
+     "2",
+     "ec",
+     "2",
+     "enm",
+     "2",
+     "exmo",
+     "2",
+     "tto",
+     "2",
+     "mfmo",
+     "2",
+     "planp",
+     "2",
+     "po",
+     "2",
+     "fovt",
+     "2",
+     "wbls",
+     "1",
+     "ontoneo",
+     "1",
+     "vbo",
+     "1",
+     "pato",
+     "1",
+     "occo",
+     "1",
+     "ovae",
+     "1",
+     "obib",
+     "1",
+     "gscmixs",
+     "1",
+     "ecto",
+     "1",
+     "pso",
+     "1",
+     "clao",
+     "1"
+    ],
+    "ontologyIri": [
+     "http://purl.obolibrary.org/obo/uberon.owl",
+     "121"
+    ],
+    "isObsolete": [
+     "false",
+     "121",
+     "true",
+     "1"
+    ],
+    "type": [
+     "class",
+     "121"
+    ]
+   }
+  }
+ }
+}

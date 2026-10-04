@@ -1,0 +1,193 @@
+{
+ "kind": "sparql",
+ "payload": "\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX oio: <http://www.geneontology.org/formats/oboInOwl#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?s ?label ?ic WHERE {\n  VALUES ?s { <http://purl.obolibrary.org/obo/UBERON_0000060> <http://purl.obolibrary.org/obo/UBERON_0000061> <http://purl.obolibrary.org/obo/UBERON_0000064> <http://purl.obolibrary.org/obo/UBERON_0000465> <http://purl.obolibrary.org/obo/UBERON_0000964> <http://purl.obolibrary.org/obo/UBERON_0001062> <http://purl.obolibrary.org/obo/UBERON_0001811> <http://purl.obolibrary.org/obo/UBERON_0004121> <http://purl.obolibrary.org/obo/UBERON_0010000> <http://purl.obolibrary.org/obo/UBERON_0010313> <http://purl.obolibrary.org/obo/UBERON_0010314> }\n  GRAPH <http://reasoner.renci.org/ontology> {\n    ?s rdfs:label ?label .\n    OPTIONAL { ?s <http://reasoner.renci.org/vocab/normalizedInformationContent> ?ic }\n  }\n}",
+ "response": {
+  "head": {
+   "vars": [
+    "s",
+    "label",
+    "ic"
+   ]
+  },
+  "results": {
+   "bindings": [
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000061"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "anatomical structure"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "20.146103714633828"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0001811"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "conjunctiva"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "66.889027225285176"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0004121"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "ectoderm-derived structure"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "29.826645606841971"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0010313"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "neural crest-derived structure"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "47.202651173598589"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000465"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "material anatomical entity"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "1.3416660185353411"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0001062"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "anatomical entity"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "1.3349164935831099"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000964"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "cornea"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "61.091487505490058"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0010000"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "multicellular anatomical structure"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "22.328944405131573"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000060"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "anatomical wall"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "40.422592924352884"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000064"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "organ part"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "30.22213950399556"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0010314"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "structure with developmental contribution from neural crest"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "32.428880009088353"
+     }
+    }
+   ]
+  }
+ }
+}

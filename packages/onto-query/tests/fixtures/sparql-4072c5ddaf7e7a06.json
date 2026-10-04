@@ -1,0 +1,411 @@
+{
+ "kind": "sparql",
+ "payload": "\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX oio: <http://www.geneontology.org/formats/oboInOwl#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nSELECT DISTINCT ?g WHERE { GRAPH ?g { ?s ?p ?o } }",
+ "response": {
+  "head": {
+   "vars": [
+    "g"
+   ]
+  },
+  "results": {
+   "bindings": [
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/aism/aism-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/bspo.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/cl/cl-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/cob.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/colao/colao-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/dpo/dpo-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/eco/eco-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/iao.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/ecto/ecto-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/emapa.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/envo/envo-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/fbbt/fbbt-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/fbcv/fbcv-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/fbdv/fbdv-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/fypo/fypo-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/go/extensions/go-bfo-bridge.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/go/go-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/hp/hp-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/uo.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/lepao/lepao-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/ma.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/maxo/maxo-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/mi.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/mmo.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/mondo/mondo-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/ncbitaxon.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/ncit.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/mp/mp-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/nbo/nbo-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/oba/oba-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/obi/obi-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/pato/pato-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/pcl/pcl-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/pco/pco-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/ro/ro-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/so.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/uberon/bridge/cl-bridge-to-caro.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/uberon/bridge/cl-bridge-to-fbbt.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/uberon/bridge/uberon-bridge-to-caro.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/uberon/bridge/uberon-bridge-to-fbbt.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/uberon/uberon-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/vbo/vbo-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/wbbt/wbbt-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/wbls/wbls-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/wbphenotype/wbphenotype-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/zfa/zfa-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "https://w3id.org/orcidio/orcidio.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "https://purl.brain-bican.org/ontology/mbao/mbao-base.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/pr/pr-asserted.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/po.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/ppo.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/apo.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/life-stages/components/mmusdv.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/life-stages/components/hsapdv.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/foodon.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/to.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/peco.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/mro.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/hao.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/clao.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/oarcs.owl"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://translator.renci.org/ubergraph-axioms.ofn"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://reasoner.renci.org/ontology"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "https://biolink.github.io/biolink-model/"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://reasoner.renci.org/nonredundant"
+     }
+    },
+    {
+     "g": {
+      "type": "uri",
+      "value": "http://reasoner.renci.org/redundant"
+     }
+    }
+   ]
+  }
+ }
+}

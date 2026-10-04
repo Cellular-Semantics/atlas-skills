@@ -1,0 +1,17 @@
+{
+ "kind": "ols4-hierarchy",
+ "payload": "ehdaa2|http://purl.obolibrary.org/obo/EHDAA2_0000997|descendants|1000|0",
+ "response": {
+  "_links": {
+   "self": {
+    "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000997/descendants?page=0&size=1000"
+   }
+  },
+  "page": {
+   "size": 1000,
+   "totalElements": 0,
+   "totalPages": 0,
+   "number": 0
+  }
+ }
+}

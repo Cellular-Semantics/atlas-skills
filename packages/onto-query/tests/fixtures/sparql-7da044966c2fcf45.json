@@ -1,0 +1,47 @@
+{
+ "kind": "sparql",
+ "payload": "\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX oio: <http://www.geneontology.org/formats/oboInOwl#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?target ?label ?src WHERE {\n  VALUES ?target { <http://purl.obolibrary.org/obo/EMAPA_35336> <http://purl.obolibrary.org/obo/MA_0002486> }\n  GRAPH <http://reasoner.renci.org/ontology> { ?target rdfs:label ?label ; rdfs:isDefinedBy ?src }\n}",
+ "response": {
+  "head": {
+   "vars": [
+    "target",
+    "label",
+    "src"
+   ]
+  },
+  "results": {
+   "bindings": [
+    {
+     "target": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/EMAPA_35336"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "eye surface region"
+     },
+     "src": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/emapa.owl"
+     }
+    },
+    {
+     "target": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/MA_0002486"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "eye surface"
+     },
+     "src": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/ma.owl"
+     }
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "kind": "sparql",
+ "payload": "\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX oio: <http://www.geneontology.org/formats/oboInOwl#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?xref WHERE {\n  VALUES ?s { <http://purl.obolibrary.org/obo/UBERON_0010409> }\n  GRAPH <http://reasoner.renci.org/ontology> { ?s oio:hasDbXref ?xref }\n}",
+ "response": {
+  "head": {
+   "vars": [
+    "xref"
+   ]
+  },
+  "results": {
+   "bindings": [
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "EMAPA:35336"
+     }
+    },
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "MA:0002486"
+     }
+    }
+   ]
+  }
+ }
+}

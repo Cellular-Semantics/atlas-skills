@@ -1,0 +1,502 @@
+{
+ "kind": "ols4",
+ "payload": "{\"fieldList\": \"obo_id,iri,label,description,synonym,exact_synonyms,broad_synonyms,narrow_synonyms,related_synonyms\", \"local\": \"true\", \"obsoletes\": \"false\", \"ontology\": \"uberon\", \"q\": \"skin\", \"queryFields\": \"label,synonym\", \"rows\": \"10\"}",
+ "response": {
+  "response": {
+   "docs": [
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0003530",
+     "synonym": [
+      "digit of foot skin",
+      "digit of terminal segment of free lower limb skin",
+      "digitus pedis skin",
+      "foot digit skin",
+      "foot digit skin",
+      "hind limb digit skin",
+      "skin of digit of foot",
+      "skin of digit of terminal segment of free lower limb",
+      "skin of digitus pedis",
+      "skin of foot digit",
+      "skin of terminal segment of free lower limb digit",
+      "skin of toe",
+      "terminal segment of free lower limb digit skin",
+      "toe skin"
+     ],
+     "description": [
+      "A zone of skin that is part of a toe [Automatically generated definition]."
+     ],
+     "narrow_synonyms": [
+      "foot digit skin"
+     ],
+     "label": "pedal digit skin",
+     "obo_id": "UBERON:0003530",
+     "exact_synonyms": [
+      "digit of foot skin",
+      "digit of terminal segment of free lower limb skin",
+      "digitus pedis skin",
+      "foot digit skin",
+      "hind limb digit skin",
+      "skin of digit of foot",
+      "skin of digit of terminal segment of free lower limb",
+      "skin of digitus pedis",
+      "skin of foot digit",
+      "skin of terminal segment of free lower limb digit",
+      "skin of toe",
+      "terminal segment of free lower limb digit skin",
+      "toe skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0003533",
+     "synonym": [
+      "digit of hand skin",
+      "digit of terminal segment of free upper limb skin",
+      "digitus manus skin",
+      "finger skin",
+      "fore limb digit skin",
+      "hand digit skin",
+      "hand digit skin",
+      "skin of digit of hand",
+      "skin of digit of terminal segment of free upper limb",
+      "skin of digitus manus",
+      "skin of finger",
+      "skin of hand digit",
+      "skin of terminal segment of free upper limb digit",
+      "terminal segment of free upper limb digit skin"
+     ],
+     "description": [
+      "A zone of skin that is part of a finger [Automatically generated definition]."
+     ],
+     "narrow_synonyms": [
+      "hand digit skin"
+     ],
+     "label": "manual digit skin",
+     "obo_id": "UBERON:0003533",
+     "exact_synonyms": [
+      "digit of hand skin",
+      "digit of terminal segment of free upper limb skin",
+      "digitus manus skin",
+      "finger skin",
+      "fore limb digit skin",
+      "hand digit skin",
+      "skin of digit of hand",
+      "skin of digit of terminal segment of free upper limb",
+      "skin of digitus manus",
+      "skin of finger",
+      "skin of hand digit",
+      "skin of terminal segment of free upper limb digit",
+      "terminal segment of free upper limb digit skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001868",
+     "synonym": [
+      "chest skin",
+      "anterior thoracic region zone of skin",
+      "anterolateral part of thorax zone of skin",
+      "chest zone of skin",
+      "front of thorax zone of skin",
+      "zone of skin of anterior chest",
+      "zone of skin of anterior part of thorax",
+      "zone of skin of anterior thoracic region",
+      "zone of skin of anterolateral part of thorax",
+      "zone of skin of chest",
+      "zone of skin of front of thorax",
+      "zone of skin of pectoral part of chest"
+     ],
+     "related_synonyms": [
+      "zone of skin of pectoral part of chest"
+     ],
+     "description": [
+      "A zone of skin that is part of a chest [Automatically generated definition]."
+     ],
+     "label": "skin of chest",
+     "obo_id": "UBERON:0001868",
+     "exact_synonyms": [
+      "chest skin",
+      "anterior thoracic region zone of skin",
+      "anterolateral part of thorax zone of skin",
+      "chest zone of skin",
+      "front of thorax zone of skin",
+      "zone of skin of anterior chest",
+      "zone of skin of anterior part of thorax",
+      "zone of skin of anterior thoracic region",
+      "zone of skin of anterolateral part of thorax",
+      "zone of skin of chest",
+      "zone of skin of front of thorax"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0003605",
+     "synonym": [
+      "camera-type eye skin gland",
+      "camera-type eye skin glands set",
+      "camera-type eye skin glands",
+      "skin gland of camera-type eye",
+      "skin gland of vertebrate eye",
+      "skin glands of camera-type eye",
+      "skin glands of vertebrate eye",
+      "skin glands set of camera-type eye",
+      "skin glands set of vertebrate eye",
+      "vertebrate eye skin gland",
+      "vertebrate eye skin glands set",
+      "vertebrate eye skin glands"
+     ],
+     "description": [
+      "A skin gland that is part of a camera-type eye [Automatically generated definition]."
+     ],
+     "label": "eye skin gland",
+     "obo_id": "UBERON:0003605",
+     "exact_synonyms": [
+      "camera-type eye skin gland",
+      "camera-type eye skin glands set",
+      "camera-type eye skin glands",
+      "skin gland of camera-type eye",
+      "skin gland of vertebrate eye",
+      "skin glands of camera-type eye",
+      "skin glands of vertebrate eye",
+      "skin glands set of camera-type eye",
+      "skin glands set of vertebrate eye",
+      "vertebrate eye skin gland",
+      "vertebrate eye skin glands set",
+      "vertebrate eye skin glands"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001459",
+     "synonym": [
+      "ear skin",
+      "external ear skin",
+      "auricular region of head zone of skin",
+      "auricular region zone of skin",
+      "external ear zone of skin",
+      "outer ear zone of skin",
+      "zone of skin of auricular region of head",
+      "zone of skin of auricular region",
+      "zone of skin of external ear",
+      "zone of skin of outer ear"
+     ],
+     "description": [
+      "A zone of skin that is part of a external ear [Automatically generated definition]."
+     ],
+     "label": "skin of external ear",
+     "obo_id": "UBERON:0001459",
+     "exact_synonyms": [
+      "ear skin",
+      "external ear skin",
+      "auricular region of head zone of skin",
+      "auricular region zone of skin",
+      "external ear zone of skin",
+      "outer ear zone of skin",
+      "zone of skin of auricular region of head",
+      "zone of skin of auricular region",
+      "zone of skin of external ear",
+      "zone of skin of outer ear"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001554",
+     "synonym": [
+      "hip skin",
+      "hip region zone of skin",
+      "hip zone of skin",
+      "regio coxae zone of skin",
+      "zone of skin of hip region",
+      "zone of skin of hip",
+      "zone of skin of regio coxae"
+     ],
+     "description": [
+      "A zone of skin that is part of a hip region."
+     ],
+     "label": "skin of hip",
+     "obo_id": "UBERON:0001554",
+     "exact_synonyms": [
+      "hip skin",
+      "hip region zone of skin",
+      "hip zone of skin",
+      "regio coxae zone of skin",
+      "zone of skin of hip region",
+      "zone of skin of hip",
+      "zone of skin of regio coxae"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0003403",
+     "synonym": [
+      "forearm skin",
+      "lower arm skin",
+      "lower segment of arm skin",
+      "skin of antebrachial region",
+      "skin of lower arm",
+      "skin of lower segment of arm",
+      "skin of zeugopod of arm"
+     ],
+     "description": [
+      "A zone of skin that is part of a lower arm [Automatically generated definition]."
+     ],
+     "label": "skin of forearm",
+     "obo_id": "UBERON:0003403",
+     "exact_synonyms": [
+      "forearm skin",
+      "lower arm skin",
+      "lower segment of arm skin",
+      "skin of antebrachial region",
+      "skin of lower arm",
+      "skin of lower segment of arm",
+      "skin of zeugopod of arm"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0003531",
+     "synonym": [
+      "anteriormost limb skin",
+      "fore limb skin",
+      "skin of fore limb",
+      "skin of forelimb",
+      "skin of upper limb",
+      "upper limb skin",
+      "wing skin"
+     ],
+     "description": [
+      "A zone of skin that is part of a forelimb [Automatically generated definition]."
+     ],
+     "narrow_synonyms": [
+      "wing skin"
+     ],
+     "label": "forelimb skin",
+     "obo_id": "UBERON:0003531",
+     "exact_synonyms": [
+      "anteriormost limb skin",
+      "fore limb skin",
+      "skin of fore limb",
+      "skin of forelimb",
+      "skin of upper limb",
+      "upper limb skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001084",
+     "synonym": [
+      "head skin",
+      "adult head zone of skin",
+      "head zone of skin",
+      "zone of skin of adult head",
+      "zone of skin of head"
+     ],
+     "description": [
+      "EDITOR_NOTE TODO - distinguish between entire skin of region and arbitrary zone of skin on region",
+      "A zone of skin that is part of a head [Automatically generated definition]."
+     ],
+     "label": "skin of head",
+     "obo_id": "UBERON:0001084",
+     "exact_synonyms": [
+      "head skin",
+      "adult head zone of skin",
+      "head zone of skin",
+      "zone of skin of adult head",
+      "zone of skin of head"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001085",
+     "synonym": [
+      "trunk skin",
+      "torso zone of skin",
+      "trunk zone of skin",
+      "zone of skin of torso",
+      "zone of skin of trunk"
+     ],
+     "description": [
+      "EDITOR_NOTE TODO - distinguish between entire skin of region and arbitrary zone of skin on region",
+      "A zone of skin that is part of a trunk [Automatically generated definition]."
+     ],
+     "label": "skin of trunk",
+     "obo_id": "UBERON:0001085",
+     "exact_synonyms": [
+      "trunk skin",
+      "torso zone of skin",
+      "trunk zone of skin",
+      "zone of skin of torso",
+      "zone of skin of trunk"
+     ]
+    }
+   ],
+   "numFound": 121,
+   "start": 0
+  },
+  "responseHeader": {
+   "QTime": 0,
+   "status": 0
+  },
+  "facet_counts": {
+   "facet_fields": {
+    "ontologyPreferredPrefix": [
+     "UBERON",
+     "121"
+    ],
+    "isDefiningOntology": [
+     "true",
+     "121",
+     "false",
+     "19"
+    ],
+    "ontologyId": [
+     "snomed",
+     "5199",
+     "ncit",
+     "1439",
+     "foodon",
+     "570",
+     "upheno",
+     "521",
+     "ncbitaxon",
+     "381",
+     "mondo",
+     "312",
+     "hp",
+     "253",
+     "dron",
+     "188",
+     "mesh",
+     "147",
+     "doid",
+     "122",
+     "uberon",
+     "121",
+     "oae",
+     "115",
+     "emapa",
+     "105",
+     "mp",
+     "89",
+     "clo",
+     "84",
+     "ordo",
+     "70",
+     "oba",
+     "62",
+     "pr",
+     "59",
+     "xpo",
+     "58",
+     "ror",
+     "53",
+     "ma",
+     "51",
+     "pbpko",
+     "48",
+     "omit",
+     "44",
+     "gaz",
+     "42",
+     "cmo",
+     "24",
+     "efo",
+     "23",
+     "vt",
+     "22",
+     "vto",
+     "21",
+     "gsso",
+     "15",
+     "maxo",
+     "15",
+     "symp",
+     "15",
+     "ohmi",
+     "14",
+     "cl",
+     "13",
+     "bto",
+     "12",
+     "hgnc",
+     "10",
+     "chebi",
+     "9",
+     "eupath",
+     "8",
+     "obi",
+     "8",
+     "zp",
+     "8",
+     "xco",
+     "7",
+     "mmo",
+     "6",
+     "vo",
+     "6",
+     "go",
+     "5",
+     "xao",
+     "5",
+     "tfo",
+     "4",
+     "pw",
+     "4",
+     "mpath",
+     "3",
+     "scdo",
+     "3",
+     "envo",
+     "3",
+     "zfa",
+     "3",
+     "opl",
+     "2",
+     "ec",
+     "2",
+     "enm",
+     "2",
+     "exmo",
+     "2",
+     "tto",
+     "2",
+     "mfmo",
+     "2",
+     "planp",
+     "2",
+     "po",
+     "2",
+     "fovt",
+     "2",
+     "wbls",
+     "1",
+     "ontoneo",
+     "1",
+     "vbo",
+     "1",
+     "pato",
+     "1",
+     "occo",
+     "1",
+     "ovae",
+     "1",
+     "obib",
+     "1",
+     "gscmixs",
+     "1",
+     "ecto",
+     "1",
+     "pso",
+     "1",
+     "clao",
+     "1"
+    ],
+    "ontologyIri": [
+     "http://purl.obolibrary.org/obo/uberon.owl",
+     "121"
+    ],
+    "isObsolete": [
+     "false",
+     "121",
+     "true",
+     "1"
+    ],
+    "type": [
+     "class",
+     "121"
+    ]
+   }
+  }
+ }
+}

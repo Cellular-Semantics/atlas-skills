@@ -1,0 +1,25 @@
+{
+ "kind": "ols4",
+ "payload": "{\"exact\": \"true\", \"fieldList\": \"obo_id,iri,label,description,synonym,exact_synonyms,broad_synonyms,narrow_synonyms,related_synonyms\", \"local\": \"true\", \"obsoletes\": \"false\", \"ontology\": \"uberon\", \"q\": \"full reproductive tract\", \"queryFields\": \"label,synonym\", \"rows\": \"200\"}",
+ "response": {
+  "response": {
+   "docs": [],
+   "numFound": 0,
+   "start": 0
+  },
+  "responseHeader": {
+   "QTime": 0,
+   "status": 0
+  },
+  "facet_counts": {
+   "facet_fields": {
+    "ontologyPreferredPrefix": [],
+    "isDefiningOntology": [],
+    "ontologyId": [],
+    "ontologyIri": [],
+    "isObsolete": [],
+    "type": []
+   }
+  }
+ }
+}
