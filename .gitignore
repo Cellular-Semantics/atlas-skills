@@ -18,3 +18,5 @@ evals/results/
 .venv/
 # cached ontology authority for evals/ontology-mapping/verify-hsapdv-claims.py
 evals/ontology-mapping/.hsapdv-authority.json
+# cached ontology authority for evals/ontology-mapping/verify-ehdaa2-claims.py
+evals/ontology-mapping/.ehdaa2-authority.json

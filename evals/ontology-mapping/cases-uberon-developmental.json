@@ -1,0 +1,156 @@
+{
+ "about": "Embryonic-anatomy cases for the map-to-ontology skill, exercising the EHDAA2 route in references/uberon-developmental.md. Windows were read off the released EHDAA2 OWL (2024-01-11) and the xrefs off Ubergraph uberon-base 2026-06-19, both verified by verify-ehdaa2-claims.py. PROPOSED, AND WEAKER THAN cases-hsapdv.json: every input string here was invented from textbook developmental anatomy, not taken from an annotation corpus. They test that the mechanism is applied, not that it survives real annotator prose. Replace the records with HDCA strings before blessing.",
+ "cases": [
+  {
+   "id": "lung-cs11-refuted",
+   "record": {
+    "tissue": "left lung",
+    "developmental_stage": "CS11"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0000118"
+   ],
+   "tests": "The bracket doing real work. EHDAA2 left lung starts CS13, so CS11 is refuted outright. One develops_from hop reaches lung bud, CS11-CS12, which crosswalks to UBERON:0000118. Answering UBERON:0002168 left lung is the failure this route exists to prevent -- and it is what every lexical rung returns.",
+   "_bucket": "refuted-by-bracket",
+   "must_mention": [
+    "CS13",
+    "EHDAA2:0000943"
+   ],
+   "must_name_rival_from": [
+    "UBERON:0002168"
+   ]
+  },
+  {
+   "id": "notochord-cs20-refuted",
+   "record": {
+    "tissue": "notochord",
+    "developmental_stage": "CS20"
+   },
+   "target": "uberon",
+   "accepted": [],
+   "tests": "EHDAA2 notochord is CS11-CS15, so CS20 is excluded at both ends of the reasoning: the structure is gone. The right answer is no mapping plus a statement of the contradiction, not UBERON:0002328 with a caveat. Tests that an excluded bracket stops the mapping rather than decorating it.",
+   "_bucket": "refuted-by-bracket",
+   "must_mention": [
+    "CS15"
+   ],
+   "must_name_rival_from": [
+    "UBERON:0002328"
+   ]
+  },
+  {
+   "id": "kidney-cs18-ambiguous",
+   "record": {
+    "tissue": "kidney",
+    "developmental_stage": "CS18"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0000080",
+    "UBERON:0000081"
+   ],
+   "tests": "No EHDAA2 term for kidney at all, and UBERON:0002113 carries no EHDAA2 xref, so the crosswalk comes back empty and the route has to be entered from the EHDAA2 side. Three candidates; the bracket refutes only the pronephros (CS09 only). Reporting one of the two survivors as the answer is wrong -- CS18 is the last stage of the mesonephros and the metanephros has been present since CS13. Correct behaviour is both, and a question.",
+   "_bucket": "bracket-narrows-but-does-not-decide",
+   "must_mention": [
+    "pronephros"
+   ],
+   "must_name_rival_from": [
+    "UBERON:0002113"
+   ]
+  },
+  {
+   "id": "limb-cs13-bud",
+   "record": {
+    "tissue": "limb",
+    "developmental_stage": "CS13"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0004347",
+    "UBERON:0005417"
+   ],
+   "tests": "The bracket on EHDAA2:0002133 upper limb (CS12-) does NOT refute CS13, and the signal comes instead from its parts, both CS12-CS14 bud tissues. Tests that a non-refuting bracket is not read as an endorsement. Also tests the RETIRED_ prefix: UBERON:0005417 forelimb bud is reachable only via RETIRED_EHDAA2:0003198, and a plain crosswalk returns nothing. `limb` without a side should not silently become forelimb.",
+   "_bucket": "bracket-does-not-refute",
+   "must_mention": [
+    "RETIRED"
+   ],
+   "must_name_rival_from": [
+    "UBERON:0002101",
+    "UBERON:0002102"
+   ]
+  },
+  {
+   "id": "pancreas-cs17-too-coarse",
+   "record": {
+    "tissue": "pancreas",
+    "developmental_stage": "CS17"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0009708",
+    "UBERON:0009709",
+    "UBERON:0001264"
+   ],
+   "tests": "EHDAA2 pancreas starts CS17, so the annotation survives its bracket. But dorsal and ventral pancreas both carry a hard end bound at CS18, inside the parent's window, which is the signal that the parent term is too coarse for this stage. Accepting the parent is defensible; accepting it without naming the two is not.",
+   "_bucket": "bracket-does-not-refute",
+   "must_mention": [
+    "CS18"
+   ],
+   "must_name_rival_from": [
+    "UBERON:0001264"
+   ]
+  },
+  {
+   "id": "pronephros-cs14-ols4-hole",
+   "record": {
+    "tissue": "pronephros",
+    "developmental_stage": "CS14"
+   },
+   "target": "uberon",
+   "accepted": [],
+   "tests": "The OLS4 data-loss case, and the one most likely to fail. The released OWL gives pronephros start CS09 AND end CS09, so CS14 is refuted. `oq neighbours` reports only the start, because OLS4 drops an end edge pointing at the same stage as the start -- so the tool alone says 'starts CS09, no end' and CS14 passes. Correct behaviour is either the refutation, or an explicit statement that the end bound could not be confirmed and the mapping is therefore unsafe. Silent acceptance fails.",
+   "_bucket": "known-tool-hole",
+   "must_mention": [
+    "end"
+   ],
+   "must_name_rival_from": [
+    "UBERON:0002120"
+   ]
+  },
+  {
+   "id": "kidney-16pcw-out-of-range",
+   "record": {
+    "tissue": "kidney",
+    "age": "16 pcw"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0002113"
+   ],
+   "tests": "16 pcw is far past CS20, where EHDAA2 asserts nothing. The route must not be entered, and its silence must not be read as a negative result. The ordinary lexical answer is correct here. Tests the ceiling as a guard, not just as a documented fact.",
+   "_bucket": "route-should-not-trigger",
+   "must_mention": [
+    "CS20"
+   ],
+   "must_name_rival_from": []
+  },
+  {
+   "id": "lung-system-granularity",
+   "record": {
+    "tissue": "respiratory tract",
+    "developmental_stage": "CS12"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0002048",
+    "UBERON:0000118"
+   ],
+   "tests": "EHDAA2:0001042 lung system (CS11-) xrefs UBERON:0002048 lung, which is a coarser-to-finer mismatch rather than equivalence. Tests that the xref is adjudicated and the mismatch stated, rather than the CURIE being emitted as though it were a direct lexical hit.",
+   "_bucket": "xref-granularity",
+   "must_mention": [
+    "EHDAA2:0001042"
+   ],
+   "must_name_rival_from": []
+  }
+ ]
+}
