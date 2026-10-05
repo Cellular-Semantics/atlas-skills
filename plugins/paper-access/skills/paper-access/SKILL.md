@@ -62,7 +62,7 @@ fetching papers yourself: a paper is megabytes and none of it should pass
 through your context.
 
 ```bash
-alias paper-access='uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@pkg-paper-access--v0.1.0#subdirectory=packages/paper-access" paper-access'
+alias paper-access='uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@pkg-paper-access--v0.3.0#subdirectory=packages/paper-access" paper-access'
 
 # Turn whatever the user gave you into identifiers. Exact DOIs, PMIDs and
 # PMCIDs pass straight through; anything else comes back as a candidate.
