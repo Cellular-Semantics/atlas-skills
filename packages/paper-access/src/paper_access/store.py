@@ -16,7 +16,7 @@ from pathlib import Path
 
 from .errors import PaperAccessError
 from .ids import Identifier, IdKind, parse_id, slug
-from .record import Availability, cross_check, validate
+from .record import Availability, cross_check, upgraded, validate
 
 logger = logging.getLogger(__name__)
 
@@ -85,7 +85,7 @@ def write(store: str | Path, record: Availability) -> Path:
     Raises:
         PaperAccessError: The record does not conform, or is not self-consistent.
     """
-    payload = record.to_dict()
+    payload = upgraded(record.to_dict())
     validate(payload)
     problems = cross_check(payload)
     if problems:
@@ -97,6 +97,47 @@ def write(store: str | Path, record: Availability) -> Path:
     path = directory / RECORD_NAME
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     return path
+
+
+def write_or_note(store_root: str | Path, record: Availability) -> tuple[Path | None, str]:
+    """Write a record, and where it will not validate, write it anyway with the
+    problems recorded instead of raising.
+
+    An inconsistent record is a bug, and raising is right for a caller that can
+    fix it. It is wrong for a corpus sweep: one zero-byte GIF made a paper
+    unwritable, and because every later run died at the same write, the paper
+    could not be re-attempted and the sweep could not get past it. A paper that
+    will not validate has to end up on disk *saying so*, or it blocks
+    everything behind it forever.
+
+    Returns:
+        Where it was written and an empty note, or ``None`` and why not.
+    """
+    try:
+        return write(store_root, record), ""
+    except PaperAccessError as exc:
+        logger.error("%s: %s", record.input, exc)
+        problem = str(exc)
+    note = f"this record did not validate when it was written: {problem}"
+    record.notes = f"{record.notes}; {note}" if record.notes else note
+    try:
+        # Second attempt: the note may be all that was wrong, but if the record
+        # is still inconsistent the stripped form below is what lands.
+        return write(store_root, record), note
+    except PaperAccessError:
+        pass
+    directory = _dir_for(store_root, record)
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / RECORD_NAME
+    payload = upgraded(record.to_dict())
+    payload["notes"] = note
+    payload.pop("supplements", None)
+    try:
+        validate(payload)
+    except PaperAccessError:
+        return None, note
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    return path, note
 
 
 def store_bytes(

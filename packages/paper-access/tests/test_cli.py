@@ -10,8 +10,10 @@ import json
 
 import pytest
 
+from paper_access import record as record_module
 from paper_access import store
 from paper_access.cli import main
+from paper_access.errors import PaperAccessError
 from paper_access.ids import Identifier
 from paper_access.record import Attempt, Availability, LocalSource, Metadata
 
@@ -180,3 +182,142 @@ def test_candidates_describes_a_drop_zone(capsys, tmp_path):
     code, payload = run(capsys, "candidates", "--inputs", str(drop))
     assert code == 0
     assert payload["candidates"][0]["title"] == "A paper"
+
+
+# -- batch mode ----------------------------------------------------------
+
+
+def test_a_sweep_runs_every_paper_and_summarises(capsys, populated, tmp_path, monkeypatch):
+    """A corpus is the actual use case, and before this every sweep was a
+    hand-rolled shell loop, which is where the timeouts went missing."""
+    from paper_access.supplements import Supplements
+
+    other = a_record()
+    other.input = "10.1371/journal.pbio.3000410"
+    other.ids = {"doi": Identifier.given("10.1371/journal.pbio.3000410")}
+    store.write(populated, other)
+
+    monkeypatch.setattr(
+        "paper_access.cli.supp_flow.list_supplements",
+        lambda record, store_root, **k: Supplements(),
+    )
+    code, payload = run(capsys, "supplements", "list", "--store", str(populated), "--all")
+    assert code == 0
+    assert set(payload["papers"]) == {DOI, "10.1371/journal.pbio.3000410"}
+    assert payload["summary"]["attempted"] == 2
+    assert payload["summary"]["errored"] == []
+
+
+def test_a_sweep_from_a_file_of_identifiers(capsys, populated, tmp_path, monkeypatch):
+    from paper_access.supplements import Supplements
+
+    monkeypatch.setattr(
+        "paper_access.cli.supp_flow.list_supplements",
+        lambda record, store_root, **k: Supplements(),
+    )
+    listing = tmp_path / "ids.txt"
+    listing.write_text(f"# the atlas\n{DOI}\n")
+    code, payload = run(
+        capsys, "supplements", "list", "--store", str(populated), "--input", str(listing)
+    )
+    assert code == 0 and list(payload["papers"]) == [DOI]
+
+
+def test_a_sweep_reports_a_paper_that_errored_without_stopping(capsys, populated, monkeypatch):
+    from paper_access.supplements import Supplements
+
+    calls: list[str] = []
+
+    def flaky(record, store_root, **k):
+        calls.append(record.input)
+        if len(calls) == 1:
+            raise PaperAccessError("this one is broken")
+        return Supplements()
+
+    other = a_record()
+    other.input = "10.1371/journal.pbio.3000410"
+    other.ids = {"doi": Identifier.given("10.1371/journal.pbio.3000410")}
+    store.write(populated, other)
+    monkeypatch.setattr("paper_access.cli.supp_flow.list_supplements", flaky)
+
+    code, payload = run(
+        capsys, "supplements", "list", "--store", str(populated), "--all",
+        "--concurrency", "1",
+    )
+    assert code == 1
+    assert len(payload["summary"]["errored"]) == 1
+    # The other paper was still attempted.
+    assert len(calls) == 2
+
+
+def test_a_sweep_with_nothing_to_do_says_so(capsys, tmp_path):
+    assert main(["supplements", "list", "--store", str(tmp_path), "--all"]) == 1
+    assert "no papers in" in capsys.readouterr().err
+
+
+def test_exit_two_means_something_needs_a_decision(capsys, populated, monkeypatch):
+    from paper_access.supplements import SupplementFile, SupplementRetrieval, Supplements
+
+    deferred = Supplements(files=[
+        SupplementFile(
+            file_id="big.zip", status="deferred",
+            retrieval=SupplementRetrieval(route="europepmc_bundle", note="too big"),
+        )
+    ])
+    deferred.gaps = [{"what": "big.zip", "reason": "too big", "file_id": "big.zip"}]
+    monkeypatch.setattr(
+        "paper_access.cli.supp_flow.list_supplements", lambda r, s, **k: deferred
+    )
+    monkeypatch.setattr(
+        "paper_access.cli.supp_flow.fetch_supplements", lambda r, s, **k: deferred
+    )
+    code, _ = run(capsys, "supplements", "fetch", "--store", str(populated), "--all")
+    assert code == 2
+    # ...and --skip-large is how a sweep says "carry on".
+    code, _ = run(
+        capsys, "supplements", "fetch", "--store", str(populated), "--all", "--skip-large"
+    )
+    assert code == 0
+
+
+# -- migration -----------------------------------------------------------
+
+
+def test_an_older_record_is_read_and_upgraded_on_write(capsys, tmp_path):
+    """v0.2.0 refused v1 outright, so a 30-paper store had to be re-fetched
+    over the network to get anywhere."""
+    payload = a_record().to_dict()
+    payload["schema_version"] = 1
+    payload.pop("supplements", None)
+    directory = tmp_path / "10.1038_s41586-023-06812-z"
+    directory.mkdir()
+    (directory / "availability.json").write_text(json.dumps(payload))
+
+    found = store.read(tmp_path, DOI)
+    assert found is not None
+
+    code, result = run(capsys, "migrate", "--store", str(tmp_path))
+    assert code == 0
+    assert result["migrated"] and result["migrated"][0]["from"] == 1
+    assert result["schema_version"] == record_module.SCHEMA_VERSION
+
+    again = json.loads((directory / "availability.json").read_text())
+    assert again["schema_version"] == record_module.SCHEMA_VERSION
+    # Upgrading does not invent a supplements block: absent still means
+    # nobody has looked, which is exactly true of a v1 record.
+    assert "supplements" not in again
+
+
+def test_a_record_from_the_future_is_still_refused(tmp_path):
+    payload = a_record().to_dict()
+    payload["schema_version"] = 99
+    directory = tmp_path / "10.1038_s41586-023-06812-z"
+    directory.mkdir()
+    (directory / "availability.json").write_text(json.dumps(payload))
+    with pytest.raises(PaperAccessError, match="newer than"):
+        store.read(tmp_path, DOI)
+
+
+def test_migrate_on_an_already_current_store_changes_nothing(capsys, populated):
+    code, result = run(capsys, "migrate", "--store", str(populated))
+    assert code == 0 and result["migrated"] == []
