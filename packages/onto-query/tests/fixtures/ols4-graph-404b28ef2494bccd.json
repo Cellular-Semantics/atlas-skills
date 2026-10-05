@@ -1,0 +1,204 @@
+{
+ "kind": "ols4-graph",
+ "payload": "ehdaa2|http://purl.obolibrary.org/obo/EHDAA2_0000997",
+ "response": {
+  "nodes": [
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "label": "liver"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/AEO_0000097",
+    "label": "ducted gland"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/AEO_0000098",
+    "label": "ductless gland"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/CARO_0000024",
+    "label": "compound organ"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0000740",
+    "label": "hepatic diverticulum"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0000998",
+    "label": "liver and biliary system"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001831",
+    "label": "septum transversum mesenchyme"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0002224",
+    "label": "endocrine glandular system"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0002225",
+    "label": "exocrine glandular system"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/HsapDv_0000019",
+    "label": "CS12"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0000176",
+    "label": "blood"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0000308",
+    "label": "common hepatic artery"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0000999",
+    "label": "early liver hepatic sinusoids"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001000",
+    "label": "liver left lobe"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001004",
+    "label": "early liver parenchyma"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001008",
+    "label": "liver right lobe"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001485",
+    "label": "portal vein"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0003452",
+    "label": "liver haemangioblasts"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0003454",
+    "label": "liver vascular system"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0004730",
+    "label": "liver haematopoietic stem cells"
+   }
+  ],
+  "edges": [
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "target": "http://purl.obolibrary.org/obo/AEO_0000097",
+    "uri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+    "label": "subClassOf"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "target": "http://purl.obolibrary.org/obo/AEO_0000098",
+    "uri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+    "label": "subClassOf"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "target": "http://purl.obolibrary.org/obo/CARO_0000024",
+    "uri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+    "label": "subClassOf"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0000740",
+    "uri": "http://purl.obolibrary.org/obo/RO_0002202",
+    "label": "develops from"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0000998",
+    "uri": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "label": "part of"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0001831",
+    "uri": "http://purl.obolibrary.org/obo/RO_0002202",
+    "label": "develops from"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0002224",
+    "uri": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "label": "part of"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0002225",
+    "uri": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "label": "part of"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "target": "http://purl.obolibrary.org/obo/HsapDv_0000019",
+    "uri": "http://purl.obolibrary.org/obo/RO_0002496",
+    "label": "existence starts during or after"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0000176",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "uri": "http://purl.obolibrary.org/obo/RO_0002202",
+    "label": "develops from"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0000308",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "uri": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "label": "part of"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0000999",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "uri": "http://purl.obolibrary.org/obo/RO_0002202",
+    "label": "develops from"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0001000",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "uri": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "label": "part of"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0001004",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "uri": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "label": "part of"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0001008",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "uri": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "label": "part of"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0001485",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "uri": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "label": "part of"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0003452",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "uri": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "label": "part of"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0003454",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "uri": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "label": "part of"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0004730",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0000997",
+    "uri": "http://purl.obolibrary.org/obo/RO_0001025",
+    "label": "located in"
+   }
+  ]
+ }
+}

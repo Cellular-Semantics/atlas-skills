@@ -1,0 +1,70 @@
+{
+ "kind": "ols4",
+ "payload": "{\"exact\": \"true\", \"fieldList\": \"obo_id,iri,label,description,synonym,exact_synonyms,broad_synonyms,narrow_synonyms,related_synonyms\", \"local\": \"true\", \"obsoletes\": \"false\", \"ontology\": \"uberon\", \"q\": \"thoracic spine\", \"queryFields\": \"label,synonym\", \"rows\": \"200\"}",
+ "response": {
+  "response": {
+   "docs": [
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0006073",
+     "synonym": [
+      "thoracic vertebrae series",
+      "axial skeleton thoracic region",
+      "columna vertebralis thoracicus",
+      "thoracic spine",
+      "thoracic vertebral column"
+     ],
+     "description": [
+      "That part of the spine comprising the thoracic vertebrae."
+     ],
+     "label": "thoracic region of vertebral column",
+     "obo_id": "UBERON:0006073",
+     "exact_synonyms": [
+      "thoracic vertebrae series",
+      "axial skeleton thoracic region",
+      "columna vertebralis thoracicus",
+      "thoracic spine",
+      "thoracic vertebral column"
+     ]
+    }
+   ],
+   "numFound": 1,
+   "start": 0
+  },
+  "responseHeader": {
+   "QTime": 0,
+   "status": 0
+  },
+  "facet_counts": {
+   "facet_fields": {
+    "ontologyPreferredPrefix": [
+     "UBERON",
+     "1"
+    ],
+    "isDefiningOntology": [
+     "true",
+     "1"
+    ],
+    "ontologyId": [
+     "uberon",
+     "1",
+     "bto",
+     "1",
+     "ncit",
+     "1"
+    ],
+    "ontologyIri": [
+     "http://purl.obolibrary.org/obo/uberon.owl",
+     "1"
+    ],
+    "isObsolete": [
+     "false",
+     "1"
+    ],
+    "type": [
+     "class",
+     "1"
+    ]
+   }
+  }
+ }
+}

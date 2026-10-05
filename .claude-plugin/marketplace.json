@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Portal-agnostic agentic skills for working with published single-cell atlases and the literature behind them. Each skill installs on its own.",
-    "version": "0.6.0"
+    "version": "0.7.0"
   },
   "plugins": [
     {
@@ -23,6 +23,11 @@
       "name": "paper-access",
       "source": "./plugins/paper-access",
       "description": "Retrieve papers as tagged article XML where it can be had, probe how much of each a search index holds, fetch their supplementary material, and say honestly which papers and files nobody can reach."
+    },
+    {
+      "name": "onto-mapping",
+      "source": "./plugins/onto-mapping",
+      "description": "Map annotator-written tissue, cell-type and developmental-stage strings to ontology terms from lexical and graph evidence, with per-ontology advice documents for the conventions that produce confidently wrong answers."
     },
     {
       "name": "atlas-tools",

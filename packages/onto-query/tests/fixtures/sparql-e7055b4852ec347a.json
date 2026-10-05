@@ -1,0 +1,127 @@
+{
+ "kind": "sparql",
+ "payload": "\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX oio: <http://www.geneontology.org/formats/oboInOwl#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?xref WHERE {\n  VALUES ?s { <http://purl.obolibrary.org/obo/MONDO_0007739> }\n  GRAPH <http://reasoner.renci.org/ontology> { ?s oio:hasDbXref ?xref }\n}",
+ "response": {
+  "head": {
+   "vars": [
+    "xref"
+   ]
+  },
+  "results": {
+   "bindings": [
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "DOID:12858"
+     }
+    },
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "GARD:0006677"
+     }
+    },
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "ICD10CM:G10"
+     }
+    },
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "ICD10WHO:G10"
+     }
+    },
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "icd11.foundation:2132180242"
+     }
+    },
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "ICD9:333.4"
+     }
+    },
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "MedDRA:10070668"
+     }
+    },
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "MEDGEN:5654"
+     }
+    },
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "MESH:D006816"
+     }
+    },
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "NANDO:1200012"
+     }
+    },
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "NCIT:C82342"
+     }
+    },
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "NORD:1256"
+     }
+    },
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "OMIM:143100"
+     }
+    },
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "Orphanet:399"
+     }
+    },
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "SCTID:58756001"
+     }
+    },
+    {
+     "xref": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "UMLS:C0020179"
+     }
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,62 @@
+{
+ "kind": "ols4-ontology",
+ "payload": "hsapdv",
+ "response": {
+  "languages": [
+   "en"
+  ],
+  "lang": "en",
+  "ontologyId": "hsapdv",
+  "loaded": "2026-09-30T11:49:02.438175841",
+  "updated": "2026-09-30T11:49:02.438175841",
+  "status": "LOADED",
+  "message": "",
+  "version": "2025-01-23",
+  "fileHash": null,
+  "loadAttempts": 0,
+  "numberOfTerms": 260,
+  "numberOfProperties": 42,
+  "numberOfIndividuals": 0,
+  "config": {
+   "id": "hsapdv",
+   "versionIri": "http://purl.obolibrary.org/obo/life-stages/releases/2025-01-23/components/hsapdv.owl",
+   "namespace": "hsapdv",
+   "preferredPrefix": "HsapDv",
+   "title": "Human Developmental Stages",
+   "description": "Life cycle stages for Human",
+   "homepage": "https://github.com/obophenotype/developmental-stage-ontologies/wiki/HsapDv",
+   "version": "2025-01-23",
+   "mailingList": null,
+   "tracker": "https://github.com/obophenotype/developmental-stage-ontologies/issues",
+   "logo": null,
+   "creators": [],
+   "annotations": null,
+   "fileLocation": "http://purl.obolibrary.org/obo/hsapdv.owl",
+   "oboSlims": false,
+   "labelProperty": "http://www.w3.org/2000/01/rdf-schema#label",
+   "definitionProperties": [],
+   "synonymProperties": [],
+   "hierarchicalProperties": [],
+   "baseUris": [],
+   "hiddenProperties": [],
+   "preferredRootTerms": [],
+   "isSkos": false,
+   "allowDownload": false
+  },
+  "baseUris": [],
+  "_links": {
+   "self": {
+    "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv?lang=en"
+   },
+   "terms": {
+    "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms"
+   },
+   "properties": {
+    "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/properties"
+   },
+   "individuals": {
+    "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/individuals"
+   }
+  }
+ }
+}

@@ -1,0 +1,33 @@
+{
+ "kind": "sparql",
+ "payload": "\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX oio: <http://www.geneontology.org/formats/oboInOwl#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?s ?label ?ic WHERE {\n  VALUES ?s { <http://purl.obolibrary.org/obo/DOID_12858> <http://purl.obolibrary.org/obo/NCIT_C82342> <http://id.who.int/icd/entity/2132180242> <http://identifiers.org/meddra/10070668> <http://identifiers.org/medgen/5654> <http://identifiers.org/mesh/D006816> <http://identifiers.org/snomedct/58756001> <http://linkedlifedata.com/resource/umls/id/C0020179> <http://purl.bioontology.org/ontology/ICD10CM/G10> <http://www.orpha.net/ORDO/Orphanet_399> <https://icd.who.int/browse10/2019/en#/G10> <https://omim.org/entry/143100> }\n  GRAPH <http://reasoner.renci.org/ontology> {\n    ?s rdfs:label ?label .\n    OPTIONAL { ?s <http://reasoner.renci.org/vocab/normalizedInformationContent> ?ic }\n  }\n}",
+ "response": {
+  "head": {
+   "vars": [
+    "s",
+    "label",
+    "ic"
+   ]
+  },
+  "results": {
+   "bindings": [
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/NCIT_C82342"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "Huntington's Disease"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "89.420179400603544"
+     }
+    }
+   ]
+  }
+ }
+}

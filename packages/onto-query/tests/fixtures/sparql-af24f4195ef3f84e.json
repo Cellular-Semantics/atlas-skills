@@ -1,0 +1,346 @@
+{
+ "kind": "sparql",
+ "payload": "\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX oio: <http://www.geneontology.org/formats/oboInOwl#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?s ?label WHERE {\n  GRAPH <http://purl.obolibrary.org/obo/life-stages/components/hsapdv.owl> {\n    ?s rdfs:label ?label .\n    FILTER(CONTAINS(LCASE(STR(?label)), \"week\"))\n    FILTER NOT EXISTS { ?s owl:deprecated true }\n  }\n} LIMIT 500",
+ "response": {
+  "head": {
+   "vars": [
+    "s",
+    "label"
+   ]
+  },
+  "results": {
+   "bindings": [
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000046"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "9th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000047"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "10th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000048"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "11th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000049"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "12th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000050"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "13th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000051"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "14th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000052"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "15th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000053"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "16th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000054"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "17th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000055"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "18th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000056"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "19th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000057"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "20th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000058"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "21st week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000059"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "22nd week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000060"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "23rd week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000061"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "24th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000062"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "25th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000063"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "26th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000064"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "27th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000065"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "28th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000066"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "29th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000067"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "30th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000068"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "31st week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000069"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "32nd week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000070"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "33rd week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000071"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "34th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000072"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "35th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000073"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "36th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000074"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "37th week post-fertilization stage"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/HsapDv_0000075"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "38th week post-fertilization and over stage"
+     }
+    }
+   ]
+  }
+ }
+}

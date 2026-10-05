@@ -1,0 +1,1102 @@
+{
+ "kind": "ols4-v2",
+ "payload": "uberon|http://purl.obolibrary.org/obo/UBERON_0010409",
+ "response": {
+  "appearsIn": [
+   "aism",
+   "cl",
+   "cpont",
+   "ecao",
+   "ecocore",
+   "ecto",
+   "flopo",
+   "fovt",
+   "go",
+   "hcao",
+   "hp",
+   "maxo",
+   "mondo",
+   "mp",
+   "nbo",
+   "oae",
+   "oba",
+   "ohpi",
+   "pato",
+   "pcl",
+   "phipo",
+   "prefer",
+   "rbo",
+   "uberon",
+   "upheno",
+   "xpo"
+  ],
+  "curie": "UBERON:0010409",
+  "definedBy": [
+   "uberon"
+  ],
+  "definition": [
+   {
+    "type": [
+     "reification"
+    ],
+    "value": "The integrated unit (of the eye) that consists of the conjunctiva, the corneal surface, and the ocular mucosal adnexa including the lid margins and the meibomian gland openings, the lacrimal glands and the lacrimal drainage system, all which are critical to maintain ocular surface integrity and provide protection from external antigens and pathogenic microorganisms.",
+    "axioms": [
+     {
+      "http://www.geneontology.org/formats/oboInOwl#hasDbXref": "MP:0013754"
+     }
+    ]
+   }
+  ],
+  "definitionProperty": "http://purl.obolibrary.org/obo/IAO_0000115",
+  "directAncestor": [
+   "http://purl.obolibrary.org/obo/BFO_0000001",
+   "http://purl.obolibrary.org/obo/BFO_0000002",
+   "http://purl.obolibrary.org/obo/BFO_0000004",
+   "http://purl.obolibrary.org/obo/BFO_0000040",
+   "http://purl.obolibrary.org/obo/UBERON_0000061",
+   "http://purl.obolibrary.org/obo/UBERON_0000063",
+   "http://purl.obolibrary.org/obo/UBERON_0000064",
+   "http://purl.obolibrary.org/obo/UBERON_0000465",
+   "http://purl.obolibrary.org/obo/UBERON_0001062",
+   "http://purl.obolibrary.org/obo/UBERON_0010000"
+  ],
+  "directParent": [
+   "http://purl.obolibrary.org/obo/UBERON_0000063"
+  ],
+  "hasDirectChildren": false,
+  "hasDirectParents": true,
+  "hasHierarchicalChildren": true,
+  "hasHierarchicalParents": true,
+  "hierarchicalAncestor": [
+   "http://purl.obolibrary.org/obo/BFO_0000001",
+   "http://purl.obolibrary.org/obo/BFO_0000002",
+   "http://purl.obolibrary.org/obo/BFO_0000004",
+   "http://purl.obolibrary.org/obo/BFO_0000040",
+   "http://purl.obolibrary.org/obo/UBERON_0000019",
+   "http://purl.obolibrary.org/obo/UBERON_0000020",
+   "http://purl.obolibrary.org/obo/UBERON_0000033",
+   "http://purl.obolibrary.org/obo/UBERON_0000047",
+   "http://purl.obolibrary.org/obo/UBERON_0000061",
+   "http://purl.obolibrary.org/obo/UBERON_0000062",
+   "http://purl.obolibrary.org/obo/UBERON_0000063",
+   "http://purl.obolibrary.org/obo/UBERON_0000064",
+   "http://purl.obolibrary.org/obo/UBERON_0000153",
+   "http://purl.obolibrary.org/obo/UBERON_0000465",
+   "http://purl.obolibrary.org/obo/UBERON_0000467",
+   "http://purl.obolibrary.org/obo/UBERON_0000468",
+   "http://purl.obolibrary.org/obo/UBERON_0000475",
+   "http://purl.obolibrary.org/obo/UBERON_0000970",
+   "http://purl.obolibrary.org/obo/UBERON_0001032",
+   "http://purl.obolibrary.org/obo/UBERON_0001062",
+   "http://purl.obolibrary.org/obo/UBERON_0001444",
+   "http://purl.obolibrary.org/obo/UBERON_0001456",
+   "http://purl.obolibrary.org/obo/UBERON_0002104",
+   "http://purl.obolibrary.org/obo/UBERON_0004088",
+   "http://purl.obolibrary.org/obo/UBERON_0004121",
+   "http://purl.obolibrary.org/obo/UBERON_0004456",
+   "http://purl.obolibrary.org/obo/UBERON_0007811",
+   "http://purl.obolibrary.org/obo/UBERON_0010000",
+   "http://purl.obolibrary.org/obo/UBERON_0010314",
+   "http://purl.obolibrary.org/obo/UBERON_0011676",
+   "http://purl.obolibrary.org/obo/UBERON_0013701",
+   "http://purl.obolibrary.org/obo/UBERON_0013702",
+   "http://purl.obolibrary.org/obo/UBERON_0015203",
+   "http://purl.obolibrary.org/obo/UBERON_0015212",
+   "http://purl.obolibrary.org/obo/UBERON_0034923"
+  ],
+  "hierarchicalParent": [
+   "http://purl.obolibrary.org/obo/UBERON_0000063",
+   {
+    "type": [
+     "reification"
+    ],
+    "value": "http://purl.obolibrary.org/obo/UBERON_0000019",
+    "axioms": [
+     {
+      "childRelationToParent": "http://purl.obolibrary.org/obo/BFO_0000050",
+      "parentRelationToChild": "http://purl.obolibrary.org/obo/BFO_0000051"
+     }
+    ]
+   }
+  ],
+  "hierarchicalProperty": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+  "imported": false,
+  "iri": "http://purl.obolibrary.org/obo/UBERON_0010409",
+  "isDefiningOntology": true,
+  "isObsolete": false,
+  "isPreferredRoot": false,
+  "label": [
+   "ocular surface region"
+  ],
+  "linkedEntities": {
+   "EMAPA:35336": {
+    "iri": "http://purl.obolibrary.org/obo/EMAPA_35336",
+    "definedBy": [
+     "emapa"
+    ],
+    "numAppearsIn": 1.0,
+    "hasLocalDefinition": false,
+    "label": [
+     "eye surface region"
+    ],
+    "curie": "EMAPA:35336",
+    "type": [
+     "class",
+     "entity"
+    ],
+    "url": "http://www.informatics.jax.org/vocab/gxd/anatomy/EMAPA:35336",
+    "source": "https://raw.githubusercontent.com/geneontology/go-site/master/metadata/db-xrefs.yaml"
+   },
+   "MA:0002486": {
+    "iri": "http://purl.obolibrary.org/obo/MA_0002486",
+    "definedBy": [
+     "ma"
+    ],
+    "numAppearsIn": 1.0,
+    "hasLocalDefinition": false,
+    "label": [
+     "eye surface"
+    ],
+    "curie": "MA:0002486",
+    "type": [
+     "class",
+     "entity"
+    ],
+    "url": "http://www.informatics.jax.org/searches/AMA.cgi?id=MA:0002486",
+    "source": "https://raw.githubusercontent.com/geneontology/go-site/master/metadata/db-xrefs.yaml"
+   },
+   "MP:0013754": {
+    "iri": "http://purl.obolibrary.org/obo/MP_0013754",
+    "definedBy": [
+     "mp"
+    ],
+    "numAppearsIn": 2.0,
+    "hasLocalDefinition": false,
+    "label": [
+     "abnormal ocular surface morphology"
+    ],
+    "curie": "MP:0013754",
+    "type": [
+     "class",
+     "entity"
+    ],
+    "url": "http://purl.obolibrary.org/obo/MP_0013754",
+    "source": "https://raw.githubusercontent.com/biopragmatics/bioregistry/main/exports/registry/registry.json"
+   },
+   "UBERON:0010409": {
+    "iri": "http://purl.obolibrary.org/obo/UBERON_0010409",
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 26.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "ocular surface region"
+    ],
+    "curie": "UBERON:0010409",
+    "type": [
+     "class",
+     "entity"
+    ],
+    "url": "http://purl.obolibrary.org/obo/UBERON_0010409",
+    "source": "https://raw.githubusercontent.com/geneontology/go-site/master/metadata/db-xrefs.yaml"
+   },
+   "http://purl.obolibrary.org/obo/BFO_0000001": {
+    "definedBy": [
+     "bfo"
+    ],
+    "numAppearsIn": 114.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "entity"
+    ],
+    "curie": "BFO:0000001",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/BFO_0000002": {
+    "definedBy": [
+     "bfo"
+    ],
+    "numAppearsIn": 132.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "continuant"
+    ],
+    "curie": "BFO:0000002",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/BFO_0000004": {
+    "definedBy": [
+     "bfo"
+    ],
+    "numAppearsIn": 130.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "independent continuant"
+    ],
+    "curie": "BFO:0000004",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/BFO_0000040": {
+    "definedBy": [
+     "bfo"
+    ],
+    "numAppearsIn": 140.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "material entity"
+    ],
+    "curie": "BFO:0000040",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/BFO_0000050": {
+    "definedBy": [
+     "ro"
+    ],
+    "numAppearsIn": 172.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "part of"
+    ],
+    "curie": "RO_",
+    "type": [
+     "entity",
+     "objectProperty",
+     "property"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/BFO_0000051": {
+    "numAppearsIn": 155.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "has part"
+    ],
+    "curie": "BFO:0000051",
+    "type": [
+     "entity",
+     "objectProperty",
+     "property"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/BSPO_0000108": {
+    "definedBy": [
+     "bspo"
+    ],
+    "numAppearsIn": 33.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "superficial to"
+    ],
+    "curie": "BSPO:0000108",
+    "type": [
+     "entity",
+     "objectProperty",
+     "property"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/IAO_0000115": {
+    "definedBy": [
+     "iao"
+    ],
+    "numAppearsIn": 233.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "definition"
+    ],
+    "curie": "IAO:0000115",
+    "type": [
+     "annotationProperty",
+     "entity",
+     "property"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0000019": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 29.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "camera-type eye"
+    ],
+    "curie": "UBERON:0000019",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0000020": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 44.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "sense organ"
+    ],
+    "curie": "UBERON:0000020",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0000033": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 35.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "head"
+    ],
+    "curie": "UBERON:0000033",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0000047": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 29.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "simple eye"
+    ],
+    "curie": "UBERON:0000047",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0000061": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 76.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "anatomical structure"
+    ],
+    "curie": "UBERON:0000061",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0000062": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 61.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "organ"
+    ],
+    "curie": "UBERON:0000062",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0000063": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 35.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "organ subunit"
+    ],
+    "curie": "UBERON:0000063",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0000064": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 51.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "organ part"
+    ],
+    "curie": "UBERON:0000064",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0000153": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 30.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "anterior region of body"
+    ],
+    "curie": "UBERON:0000153",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0000465": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 88.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "material anatomical entity"
+    ],
+    "curie": "UBERON:0000465",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0000467": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 52.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "anatomical system"
+    ],
+    "curie": "UBERON:0000467",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0000468": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 44.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "multicellular organism"
+    ],
+    "curie": "UBERON:0000468",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0000475": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 42.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "organism subdivision"
+    ],
+    "curie": "UBERON:0000475",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0000970": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 43.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "eye"
+    ],
+    "curie": "UBERON:0000970",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0001032": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 36.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "sensory system"
+    ],
+    "curie": "UBERON:0001032",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0001062": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 91.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "anatomical entity"
+    ],
+    "curie": "UBERON:0001062",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0001444": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 32.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "subdivision of head"
+    ],
+    "curie": "UBERON:0001444",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0001456": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 32.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "face"
+    ],
+    "curie": "UBERON:0001456",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0002104": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 31.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "visual system"
+    ],
+    "curie": "UBERON:0002104",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0004088": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 30.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "orbital region"
+    ],
+    "curie": "UBERON:0004088",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0004121": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 48.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "ectoderm-derived structure"
+    ],
+    "curie": "UBERON:0004121",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0004456": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 32.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "entire sense organ system"
+    ],
+    "curie": "UBERON:0004456",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0007811": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 33.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "craniocervical region"
+    ],
+    "curie": "UBERON:0007811",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0010000": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 60.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "multicellular anatomical structure"
+    ],
+    "curie": "UBERON:0010000",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0010314": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 43.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "structure with developmental contribution from neural crest"
+    ],
+    "curie": "UBERON:0010314",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0011676": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 33.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "subdivision of organism along main body axis"
+    ],
+    "curie": "UBERON:0011676",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0013701": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 31.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "main body axis"
+    ],
+    "curie": "UBERON:0013701",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0013702": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 33.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "body proper"
+    ],
+    "curie": "UBERON:0013702",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0015203": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 27.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "non-connected functional system"
+    ],
+    "curie": "UBERON:0015203",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0015212": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 42.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "lateral structure"
+    ],
+    "curie": "UBERON:0015212",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0022288": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 25.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "surface of eyeball"
+    ],
+    "curie": "UBERON:0022288",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/UBERON_0034923": {
+    "definedBy": [
+     "uberon"
+    ],
+    "numAppearsIn": 32.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "disconnected anatomical group"
+    ],
+    "curie": "UBERON:0034923",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/uberon/core#human_subset": {
+    "numAppearsIn": 17.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "human_subset"
+    ],
+    "curie": "human_subset",
+    "type": [
+     "annotationProperty",
+     "entity",
+     "property"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/uberon/core#mouse_subset": {
+    "numAppearsIn": 17.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "mouse_subset"
+    ],
+    "curie": "mouse_subset",
+    "type": [
+     "annotationProperty",
+     "entity",
+     "property"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/uberon/core#pheno_slim": {
+    "numAppearsIn": 26.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "pheno_slim"
+    ],
+    "curie": "pheno_slim",
+    "type": [
+     "annotationProperty",
+     "entity",
+     "property"
+    ]
+   },
+   "http://www.geneontology.org/formats/oboInOwl#hasDbXref": {
+    "definedBy": [
+     "oio"
+    ],
+    "numAppearsIn": 215.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "database_cross_reference",
+     "has_dbxref"
+    ],
+    "curie": "OIO:hasDbXref",
+    "type": [
+     "annotationProperty",
+     "entity",
+     "property"
+    ]
+   },
+   "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym": {
+    "definedBy": [
+     "oio"
+    ],
+    "numAppearsIn": 210.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "has_exact_synonym"
+    ],
+    "curie": "OIO:hasExactSynonym",
+    "type": [
+     "annotationProperty",
+     "entity",
+     "property"
+    ]
+   },
+   "http://www.geneontology.org/formats/oboInOwl#id": {
+    "definedBy": [
+     "oio"
+    ],
+    "numAppearsIn": 183.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "id"
+    ],
+    "curie": "OIO:id",
+    "type": [
+     "annotationProperty",
+     "entity",
+     "property"
+    ]
+   },
+   "http://www.geneontology.org/formats/oboInOwl#inSubset": {
+    "definedBy": [
+     "oio"
+    ],
+    "numAppearsIn": 132.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "in_subset"
+    ],
+    "curie": "OIO:inSubset",
+    "type": [
+     "annotationProperty",
+     "entity",
+     "property"
+    ]
+   },
+   "http://www.w3.org/2000/01/rdf-schema#label": {
+    "definedBy": [
+     "rdfs"
+    ],
+    "numAppearsIn": 204.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "label"
+    ],
+    "curie": "RDFS:label",
+    "type": [
+     "entity",
+     "property"
+    ]
+   },
+   "http://www.w3.org/2000/01/rdf-schema#subClassOf": {
+    "definedBy": [
+     "rdfs"
+    ],
+    "numAppearsIn": 8.0,
+    "hasLocalDefinition": false,
+    "label": [
+     "subClassOf"
+    ],
+    "curie": "RDFS:subClassOf",
+    "type": [
+     "entity",
+     "property"
+    ]
+   }
+  },
+  "linksTo": [
+   "http://purl.obolibrary.org/obo/BFO_0000001",
+   "http://purl.obolibrary.org/obo/BFO_0000002",
+   "http://purl.obolibrary.org/obo/BFO_0000004",
+   "http://purl.obolibrary.org/obo/BFO_0000040",
+   "http://purl.obolibrary.org/obo/BFO_0000050",
+   "http://purl.obolibrary.org/obo/BFO_0000051",
+   "http://purl.obolibrary.org/obo/BSPO_0000108",
+   "http://purl.obolibrary.org/obo/EMAPA_35336",
+   "http://purl.obolibrary.org/obo/IAO_0000115",
+   "http://purl.obolibrary.org/obo/MA_0002486",
+   "http://purl.obolibrary.org/obo/MP_0013754",
+   "http://purl.obolibrary.org/obo/UBERON_0000019",
+   "http://purl.obolibrary.org/obo/UBERON_0000020",
+   "http://purl.obolibrary.org/obo/UBERON_0000033",
+   "http://purl.obolibrary.org/obo/UBERON_0000047",
+   "http://purl.obolibrary.org/obo/UBERON_0000061",
+   "http://purl.obolibrary.org/obo/UBERON_0000062",
+   "http://purl.obolibrary.org/obo/UBERON_0000063",
+   "http://purl.obolibrary.org/obo/UBERON_0000064",
+   "http://purl.obolibrary.org/obo/UBERON_0000153",
+   "http://purl.obolibrary.org/obo/UBERON_0000465",
+   "http://purl.obolibrary.org/obo/UBERON_0000467",
+   "http://purl.obolibrary.org/obo/UBERON_0000468",
+   "http://purl.obolibrary.org/obo/UBERON_0000475",
+   "http://purl.obolibrary.org/obo/UBERON_0000970",
+   "http://purl.obolibrary.org/obo/UBERON_0001032",
+   "http://purl.obolibrary.org/obo/UBERON_0001062",
+   "http://purl.obolibrary.org/obo/UBERON_0001444",
+   "http://purl.obolibrary.org/obo/UBERON_0001456",
+   "http://purl.obolibrary.org/obo/UBERON_0002104",
+   "http://purl.obolibrary.org/obo/UBERON_0004088",
+   "http://purl.obolibrary.org/obo/UBERON_0004121",
+   "http://purl.obolibrary.org/obo/UBERON_0004456",
+   "http://purl.obolibrary.org/obo/UBERON_0007811",
+   "http://purl.obolibrary.org/obo/UBERON_0010000",
+   "http://purl.obolibrary.org/obo/UBERON_0010314",
+   "http://purl.obolibrary.org/obo/UBERON_0010409",
+   "http://purl.obolibrary.org/obo/UBERON_0011676",
+   "http://purl.obolibrary.org/obo/UBERON_0013701",
+   "http://purl.obolibrary.org/obo/UBERON_0013702",
+   "http://purl.obolibrary.org/obo/UBERON_0015203",
+   "http://purl.obolibrary.org/obo/UBERON_0015212",
+   "http://purl.obolibrary.org/obo/UBERON_0022288",
+   "http://purl.obolibrary.org/obo/UBERON_0034923",
+   "http://purl.obolibrary.org/obo/uberon/core#human_subset",
+   "http://purl.obolibrary.org/obo/uberon/core#mouse_subset",
+   "http://purl.obolibrary.org/obo/uberon/core#pheno_slim",
+   "http://www.geneontology.org/formats/oboInOwl#hasDbXref",
+   "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym",
+   "http://www.geneontology.org/formats/oboInOwl#id",
+   "http://www.geneontology.org/formats/oboInOwl#inSubset",
+   "http://www.w3.org/2000/01/rdf-schema#label",
+   "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+  ],
+  "numDescendants": 0.0,
+  "numHierarchicalDescendants": 58.0,
+  "ontologyId": "uberon",
+  "ontologyIri": "http://purl.obolibrary.org/obo/uberon.owl",
+  "ontologyPreferredPrefix": "UBERON",
+  "relatedTo": [
+   {
+    "property": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "value": "http://purl.obolibrary.org/obo/UBERON_0000019",
+    "type": [
+     "related"
+    ],
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.w3.org/2002/07/owl#Restriction",
+    "http://www.w3.org/2002/07/owl#onProperty": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "http://www.w3.org/2002/07/owl#someValuesFrom": "http://purl.obolibrary.org/obo/UBERON_0000019",
+    "isObsolete": false
+   },
+   {
+    "property": "http://purl.obolibrary.org/obo/BSPO_0000108",
+    "value": "http://purl.obolibrary.org/obo/UBERON_0022288",
+    "type": [
+     "related"
+    ],
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.w3.org/2002/07/owl#Restriction",
+    "http://www.w3.org/2002/07/owl#onProperty": "http://purl.obolibrary.org/obo/BSPO_0000108",
+    "http://www.w3.org/2002/07/owl#someValuesFrom": "http://purl.obolibrary.org/obo/UBERON_0022288",
+    "isObsolete": false
+   }
+  ],
+  "searchableAnnotationValues": [
+   false
+  ],
+  "shortForm": "UBERON_0010409",
+  "synonym": [
+   "eye surface region",
+   "ocular surface",
+   {
+    "type": [
+     "reification"
+    ],
+    "value": "eye surface",
+    "axioms": [
+     {
+      "http://www.geneontology.org/formats/oboInOwl#hasDbXref": "MA:0002486"
+     }
+    ]
+   }
+  ],
+  "synonymProperty": "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym",
+  "type": [
+   "class",
+   "entity"
+  ],
+  "http://purl.obolibrary.org/obo/IAO_0000115": {
+   "type": [
+    "reification"
+   ],
+   "value": "The integrated unit (of the eye) that consists of the conjunctiva, the corneal surface, and the ocular mucosal adnexa including the lid margins and the meibomian gland openings, the lacrimal glands and the lacrimal drainage system, all which are critical to maintain ocular surface integrity and provide protection from external antigens and pathogenic microorganisms.",
+   "axioms": [
+    {
+     "http://www.geneontology.org/formats/oboInOwl#hasDbXref": "MP:0013754"
+    }
+   ]
+  },
+  "http://www.geneontology.org/formats/oboInOwl#hasDbXref": [
+   "EMAPA:35336",
+   "MA:0002486"
+  ],
+  "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym": [
+   "eye surface region",
+   "ocular surface",
+   {
+    "type": [
+     "reification"
+    ],
+    "value": "eye surface",
+    "axioms": [
+     {
+      "http://www.geneontology.org/formats/oboInOwl#hasDbXref": "MA:0002486"
+     }
+    ]
+   }
+  ],
+  "http://www.geneontology.org/formats/oboInOwl#id": "UBERON:0010409",
+  "http://www.geneontology.org/formats/oboInOwl#inSubset": [
+   "http://purl.obolibrary.org/obo/uberon/core#human_subset",
+   "http://purl.obolibrary.org/obo/uberon/core#mouse_subset",
+   "http://purl.obolibrary.org/obo/uberon/core#pheno_slim"
+  ],
+  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.w3.org/2002/07/owl#Class",
+  "http://www.w3.org/2000/01/rdf-schema#label": "ocular surface region",
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf": [
+   "http://purl.obolibrary.org/obo/UBERON_0000063",
+   {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.w3.org/2002/07/owl#Restriction",
+    "http://www.w3.org/2002/07/owl#onProperty": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "http://www.w3.org/2002/07/owl#someValuesFrom": "http://purl.obolibrary.org/obo/UBERON_0000019",
+    "isObsolete": false
+   },
+   {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.w3.org/2002/07/owl#Restriction",
+    "http://www.w3.org/2002/07/owl#onProperty": "http://purl.obolibrary.org/obo/BSPO_0000108",
+    "http://www.w3.org/2002/07/owl#someValuesFrom": "http://purl.obolibrary.org/obo/UBERON_0022288",
+    "isObsolete": false
+   }
+  ]
+ }
+}

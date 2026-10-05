@@ -1,0 +1,21 @@
+{
+  "name": "onto-mapping",
+  "version": "0.2.1",
+  "description": "Map free-text metadata fields to ontology terms using lexical and graph evidence, with the judgement left in the transcript.",
+  "author": {
+    "name": "Cellular Semantics",
+    "url": "https://github.com/Cellular-Semantics"
+  },
+  "homepage": "https://github.com/Cellular-Semantics/atlas-skills",
+  "repository": "https://github.com/Cellular-Semantics/atlas-skills",
+  "license": "MIT",
+  "keywords": [
+    "ontology",
+    "uberon",
+    "cell-ontology",
+    "hsapdv",
+    "ols4",
+    "ubergraph",
+    "curation"
+  ]
+}

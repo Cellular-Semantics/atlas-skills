@@ -1,0 +1,945 @@
+{
+ "kind": "sparql",
+ "payload": "\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX oio: <http://www.geneontology.org/formats/oboInOwl#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?s ?label ?ic WHERE {\n  VALUES ?s { <http://purl.obolibrary.org/obo/GO_0005975> <http://purl.obolibrary.org/obo/GO_0006090> <http://purl.obolibrary.org/obo/GO_0006091> <http://purl.obolibrary.org/obo/GO_0006096> <http://purl.obolibrary.org/obo/GO_0006099> <http://purl.obolibrary.org/obo/GO_0006139> <http://purl.obolibrary.org/obo/GO_0006163> <http://purl.obolibrary.org/obo/GO_0006195> <http://purl.obolibrary.org/obo/GO_0006753> <http://purl.obolibrary.org/obo/GO_0006793> <http://purl.obolibrary.org/obo/GO_0008150> <http://purl.obolibrary.org/obo/GO_0008152> <http://purl.obolibrary.org/obo/GO_0009056> <http://purl.obolibrary.org/obo/GO_0009060> <http://purl.obolibrary.org/obo/GO_0009117> <http://purl.obolibrary.org/obo/GO_0009132> <http://purl.obolibrary.org/obo/GO_0009134> <http://purl.obolibrary.org/obo/GO_0009135> <http://purl.obolibrary.org/obo/GO_0009137> <http://purl.obolibrary.org/obo/GO_0009141> <http://purl.obolibrary.org/obo/GO_0009144> <http://purl.obolibrary.org/obo/GO_0009150> <http://purl.obolibrary.org/obo/GO_0009154> <http://purl.obolibrary.org/obo/GO_0009166> <http://purl.obolibrary.org/obo/GO_0009179> <http://purl.obolibrary.org/obo/GO_0009181> <http://purl.obolibrary.org/obo/GO_0009185> <http://purl.obolibrary.org/obo/GO_0009191> <http://purl.obolibrary.org/obo/GO_0009205> <http://purl.obolibrary.org/obo/GO_0009259> <http://purl.obolibrary.org/obo/GO_0009261> <http://purl.obolibrary.org/obo/GO_0009987> <http://purl.obolibrary.org/obo/GO_0015980> <http://purl.obolibrary.org/obo/GO_0016052> <http://purl.obolibrary.org/obo/GO_0019364> <http://purl.obolibrary.org/obo/GO_0019637> <http://purl.obolibrary.org/obo/GO_0019693> <http://purl.obolibrary.org/obo/GO_0019752> <http://purl.obolibrary.org/obo/GO_0032787> <http://purl.obolibrary.org/obo/GO_0034655> <http://purl.obolibrary.org/obo/GO_0043436> <http://purl.obolibrary.org/obo/GO_0044238> <http://purl.obolibrary.org/obo/GO_0044281> <http://purl.obolibrary.org/obo/GO_0045333> <http://purl.obolibrary.org/obo/GO_0046031> <http://purl.obolibrary.org/obo/GO_0046032> <http://purl.obolibrary.org/obo/GO_0046034> <http://purl.obolibrary.org/obo/GO_0046434> <http://purl.obolibrary.org/obo/GO_0046496> <http://purl.obolibrary.org/obo/GO_0055086> <http://purl.obolibrary.org/obo/GO_0072521> <http://purl.obolibrary.org/obo/GO_0072523> <http://purl.obolibrary.org/obo/GO_0072524> <http://purl.obolibrary.org/obo/GO_0072526> <http://purl.obolibrary.org/obo/GO_1901135> <http://purl.obolibrary.org/obo/GO_1901136> <http://purl.obolibrary.org/obo/GO_1901292> }\n  GRAPH <http://reasoner.renci.org/ontology> {\n    ?s rdfs:label ?label .\n    OPTIONAL { ?s <http://reasoner.renci.org/vocab/normalizedInformationContent> ?ic }\n  }\n}",
+ "response": {
+  "head": {
+   "vars": [
+    "s",
+    "label",
+    "ic"
+   ]
+  },
+  "results": {
+   "bindings": [
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0008150"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "biological_process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "15.543267770866001"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0008150"
+     },
+     "label": {
+      "xml:lang": "en",
+      "type": "literal",
+      "value": "biological process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "15.543267770866001"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009060"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "aerobic respiration"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "60.34083117205337"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0045333"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "cellular respiration"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "59.811024603907747"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009987"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "cellular process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "16.116851232987941"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0008152"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "17.633243135251217"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009056"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "50.248410166502389"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0016052"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "carbohydrate catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "62.705773298034011"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0019752"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "carboxylic acid metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "53.678073909596733"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0005975"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "carbohydrate metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "55.196626220887985"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0006090"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "pyruvate metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "67.902354005552738"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0006091"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "generation of precursor metabolites and energy"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "56.750554362078397"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0006096"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "glycolytic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "69.995745318391272"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0006099"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "tricarboxylic acid cycle"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "85.556297844603094"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0006139"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "nucleobase-containing compound metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "46.84509820803239"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0006163"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "purine nucleotide metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "63.573882689834868"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0006195"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "purine nucleotide catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "68.366566502672001"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0006753"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "nucleoside phosphate metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "57.483857137650887"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0006793"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "phosphorus metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "54.845763218790395"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009117"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "nucleotide metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "59.913624869481325"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009132"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "nucleoside diphosphate metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "66.804205246611374"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009134"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "nucleoside diphosphate catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "68.808656558566597"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009135"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "purine nucleoside diphosphate metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "68.474333049630616"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009137"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "purine nucleoside diphosphate catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "69.469575603527773"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009141"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "nucleoside triphosphate metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "65.973999280641763"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009144"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "purine nucleoside triphosphate metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "67.468771907761464"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009150"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "purine ribonucleotide metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "65.683405574302043"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009154"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "purine ribonucleotide catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "69.160898609454634"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009166"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "nucleotide catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "66.556114968424112"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009179"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "purine ribonucleoside diphosphate metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "69.160898609454634"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009181"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "purine ribonucleoside diphosphate catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "69.727397359642964"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009185"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "ribonucleoside diphosphate metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "68.313338583188525"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009191"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "ribonucleoside diphosphate catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "69.406669744157"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009205"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "purine ribonucleoside triphosphate metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "68.104634954525636"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009259"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "ribonucleotide metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "64.223656868368764"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0009261"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "ribonucleotide catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "68.474333049630616"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0015980"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "energy derivation by oxidation of organic compounds"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "58.461554496603576"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0019364"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "pyridine nucleotide catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "69.793464369418388"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0019637"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "organophosphate metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "55.061083024218497"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0019693"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "ribose phosphate metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "64.055093475195505"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0032787"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "monocarboxylic acid metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "57.670208228249606"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0043436"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "oxoacid metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "53.525389602459221"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0044238"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "primary metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "17.888914014187137"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0044281"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "small molecule metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "48.096018199041701"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0046031"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "ADP metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "69.793464369418388"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0046032"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "ADP catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "69.927624375732464"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0046034"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "ATP metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "68.528886160558912"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0046434"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "organophosphate catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "63.52252608377858"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0046496"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "nicotinamide nucleotide metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "68.26053820181059"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0055086"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "nucleobase-containing small molecule metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "56.074409804486066"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0072521"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "purine-containing compound metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "59.972980687106933"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0072523"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "purine-containing compound catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "66.475456138806351"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0072524"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "pyridine-containing compound metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "65.900137693010862"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0072526"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "pyridine-containing compound catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "69.160898609454634"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_1901135"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "carbohydrate derivative metabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "54.558309876039822"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_1901136"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "carbohydrate derivative catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "63.704057481028542"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_1901292"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "nucleoside phosphate catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "64.850189023374952"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/GO_0034655"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "nucleobase-containing compound catabolic process"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "60.215913168136858"
+     }
+    }
+   ]
+  }
+ }
+}

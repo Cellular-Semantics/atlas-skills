@@ -1,0 +1,657 @@
+{
+ "kind": "sparql",
+ "payload": "\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX oio: <http://www.geneontology.org/formats/oboInOwl#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?s ?label ?ic WHERE {\n  VALUES ?s { <http://purl.obolibrary.org/obo/UBERON_0000019> <http://purl.obolibrary.org/obo/UBERON_0000020> <http://purl.obolibrary.org/obo/UBERON_0000033> <http://purl.obolibrary.org/obo/UBERON_0000047> <http://purl.obolibrary.org/obo/UBERON_0000060> <http://purl.obolibrary.org/obo/UBERON_0000061> <http://purl.obolibrary.org/obo/UBERON_0000062> <http://purl.obolibrary.org/obo/UBERON_0000063> <http://purl.obolibrary.org/obo/UBERON_0000064> <http://purl.obolibrary.org/obo/UBERON_0000153> <http://purl.obolibrary.org/obo/UBERON_0000465> <http://purl.obolibrary.org/obo/UBERON_0000467> <http://purl.obolibrary.org/obo/UBERON_0000468> <http://purl.obolibrary.org/obo/UBERON_0000475> <http://purl.obolibrary.org/obo/UBERON_0000481> <http://purl.obolibrary.org/obo/UBERON_0000966> <http://purl.obolibrary.org/obo/UBERON_0000970> <http://purl.obolibrary.org/obo/UBERON_0001016> <http://purl.obolibrary.org/obo/UBERON_0001032> <http://purl.obolibrary.org/obo/UBERON_0001062> <http://purl.obolibrary.org/obo/UBERON_0001444> <http://purl.obolibrary.org/obo/UBERON_0001456> <http://purl.obolibrary.org/obo/UBERON_0001802> <http://purl.obolibrary.org/obo/UBERON_0002104> <http://purl.obolibrary.org/obo/UBERON_0004088> <http://purl.obolibrary.org/obo/UBERON_0004121> <http://purl.obolibrary.org/obo/UBERON_0004456> <http://purl.obolibrary.org/obo/UBERON_0004923> <http://purl.obolibrary.org/obo/UBERON_0005388> <http://purl.obolibrary.org/obo/UBERON_0007811> <http://purl.obolibrary.org/obo/UBERON_0010000> <http://purl.obolibrary.org/obo/UBERON_0010230> <http://purl.obolibrary.org/obo/UBERON_0010314> <http://purl.obolibrary.org/obo/UBERON_0011676> <http://purl.obolibrary.org/obo/UBERON_0013701> <http://purl.obolibrary.org/obo/UBERON_0013702> <http://purl.obolibrary.org/obo/UBERON_0015203> <http://purl.obolibrary.org/obo/UBERON_0015212> <http://purl.obolibrary.org/obo/UBERON_0019207> <http://purl.obolibrary.org/obo/UBERON_0034923> }\n  GRAPH <http://reasoner.renci.org/ontology> {\n    ?s rdfs:label ?label .\n    OPTIONAL { ?s <http://reasoner.renci.org/vocab/normalizedInformationContent> ?ic }\n  }\n}",
+ "response": {
+  "head": {
+   "vars": [
+    "s",
+    "label",
+    "ic"
+   ]
+  },
+  "results": {
+   "bindings": [
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000020"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "sense organ"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "40.04448659854804"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000061"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "anatomical structure"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "20.146103714633828"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000019"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "camera-type eye"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "44.612482298652495"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000966"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "retina"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "52.851262728166887"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000970"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "eye"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "44.340159392581953"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0001016"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "nervous system"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "28.875105593446975"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0001032"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "sensory system"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "38.026966992688777"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0004121"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "ectoderm-derived structure"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "29.826645606841971"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0005388"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "photoreceptor array"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "52.365186819335491"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0004088"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "orbital region"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "44.391499737806079"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000465"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "material anatomical entity"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "1.3416660185353411"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0001062"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "anatomical entity"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "1.3349164935831099"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000033"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "head"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "32.918972478845781"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000062"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "organ"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "26.524312705870361"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000468"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "multicellular organism"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "22.420254532583829"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000467"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "anatomical system"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "23.307176573231235"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0001456"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "face"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "41.036038111658215"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0010000"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "multicellular anatomical structure"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "22.328944405131573"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0007811"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "craniocervical region"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "32.784158994353298"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0010230"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "eyeball of camera-type eye"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "45.634458569825576"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0001802"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "posterior segment of eyeball"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "51.930109552093484"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0002104"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "visual system"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "44.087975063790722"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0019207"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "chorioretinal region"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "52.502487274774126"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000475"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "organism subdivision"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "28.093122338332886"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000481"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "multi-tissue structure"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "31.560358694759152"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0034923"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "disconnected anatomical group"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "30.4684362812629"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0011676"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "subdivision of organism along main body axis"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "29.262027710729932"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0015203"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "non-connected functional system"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "33.919542390875819"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000047"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "simple eye"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "44.605283073160422"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000060"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "anatomical wall"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "40.422592924352884"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000063"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "organ subunit"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "36.51687063755336"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000064"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "organ part"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "30.22213950399556"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0000153"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "anterior region of body"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "32.033744380534067"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0001444"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "subdivision of head"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "40.728941506457538"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0004456"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "entire sense organ system"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "38.035436779191194"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0004923"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "organ component layer"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "40.640171823811301"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0010314"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "structure with developmental contribution from neural crest"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "32.428880009088353"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0015212"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "lateral structure"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "33.75094673322949"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0013701"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "main body axis"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "29.189085438697195"
+     }
+    },
+    {
+     "s": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/UBERON_0013702"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "body proper"
+     },
+     "ic": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+      "type": "literal",
+      "value": "30.601114537742937"
+     }
+    }
+   ]
+  }
+ }
+}

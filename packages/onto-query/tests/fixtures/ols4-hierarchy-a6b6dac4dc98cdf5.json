@@ -1,0 +1,1738 @@
+{
+ "kind": "ols4-hierarchy",
+ "payload": "ehdaa2|http://purl.obolibrary.org/obo/EHDAA2_0000997|hierarchicalDescendants|1000|0",
+ "response": {
+  "_embedded": {
+   "terms": [
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0000308",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0000308"
+      ]
+     },
+     "label": "common hepatic artery",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "EHDAA2_0000308",
+     "obo_id": "EHDAA2:0000308",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000308?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000308/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000308/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000308/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000308/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000308/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000308/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000308/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000308/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000308/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000308/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000308/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000308/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000308/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0000309",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0000309"
+      ]
+     },
+     "label": "common hepatic artery cystic branch",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0000309",
+     "obo_id": "EHDAA2:0000309",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000309?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000309/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000309/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000309/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000309/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000309/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000309/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000309/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000309/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000309/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0000310",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0000310"
+      ]
+     },
+     "label": "common hepatic artery gastroduodenal branch",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0000310",
+     "obo_id": "EHDAA2:0000310",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000310?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000310/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000310/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000310/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000310/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000310/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000310/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000310/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000310/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000310/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001000",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0001000"
+      ]
+     },
+     "label": "liver left lobe",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "EHDAA2_0001000",
+     "obo_id": "EHDAA2:0001000",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001000?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001000/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001000/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001000/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001000/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001000/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001000/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001000/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001000/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001000/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001000/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001000/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001000/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001001",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0001001"
+      ]
+     },
+     "label": "liver left lobe hepatic sinusoids",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0001001",
+     "obo_id": "EHDAA2:0001001",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001001?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001001/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001001/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001001/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001001/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001001/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001001/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001001/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "located_in": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001001/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0001025"
+      },
+      "develops_in": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001001/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002226"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001001/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001002",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0001002"
+      ]
+     },
+     "label": "liver left lobe parenchyma",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0001002",
+     "obo_id": "EHDAA2:0001002",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001002?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001002/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001002/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001002/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001002/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001002/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001002/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001002/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001002/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001002/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001004",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0001004"
+      ]
+     },
+     "label": "early liver parenchyma",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0001004",
+     "obo_id": "EHDAA2:0001004",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001004?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001004/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001004/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001004/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001004/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001004/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001004/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001004/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001004/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001004/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      },
+      "existence_ends_during_or_before": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001004/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002497"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001005",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0001005"
+      ]
+     },
+     "label": "liver right caudate lobe",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "EHDAA2_0001005",
+     "obo_id": "EHDAA2:0001005",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001005?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001005/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001005/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001005/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001005/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001005/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001005/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001005/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001005/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001005/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001005/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001005/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001005/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001005/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001006",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0001006"
+      ]
+     },
+     "label": "liver right caudate lobe hepatic sinusoids",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0001006",
+     "obo_id": "EHDAA2:0001006",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001006?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001006/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001006/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001006/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001006/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001006/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001006/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001006/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "located_in": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001006/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0001025"
+      },
+      "develops_in": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001006/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002226"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001006/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001007",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0001007"
+      ]
+     },
+     "label": "liver right caudate lobe parenchyma",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0001007",
+     "obo_id": "EHDAA2:0001007",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001007?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001007/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001007/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001007/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001007/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001007/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001007/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001007/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001007/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001007/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001008",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0001008"
+      ]
+     },
+     "label": "liver right lobe",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "EHDAA2_0001008",
+     "obo_id": "EHDAA2:0001008",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001008?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001008/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001008/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001008/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001008/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001008/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001008/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001008/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001008/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001008/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001008/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001008/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001008/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001009",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0001009"
+      ]
+     },
+     "label": "liver right lobe hepatic sinusoids",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0001009",
+     "obo_id": "EHDAA2:0001009",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001009?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001009/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001009/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001009/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001009/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001009/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001009/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001009/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "located_in": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001009/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0001025"
+      },
+      "develops_in": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001009/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002226"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001009/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001010",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0001010"
+      ]
+     },
+     "label": "liver right lobe parenchyma",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0001010",
+     "obo_id": "EHDAA2:0001010",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001010?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001010/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001010/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001010/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001010/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001010/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001010/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001010/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001010/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001010/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001012",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0001012"
+      ]
+     },
+     "label": "liver right quadrate lobe",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "EHDAA2_0001012",
+     "obo_id": "EHDAA2:0001012",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001012?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001012/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001012/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001012/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001012/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001012/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001012/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001012/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001012/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001012/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001012/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001012/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001012/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001012/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001013",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0001013"
+      ]
+     },
+     "label": "liver right quadrate lobe hepatic sinusoids",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0001013",
+     "obo_id": "EHDAA2:0001013",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001013?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001013/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001013/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001013/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001013/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001013/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001013/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001013/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "located_in": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001013/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0001025"
+      },
+      "develops_in": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001013/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002226"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001013/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001014",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0001014"
+      ]
+     },
+     "label": "liver right quadrate lobe parenchyma",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0001014",
+     "obo_id": "EHDAA2:0001014",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001014?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001014/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001014/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001014/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001014/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001014/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001014/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001014/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001014/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001014/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001485",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0001485"
+      ]
+     },
+     "label": "portal vein",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0001485",
+     "obo_id": "EHDAA2:0001485",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001485?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001485/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001485/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001485/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001485/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001485/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001485/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001485/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001485/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0001485/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0003452",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0003452"
+      ]
+     },
+     "label": "liver haemangioblasts",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0003452",
+     "obo_id": "EHDAA2:0003452",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003452?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003452/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003452/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003452/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003452/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003452/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003452/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003452/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003452/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003452/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0003454",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0003454"
+      ]
+     },
+     "label": "liver vascular system",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "EHDAA2_0003454",
+     "obo_id": "EHDAA2:0003454",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003454?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003454/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003454/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003454/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003454/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003454/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003454/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003454/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003454/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003454/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003454/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003454/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003454/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003454/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0003455",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0003455"
+      ]
+     },
+     "label": "sinusoid system",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "EHDAA2_0003455",
+     "obo_id": "EHDAA2:0003455",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003455?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003455/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003455/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003455/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003455/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003455/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003455/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003455/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003455/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003455/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003455/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003455/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003455/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0003456",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0003456"
+      ]
+     },
+     "label": "early liver hepatic sinusoid linings",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0003456",
+     "obo_id": "EHDAA2:0003456",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003456?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003456/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003456/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003456/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003456/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003456/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003456/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003456/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003456/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003456/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      },
+      "existence_ends_during_or_before": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003456/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002497"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0003457",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0003457"
+      ]
+     },
+     "label": "liver left lobe hepatic sinusoid linings",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0003457",
+     "obo_id": "EHDAA2:0003457",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003457?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003457/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003457/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003457/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003457/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003457/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003457/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003457/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003457/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003457/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0003458",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0003458"
+      ]
+     },
+     "label": "liver right lobe hepatic sinusoid linings",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": true,
+     "is_root": false,
+     "short_form": "EHDAA2_0003458",
+     "obo_id": "EHDAA2:0003458",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003458?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003458/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003458/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003458/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003458/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003458/jstree"
+      },
+      "children": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003458/children"
+      },
+      "descendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003458/descendants"
+      },
+      "hierarchicalChildren": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003458/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003458/hierarchicalDescendants"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003458/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003458/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003458/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003458/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0003459",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0003459"
+      ]
+     },
+     "label": "liver right quadrate lobe hepatic sinusoid linings",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0003459",
+     "obo_id": "EHDAA2:0003459",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003459?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003459/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003459/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003459/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003459/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003459/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003459/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003459/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003459/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003459/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0003460",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0003460"
+      ]
+     },
+     "label": "liver right caudate lobe hepatic sinusoid linings",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0003460",
+     "obo_id": "EHDAA2:0003460",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003460?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003460/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003460/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003460/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003460/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003460/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003460/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003460/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003460/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0003460/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/EHDAA2_0004525",
+     "lang": "en",
+     "description": [],
+     "synonyms": [],
+     "annotation": {
+      "has_obo_namespace": [
+       "human_developmental_anatomy"
+      ],
+      "id": [
+       "EHDAA2:0004525"
+      ]
+     },
+     "label": "liver capillary plexus",
+     "ontology_name": "ehdaa2",
+     "ontology_prefix": null,
+     "ontology_iri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+     "is_obsolete": false,
+     "term_replaced_by": null,
+     "is_defining_ontology": false,
+     "has_children": false,
+     "is_root": false,
+     "short_form": "EHDAA2_0004525",
+     "obo_id": "EHDAA2:0004525",
+     "in_subset": null,
+     "obo_definition_citation": null,
+     "obo_xref": null,
+     "obo_synonym": null,
+     "is_preferred_root": false,
+     "_links": {
+      "self": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0004525?lang=en"
+      },
+      "parents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0004525/parents"
+      },
+      "ancestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0004525/ancestors"
+      },
+      "hierarchicalParents": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0004525/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0004525/hierarchicalAncestors"
+      },
+      "jstree": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0004525/jstree"
+      },
+      "graph": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0004525/graph"
+      },
+      "part_of": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0004525/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "develops_from": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0004525/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002202"
+      },
+      "existence_starts_during_or_after": {
+       "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0004525/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002496"
+      }
+     }
+    }
+   ]
+  },
+  "_links": {
+   "self": {
+    "href": "http://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FEHDAA2_0000997/hierarchicalDescendants?page=0&size=1000"
+   }
+  },
+  "page": {
+   "size": 1000,
+   "totalElements": 26,
+   "totalPages": 1,
+   "number": 0
+  }
+ }
+}

@@ -1,0 +1,198 @@
+{
+  "about": "Fixed cases for the map-to-ontology skill. These test behaviour -- triggering, sequencing, interpretation -- not the query layer, which has its own unit tests in packages/onto-query. Expected values were verified against the live services on 2026-10-02.",
+  "cases": [
+    {
+      "id": "reproductive-tract",
+      "record": {
+        "raw_tissue": "full reproductive tract"
+      },
+      "target": "uberon",
+      "accepted": [
+        "UBERON:0000990"
+      ],
+      "expected_rung": 2,
+      "tests": "No literal match. Latent knowledge has to supply 'reproductive tract' or 'genital tract' before any query succeeds. The sexed terms come back in the same result, so the judgement is whether 'full' means the unsexed whole.",
+      "must_mention": [
+        "reproductive system"
+      ]
+    },
+    {
+      "id": "skin",
+      "record": {
+        "raw_tissue": "skin"
+      },
+      "target": "uberon",
+      "accepted": [
+        "UBERON:0002097",
+        "UBERON:0000014"
+      ],
+      "expected_rung": 3,
+      "tests": "Exact returns four terms with different synonym scopes, so rung 1 cannot exit. Needs either adjudication of those four or a second independent route. A correct answer names its rival from the other candidate.",
+      "must_name_rival_from": [
+        "UBERON:0002097",
+        "UBERON:0000014"
+      ]
+    },
+    {
+      "id": "spine-thoracic",
+      "record": {
+        "structure": "spine",
+        "region": "thoracic"
+      },
+      "target": "uberon",
+      "accepted": [
+        "UBERON:0006073"
+      ],
+      "expected_rung": 2,
+      "tests": "Field combination at rung 2 beats a graph query: 'thoracic spine' is an exact synonym. Exiting at rung 3 is a pass but a worse answer -- it means the combination was not tried.",
+      "must_mention": [
+        "thoracic"
+      ]
+    },
+    {
+      "id": "cornea-conjunctiva",
+      "record": {
+        "raw_tissue": "Cornea/Conjunctiva"
+      },
+      "target": "uberon",
+      "accepted": [
+        "UBERON:0010409"
+      ],
+      "expected_rung": 3,
+      "tests": "Names two structures; the mapping for the whole sample is the most specific term grouping them. Requires common-ancestors over one seed per part. Fails entirely if part_of is dropped from the traversal."
+    },
+    {
+      "id": "stage-weeks",
+      "record": {
+        "age": "12 pcw",
+        "age_units": "weeks post conception"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000050"
+      ],
+      "expected_rung": 3,
+      "tests": "Lexical search on the raw annotation cannot work: these terms carry no synonyms at all. The only route is a cohort survey to read the convention, then constructing the term. '12 pcw' is 12 completed weeks under the UK clinical convention = 84 dpf = the 13th week post-fertilization stage. The 12th-week term is the rival a reader using the ordinal convention would pick, and must be named -- see references/hsapdv.md.",
+      "must_mention": [
+        "completed"
+      ],
+      "must_name_rival_from": [
+        "HsapDv:0000049"
+      ]
+    },
+    {
+      "id": "cells-in-retina",
+      "record": {
+        "cell_type": "cone",
+        "tissue": "retina"
+      },
+      "target": "cl",
+      "accepted": [
+        "CL:0000573"
+      ],
+      "expected_rung": 3,
+      "tests": "Tissue is a structural constraint, not a search term. part_of retina returns 55 CL terms, among which the cone is unambiguous."
+    },
+    {
+      "id": "cells-to-structure",
+      "record": {
+        "cell_types": [
+          "retinal rod cell",
+          "retinal cone cell",
+          "Mueller cell"
+        ]
+      },
+      "target": "uberon",
+      "accepted": [
+        "UBERON:0000966"
+      ],
+      "expected_rung": 3,
+      "tests": "Co-annotation common ancestors across ontologies: CL seeds, Uberon target. The band includes chorioretinal region and photoreceptor array, so the answer should name one of those as the rival.",
+      "must_name_rival_from": [
+        "UBERON:0019207",
+        "UBERON:0005388",
+        "UBERON:0001802"
+      ]
+    },
+    {
+      "id": "go-mixture",
+      "record": {
+        "processes": [
+          "glycolysis",
+          "TCA cycle"
+        ]
+      },
+      "target": "go",
+      "accepted": [
+        "GO:0009060",
+        "GO:0045333",
+        "GO:0015980",
+        "GO:0006091"
+      ],
+      "expected_rung": 3,
+      "tests": "Four candidates within 4 IC, then a 39-point cliff. Any of the band is acceptable; what is not acceptable is presenting the top row as unambiguous. The report must acknowledge the band."
+    },
+    {
+      "id": "unrelated-pair",
+      "record": {
+        "raw_tissue": "cornea and femur"
+      },
+      "target": "uberon",
+      "accepted": [],
+      "expect_unresolved": true,
+      "expected_rung": 5,
+      "tests": "IC tops out at 33.75 on a cross-cutting grouping class. The correct answer is that these do not share a meaningful ancestor and the sample should not be mapped to one term -- not 'lateral structure'.",
+      "must_not_answer": [
+        "UBERON:0015212",
+        "UBERON:0010314"
+      ]
+    },
+    {
+      "id": "muscle",
+      "record": {
+        "raw_tissue": "muscle"
+      },
+      "target": "uberon",
+      "accepted": [
+        "UBERON:0001630",
+        "UBERON:0005090",
+        "UBERON:0002385",
+        "UBERON:0001015"
+      ],
+      "expected_rung": 4,
+      "tests": "The hardest case. Exact returns only muscle organ and muscle structure, missing muscle tissue and musculature entirely. The 768-term stemmed set spans two senses and must be partitioned before any graph move. A good answer says which sense it chose and that the annotation is underspecified.",
+      "must_mention": [
+        "sense"
+      ]
+    },
+    {
+      "id": "ehdaa2-outside-ubergraph",
+      "record": {
+        "raw_tissue": "liver",
+        "source_ontology": "ehdaa2"
+      },
+      "target": "ehdaa2",
+      "accepted": [
+        "EHDAA2:0000997"
+      ],
+      "expected_rung": 1,
+      "tests": "Trivial lexically, but the ontology is not in Ubergraph. The report must say that graph moves were unavailable, and ideally that the term carries a staging link to HsapDv:0000019 found via neighbours.",
+      "must_mention": [
+        "Ubergraph"
+      ]
+    },
+    {
+      "id": "trivial-exact",
+      "record": {
+        "raw_tissue": "cornea"
+      },
+      "target": "uberon",
+      "accepted": [
+        "UBERON:0000964"
+      ],
+      "expected_rung": 1,
+      "tests": "The cost control case. One exact hit plus one term lookup. Anything beyond rung 1 here is a failure of proportion, not of accuracy.",
+      "max_rung": 1
+    }
+  ]
+}

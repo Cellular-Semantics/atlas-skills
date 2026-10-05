@@ -1,0 +1,170 @@
+{
+ "kind": "ols4",
+ "payload": "{\"exact\": \"true\", \"fieldList\": \"obo_id,iri,label,description,synonym,exact_synonyms,broad_synonyms,narrow_synonyms,related_synonyms\", \"local\": \"true\", \"obsoletes\": \"false\", \"ontology\": \"uberon\", \"q\": \"skin\", \"queryFields\": \"label,synonym\", \"rows\": \"200\"}",
+ "response": {
+  "response": {
+   "docs": [
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0000014",
+     "synonym": [
+      "portion of skin",
+      "region of skin",
+      "skin region",
+      "skin zone",
+      "skin"
+     ],
+     "description": [
+      "Any portion of the organ that covers that body and consists of a layer of epidermis and a layer of dermis."
+     ],
+     "label": "zone of skin",
+     "obo_id": "UBERON:0000014",
+     "exact_synonyms": [
+      "portion of skin",
+      "region of skin",
+      "skin region",
+      "skin zone",
+      "skin"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0002097",
+     "synonym": [
+      "entire integument",
+      "entire skin",
+      "integument",
+      "integumental organ",
+      "pelt",
+      "skin organ",
+      "skin"
+     ],
+     "related_synonyms": [
+      "entire integument",
+      "integument",
+      "integumental organ",
+      "pelt",
+      "skin"
+     ],
+     "description": [
+      "The organ covering the body that consists of the dermis and epidermis."
+     ],
+     "label": "skin of body",
+     "obo_id": "UBERON:0002097",
+     "exact_synonyms": [
+      "entire skin",
+      "skin organ"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001003",
+     "synonym": [
+      "epidermis",
+      "skin",
+      "vertebrate epidermis"
+     ],
+     "broad_synonyms": [
+      "epidermis",
+      "skin"
+     ],
+     "description": [
+      "The outer epithelial layer of the skin that is superficial to the dermis."
+     ],
+     "label": "skin epidermis",
+     "obo_id": "UBERON:0001003",
+     "exact_synonyms": [
+      "vertebrate epidermis"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0002199",
+     "synonym": [
+      "dermis plus epidermis plus hypodermis",
+      "skin and subcutaneous tissue",
+      "skin plus hypodermis",
+      "skin",
+      "vertebrate integument",
+      "dermal system",
+      "dermoid system",
+      "integumentum commune",
+      "tegument",
+      "the integument"
+     ],
+     "related_synonyms": [
+      "skin",
+      "vertebrate integument",
+      "dermal system",
+      "dermoid system",
+      "tegument"
+     ],
+     "description": [
+      "The dermis, epidermis and hypodermis."
+     ],
+     "label": "integument",
+     "obo_id": "UBERON:0002199",
+     "exact_synonyms": [
+      "dermis plus epidermis plus hypodermis",
+      "skin and subcutaneous tissue",
+      "skin plus hypodermis",
+      "integumentum commune",
+      "the integument"
+     ]
+    }
+   ],
+   "numFound": 4,
+   "start": 0
+  },
+  "responseHeader": {
+   "QTime": 0,
+   "status": 0
+  },
+  "facet_counts": {
+   "facet_fields": {
+    "ontologyPreferredPrefix": [
+     "UBERON",
+     "4"
+    ],
+    "isDefiningOntology": [
+     "true",
+     "4"
+    ],
+    "ontologyId": [
+     "uberon",
+     "4",
+     "xao",
+     "2",
+     "emapa",
+     "1",
+     "bto",
+     "1",
+     "ncit",
+     "1",
+     "mesh",
+     "1",
+     "zfa",
+     "1",
+     "mondo",
+     "1",
+     "ma",
+     "1",
+     "omit",
+     "1",
+     "clao",
+     "1",
+     "tfo",
+     "1"
+    ],
+    "ontologyIri": [
+     "http://purl.obolibrary.org/obo/uberon.owl",
+     "4"
+    ],
+    "isObsolete": [
+     "false",
+     "4"
+    ],
+    "type": [
+     "class",
+     "4"
+    ]
+   }
+  }
+ }
+}

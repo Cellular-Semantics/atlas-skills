@@ -1,0 +1,528 @@
+{
+  "about": "HsapDv developmental-stage cases for the map-to-ontology skill. Every input string is taken verbatim from the HDCA 071_ontology_mapping worktable (454 rows, 279 distinct stage/age pairs); _n_samples records how many samples in that corpus carry the string, as a weight on how much each shape matters. Expected terms were derived from start_dpf/end_dpf in HsapDv 2025-01-23 and verified against live Ubergraph. PROPOSED - not yet blessed.",
+  "cases": [
+    {
+      "id": "pcw-20",
+      "record": {
+        "raw_stage": "20 PCW"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000058"
+      ],
+      "tests": "The commonest input shape. 20 wpf = 140 dpf, which the 21st-week term spans [140,147). Answering the 20th-week term is the off-by-one failure: that term covers an age of 19-20 weeks.",
+      "_bucket": "A",
+      "_n_samples": 70,
+      "must_mention": [
+        "over 20"
+      ],
+      "must_name_rival_from": [
+        "HsapDv:0000057"
+      ]
+    },
+    {
+      "id": "pcw-10-boundary",
+      "record": {
+        "raw_stage": "10 PCW"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000048"
+      ],
+      "tests": "70 dpf sits exactly on a boundary. Half-open intervals put it in the 11th-week term [70,77), not the 10th [63,70). Tests the boundary rule and the off-by-one together.",
+      "_bucket": "A",
+      "_n_samples": 27,
+      "must_mention": [
+        "70"
+      ],
+      "must_name_rival_from": [
+        "HsapDv:0000047"
+      ]
+    },
+    {
+      "id": "pcw-decimal-14-4",
+      "record": {
+        "raw_stage": "late embryonic stage",
+        "raw_age": "14.4 post-conception"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000052"
+      ],
+      "tests": "14.4 wpf = 100.8 dpf -> 15th-week term [98,105). Non-integer, so the 'in the Nth week' reading is unavailable and the off-by-one is tested cleanly. The 'late embryonic' label is wrong at 14 weeks and should be called out, not followed.",
+      "_bucket": "A",
+      "_n_samples": 24,
+      "must_mention": [
+        "late embryonic"
+      ]
+    },
+    {
+      "id": "pcw-spelled-out",
+      "record": {
+        "raw_stage": "embryo",
+        "raw_age": "16 post-conceptional week"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000054"
+      ],
+      "tests": "Same arithmetic behind a different spelling. 16 wpf = 112 dpf -> 17th-week term. Checks that the unit is recognised without the 'PCW' abbreviation.",
+      "_bucket": "A",
+      "_n_samples": 18,
+      "must_name_rival_from": [
+        "HsapDv:0000053"
+      ]
+    },
+    {
+      "id": "bare-number-with-units",
+      "record": {
+        "raw_stage": "",
+        "raw_age": "15",
+        "age_units": "weeks post conception"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000053"
+      ],
+      "expected_rung": 3,
+      "must_name_rival_from": [
+        "HsapDv:0000052"
+      ],
+      "must_mention": [
+        "age_units"
+      ],
+      "tests": "The value carries no searchable text. Observed failure: the agent read the ladder as 'always run rungs 1 and 2 on the raw input' and lexically searched '15', which cannot work -- no HsapDv label contains that digit -- and returns false leads with a rank attached. The information is in the sibling field, not the value: 15 completed weeks post conception = 105 dpf = the 16th week term. A correct run skips the lexical rungs, names age_units as what made it answerable, and verifies with `oq term`.",
+      "_bucket": "A",
+      "_n_samples": 0
+    },
+    {
+      "id": "gw-18",
+      "record": {
+        "raw_age": "GW 18"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000054"
+      ],
+      "tests": "GW is last-menstrual-period weeks. 18 - 2 = 16 wpf = 112 dpf -> 17th-week term. Two conversions compose: LMP->pc, then age->ordinal. Skipping the first lands two terms late.",
+      "_bucket": "B",
+      "_n_samples": 5,
+      "must_mention": [
+        "last menstrual"
+      ],
+      "must_name_rival_from": [
+        "HsapDv:0000053"
+      ]
+    },
+    {
+      "id": "gestation-9wk",
+      "record": {
+        "raw_stage": "embryo",
+        "raw_age": "9 weeks gestation"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000026"
+      ],
+      "tests": "9 LMP weeks = 7 wpf = 49 dpf, inside the embryonic period where only Carnegie stages exist -> CS19 [48,51). Composes the LMP conversion with the Carnegie branch.",
+      "_bucket": "B",
+      "_n_samples": 20,
+      "must_name_rival_from": [
+        "HsapDv:0000025",
+        "HsapDv:0000027"
+      ]
+    },
+    {
+      "id": "gestational-age-23wk",
+      "record": {
+        "raw_stage": "23 weeks gestational age"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000059"
+      ],
+      "tests": "'gestational age' names the LMP convention explicitly. 23 - 2 = 21 wpf = 147 dpf -> 22nd-week term.",
+      "_bucket": "B",
+      "_n_samples": 2,
+      "must_name_rival_from": [
+        "HsapDv:0000058"
+      ]
+    },
+    {
+      "id": "carnegie-from-4wk",
+      "record": {
+        "raw_age": "4wk"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000020"
+      ],
+      "tests": "HsapDv has no weekly term before the 9th, so an embryonic age can only reach a Carnegie stage. 28 dpf -> CS13 [28,31). Must not invent a '4th week post-fertilization stage'.",
+      "_bucket": "C",
+      "_n_samples": 10,
+      "must_mention": [
+        "28"
+      ],
+      "must_name_rival_from": [
+        "HsapDv:0000019",
+        "HsapDv:0000021"
+      ]
+    },
+    {
+      "id": "carnegie-from-5.7wk",
+      "record": {
+        "raw_stage": "embryo stage",
+        "raw_age": "5.7 week"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000023"
+      ],
+      "tests": "39.9 dpf -> CS16 [37,42). Mid-interval, so unambiguous on days; still only approximate because Carnegie staging is morphological.",
+      "_bucket": "C",
+      "_n_samples": 21
+    },
+    {
+      "id": "carnegie-pcw-no-space",
+      "record": {
+        "raw_age": "PCW5.5"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000023"
+      ],
+      "tests": "38.5 dpf -> CS16. Tests parsing a unit prefix with no separator.",
+      "_bucket": "C",
+      "_n_samples": 1
+    },
+    {
+      "id": "carnegie-boundary-6wk",
+      "record": {
+        "raw_stage": "embryo",
+        "raw_age": "6 post-conceptional week"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000024"
+      ],
+      "tests": "42 dpf is CS17's start and CS16's definitional comment ('day 37 to 42') also reaches it. The start_dpf partition resolves to CS17; a good answer names CS16 as the rival.",
+      "_bucket": "C",
+      "_n_samples": 1,
+      "must_name_rival_from": [
+        "HsapDv:0000023",
+        "HsapDv:0000024"
+      ]
+    },
+    {
+      "id": "carnegie-hedged",
+      "record": {
+        "raw_age": "about 4 PCW"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000020"
+      ],
+      "tests": "Same arithmetic as carnegie-from-4wk, with an explicit hedge in the string. The term is unchanged; the hedge belongs in the confidence, not in a different answer.",
+      "_bucket": "C",
+      "_n_samples": 1,
+      "must_name_rival_from": [
+        "HsapDv:0000019",
+        "HsapDv:0000021"
+      ]
+    },
+    {
+      "id": "cs-compact",
+      "record": {
+        "raw_stage": "CS14"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000021"
+      ],
+      "tests": "'CS14' is an exact synonym on the term. Should finish at the cheapest rung without arithmetic.",
+      "_bucket": "D",
+      "_n_samples": 2,
+      "max_rung": 1
+    },
+    {
+      "id": "cs-prefixed-label",
+      "record": {
+        "raw_stage": "embryonic stage / Carnegie stage 17"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000024"
+      ],
+      "tests": "A Carnegie stage behind a redundant prefix. The prefix is not a second value to reconcile.",
+      "_bucket": "D",
+      "_n_samples": 162
+    },
+    {
+      "id": "cs-plural-singular",
+      "record": {
+        "raw_stage": "Carnegie Stages 13"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000020"
+      ],
+      "tests": "'Stages' is plural but one value follows. Must not be read as a range.",
+      "_bucket": "D",
+      "_n_samples": 28
+    },
+    {
+      "id": "cs-beats-age",
+      "record": {
+        "raw_stage": "Carnegie stage 22",
+        "raw_age": "8 week"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000029"
+      ],
+      "tests": "Both fields are populated and disagree: 8 wpf = 56 dpf would give CS23 or the 9th-week term. The stated Carnegie stage is morphological and assigned from the specimen, so it wins - but the disagreement must be reported.",
+      "_bucket": "D",
+      "_n_samples": 9,
+      "must_mention": [
+        "8 week"
+      ],
+      "must_name_rival_from": [
+        "HsapDv:0000046"
+      ]
+    },
+    {
+      "id": "cs-range-15-16",
+      "record": {
+        "raw_stage": "Carnegie Stages 15-16"
+      },
+      "target": "hsapdv",
+      "accepted": [],
+      "tests": "A genuine two-stage range. No single Carnegie term is correct. Acceptable answers are an explicit no-call or the enclosing organogenesis stage; silently picking CS15 (as the lower) or CS16 (as the upper) is the failure.",
+      "_bucket": "D",
+      "_n_samples": 68,
+      "expect_unresolved": true
+    },
+    {
+      "id": "obstetric-8+3",
+      "record": {
+        "raw_age": "8+3 PCW (post-conception wk)"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000046"
+      ],
+      "tests": "8 weeks 3 days = 59 dpf -> 9th-week term [56,63). The trap is reading '8+3' as two donors at 8 and 3 weeks, or as 8.3 weeks. All three readings give different answers.",
+      "_bucket": "E",
+      "_n_samples": 1,
+      "must_not_answer": [
+        "HsapDv:0000037"
+      ]
+    },
+    {
+      "id": "obstetric-14+4",
+      "record": {
+        "raw_age": "14+4 PCW (post-conception wk)"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000052"
+      ],
+      "tests": "14 weeks 4 days = 102 dpf -> 15th-week term [98,105). Second W+D case because the notation is the single most under-recognised one in the corpus.",
+      "_bucket": "E",
+      "_n_samples": 1
+    },
+    {
+      "id": "multi-two-donors",
+      "record": {
+        "raw_stage": "embryo stage",
+        "raw_age": "5.8/7.6 week"
+      },
+      "target": "hsapdv",
+      "accepted": [],
+      "tests": "Two donors, 40.6 and 53.2 dpf, i.e. CS16 and CS21. They share no week term; the lowest common ancestor is the organogenesis stage. Expected behaviour is a no-call naming both, not one of the two.",
+      "_bucket": "F",
+      "_n_samples": 21,
+      "expect_unresolved": true
+    },
+    {
+      "id": "multi-three-pcw",
+      "record": {
+        "raw_stage": "12, 14 and 19 PCW"
+      },
+      "target": "hsapdv",
+      "accepted": [],
+      "tests": "Three donors spanning the 13th, 15th and 20th week terms. Lowest common ancestor is the fetal stage. Tests that a pooled row is recognised from prose ('and') rather than a delimiter.",
+      "_bucket": "F",
+      "_n_samples": 2,
+      "expect_unresolved": true
+    },
+    {
+      "id": "range-tilde",
+      "record": {
+        "raw_age": "9~11 week"
+      },
+      "target": "hsapdv",
+      "accepted": [],
+      "tests": "A range, not a pool: 63 to 77 dpf, spanning the 10th, 11th and 12th week terms. Same no-call expectation; tests a '~' separator.",
+      "_bucket": "F",
+      "_n_samples": 3,
+      "expect_unresolved": true
+    },
+    {
+      "id": "same-donor-two-notations",
+      "record": {
+        "raw_stage": "7.4 PCW, 7/4 PCW"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000027",
+        "HsapDv:0000028"
+      ],
+      "tests": "One donor written twice: '7.4 PCW' and '7/4 PCW' are the same 7-weeks-4-days value in two spellings, so this is NOT a two-donor row. 7w4d = 53 dpf -> CS21; a true decimal 7.4 = 51.8 dpf -> CS20. Either is acceptable if the reading is stated. The failure the corpus actually shows is pulling '4' out of '7/4' and answering CS13.",
+      "_bucket": "F",
+      "_n_samples": 1,
+      "must_not_answer": [
+        "HsapDv:0000020"
+      ]
+    },
+    {
+      "id": "ordinal-label-plus-age",
+      "record": {
+        "raw_stage": "15th week post-fertilization human stage",
+        "raw_age": "15 week"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000052"
+      ],
+      "tests": "The label is HsapDv's own ordinal (14-15 wpf -> 15th-week term). The age read as 15 wpf would give the 16th-week term instead. The label is unambiguous and wins, but the one-term conflict must be surfaced - the corpus marks these high confidence with no review.",
+      "_bucket": "G",
+      "_n_samples": 58,
+      "must_mention": [
+        "15 week"
+      ],
+      "must_name_rival_from": [
+        "HsapDv:0000053"
+      ]
+    },
+    {
+      "id": "ordinal-label-bare-number",
+      "record": {
+        "raw_stage": "10th week post-fertilization human stage",
+        "raw_age": "12"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000047"
+      ],
+      "tests": "The label gives the 10th-week term directly. The bare '12' has no unit; if it is LMP weeks it implies 10 wpf and the 11th-week term. Answer from the label, flag the unit-less field.",
+      "_bucket": "G",
+      "_n_samples": 3
+    },
+    {
+      "id": "label-contradicts-age",
+      "record": {
+        "raw_stage": "late embryonic stage",
+        "raw_age": "14 week"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000052"
+      ],
+      "tests": "The label is study-wide boilerplate and wrong (14 wpf is fetal); the age is per-sample. Take the age -> 98 dpf -> 15th-week term, and say the label disagrees.",
+      "_bucket": "G",
+      "_n_samples": 102,
+      "must_name_rival_from": [
+        "HsapDv:0000051"
+      ]
+    },
+    {
+      "id": "irreconcilable",
+      "record": {
+        "raw_stage": "adult",
+        "raw_age": "8 week"
+      },
+      "target": "hsapdv",
+      "accepted": [],
+      "tests": "No human donor is both. One field is wrong or the age is on some other scale. Expected behaviour is a no-call that says what would settle it, not a best-effort term from either field.",
+      "_bucket": "G",
+      "_n_samples": 2,
+      "expect_unresolved": true
+    },
+    {
+      "id": "days-embryonic",
+      "record": {
+        "raw_stage": "late embryonic stage",
+        "raw_age": "47 day"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000025"
+      ],
+      "tests": "47 dpf -> CS18 [44,48). Days are HsapDv's native unit, so no conversion is needed; the label agrees for once.",
+      "_bucket": "H",
+      "_n_samples": 4
+    },
+    {
+      "id": "days-fetal",
+      "record": {
+        "raw_stage": "late embryonic stage",
+        "raw_age": "101 day"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000052"
+      ],
+      "tests": "101 dpf -> 15th-week term. Crosses out of the embryonic period, so the label is wrong. The corpus left this unmapped; the day count is enough to map it.",
+      "_bucket": "H",
+      "_n_samples": 8
+    },
+    {
+      "id": "postnatal-years",
+      "record": {
+        "raw_stage": "child stage",
+        "raw_age": "10 year"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000104",
+        "HsapDv:0000271"
+      ],
+      "tests": "The exact age supports the 10-year-old stage; 'juvenile stage (5-14 yo)' is an acceptable coarser answer. Two traps: 'child stage (1-4 yo)' (HsapDv:0000265), which the corpus gives, excludes a 10-year-old; and '6-12 year-old child stage' (HsapDv:0000085) looks like a perfect fit but is obsolete, with HsapDv:0000271 as its replacement.",
+      "_bucket": "I",
+      "_n_samples": 2,
+      "must_not_answer": [
+        "HsapDv:0000265",
+        "HsapDv:0000085"
+      ]
+    },
+    {
+      "id": "postnatal-months-in-noise",
+      "record": {
+        "raw_stage": "6months old human thymus"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000179"
+      ],
+      "tests": "The age is embedded in a string that also names a tissue. 6 months -> 6-month-old stage. Tests extraction without being derailed by 'thymus'.",
+      "_bucket": "I",
+      "_n_samples": 4
+    },
+    {
+      "id": "mouse-stage",
+      "record": {
+        "raw_stage": "E8.5"
+      },
+      "target": "hsapdv",
+      "accepted": [],
+      "tests": "Embryonic day 8.5 is mouse notation. HsapDv is human-only; the correct answer is a no-call that names MmusDv as the right ontology. Converting 8.5 days into a human Carnegie stage is the failure.",
+      "_bucket": "J",
+      "_n_samples": 2,
+      "expect_unresolved": true,
+      "must_mention": [
+        "mouse"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,621 @@
+{
+ "kind": "sparql",
+ "payload": "\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX oio: <http://www.geneontology.org/formats/oboInOwl#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?other ?label WHERE {\n  VALUES ?anchor { <http://purl.obolibrary.org/obo/UBERON_0000966> }\n  GRAPH <http://reasoner.renci.org/redundant> { ?other obo:BFO_0000050 ?anchor . }\n  GRAPH <http://reasoner.renci.org/ontology> {\n    ?other rdfs:isDefinedBy <http://purl.obolibrary.org/obo/cl.owl> .\n    ?other rdfs:label ?label .\n    FILTER NOT EXISTS { ?other owl:deprecated true }\n  }\n}",
+ "response": {
+  "head": {
+   "vars": [
+    "other",
+    "label"
+   ]
+  },
+  "results": {
+   "bindings": [
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0000561"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0000573"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "retinal cone cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0000604"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "retinal rod cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0000636"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "Mueller cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0002485"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "retinal melanocyte"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0002585"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "retinal blood vessel endothelial cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0002586"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "retinal pigment epithelial cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0003048"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "L cone cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0003049"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "M cone cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0003050"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "S cone cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0003051"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "UV cone cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004161"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "510 nm-cone"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004162"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "360 nm-cone"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004219"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "A2 amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004220"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "flag amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004221"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "flag A amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004222"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "flag B amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004223"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "AB diffuse-1 amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004224"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "AB diffuse-2 amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004225"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "spider amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004226"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "monostratified amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004227"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "flat bistratified amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004228"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "broad diffuse amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004229"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "A2-like amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004230"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "diffuse bistratified amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004231"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "recurving diffuse amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004232"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "starburst amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004233"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "DAPI-3 amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004234"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "diffuse multistratified amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004235"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "AB broad diffuse-1 amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004236"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "AB broad diffuse-2 amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004237"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "fountain amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004238"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "asymmetric bistratified amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004239"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "wavy bistratified amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004240"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "WF1 amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004241"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "WF2 amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004242"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "WF3-1 amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004243"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "WF3-2 amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004244"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "WF4 amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004245"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "indoleamine-accumulating amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004250"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "bistratified retinal amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004251"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "narrow field retinal amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004252"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "medium field retinal amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0004253"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "wide field retinal amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0010009"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "camera-type eye photoreceptor cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0011104"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "interplexiform cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0011105"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "dopamanergic interplexiform cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_0011106"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "GABAnergic interplexiform cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_4023119"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "displaced amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_4023129"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "retinoblast"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_4030027"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "GABAergic amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_4030028"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "glycinergic amacrine cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_4033015"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "retinal astrocyte"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_4033036"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "OFFx cell"
+     }
+    },
+    {
+     "other": {
+      "type": "uri",
+      "value": "http://purl.obolibrary.org/obo/CL_4033091"
+     },
+     "label": {
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "type": "literal",
+      "value": "glycinergic-GABAergic amacrine cell"
+     }
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "onto-query"
+version = "0.2.0"
+description = "Evidence-returning query primitives over OLS4 and Ubergraph. No scoring, no selection."
+requires-python = ">=3.11"
+dependencies = []
+license = { text = "MIT" }
+authors = [{ name = "Cellular Semantics" }]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0"]
+
+[project.scripts]
+# `oq` is what the skill types, and it is short on purpose. `onto-query`
+# matches the package directory, which is the name the repo's pin check
+# invokes -- it derives the CLI from the subdirectory in the pin.
+oq = "onto_query.cli:main"
+onto-query = "onto_query.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/onto_query"]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

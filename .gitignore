@@ -13,3 +13,8 @@ build/
 # the picker needs no network.
 evals/.cache/
 evals/results/
+
+# onto-query: throwaway venv for local test runs
+.venv/
+# cached ontology authority for evals/ontology-mapping/verify-hsapdv-claims.py
+evals/ontology-mapping/.hsapdv-authority.json

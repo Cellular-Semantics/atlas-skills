@@ -1,0 +1,100 @@
+{
+ "kind": "ols4",
+ "payload": "{\"exact\": \"true\", \"fieldList\": \"obo_id,iri,label,description,synonym,exact_synonyms,broad_synonyms,narrow_synonyms,related_synonyms\", \"local\": \"true\", \"obsoletes\": \"false\", \"ontology\": \"uberon\", \"q\": \"muscle\", \"queryFields\": \"label,synonym\", \"rows\": \"200\"}",
+ "response": {
+  "response": {
+   "docs": [
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0005090",
+     "synonym": [
+      "muscle element",
+      "muscle",
+      "musculus"
+     ],
+     "related_synonyms": [
+      "muscle element",
+      "muscle"
+     ],
+     "description": [
+      "Muscle structures are contractile cells, tissues or organs that are found in multicellular organisms[GO]."
+     ],
+     "label": "muscle structure",
+     "obo_id": "UBERON:0005090",
+     "exact_synonyms": [
+      "musculus"
+     ]
+    },
+    {
+     "iri": "http://purl.obolibrary.org/obo/UBERON_0001630",
+     "synonym": [
+      "muscle"
+     ],
+     "broad_synonyms": [
+      "muscle"
+     ],
+     "description": [
+      "Organ consisting of a tissue made up of various elongated cells that are specialized to contract and thus to produce movement and mechanical work[GO]."
+     ],
+     "label": "muscle organ",
+     "obo_id": "UBERON:0001630"
+    }
+   ],
+   "numFound": 2,
+   "start": 0
+  },
+  "responseHeader": {
+   "QTime": 0,
+   "status": 0
+  },
+  "facet_counts": {
+   "facet_fields": {
+    "ontologyPreferredPrefix": [
+     "UBERON",
+     "2"
+    ],
+    "isDefiningOntology": [
+     "true",
+     "2"
+    ],
+    "ontologyId": [
+     "uberon",
+     "2",
+     "exo",
+     "1",
+     "schemaorg_http",
+     "1",
+     "bto",
+     "1",
+     "ncit",
+     "1",
+     "mesh",
+     "1",
+     "spd",
+     "1",
+     "zfa",
+     "1",
+     "ecao",
+     "1",
+     "xao",
+     "1",
+     "hao",
+     "1",
+     "schemaorg_https",
+     "1"
+    ],
+    "ontologyIri": [
+     "http://purl.obolibrary.org/obo/uberon.owl",
+     "2"
+    ],
+    "isObsolete": [
+     "false",
+     "2"
+    ],
+    "type": [
+     "class",
+     "2"
+    ]
+   }
+  }
+ }
+}
