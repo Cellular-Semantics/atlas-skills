@@ -328,6 +328,23 @@ def check_counts(auth, texts, fail):
     ret = {k: v for k, v in auth["xrefs"].items() if k.startswith("RETIRED_")}
     ambiguous = sum(1 for v in ub.values() if len({u for u, _ in v}) > 1)
 
+    # Carnegie substages (CS05a-CS06b) carry no dpf, so a bracket anchored to one
+    # cannot be reached from an age. They cluster in the extraembryonic branch.
+    subs = {31, 32, 33, 34, 35}
+    substage_terms = [
+        c for c in native
+        if any(int(v.split(":")[1]) in subs
+               for k in ("start", "end") for v in rel.get(c, {}).get(k, []))
+    ]
+    substage = len(substage_terms)
+    substage_xrefed = sum(
+        1 for c in substage_terms
+        if auth["xrefs"].get(c) or auth["xrefs"].get(f"RETIRED_{c}")
+    )
+    somite_hole = sum(
+        1 for c in single if auth["labels"].get(c, "").startswith("somite")
+    )
+
     # (name, value, context regex -- {n} is where the number must appear)
     claims = [
         ("native classes", len(native), r"\*\*{n}\*\* are native EHDAA2"),
@@ -350,11 +367,18 @@ def check_counts(auth, texts, fail):
         ("develops_from terms with one parent", one_parent,
          r"{n} have exactly one parent"),
         ("max develops_from parents", max_parents, r"the maximum is (?:five|{n})"),
+        ("substage-anchored classes", substage, r"\*\*{n} classes are anchored to"),
+        ("substage-anchored with a Uberon xref", substage_xrefed,
+         r"of which {n} carry a\s+Uberon xref"),
+        ("affected somite terms", somite_hole, r"{n} of\s+the affected 224"),
     ]
     text = "\n".join(t for _, t in texts)
     for name, n, ctx in claims:
         word = {5: "five", 2: "two"}.get(n, "")
         pat = ctx.replace("{n}", f"(?:{n:,}|{n}" + (f"|{word}" if word else "") + ")")
+        # the reference is hard-wrapped at 79 columns, so any literal space in a
+        # context pattern may be a newline plus indent in the file
+        pat = re.sub(r"(?<!\\)(?<!\\s)\s(?![*+?{])", r"\\s+", pat)
         if not re.search(pat, text):
             fail("counts", f"{name} = {n} is not stated in its own sentence "
                            f"(looked for /{pat}/)")
@@ -368,6 +392,24 @@ def check_counts(auth, texts, fail):
         "uberon classes carrying a RETIRED one":
             len({u for v in ret.values() for u, _ in v}),
     }
+
+
+def check_claimed_absences(auth, texts, fail):
+    """A term the text says has no Uberon xref must really have none.
+
+    An absence is a claim like any other, and it is the kind that rots quietly:
+    the xref gets added upstream and the warning in the reference becomes a lie
+    that nothing else in the file contradicts.
+    """
+    pat = re.compile(
+        rf"`({EHDAA2_CURIE})[^`]*`[^.]{{0,120}}?no Uberon xref", re.IGNORECASE
+    )
+    for path, text in texts:
+        for c in pat.findall(text):
+            if auth["xrefs"].get(c) or auth["xrefs"].get(f"RETIRED_{c}"):
+                targets = auth["xrefs"].get(c) or auth["xrefs"][f"RETIRED_{c}"]
+                fail(path, f"{c} is said to have no Uberon xref, but it has "
+                           f"{[t[0] for t in targets]}")
 
 
 def check_navigation_table(auth, texts, fail):
@@ -538,6 +580,7 @@ def main() -> int:
     check_xref_pairs(auth, texts, fail)
     counts = check_counts(auth, texts, fail)
     check_navigation_table(auth, texts, fail)
+    check_claimed_absences(auth, texts, fail)
     hi_cs, lo_cs = check_stage_ceiling(auth, texts, fail)
 
     print(f"stage targets used: {lo_cs} to {hi_cs}")

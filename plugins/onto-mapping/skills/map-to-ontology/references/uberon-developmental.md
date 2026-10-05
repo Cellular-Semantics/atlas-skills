@@ -151,9 +151,20 @@ silent on the last fortnight of the embryonic period and on everything fetal.
 For a sample past about 7.5 pcw, EHDAA2 has no bracket to offer and you should
 say so rather than reading the absence as a negative result.
 
-A small number of classes point at the Carnegie substage terms
-`HsapDv:0000031`-`0000035` (CS05a/b/c, CS06a/b), which carry no dpf annotations
-of their own. See `hsapdv.md` — those cannot be reached from an age.
+**57 classes are anchored to Carnegie substages instead** —
+`HsapDv:0000031`-`0000035`, that is CS05a/b/c and CS06a/b — of which 39 carry a
+Uberon xref. Those substage terms have no dpf annotations of their own (see
+`hsapdv.md`), so they cannot be reached from an age, and they sit at CS05-CS06
+where nothing in a dissection corpus lands anyway.
+
+They matter because of *where* they concentrate: the extraembryonic and early
+conceptus branch. Ten of them are yolk sac terms, nine chorion, eight
+trophoblast, three amnion. So for an annotation of `yolk sac` — the fourth
+commonest tissue string in the HDCA corpus, 72 rows — the bracket is technically
+present and practically useless. `EHDAA2:0002212 secondary yolk sac` xrefs
+`UBERON:0001040 yolk sac` and starts at CS05c with no end, which excludes
+nothing at any stage a sample is likely to carry. Report that the route had
+nothing to say, rather than that the annotation passed a check.
 
 ## The xref bridge, and the judgment it needs
 
@@ -492,6 +503,66 @@ those. Uberon has `UBERON:0009708` and `UBERON:0009709` for them.
 Two structures with a stated end bound inside the window of their parent is a
 reliable signal that the parent term is too coarse for the stage.
 
+## What a real corpus does to this
+
+Run against 361 distinct (stage, tissue) pairs from HDCA, the route's behaviour
+is lopsided in a way worth knowing before you rely on it.
+
+**Only 33 of 205 distinct strings match an EHDAA2 label exactly.** For the other
+84% the work is step 6 — searching EHDAA2's vocabulary — not step 3's crosswalk.
+Budget accordingly.
+
+**The bracket refutes rarely, and when it does it is usually right.** Across the
+tested pairs it refuted on three brain terms, the vertebral series and the
+calvaria, and passed everything else. A route that refuted often would be
+suspect; this one mostly returns "not excluded", which is the honest answer and
+is not a mapping.
+
+**Where it earns its keep is discriminating within a series.** The HDCA skeletal
+study carries `upper vertebrae`, `mid vertebrae`, `mid-low vertebrae` and
+`lower vertebrae` at CS16. EHDAA2 has `atlas pre-cartilage condensation` and
+`axis pre-cartilage condensation` at CS15-CS16, but the cervical cartilage
+condensations do not start until CS17 and the thoracic ones until CS18. So at
+CS16 `upper vertebrae` has a candidate and `mid vertebrae` does not — the same
+string family, split by the bracket, which no lexical probe could do.
+
+The limb pair behaves the same way in the opposite direction. `upper limb bud
+ectoderm` and `upper limb bud mesenchyme` run CS12-CS14, so `forelimb` at CS13
+is a bud and `forelimb` at CS16 is not. Both are in the corpus.
+
+**A refutation you cannot repair is still a result.** `calvaria` at CS16 is
+refuted — `parietal bone primordium` and `interparietal bone primordium` both
+start at CS19 — and EHDAA2 offers nothing at CS16 to replace it with. Report the
+refutation and the absence. Do not reach further down the chain for something
+that will fit; `mid vertebrae` at CS16 fails the same way, and the sclerotome
+terms that would be the obvious fallback ended at CS13-CS15.
+
+### Label identity across the bridge is not term identity
+
+`UBERON:0001900 ventral thalamus` xrefs `EHDAA2:0004470 **subthalamus**`. EHDAA2
+also has `EHDAA2:0004471 ventral thalamus`, and that one has **no Uberon xref at
+all**. Uberon lists "subthalamus" as an exact synonym of ventral thalamus, so the
+xref is defensible — but it means crosswalking from the EHDAA2 term whose label
+matches your string returns nothing, while the Uberon term whose label matches
+lands on a differently-labelled EHDAA2 term.
+
+Check the label on both ends of a crosswalk. Matching labels are not evidence
+the bridge went where you think, and mismatched ones are not evidence it went
+wrong.
+
+### EHDAA2's "future X" collapses to Uberon's "X"
+
+`EHDAA2:0000234 future cerebral cortex` (CS16-) xrefs `UBERON:0000956 cerebral
+cortex`. `EHDAA2:0000596 future corpus striatum` (CS16-) xrefs
+`UBERON:0000369 corpus striatum`. Uberon has no "future cerebral cortex" or
+"future corpus striatum" to receive them.
+
+This is the reverse of the `presumptive midbrain` case, where Uberon *did* keep
+the distinction, and you cannot tell which you are in without looking. When the
+EHDAA2 label says "future" and the Uberon label does not, say so in the report:
+the CURIE you emit is for the mature structure and the ontology that knows about
+the stage called it a precursor.
+
 ## Other things that will bite
 
 - **A bracket is per-term, not per-sample.** Several terms from one record can
@@ -506,6 +577,11 @@ reliable signal that the parent term is too coarse for the stage.
   the right one.
 - **EHDAA2 labels carry no synonyms configured in OLS4**, so lexical recall is
   worse than it is for Uberon. A miss is weak evidence that a term is absent.
+- **The OLS4 end-bound loss hits real annotations, not just principle.** 39 of
+  the affected 224 are the per-somite terms `somite 01`-`somite NN`, each
+  existing at exactly one stage. Through OLS4 `somite 01` reads CS09 with no
+  end; in the OWL it is CS09-CS09. A `somite` annotation at CS16 is refuted by
+  seven stages and passes anyway.
 - **One label typo in this release.** `EHDAA2:0003471` is
   "upper limb bud mesenchy**e**me". Lexical matching on the correct spelling
   misses it.

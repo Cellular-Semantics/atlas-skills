@@ -24,12 +24,15 @@ suite and nothing here interferes with it.
   blessed.**
 - `cases-hsapdv.md` — the same 32 cases as a review document, with the
   reasoning for each expected answer spelled out. Read this one first.
-- `cases-uberon-developmental.json` — 8 embryonic-anatomy cases exercising the
-  EHDAA2 route in `references/uberon-developmental.md`. **Proposed, and weaker
-  than the HsapDv set**: the input strings were invented from textbook
-  developmental anatomy rather than taken from an annotation corpus, so they
-  test that the mechanism is applied, not that it survives real annotator
-  prose. Replace the records with HDCA strings before blessing.
+- `cases-uberon-developmental.json` — 10 embryonic-anatomy cases exercising the
+  EHDAA2 route in `references/uberon-developmental.md`. **Proposed.** Every
+  record but one is a real string from the HDCA `embryonic_tissue_fields`
+  corpus; the exception is constructed, because no HDCA pair landed on a term
+  affected by the OLS4 end-bound loss and that hole needs a regression case.
+- `plan-hdca-uberon-developmental.md` / `results-hdca-uberon-developmental.md` —
+  how the subset was chosen, and what running it found. The results are where
+  the two bridge hazards and the extraembryonic blind spot came from; none was
+  visible from invented examples.
 - `verify-ehdaa2-claims.py` — checks every EHDAA2 CURIE, ID:label pair,
   existence window, xref pair, count and the CS20 ceiling asserted in the
   reference and the cases. Two authorities: the released EHDAA2 OWL for
@@ -39,7 +42,7 @@ suite and nothing here interferes with it.
   written against OLS4 would confirm the reference's own worked examples to be
   wrong. It also tests for that data loss, so we find out when it is fixed.
 - `mutate-ehdaa2-claims.py` — measures what the verifier catches, by breaking
-  the reference eight ways and confirming each is caught. Currently **8/8**.
+  the reference fifteen ways and confirming each is caught. Currently **15/15**.
   Run it after editing either file; a drop means the verifier lost coverage.
 - `verify-hsapdv-claims.py` — checks every HsapDv CURIE, ID:label pair, label
   phrase and interval number asserted in the skill text and the cases against

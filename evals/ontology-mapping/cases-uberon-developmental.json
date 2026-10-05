@@ -1,5 +1,5 @@
 {
- "about": "Embryonic-anatomy cases for the map-to-ontology skill, exercising the EHDAA2 route in references/uberon-developmental.md. Windows were read off the released EHDAA2 OWL (2024-01-11) and the xrefs off Ubergraph uberon-base 2026-06-19, both verified by verify-ehdaa2-claims.py. PROPOSED. The three mesencephalon/spinal-cord/medulla cases come from the HDCA corpus; the rest are still invented. WEAKER THAN cases-hsapdv.json: every input string here was invented from textbook developmental anatomy, not taken from an annotation corpus. They test that the mechanism is applied, not that it survives real annotator prose. Replace the records with HDCA strings before blessing.",
+ "about": "EHDAA2-route cases for the map-to-ontology skill, exercising references/uberon-developmental.md. Every record except pronephros-cs14-ols4-hole is taken from the HDCA embryonic_tissue_fields corpus; that one is constructed, because no HDCA pair happened to land on a term affected by the OLS4 end-bound loss and the hole needs a regression case anyway. Windows read from the EHDAA2 2024-01-11 OWL and xrefs from Ubergraph uberon-base 2026-06-19, both verified by verify-ehdaa2-claims.py. PROPOSED - not yet blessed.",
  "cases": [
   {
    "id": "mesencephalon-cs18-superseded",
@@ -62,103 +62,117 @@
    ]
   },
   {
-   "id": "lung-cs11-refuted",
+   "id": "mid-vertebrae-cs16-refuted-unrepairable",
    "record": {
-    "tissue": "left lung",
-    "developmental_stage": "CS11"
-   },
-   "target": "uberon",
-   "accepted": [
-    "UBERON:0000118"
-   ],
-   "tests": "The bracket doing real work. EHDAA2 left lung starts CS13, so CS11 is refuted outright. One develops_from hop reaches lung bud, CS11-CS12, which crosswalks to UBERON:0000118. Answering UBERON:0002168 left lung is the failure this route exists to prevent -- and it is what every lexical rung returns.",
-   "_bucket": "refuted-by-bracket",
-   "must_mention": [
-    "CS13",
-    "EHDAA2:0000943"
-   ],
-   "must_name_rival_from": [
-    "UBERON:0002168"
-   ]
-  },
-  {
-   "id": "notochord-cs20-refuted",
-   "record": {
-    "tissue": "notochord",
-    "developmental_stage": "CS20"
+    "tissue": "mid vertebrae",
+    "developmental_stage": "CS16"
    },
    "target": "uberon",
    "accepted": [],
-   "tests": "EHDAA2 notochord is CS11-CS15, so CS20 is excluded at both ends of the reasoning: the structure is gone. The right answer is no mapping plus a statement of the contradiction, not UBERON:0002328 with a caveat. Tests that an excluded bracket stops the mapping rather than decorating it.",
-   "_bucket": "refuted-by-bracket",
-   "must_mention": [
-    "CS15"
-   ],
-   "must_name_rival_from": [
-    "UBERON:0002328"
-   ]
-  },
-  {
-   "id": "kidney-cs18-ambiguous",
-   "record": {
-    "tissue": "kidney",
-    "developmental_stage": "CS18"
-   },
-   "target": "uberon",
-   "accepted": [
-    "UBERON:0000080",
-    "UBERON:0000081"
-   ],
-   "tests": "No EHDAA2 term for kidney at all, and UBERON:0002113 carries no EHDAA2 xref, so the crosswalk comes back empty and the route has to be entered from the EHDAA2 side. Three candidates; the bracket refutes only the pronephros (CS09 only). Reporting one of the two survivors as the answer is wrong -- CS18 is the last stage of the mesonephros and the metanephros has been present since CS13. Correct behaviour is both, and a question.",
-   "_bucket": "bracket-narrows-but-does-not-decide",
-   "must_mention": [
-    "pronephros"
-   ],
-   "must_name_rival_from": [
-    "UBERON:0002113"
-   ]
-  },
-  {
-   "id": "limb-cs13-bud",
-   "record": {
-    "tissue": "limb",
-    "developmental_stage": "CS13"
-   },
-   "target": "uberon",
-   "accepted": [
-    "UBERON:0004347",
-    "UBERON:0005417"
-   ],
-   "tests": "The bracket on EHDAA2:0002133 upper limb (CS12-) does NOT refute CS13, and the signal comes instead from its parts, both CS12-CS14 bud tissues. Tests that a non-refuting bracket is not read as an endorsement. Also tests the RETIRED_ prefix: UBERON:0005417 forelimb bud is reachable only via RETIRED_EHDAA2:0003198, and a plain crosswalk returns nothing. `limb` without a side should not silently become forelimb.",
-   "_bucket": "bracket-does-not-refute",
-   "must_mention": [
-    "RETIRED"
-   ],
-   "must_name_rival_from": [
-    "UBERON:0002101",
-    "UBERON:0002102"
-   ]
-  },
-  {
-   "id": "pancreas-cs17-too-coarse",
-   "record": {
-    "tissue": "pancreas",
-    "developmental_stage": "CS17"
-   },
-   "target": "uberon",
-   "accepted": [
-    "UBERON:0009708",
-    "UBERON:0009709",
-    "UBERON:0001264"
-   ],
-   "tests": "EHDAA2 pancreas starts CS17, so the annotation survives its bracket. But dorsal and ventral pancreas both carry a hard end bound at CS18, inside the parent's window, which is the signal that the parent term is too coarse for this stage. Accepting the parent is defensible; accepting it without naming the two is not.",
-   "_bucket": "bracket-does-not-refute",
+   "tests": "From HDCA to_2024_skeletal_integration. EHDAA2 has no vertebral term covering CS16 in the thoracic region: cervical cartilage condensations start CS17, thoracic CS18, and the sclerotome terms that look like the fallback ended at CS13-CS15. The correct outcome is a refutation with no replacement offered. Walking further down the chain until something fits is the failure.",
+   "_bucket": "refuted-unrepairable",
+   "_source": "HDCA to_2024_skeletal_integration",
    "must_mention": [
     "CS18"
    ],
    "must_name_rival_from": [
-    "UBERON:0001264"
+    "UBERON:0001130"
    ]
+  },
+  {
+   "id": "upper-vertebrae-cs16-series-split",
+   "record": {
+    "tissue": "upper vertebrae",
+    "developmental_stage": "CS16"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0002413"
+   ],
+   "tests": "The companion to mid-vertebrae-cs16, same study and same stage, and the reason the route is worth running: a lexical probe cannot tell the two strings apart, but EHDAA2 has atlas and axis pre-cartilage condensations at CS15-CS16, so this one has a stage-appropriate structure and that one does not. The twist is that the bridge cannot carry it: EHDAA2:0004004 and EHDAA2:0004005 have no Uberon xref, and Uberon has no atlas or axis pre-cartilage condensation term at all. So the right answer is the coarser UBERON:0002413 cervical vertebra WITH the finding stated -- the structure present at CS16 is a pre-cartilage condensation that Uberon cannot express. Emitting UBERON:0002413 as though it were a clean match, or declaring the string unmappable because the crosswalk came back empty, both fail.",
+   "_bucket": "series-discrimination-bridge-cannot-carry",
+   "_source": "HDCA to_2024_skeletal_integration",
+   "must_mention": [
+    "pre-cartilage"
+   ],
+   "must_name_rival_from": []
+  },
+  {
+   "id": "forelimb-cs16-not-a-bud",
+   "record": {
+    "tissue": "forelimb",
+    "developmental_stage": "CS16"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0002102"
+   ],
+   "tests": "The inverse of the CS13 limb case, and both stages are in the corpus. `upper limb bud ectoderm` and `upper limb bud mesenchyme` run CS12-CS14, so at CS16 the forelimb is no longer a bud and the plain term is right. Answering UBERON:0005417 forelimb bud is the failure -- a route that has learned 'embryonic means bud' rather than learned to read the bracket.",
+   "_bucket": "bracket-prevents-overcorrection",
+   "_source": "HDCA",
+   "must_mention": [
+    "CS14"
+   ],
+   "must_name_rival_from": [
+    "UBERON:0005417"
+   ]
+  },
+  {
+   "id": "yolk-sac-cs17-substage-silence",
+   "record": {
+    "tissue": "yolk sac",
+    "developmental_stage": "CS17"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0001040"
+   ],
+   "tests": "The fourth commonest string in the corpus, 72 rows. EHDAA2:0002212 secondary yolk sac xrefs UBERON:0001040 correctly, but its start bound is HsapDv:0000033 (CS05c), a Carnegie substage with no dpf, and there is no end bound -- so the bracket excludes nothing at any stage a sample carries. The lexical answer is right. The failure is reporting that the annotation passed its bracket: the route had nothing to say, which is not the same thing.",
+   "_bucket": "route-silent-not-confirming",
+   "_source": "HDCA",
+   "must_mention": [
+    "substage"
+   ],
+   "must_name_rival_from": []
+  },
+  {
+   "id": "thalamus-cs18-label-crossing",
+   "record": {
+    "tissue": "Thalamus",
+    "developmental_stage": "CS18"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0004703",
+    "UBERON:0001897"
+   ],
+   "tests": "From HDCA braun_2023_brain, which also carries `dorsal plus ventral thalamus` as a separate value in the same study -- so `Thalamus` here is unlikely to mean the union. EHDAA2 has no plain thalamus term. The hazard is the bridge: UBERON:0001900 ventral thalamus xrefs EHDAA2:0004470 subthalamus, while EHDAA2:0004471 ventral thalamus has no Uberon xref at all. A report that does not notice the sibling value in the same study, or that treats matching labels across the bridge as evidence, fails.",
+   "_bucket": "bridge-hazard",
+   "_source": "HDCA braun_2023_brain",
+   "must_mention": [
+    "dorsal"
+   ],
+   "must_name_rival_from": [
+    "UBERON:0001900"
+   ]
+  },
+  {
+   "id": "cortex-cs19-future-collapse",
+   "record": {
+    "tissue": "Cortex",
+    "developmental_stage": "CS19"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0000956"
+   ],
+   "tests": "EHDAA2:0000234 is labelled `future cerebral cortex` (CS16-) and xrefs UBERON:0000956 cerebral cortex; Uberon has no `future cerebral cortex` to receive it. The bracket does not refute, so the lexical answer stands -- but the ontology that knows about the stage called this a precursor and the report should say so. Contrast mesencephalon, where Uberon did keep the distinction as presumptive midbrain. Nothing but looking separates the two.",
+   "_bucket": "xref-granularity",
+   "_source": "HDCA braun_2023_brain",
+   "must_mention": [
+    "future"
+   ],
+   "must_name_rival_from": []
   },
   {
    "id": "pronephros-cs14-ols4-hole",
@@ -176,41 +190,6 @@
    "must_name_rival_from": [
     "UBERON:0002120"
    ]
-  },
-  {
-   "id": "kidney-16pcw-out-of-range",
-   "record": {
-    "tissue": "kidney",
-    "age": "16 pcw"
-   },
-   "target": "uberon",
-   "accepted": [
-    "UBERON:0002113"
-   ],
-   "tests": "16 pcw is far past CS20, where EHDAA2 asserts nothing. The route must not be entered, and its silence must not be read as a negative result. The ordinary lexical answer is correct here. Tests the ceiling as a guard, not just as a documented fact.",
-   "_bucket": "route-should-not-trigger",
-   "must_mention": [
-    "CS20"
-   ],
-   "must_name_rival_from": []
-  },
-  {
-   "id": "lung-system-granularity",
-   "record": {
-    "tissue": "respiratory tract",
-    "developmental_stage": "CS12"
-   },
-   "target": "uberon",
-   "accepted": [
-    "UBERON:0002048",
-    "UBERON:0000118"
-   ],
-   "tests": "EHDAA2:0001042 lung system (CS11-) xrefs UBERON:0002048 lung, which is a coarser-to-finer mismatch rather than equivalence. Tests that the xref is adjudicated and the mismatch stated, rather than the CURIE being emitted as though it were a direct lexical hit.",
-   "_bucket": "xref-granularity",
-   "must_mention": [
-    "EHDAA2:0001042"
-   ],
-   "must_name_rival_from": []
   }
  ]
 }
