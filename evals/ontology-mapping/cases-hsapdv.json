@@ -74,6 +74,28 @@
       ]
     },
     {
+      "id": "bare-number-with-units",
+      "record": {
+        "raw_stage": "",
+        "raw_age": "15",
+        "age_units": "weeks post conception"
+      },
+      "target": "hsapdv",
+      "accepted": [
+        "HsapDv:0000053"
+      ],
+      "expected_rung": 3,
+      "must_name_rival_from": [
+        "HsapDv:0000052"
+      ],
+      "must_mention": [
+        "age_units"
+      ],
+      "tests": "The value carries no searchable text. Observed failure: the agent read the ladder as 'always run rungs 1 and 2 on the raw input' and lexically searched '15', which cannot work -- no HsapDv label contains that digit -- and returns false leads with a rank attached. The information is in the sibling field, not the value: 15 completed weeks post conception = 105 dpf = the 16th week term. A correct run skips the lexical rungs, names age_units as what made it answerable, and verifies with `oq term`.",
+      "_bucket": "A",
+      "_n_samples": 0
+    },
+    {
       "id": "gw-18",
       "record": {
         "raw_age": "GW 18"

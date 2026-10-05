@@ -1,17 +1,17 @@
 # Proposed gold-standard eval set: HsapDv developmental stages
 
-**Status: proposed, not blessed.** Review and amend, then I will merge into `evals/cases.json`.
+**Status: proposed, not blessed.** Review and amend, then I will merge into the native `evals/cases/` harness.
 
-32 cases, every input string taken verbatim from the HDCA `071_ontology_mapping` worktable. `n` = samples in that corpus carrying the string.
+33 cases. Every input string is taken verbatim from the HDCA `071_ontology_mapping` worktable, except `bare-number-with-units`, which reproduces a failure observed in real use. `n` = samples in that corpus carrying the string.
 
-**Convention**: an integer week count is read as *N completed weeks* (UK clinical / ICD-10), unless the input is explicitly ordinal (`15th week …`), in which case it already names a term. Because an integer week is a rounded value with about half a week of slack, 12 cases require the adjacent term to be named as a rival — a single answer without it overstates the string. A caller-stated convention overrides the default.
+**Convention**: an integer week count is read as *N completed weeks* (UK clinical / ICD-10), unless the input is explicitly ordinal (`15th week …`), in which case it already names a term. Because an integer week is a rounded value with about half a week of slack, most such cases require the adjacent term to be named as a rival. A caller-stated convention overrides the default.
 
 Every ID:label pair, label phrase and interval number was verified against live Ubergraph and the `.obo` from the OBO PURL. **no-call** cases expect a decline with reasons. *must mention* is a soft substring check over the report's prose, chosen so a correct answer cannot satisfy it by itself.
 
 
 ## A. Post-conception weeks
 
-Cardinal integer weeks. Default to the UK clinical reading (N *completed* weeks), name the adjacent term, state the assumption.
+Cardinal integer weeks. Default to the UK clinical reading (N *completed* weeks), name the adjacent term, state the assumption. Includes the bare-number case, where the value carries no searchable text and the lexical rungs must be skipped.
 
 ### `pcw-20`  ·  n=70
 
@@ -52,6 +52,16 @@ The commonest input shape. 20 wpf = 140 dpf, which the 21st-week term spans [140
 Same arithmetic behind a different spelling. 16 wpf = 112 dpf -> 17th-week term. Checks that the unit is recognised without the 'PCW' abbreviation.
 
 *must name alternative: `HsapDv:0000053` — 16th week post-fertilization stage*
+
+### `bare-number-with-units`  ·  from observed failure
+
+**Input** `raw_age` = `15` + `age_units` = `weeks post conception`
+
+**Expected** `HsapDv:0000053` — 16th week post-fertilization stage
+
+The value carries no searchable text. Observed failure: the agent read the ladder as 'always run rungs 1 and 2 on the raw input' and lexically searched '15', which cannot work -- no HsapDv label contains that digit -- and returns false leads with a rank attached. The information is in the sibling field, not the value: 15 completed weeks post conception = 105 dpf = the 16th week term. A correct run skips the lexical rungs, names age_units as what made it answerable, and verifies with `oq term`.
+
+*must name alternative: `HsapDv:0000052` — 15th week post-fertilization stage  ·  must mention: `age_units`  ·  expected rung: 3*
 
 
 ## B. Gestational / LMP conversion
@@ -355,7 +365,7 @@ Embryonic day 8.5 is mouse notation. HsapDv is human-only; the correct answer is
 
 | bucket | cases | samples |
 |---|---|---|
-| A. Post-conception weeks | 4 | 139 |
+| A. Post-conception weeks | 5 | 139 |
 | B. Gestational / LMP conversion | 3 | 27 |
 | C. Sub-8-week — age to Carnegie | 5 | 34 |
 | D. Explicit Carnegie strings | 5 | 269 |
@@ -365,4 +375,4 @@ Embryonic day 8.5 is mouse notation. HsapDv is human-only; the correct answer is
 | H. Days post conception | 2 | 12 |
 | I. Postnatal | 2 | 6 |
 | J. Out of scope | 1 | 2 |
-| **total** | **32** | **683** |
+| **total** | **33** | **683** |

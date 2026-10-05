@@ -105,15 +105,62 @@ Cheapest rung first. Leave a rung when you hit one of its named failure signals.
 Most records finish at rung 1 or 2, and spending heavily on an easy record is as
 much a failure as getting a hard one wrong.
 
+**Rung 0 chooses where you enter.** It is not a warm-up for rung 1. Some inputs
+carry no searchable text at all, and for those the lexical rungs are not a
+cheap first try — they are a waste that produces false leads. Rung 0 says which
+of those you have.
+
 ### Rung 0 — triage
 
-Read the whole record, all fields together, and write down two things.
+Read the whole record, all fields together, and write down three things.
 
 **Could a plain lexical match get this wrong?** Signals that it could: more than
 one field; the string names more than one thing (`Cornea/Conjunctiva`); it
 carries a number, unit or abbreviation (`12 pcw`, `wk 8`); it is a short common
 ambiguous word (`skin`, `muscle`, `brain`); it reads as a description rather
 than a name (`full reproductive tract`).
+
+**Is the string searchable at all?** Ask it concretely: could a curator find
+this term by typing this string into a search box? If the answer is no, no
+lexical probe will help: **skip rungs 1 and 2 and enter at rung 3**, whose
+tools — `cohort` and `term` — are the ones that work on a quantity.
+
+The answer is no whenever the value is a quantity or a code rather than a name:
+
+| value | why searching fails |
+|---|---|
+| `15`, `84`, `12.2` | the target term's label contains no digit from this |
+| `20 PCW`, `8+3`, `6wk`, `47 day` | the quantity is the content; `PCW` is not in any label |
+| `GSM4116579`, `D12`, `S3` | an identifier, not a description |
+
+Searching these is worse than useless. A lexical probe on `15` can match an
+unrelated term whose label or definition happens to contain 15, and a rank is
+reported for it, which reads as signal when it is noise.
+
+For these the route is **convert, construct, verify** — not search:
+
+1. **Read the field key, because the value does not carry the information.**
+   `15` means nothing. `age=15` beside `age_units=weeks post conception` means
+   something specific, and `development_stage=15` beside
+   `gestational_age_units=weeks` means something two terms away from it. The
+   key and its sibling unit fields tell you the quantity and the reference
+   point; the number alone tells you neither.
+2. **Use the target ontology's advice document** for the conversion and the
+   naming convention — `references/hsapdv.md` for developmental stage. Where no
+   advice document covers it yet, read the convention off the ontology with a
+   rung-3 cohort survey:
+   `$OQ cohort -o <ontology> --label-contains "<pattern>"`.
+3. **Construct the term you believe is right, then verify it** with
+   `$OQ term <CURIE> -o <ontology>`, checking that its own annotations bracket
+   your value. That is the exit test for this route; a lexical hit is not.
+
+**If no field in the record supplies the unit or the reference point, the value
+is not mappable.** `15` with nothing to say whether that is weeks, months,
+years, post-conception or post-menstrual is a question for the submitter, not a
+mapping. Say so and stop — do not pick the most common convention and hope.
+
+A mixed string (`6months old human thymus`) is a quantity wrapped in words.
+Extract the quantity and take this route; do not search the whole string.
 
 **What is each field for?** Give every field exactly one role and say which:
 
@@ -127,6 +174,9 @@ Putting a validator into the search is a common way to get nothing back.
 Leaving a search term out throws away signal.
 
 ### Rung 1 — exact, then stemmed
+
+Only if rung 0 found searchable text. A quantity or an identifier does not
+reach this rung at all.
 
 ```
 $OQ lexical -q "<string>" -o <ontology> --probes exact
