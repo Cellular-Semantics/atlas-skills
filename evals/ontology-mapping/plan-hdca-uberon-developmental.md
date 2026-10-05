@@ -43,43 +43,63 @@ label match, three pairs are refuted by their bracket:
 | `medulla oblongata` | CS17 | `EHDAA2:0001088` CS18- | off by one stage |
 | `spinal cord` | CS12 | `EHDAA2:0001255` CS13- | off by one stage |
 
-Each is a different kind of result and all three are worth running properly.
+Each is a different kind of result, and following them through changed the
+plan.
 
-`Mesencephalon` is the one to be careful about. EHDAA2 has *both*
-`mesencephalon` (CS09-CS11) and `midbrain` (`EHDAA2:0001162`, CS12-), treating
-them as different-time structures. Uberon makes them exact synonyms of
-`UBERON:0001891`. So the bracket's "refutation" here is really EHDAA2 asserting
-a vocabulary distinction Uberon does not recognise, and a skill that reports
-"mesencephalon cannot exist at CS18" has said something false about the world
-while correctly reading the ontology. **This is the most valuable case in the
-set**, because it tests whether the route knows the difference between a
-refutation and a naming convention. It is also the clearest candidate for a
-false positive, which is the number this exercise most needs to produce.
+**All three resolve, and none is a false positive.** I first read
+`Mesencephalon` as EHDAA2 drawing a distinction Uberon treats as synonymy. That
+was wrong. The crosswalk does not land on `UBERON:0001891 midbrain` — it lands
+on **`UBERON:0009616 presumptive midbrain`**, a separate Uberon term defined as
+"a presumptive structure that has the potential to develop into a midbrain",
+with `has potential to develop into UBERON:0001891`. Uberon makes the same
+distinction EHDAA2 does, and the xrefs keep the two apart correctly
+(`EHDAA2:0001162 midbrain` xrefs `UBERON:0001891`). The refutation is sound and
+the route recovers the right answer.
 
-The other two differ in how much the stage can be trusted. `spinal cord` at
-CS12 comes from `xu_2023_embryo` with `stage_source_value = CS12` asserted
-directly by the repository, confidence `high` — so the stage is not derived and
-the disagreement is a real one about the tissue. `medulla oblongata` at CS17
-comes from `braun_2023_brain` where the stage was converted from a decimal age
-(`6.0`), verdict `SINGLE_SOURCE_OBS`, confidence `medium` — so the refutation
-may indict the stage rather than the annotation. Those need different verdicts
-and the test set should contain both.
+**Getting there needed Ubergraph, and a different edge each time.** EHDAA2's
+own `develops_from` is empty in both directions on all three terms, so the
+chain that finds the answer is Uberon's:
+
+| annotation | edge | answer | answer's EHDAA2 window |
+|---|---|---|---|
+| `Mesencephalon` CS18 | `develops_from` `-d in` | `UBERON:0001891` midbrain | CS12- |
+| `spinal cord` CS12 | `develops_from` `-d out` | `UBERON:0006241` future spinal cord | CS10-CS12 |
+| `medulla oblongata` CS17 | `part_of` `-d out` | `UBERON:0005290` myelencephalon | CS16-CS17 |
+
+`future spinal cord` closes at exactly CS12, and `myelencephalon` spans exactly
+CS16-CS17. Both brackets land on the observed stage rather than merely
+tolerating it, which is stronger evidence than this method usually produces.
+
+The third row is the one that breaks a single-edge recipe:
+`UBERON:0001896 medulla oblongata` has **no** `develops_from` in Uberon at all,
+and the developmental relation is carried by `part_of myelencephalon`. A walk
+that follows only `develops_from` returns nothing and reports the annotation
+unmappable. Three cases, three edges — which is the argument for parameterised
+edge sets rather than a bespoke command, and it is now in the reference with a
+worked table and a checker that tests the logic rather than the prose.
+
+**What this does to the plan.** Tier A has already been run, and all three pass.
+The remaining value in Tier A is regression, not discovery, so the weight should
+move to Tiers B and F. The false-positive question is still the right one, but
+the three cases that looked most likely to produce one did not, so the estimate
+has to come from the harder tiers rather than from these.
 
 ## The subset: 21 pairs in six tiers
 
 Chosen to span the decision space rather than to sample the corpus
 proportionally. A proportional sample would be nine-tenths brain regions.
 
-### Tier A — the bracket refutes (3)
+### Tier A — the bracket refutes (3) — DONE
 
 `Mesencephalon` CS18 · `medulla oblongata` CS17 · `spinal cord` CS12
 
-The reason the route exists. Tests that a refutation stops the mapping, that
-the EHDAA2-vs-Uberon vocabulary split is recognised rather than parroted, and
-that a low-confidence stage is weighed against the tissue rather than assumed
-correct.
+All three run and all three resolve; see above. Keep them as regression cases,
+since between them they exercise all three navigation edges, but they no longer
+carry the finding. `medulla oblongata` is still worth revisiting against the
+stage column: its CS17 is `medium` confidence converted from a decimal age, and
+`myelencephalon` ending at CS17 means the mapping is right at the boundary.
 
-### Tier B — no EHDAA2 label, so step 6 (6)
+### Tier B — no EHDAA2 label, so step 6 (6) — DO FIRST
 
 `Medulla` CS19 · `Cortex` CS19 · `Striatum` CS19 · `Thalamus` CS18 ·
 `mid vertebrae` CS16 · `calvaria` CS16
@@ -157,10 +177,13 @@ which that happens — EHDAA2 drawing a time distinction that Uberon treats as
 synonymy — and nothing in the method as written detects it.
 
 So the output of this exercise should be: of the refutations the route
-produces across the 21 cases, how many survive scrutiny. If that number is poor,
-the fix is in the reference text, probably a rule that a refutation must be
-checked against whether the Uberon term treats the EHDAA2 term's label as a
-synonym of a longer-lived term before it is reported.
+produces across the 21 cases, how many survive scrutiny.
+
+Tier A contributes three refutations and three survivals, which is encouraging
+and not yet informative — those were the cases where an exact EHDAA2 label
+existed, which is the easy 16%. The number that matters will come from Tier B,
+where the term has to be found rather than matched, and from Tier F, where the
+string does not name one structure at all.
 
 ## Risks
 
@@ -168,6 +191,11 @@ synonym of a longer-lived term before it is reported.
   confidence and 358 are `CLASH`. A refutation may be a stage error. Tier A
   carries one of each deliberately; conclusions should not be drawn from
   `medium`-confidence rows alone.
+- **A refutation can be a vocabulary split rather than an error.** Tier A
+  showed Uberon and EHDAA2 agreeing, with `presumptive midbrain` kept separate
+  from `midbrain` on both sides. That will not always hold, and where the
+  crosswalk lands on a term whose label the annotator would consider a synonym
+  of the one they wrote, the refutation needs checking before it is reported.
 - **The brain dominates.** `braun_2023_brain` is 660 rows and most of the
   interesting exact matches. Findings may not generalise to other organs, and
   the report should say which tier each conclusion came from.

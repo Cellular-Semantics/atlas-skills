@@ -1,6 +1,66 @@
 {
- "about": "Embryonic-anatomy cases for the map-to-ontology skill, exercising the EHDAA2 route in references/uberon-developmental.md. Windows were read off the released EHDAA2 OWL (2024-01-11) and the xrefs off Ubergraph uberon-base 2026-06-19, both verified by verify-ehdaa2-claims.py. PROPOSED, AND WEAKER THAN cases-hsapdv.json: every input string here was invented from textbook developmental anatomy, not taken from an annotation corpus. They test that the mechanism is applied, not that it survives real annotator prose. Replace the records with HDCA strings before blessing.",
+ "about": "Embryonic-anatomy cases for the map-to-ontology skill, exercising the EHDAA2 route in references/uberon-developmental.md. Windows were read off the released EHDAA2 OWL (2024-01-11) and the xrefs off Ubergraph uberon-base 2026-06-19, both verified by verify-ehdaa2-claims.py. PROPOSED. The three mesencephalon/spinal-cord/medulla cases come from the HDCA corpus; the rest are still invented. WEAKER THAN cases-hsapdv.json: every input string here was invented from textbook developmental anatomy, not taken from an annotation corpus. They test that the mechanism is applied, not that it survives real annotator prose. Replace the records with HDCA strings before blessing.",
  "cases": [
+  {
+   "id": "mesencephalon-cs18-superseded",
+   "record": {
+    "tissue": "Mesencephalon",
+    "developmental_stage": "CS18"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0001891"
+   ],
+   "tests": "From HDCA braun_2023_brain. EHDAA2:0000615 mesencephalon is CS09-CS11, so CS18 is refuted: the annotator used the early vesicle's name for a later structure. The crosswalk lands on UBERON:0009616 presumptive midbrain, not on UBERON:0001891, because Uberon keeps the same distinction. One hop `develops_from -d in` reaches UBERON:0001891 midbrain, whose EHDAA2 counterpart EHDAA2:0001162 is CS12-open and is not refuted. Returning UBERON:0009616 is the failure: it is what the string matches and what the bracket excludes.",
+   "_bucket": "refuted-then-navigated-forward",
+   "_source": "HDCA braun_2023_brain",
+   "must_mention": [
+    "presumptive midbrain"
+   ],
+   "must_name_rival_from": [
+    "UBERON:0009616"
+   ]
+  },
+  {
+   "id": "spinal-cord-cs12-too-early",
+   "record": {
+    "tissue": "spinal cord",
+    "developmental_stage": "CS12"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0006241"
+   ],
+   "tests": "From HDCA xu_2023_embryo, where CS12 is asserted by the repository at high confidence, so the stage is not in doubt and the disagreement is about the tissue. EHDAA2:0001255 spinal cord starts CS13. Walking `develops_from -d out` from UBERON:0002240 returns 29 terms, most of them upper-ontology noise; the bracket is what selects UBERON:0006241 future spinal cord, whose EHDAA2 counterpart is CS10-CS12 and closes exactly on the observed stage. Tests that the noisy direction is filtered by the bracket rather than by eye.",
+   "_bucket": "refuted-then-navigated-backward",
+   "_source": "HDCA xu_2023_embryo",
+   "must_mention": [
+    "CS13"
+   ],
+   "must_name_rival_from": [
+    "UBERON:0002240"
+   ]
+  },
+  {
+   "id": "medulla-oblongata-cs17-part-of",
+   "record": {
+    "tissue": "medulla oblongata",
+    "developmental_stage": "CS17"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0005290"
+   ],
+   "tests": "From HDCA braun_2023_brain. EHDAA2:0001088 medulla oblongata starts CS18, so CS17 is refuted by one stage. The case that breaks a develops_from-only recipe: UBERON:0001896 has no develops_from in Uberon at all, and the developmental relation is carried by `part of UBERON:0005290 myelencephalon`, whose EHDAA2 counterpart is CS16-CS17. Reporting the annotation unmappable because the develops_from walk returned nothing is the failure. The stage here is medium confidence converted from a decimal age, so a report that names the stage as the alternative explanation is also acceptable.",
+   "_bucket": "refuted-then-navigated-by-part-of",
+   "_source": "HDCA braun_2023_brain",
+   "must_mention": [
+    "myelencephalon"
+   ],
+   "must_name_rival_from": [
+    "UBERON:0001896"
+   ]
+  },
   {
    "id": "lung-cs11-refuted",
    "record": {

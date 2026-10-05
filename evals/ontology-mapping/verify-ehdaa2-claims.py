@@ -22,6 +22,8 @@ Claim types checked:
   4. every EHDAA2 -> Uberon xref pair asserted in the text is in Ubergraph
   5. every count asserted in the text recomputes, in its own sentence
   5b. the CS20 ceiling is still where the ontology puts it
+  6. each worked navigation row really is refuted, and its answer really is in
+     range -- the method's central move, checked rather than asserted
   6. the OLS4 end-bound loss still affects exactly the terms we say it does
 
 It makes no judgement about whether a mapping is biologically right. That is
@@ -255,18 +257,47 @@ def check_windows(auth, texts, fail):
 
 
 def check_xref_pairs(auth, texts, fail):
-    """Any EHDAA2 CURIE and UBERON CURIE named together must really be xrefed."""
-    pat = re.compile(
-        rf"({EHDAA2_CURIE})[^\n]{{0,120}}?({UBERON_CURIE})"
-        rf"|({UBERON_CURIE})[^\n]{{0,120}}?({EHDAA2_CURIE})"
+    """An EHDAA2 CURIE and a Uberon CURIE claimed to be the same term must be xrefed.
+
+    Only pairs that actually claim identity are judged. A markdown table pairs
+    them only when its header names both ontologies -- the crosswalk tables do,
+    while a table whose columns are "refuted because" and "answer" deliberately
+    puts two *different* terms on one row. Outside tables, the pair must not be
+    separated by a cell boundary.
+    """
+    inline = re.compile(
+        rf"({EHDAA2_CURIE})[^\n|]{{0,120}}?({UBERON_CURIE})"
+        rf"|({UBERON_CURIE})[^\n|]{{0,120}}?({EHDAA2_CURIE})"
     )
+
+    def judge(path, e, u):
+        targets = [t[0] for t in auth["xrefs"].get(e, [])]
+        if targets and u not in targets:
+            fail(path, f"{e} shown with {u}; Uberon xrefs it to {targets}")
+
     for path, text in texts:
-        for m in pat.finditer(text):
-            e = m.group(1) or m.group(4)
-            u = m.group(2) or m.group(3)
-            targets = [t[0] for t in auth["xrefs"].get(e, [])]
-            if targets and u not in targets:
-                fail(path, f"{e} shown with {u}; Uberon xrefs it to {targets}")
+        in_xref_table = False
+        for line in text.splitlines():
+            stripped = line.strip()
+            if stripped.startswith("|"):
+                if re.match(r"\|[\s|:-]+\|?$", stripped):
+                    continue  # the ---|--- separator
+                header = {c.strip().lower() for c in stripped.strip("|").split("|")}
+                if "ehdaa2" in header and "uberon" in header:
+                    in_xref_table = True
+                    continue
+                if in_xref_table:
+                    cells = [c.strip() for c in stripped.strip("|").split("|")]
+                    es = [c for cell in cells for c in re.findall(EHDAA2_CURIE, cell)]
+                    us = [c for cell in cells for c in re.findall(UBERON_CURIE, cell)]
+                    if len(es) == 1 and len(us) == 1:
+                        judge(path, es[0], us[0])
+                    continue
+                in_xref_table = False  # a table that does not name both ontologies
+                continue
+            in_xref_table = False
+            for m in inline.finditer(line):
+                judge(path, m.group(1) or m.group(4), m.group(2) or m.group(3))
 
 
 def check_counts(auth, texts, fail):
@@ -337,6 +368,57 @@ def check_counts(auth, texts, fail):
         "uberon classes carrying a RETIRED one":
             len({u for v in ret.values() for u, _ in v}),
     }
+
+
+def check_navigation_table(auth, texts, fail):
+    """The three worked navigation rows must actually work.
+
+    Each row claims: this stage is refuted by that EHDAA2 term's window, and
+    this Uberon term is the answer. Both halves are checkable. The second half
+    is the one worth checking -- an answer whose own bracket also excludes the
+    stage would be a worked example that does not work.
+    """
+    rev = collections.defaultdict(list)
+    for ehdaa2_id, pairs in auth["xrefs"].items():
+        for u, _ in pairs:
+            rev[u].append(ehdaa2_id.replace("RETIRED_", ""))
+
+    row = re.compile(
+        rf"\|\s*`[^`]+`\s+at\s+(CS\d\d)\s*\|\s*`({EHDAA2_CURIE})`[^|]*\|"
+        rf"[^|]*\|\s*`({UBERON_CURIE})`"
+    )
+    seen = 0
+    for path, text in texts:
+        for stage, refuted, answer in row.findall(text):
+            seen += 1
+            n = CS_TO_HSAPDV.get(stage)
+
+            start, end = window(auth, refuted)
+            lo = CS_TO_HSAPDV.get(start) if start else None
+            hi = CS_TO_HSAPDV.get(end) if end else None
+            if not ((lo and n < lo) or (hi and n > hi)):
+                fail(path, f"{refuted} window ({start}, {end}) does not actually "
+                           f"exclude {stage}, but the table says it refutes")
+
+            counterparts = rev.get(answer, [])
+            if not counterparts:
+                fail(path, f"{answer} is offered as the answer for {stage} but has "
+                           "no EHDAA2 xref, so its bracket cannot be checked")
+                continue
+            ok = False
+            for c in counterparts:
+                s2, e2 = window(auth, c)
+                lo2 = CS_TO_HSAPDV.get(s2) if s2 else None
+                hi2 = CS_TO_HSAPDV.get(e2) if e2 else None
+                if (lo2 is None or n >= lo2) and (hi2 is None or n <= hi2):
+                    ok = True
+            if not ok:
+                windows = [(c, window(auth, c)) for c in counterparts]
+                fail(path, f"{answer} is offered as the answer for {stage}, but its "
+                           f"EHDAA2 counterpart excludes that stage: {windows}")
+    if seen < 3:
+        fail("navigation", f"only {seen} navigation rows found; the table that "
+                           "carries the method's central move has shrunk")
 
 
 def check_stage_ceiling(auth, texts, fail):
@@ -455,6 +537,7 @@ def main() -> int:
     check_windows(auth, texts, fail)
     check_xref_pairs(auth, texts, fail)
     counts = check_counts(auth, texts, fail)
+    check_navigation_table(auth, texts, fail)
     hi_cs, lo_cs = check_stage_ceiling(auth, texts, fail)
 
     print(f"stage targets used: {lo_cs} to {hi_cs}")

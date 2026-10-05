@@ -220,10 +220,69 @@ the EHDAA2 chain when you want the named structure that occupied the same place
 at an earlier stage, which is usually the question a mis-stated annotation
 raises.
 
+### Reason over the chain in Ubergraph, not in EHDAA2
+
+EHDAA2's `develops_from` is sparse exactly where you need it. None of the three
+terms that a real corpus refuted — `mesencephalon`, `medulla oblongata`,
+`spinal cord` — carries a `develops_from` in either direction in EHDAA2. The
+chain that gets you to the stage-appropriate term is Uberon's, and it is in
+Ubergraph with full closure over the property hierarchy and chains.
+
+So the shape of the move is: **refute in EHDAA2, navigate in Uberon, re-check
+the bracket in EHDAA2.** Cross back and forth rather than trying to do it all
+on one side.
+
+**Which edge carries the answer varies, so try a set.** Three worked cases,
+three different edges:
+
+| annotation | refuted because | edge that found it | answer |
+|---|---|---|---|
+| `Mesencephalon` at CS18 | `EHDAA2:0000615` is CS09-CS11 | `develops_from`, direction `in` | `UBERON:0001891` midbrain |
+| `spinal cord` at CS12 | `EHDAA2:0001255` starts CS13 | `develops_from`, direction `out` | `UBERON:0006241` future spinal cord |
+| `medulla oblongata` at CS17 | `EHDAA2:0001088` starts CS18 | `part_of`, direction `out` | `UBERON:0005290` myelencephalon |
+
+The third is the one that breaks a single-edge recipe. `UBERON:0001896 medulla
+oblongata` has **no** `develops_from` in Uberon at all — `relations ... -p
+develops_from -d out` returns zero. What carries the developmental relation is
+`part of myelencephalon`, because the embryonic vesicle is modelled as the
+whole rather than as the precursor. A walk that only follows `develops_from`
+finds nothing and reports the annotation unmappable.
+
+**Direction follows from which way the bracket failed.** If the observed stage
+is *later* than the term's end bound, the annotation names a structure that has
+been superseded, and you want what develops *from* it — direction `in`. If the
+observed stage is *earlier* than the start bound, the structure has not formed
+yet and you want its precursor — direction `out`.
+
+```
+$OQ relations <UBERON CURIE> -p develops_from -d in  -t uberon   # too late
+$OQ relations <UBERON CURIE> -p develops_from -d out -t uberon   # too early
+$OQ relations <UBERON CURIE> -p part_of       -d out -t uberon   # neither worked
+```
+
+**Direction `in` is clean; direction `out` is noisy.** `presumptive midbrain`
+returns 5 terms going `in`. `spinal cord` returns 29 going `out`, and most of
+them are `anatomical structure`, `blastula`, `embryo`, `germ layer` — Ubergraph's
+closure includes the subsumption ancestors of the `develops_from` targets, so
+the upper ontology comes along for the ride.
+
+**The bracket is what makes the noisy direction usable.** Do not try to filter
+the 29 by eye. Crosswalk each candidate back to EHDAA2 and keep the ones whose
+window contains the observed stage. For `spinal cord` at CS12 that leaves
+`UBERON:0006241 future spinal cord`, whose EHDAA2 counterpart
+`EHDAA2:0000674 future spinal cord` is **CS10-CS12** — a window that closes
+exactly where the annotation sits. One survivor out of twenty-nine, selected by
+the bracket rather than by judgement.
+
+That round trip is the whole method in one move: EHDAA2 refutes, Ubergraph
+proposes, EHDAA2 confirms the proposal is in range.
+
 ### Walking the EHDAA2 chain is a client-side job
 
-EHDAA2 is not in Ubergraph, so there is no inference closure over it, and OLS4
-will not give you transitive ancestors over an arbitrary relation —
+Where you do want EHDAA2's own chain — usually to read the brackets on a run of
+precursors in one go — it has to be walked by hand. EHDAA2 is not in Ubergraph,
+so there is no inference closure over it, and OLS4 will not give you transitive
+ancestors over an arbitrary relation —
 `hierarchicalAncestors` follows a per-ontology configured property set
 (subClassOf plus part_of) and silently ignores any attempt to override it. The
 chain has to be walked one hop at a time with `neighbours`.
@@ -341,9 +400,17 @@ rather than a quantity.
    before`. Test the sample's stage against the window, remembering that it can
    only refute.
 
-5. **If the stage is excluded, walk one or two hops of `develops from`** from
-   the EHDAA2 term, read the bracket on each term reached, and crosswalk the
-   survivors back to Uberon. Those are your candidates.
+5. **If the bracket excludes the stage, navigate in Uberon, not in EHDAA2.**
+   EHDAA2's `develops_from` is sparse and is often absent on exactly the term
+   that was refuted. Go back to the Uberon term and walk one hop in Ubergraph,
+   choosing direction from how the bracket failed: `-d in` when the stage is
+   later than the end bound, `-d out` when it is earlier than the start bound.
+   Try `develops_from` first and `part_of` when that returns nothing — the
+   embryonic vesicle is sometimes modelled as the whole rather than as the
+   precursor. Then crosswalk every candidate back into EHDAA2 and keep only
+   those whose window contains the observed stage. The bracket is the filter;
+   going `-d out` returns enough upper-ontology noise that nothing else will
+   do.
 
 6. **If the mature name has no EHDAA2 term at all**, the structure does not
    exist under that name in the embryo. Search EHDAA2 for what the region is
