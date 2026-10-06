@@ -246,6 +246,32 @@ how ontologies word things: formal over colloquial; `system`, `tract`, `region`,
 For `full reproductive tract`: reproductive system, reproductive tract, female
 reproductive system, genital tract, reproductive organ system.
 
+**Substitute words inside the name, one at a time.** This is the single most
+productive move at this rung and it is easy to skip, because the string you
+were given already looks like a term. Hold the rest of the name fixed and swap
+one word for the ontology's preferred wording:
+
+| you were given | also try |
+|---|---|
+| future X | presumptive X, X primordium, X anlage, X rudiment, X bud, developing X |
+| control of X | regulation of X, X regulation |
+| X formation | X development, X morphogenesis, X differentiation |
+| upper / lower X | fore- / hind-, superior / inferior, cranial / caudal X |
+| X layer | X lamina, stratum X, X zone |
+
+**Do not expect the ontology's synonyms to do this for you.** They mostly do
+not. In Uberon, 39 terms are named `future X` and 44 `presumptive X`, and only
+**9 of each** carry the other spelling as an exact synonym — so searching
+`future midbrain` returns nothing while `presumptive midbrain` is a real term.
+In GO, **3161** terms are named `regulation of X` and exactly **4** carry a
+`control of X` synonym. A curator who writes "control of glycolysis" finds
+nothing by searching, and finds the term immediately by substituting one word.
+
+The substitutions worth trying come from the *kind* of thing you are naming, so
+work out the kind first. An anatomical precursor, a regulatory process and a
+cell layer each have their own vocabulary, and guessing across kinds wastes
+queries.
+
 **Combine fields here**, and do it before reaching for the graph. If the record
 has more than one search-term field, some candidates should be those fields
 joined the way an ontology would word them. `spine` plus `thoracic` gives

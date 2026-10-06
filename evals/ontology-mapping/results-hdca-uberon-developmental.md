@@ -127,6 +127,40 @@ being theoretical with the next dataset.
 - Mutation coverage went 8/8 → **15/15**.
 - Six HDCA-derived eval cases replace six invented ones.
 
+## Added after the run
+
+Three things the run showed were missing, none of them specific to this route.
+
+**Word substitution inside a name.** Uberon names developmental precursors
+seven ways — `X primordium` (79 terms), `X bud` (63), `presumptive X` (44),
+`future X` (39), `X anlage` (12), `developing X` (8), `X rudiment` (2) — and the
+synonyms do not bridge them: only 9 of 39 `future X` terms carry the
+`presumptive X` spelling. `future midbrain` returns nothing; `presumptive
+midbrain` is the term. The general form is now in SKILL.md at rung 2, where it
+belongs: in GO, 3161 terms are named `regulation of X` and exactly 4 carry a
+`control of X` synonym, so a curator writing "control of glycolysis" finds
+nothing by searching and finds it immediately by substituting one word.
+
+**Direct edge before transitive closure.** `relations` answers from Ubergraph's
+`redundant` graph. For `spinal cord develops_from` that is 29 terms; the
+`nonredundant` graph has exactly one, `posterior neural tube`. Ask for the
+direct parent first and only escalate when it leads somewhere without a
+bracket — which is what happens here, since `posterior neural tube` has no
+EHDAA2 xref. Read definitions when adjudicating the closure: `future spinal
+cord` and `posterior neural tube` are equally plausible from their labels and
+only one is dated.
+
+**The mature-term fallback.** The run's original stance — an unrepairable
+refutation returns nothing — was wrong for curation. A curator dissected
+something and called it the calvaria, and that names a real region even though
+the structure had not formed. The rule is now: if no stage-appropriate earlier
+term can be found, emit the mature term with the refutation recorded beside it.
+`calvaria` at CS16 maps to `UBERON:0004339 vault of skull`, flagged. The
+refutation must reach the report, or the fallback becomes the same wrong answer
+the route exists to catch.
+
+`docs/onto-query-gaps.md` collects the five package changes these imply.
+
 ## What this run cannot tell you
 
 The brain supplies most of the exact-label matches, and

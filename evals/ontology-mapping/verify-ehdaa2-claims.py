@@ -45,6 +45,7 @@ import json
 import re
 import sys
 import ssl
+import time
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -104,7 +105,16 @@ def load_owl() -> dict:
     from rdflib import RDF, RDFS, OWL, URIRef
 
     g = rdflib.Graph()
-    g.parse(OWL_URL)
+    # purl.obolibrary.org 500s intermittently; a one-shot fetch makes the whole
+    # check flaky for a reason that has nothing to do with the claims.
+    for attempt in range(4):
+        try:
+            g.parse(OWL_URL)
+            break
+        except Exception as e:  # noqa: BLE001 -- rdflib wraps several
+            if attempt == 3:
+                raise RuntimeError(f"could not fetch {OWL_URL}: {e}") from None
+            time.sleep(2 ** attempt)
 
     def local(u: str) -> str:
         return str(u).rsplit("/", 1)[-1]
@@ -141,13 +151,24 @@ def load_owl() -> dict:
 
 
 def sparql(query: str) -> list[dict]:
+    """POST a query; on failure say which query, since several run per build."""
     body = urllib.parse.urlencode({"query": query}).encode()
     req = urllib.request.Request(
         SPARQL, data=body,
         headers={"Accept": "application/sparql-results+json"},
     )
-    with urllib.request.urlopen(req, timeout=120) as fh:
-        return json.load(fh)["results"]["bindings"]
+    head = " ".join(query.split())[:160]
+    last = None
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(req, timeout=180) as fh:
+                return json.load(fh)["results"]["bindings"]
+        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError) as e:
+            # Ubergraph 500s and drops connections under load; the aggregate
+            # queries below are the ones that trip it.
+            last = e
+            time.sleep(2 ** attempt)
+    raise RuntimeError(f"SPARQL failed after 4 attempts ({last}) on: {head}")
 
 
 def load_xrefs() -> dict:
@@ -170,9 +191,89 @@ def load_xrefs() -> dict:
     return dict(out)
 
 
+def load_naming() -> dict:
+    """Counts behind the rung-2 substitution advice, from Uberon and GO."""
+    rows = sparql(f"""
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        SELECT ?pat (COUNT(DISTINCT ?u) AS ?n) WHERE {{
+          GRAPH <{UBERON_GRAPH}> {{ ?u rdfs:label ?l }}
+          FILTER(STRSTARTS(STR(?u), "{OBO}UBERON_"))
+          BIND(IF(STRSTARTS(LCASE(?l),"future "),"future X",
+               IF(STRSTARTS(LCASE(?l),"presumptive "),"presumptive X",
+               IF(CONTAINS(LCASE(?l)," primordium"),"X primordium",
+               IF(CONTAINS(LCASE(?l)," anlage"),"X anlage",
+               IF(CONTAINS(LCASE(?l)," rudiment"),"X rudiment",
+               IF(CONTAINS(LCASE(?l)," bud"),"X bud",
+               IF(CONTAINS(LCASE(?l),"developing "),"developing X","other")))))))
+               AS ?pat)
+          FILTER(?pat != "other")
+        }} GROUP BY ?pat
+    """)
+    patterns = {r["pat"]["value"]: int(r["n"]["value"]) for r in rows}
+
+    syn = sparql(f"""
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
+        SELECT ?l (GROUP_CONCAT(?s;separator=" ~ ") AS ?syns) WHERE {{
+          GRAPH <{UBERON_GRAPH}> {{
+            ?u rdfs:label ?l . OPTIONAL {{ ?u oboInOwl:hasExactSynonym ?s }}
+          }}
+          FILTER(STRSTARTS(STR(?u), "{OBO}UBERON_"))
+          FILTER(STRSTARTS(LCASE(?l),"future ") || STRSTARTS(LCASE(?l),"presumptive "))
+        }} GROUP BY ?l
+    """)
+
+    def cross(prefix, other):
+        n = 0
+        for r in syn:
+            if not r["l"]["value"].lower().startswith(prefix):
+                continue
+            syns = (r.get("syns", {}).get("value") or "").lower()
+            if any(x.strip().startswith(other) for x in syns.split("~")):
+                n += 1
+        return n
+
+    go = sparql("""
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
+        SELECT (COUNT(DISTINCT ?u) AS ?n_reg) (COUNT(DISTINCT ?v) AS ?n_ctrl) WHERE {
+          GRAPH <http://purl.obolibrary.org/obo/go/go-base.owl> {
+            ?u rdfs:label ?l .
+            OPTIONAL {
+              ?u oboInOwl:hasExactSynonym ?s .
+              FILTER(CONTAINS(LCASE(?s),"control of")) BIND(?u AS ?v)
+            }
+          }
+          FILTER(STRSTARTS(LCASE(?l),"regulation of"))
+        }
+    """)[0]
+
+    # direct vs closure, the spinal cord worked example
+    def dev_count(graph):
+        return len(sparql(f"""
+            SELECT ?o WHERE {{
+              GRAPH <http://reasoner.renci.org/{graph}> {{
+                <{OBO}UBERON_0002240> <{OBO}RO_0002202> ?o .
+              }}
+              FILTER(STRSTARTS(STR(?o),"{OBO}UBERON_"))
+            }}
+        """))
+
+    return {
+        "patterns": patterns,
+        "future_with_presumptive": cross("future ", "presumptive "),
+        "presumptive_with_future": cross("presumptive ", "future "),
+        "go_regulation": int(go["n_reg"]["value"]),
+        "go_with_control_syn": int(go["n_ctrl"]["value"]),
+        "spinal_cord_dev": {g: dev_count(g)
+                            for g in ("nonredundant", "redundant", "ontology")},
+    }
+
+
 def build_authority() -> dict:
     a = load_owl()
     a["xrefs"] = load_xrefs()
+    a["naming"] = load_naming()
     return a
 
 
@@ -394,6 +495,47 @@ def check_counts(auth, texts, fail):
     }
 
 
+def check_naming_advice(auth, texts, fail):
+    """The rung-2 substitution advice rests on counts; check them.
+
+    These are the numbers that make "generate the variants yourself" an argument
+    rather than an opinion, so they are the ones worth catching when they drift.
+    """
+    n = auth.get("naming")
+    if not n:
+        fail("naming", "authority predates the naming counts; refetch without --offline")
+        return
+    text = "\n".join(t for _, t in texts)
+
+    claims = [(f"{pat} count", v, rf"\|\s*`?{re.escape(pat)}`?\s*\|\s*{v}\s*\|")
+              for pat, v in n["patterns"].items()]
+    claims += [
+        ("total precursor terms", sum(n["patterns"].values()),
+         r"{n} terms for one idea"),
+        ("future with presumptive synonym", n["future_with_presumptive"],
+         r"only {n} of the \d+ `future X` terms carry"),
+        ("presumptive with future synonym", n["presumptive_with_future"],
+         r"only {n} of the \d+ the reverse|and only {n} of the \d+ the reverse"),
+        ("GO regulation terms", n["go_regulation"], r"\*\*{n}\*\* terms are named"),
+        ("GO with control synonym", n["go_with_control_syn"],
+         r"exactly \*\*{n}\*\* carry"),
+        ("spinal cord direct develops_from", n["spinal_cord_dev"]["nonredundant"],
+         r"there\s+is exactly \*\*(?:one|{n})\*\*"),
+    ]
+    for name, v, ctx in claims:
+        pat = ctx.replace("{n}", str(v))
+        pat = re.sub(r"(?<!\\)(?<!\\s)\s(?![*+?{])", r"\\s+", pat)
+        if not re.search(pat, text):
+            fail("naming", f"{name} = {v} is not stated where expected "
+                           f"(looked for /{pat}/)")
+
+    for g, want in n["spinal_cord_dev"].items():
+        if not re.search(rf"{g}\s+UBERON:0002240 develops_from\s+->\s+"
+                         rf"(?:{want} terms|posterior neural tube)", text):
+            fail("naming", f"the {g} graph returns {want} develops_from edges for "
+                           "spinal cord; the worked block does not say so")
+
+
 def check_claimed_absences(auth, texts, fail):
     """A term the text says has no Uberon xref must really have none.
 
@@ -574,6 +716,7 @@ def main() -> int:
         failures.append((where, msg))
 
     check_curies_exist(auth, texts + curie_only, fail)
+    naming_targets = texts
     check_xref_pairs(auth, curie_only, fail)
     check_label_adjacency(auth, texts, fail)
     check_windows(auth, texts, fail)
@@ -581,6 +724,7 @@ def main() -> int:
     counts = check_counts(auth, texts, fail)
     check_navigation_table(auth, texts, fail)
     check_claimed_absences(auth, texts, fail)
+    check_naming_advice(auth, texts + curie_only, fail)
     hi_cs, lo_cs = check_stage_ceiling(auth, texts, fail)
 
     print(f"stage targets used: {lo_cs} to {hi_cs}")

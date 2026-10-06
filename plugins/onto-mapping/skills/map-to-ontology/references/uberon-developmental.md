@@ -231,6 +231,35 @@ the EHDAA2 chain when you want the named structure that occupied the same place
 at an earlier stage, which is usually the question a mis-stated annotation
 raises.
 
+### Name the precursor before you walk to it
+
+Before any graph move, try the lexical one the skill's rung 2 describes:
+substitute one word and search again. Uberon names developmental precursors
+seven different ways, and which one it used for your structure is not
+predictable:
+
+| pattern | Uberon terms |
+|---|---|
+| `X primordium` | 79 |
+| `X bud` | 63 |
+| `presumptive X` | 44 |
+| `future X` | 39 |
+| `X anlage` | 12 |
+| `developing X` | 8 |
+| `X rudiment` | 2 |
+
+247 terms for one idea. **The ontology's synonyms will not bridge these for
+you**: only 9 of the 39 `future X` terms carry a `presumptive X` exact synonym
+and only 9 of the 44 the reverse. `future spinal cord` does carry
+`presumptive spinal cord`; `presumptive midbrain` carries only
+`presumptive mesencephalon`, so a search for `future midbrain` returns nothing
+at all while the term sits there under the other spelling.
+
+So for an annotation of `midbrain` on a CS10 sample, run the substitutions
+before reaching for `develops_from`. It is one lexical call against seven
+spellings, and it often lands directly on the term a graph walk would have
+taken several hops and a crosswalk to reach.
+
 ### Reason over the chain in Ubergraph, not in EHDAA2
 
 EHDAA2's `develops_from` is sparse exactly where you need it. None of the three
@@ -271,15 +300,45 @@ $OQ relations <UBERON CURIE> -p develops_from -d out -t uberon   # too early
 $OQ relations <UBERON CURIE> -p part_of       -d out -t uberon   # neither worked
 ```
 
-**Direction `in` is clean; direction `out` is noisy.** `presumptive midbrain`
-returns 5 terms going `in`. `spinal cord` returns 29 going `out`, and most of
-them are `anatomical structure`, `blastula`, `embryo`, `germ layer` — Ubergraph's
-closure includes the subsumption ancestors of the `develops_from` targets, so
-the upper ontology comes along for the ride.
+**Ask for the direct edge first, then the closure.** `$OQ relations` answers
+from Ubergraph's `redundant` graph, which is the full transitive closure, and
+that is why `spinal cord` going `out` returns 29 terms — `anatomical structure`,
+`blastula`, `embryo`, `germ layer` and the rest of the upper ontology, pulled in
+because the closure includes the subsumption ancestors of the `develops_from`
+targets.
 
-**The bracket is what makes the noisy direction usable.** Do not try to filter
-the 29 by eye. Crosswalk each candidate back to EHDAA2 and keep the ones whose
-window contains the observed stage. For `spinal cord` at CS12 that leaves
+The direct edges live in the `nonredundant` graph, and for the same query there
+is exactly **one**:
+
+```
+nonredundant   UBERON:0002240 develops_from  ->  posterior neural tube
+redundant      UBERON:0002240 develops_from  ->  29 terms
+ontology       UBERON:0002240 develops_from  ->  0 terms
+```
+
+The `ontology` graph returns nothing because the assertions are OWL
+restrictions rather than plain triples; `nonredundant` is the one that means
+"direct". The same information is available for an OLS4-only ontology from
+`neighbours`, which is asserted and one hop by construction.
+
+So the order is: **direct first, closure second, judgement over the gap.** Start
+with the one or two direct parents. If one of them crosswalks into EHDAA2 with
+a window that contains your stage, you are done and you never pay for the
+closure. Only when the direct edge leads somewhere unusable — `posterior neural
+tube` has no EHDAA2 xref at all, so it carries no bracket — escalate to the
+closure and work through it.
+
+`$OQ relations` has no flag for this yet; it always answers from `redundant`.
+Until it grows one, read the first hop from `$OQ term`, whose `develops from`
+list is the asserted one, and treat `relations` as the escalation.
+
+**When you do reach the closure, the bracket is what makes it usable.** Do not
+try to filter the 29 by eye, and do not pick on plausibility of the label
+alone — read the definition of anything you are about to accept, because
+`future spinal cord` and `posterior neural tube` are both plausible from their
+names and only one of them is dated. Crosswalk each candidate back to EHDAA2
+and keep the ones whose window contains the observed stage. For `spinal cord`
+at CS12 that leaves
 `UBERON:0006241 future spinal cord`, whose EHDAA2 counterpart
 `EHDAA2:0000674 future spinal cord` is **CS10-CS12** — a window that closes
 exactly where the annotation sits. One survivor out of twenty-nine, selected by
@@ -433,8 +492,15 @@ rather than a quantity.
    ordinary exit test: name the rival and say why not it. The bracket is
    evidence for the report, not a substitute for that line.
 
-8. **Report the route.** The CURIE, the EHDAA2 term you bridged through, the
-   bracket, and the fact that the bracket refuted rather than confirmed.
+8. **If nothing in range can be found, fall back to the mature term.** Emit the
+   term the lexical rungs gave you, with the refutation recorded beside it. A
+   region annotation is worth keeping; the claim that the structure had formed
+   is what you are withdrawing. Do not keep walking for a better fit.
+
+9. **Report the route.** The CURIE, the EHDAA2 term you bridged through, the
+   bracket, whether the bracket refuted or merely failed to refute, and whether
+   the term you are emitting is the stage-appropriate one or the mature
+   fallback.
 
 ## Worked examples
 
@@ -530,12 +596,33 @@ The limb pair behaves the same way in the opposite direction. `upper limb bud
 ectoderm` and `upper limb bud mesenchyme` run CS12-CS14, so `forelimb` at CS13
 is a bud and `forelimb` at CS16 is not. Both are in the corpus.
 
-**A refutation you cannot repair is still a result.** `calvaria` at CS16 is
-refuted — `parietal bone primordium` and `interparietal bone primordium` both
-start at CS19 — and EHDAA2 offers nothing at CS16 to replace it with. Report the
-refutation and the absence. Do not reach further down the chain for something
-that will fit; `mid vertebrae` at CS16 fails the same way, and the sclerotome
-terms that would be the obvious fallback ended at CS13-CS15.
+**When the refutation cannot be repaired, fall back to the mature term and say
+so.** `calvaria` at CS16 is refuted — `parietal bone primordium` and
+`interparietal bone primordium` both start at CS19 — and EHDAA2 offers nothing
+at CS16 to put in its place. `mid vertebrae` at CS16 fails the same way, with
+the sclerotome terms that look like the obvious fallback having ended at
+CS13-CS15.
+
+Return the mature structure anyway: `UBERON:0004339 vault of skull`,
+`UBERON:0002347 thoracic vertebra`. This is the general rule and it holds
+wherever the route runs out:
+
+> **If no stage-appropriate earlier term can be found, use the mature structure
+> term, and record the refutation beside it.**
+
+The reasoning is that the annotation is not meaningless — a curator dissected
+something and called it the calvaria, and that names a real region of the
+specimen. What is wrong is the implication that the named structure had formed.
+Returning nothing throws away a usable region annotation to avoid overstating a
+developmental claim, which trades a large loss for a small one. The mature term
+with the refutation attached loses neither.
+
+Two conditions on using it. The refutation has to be **in the report**, not just
+in your reasoning, or the fallback silently becomes the same wrong answer the
+route exists to catch. And do not keep walking the chain looking for something
+that fits — a term three hops away with a window that happens to span the stage
+is not evidence about what was dissected, and the fallback is honest in a way
+that is not.
 
 ### Label identity across the bridge is not term identity
 

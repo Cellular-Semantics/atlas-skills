@@ -11,7 +11,7 @@
    "accepted": [
     "UBERON:0001891"
    ],
-   "tests": "From HDCA braun_2023_brain. EHDAA2:0000615 mesencephalon is CS09-CS11, so CS18 is refuted: the annotator used the early vesicle's name for a later structure. The crosswalk lands on UBERON:0009616 presumptive midbrain, not on UBERON:0001891, because Uberon keeps the same distinction. One hop `develops_from -d in` reaches UBERON:0001891 midbrain, whose EHDAA2 counterpart EHDAA2:0001162 is CS12-open and is not refuted. Returning UBERON:0009616 is the failure: it is what the string matches and what the bracket excludes.",
+   "tests": "From HDCA braun_2023_brain. EHDAA2:0000615 mesencephalon is CS09-CS11, so CS18 is refuted: the annotator used the early vesicle's name for a later structure. The crosswalk lands on UBERON:0009616 presumptive midbrain, not on UBERON:0001891, because Uberon keeps the same distinction. One hop `develops_from -d in` reaches UBERON:0001891 midbrain, whose EHDAA2 counterpart EHDAA2:0001162 is CS12-open and is not refuted. Returning UBERON:0009616 is the failure: it is what the string matches and what the bracket excludes. Worth trying the rung-2 substitution first: `presumptive midbrain` is a real Uberon term and `future midbrain` is not, and only 9 of 39 `future X` terms carry the `presumptive X` spelling as a synonym, so the substitution has to be generated rather than looked up.",
    "_bucket": "refuted-then-navigated-forward",
    "_source": "HDCA braun_2023_brain",
    "must_mention": [
@@ -62,15 +62,18 @@
    ]
   },
   {
-   "id": "mid-vertebrae-cs16-refuted-unrepairable",
+   "id": "mid-vertebrae-cs16-mature-fallback",
    "record": {
     "tissue": "mid vertebrae",
     "developmental_stage": "CS16"
    },
    "target": "uberon",
-   "accepted": [],
-   "tests": "From HDCA to_2024_skeletal_integration. EHDAA2 has no vertebral term covering CS16 in the thoracic region: cervical cartilage condensations start CS17, thoracic CS18, and the sclerotome terms that look like the fallback ended at CS13-CS15. The correct outcome is a refutation with no replacement offered. Walking further down the chain until something fits is the failure.",
-   "_bucket": "refuted-unrepairable",
+   "accepted": [
+    "UBERON:0002347",
+    "UBERON:0001130"
+   ],
+   "tests": "From HDCA to_2024_skeletal_integration. EHDAA2 has no vertebral term covering CS16 in the thoracic region: cervical cartilage condensations start CS17, thoracic CS18, and the sclerotome terms that look like the fallback ended at CS13-CS15. So the refutation cannot be repaired, and the rule applies -- emit the mature term with the refutation recorded beside it. Two ways to fail: returning no mapping at all, which throws away a usable region annotation; and returning the mature term without the refutation, which is the confident wrong answer the route exists to prevent. Walking further down the chain for something whose window happens to span CS16 is also a failure.",
+   "_bucket": "refuted-mature-fallback",
    "_source": "HDCA to_2024_skeletal_integration",
    "must_mention": [
     "CS18"
