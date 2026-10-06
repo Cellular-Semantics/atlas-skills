@@ -189,6 +189,39 @@ contradict the derived stage. A refutation on such a record is evidence about
 the stage, not the tissue, and the report has to say which it is proposing to
 change.
 
+## Checked against a systematic HDCA run
+
+An independent HDCA trawl — 38 mature terms, 167 candidates — accepted
+**one** substitution (`embryo limb` at CS13 to `UBERON:0004347 limb bud`), with
+64 candidates already correct because the samples are fetal, 51 with no stage
+evidence, and 27 whose precursor had closed before the earliest sample. Three
+things follow for the run above.
+
+**My 4-in-19 is not a rate.** These records were chosen to include every case
+the sweep got interestingly wrong, so the sample is enriched for exactly the
+situations where EHDAA2 contributes. Against an unselected corpus the yield is
+closer to 1 in 38 mature terms. The run shows the mechanism works; it does not
+show it is often needed.
+
+**The `future spinal cord` call is contested, and they are probably right for a
+pipeline.** That review declined the same substitution because the precursor's
+window ends exactly at CS12. The windows abut cleanly — future spinal cord
+CS10-CS12, spinal cord CS13- — but `ends_during_or_before` is an upper bound, so
+the precursor is permitted at CS12 rather than asserted, and a recorded stage
+carries about a stage of noise. The counter-argument is real too: EHDAA2
+positively excludes the mature term at CS12, so declining keeps a term the
+ontology rules out. The defensible output is both terms and the conflict; where
+one must be chosen, the mature-term fallback wins on robustness. I recorded it
+as a clean improvement, which was more confident than the axioms support.
+
+**The `ovary` result is outside that trawl's search space, which matters.**
+It searched backwards only — mature term to precursor — and every near-miss it
+reported has that shape (retina to optic cup, heart to heart tube, dorsal root
+ganglion to trunk neural crest). `UBERON:0000992 ovary` is `subClassOf` gonad
+and `develops_from` indifferent gonad, so it is reachable walking `in` from
+gonad and never walking `out`. A backwards-only trawl under-reports the route's
+value and then correctly concludes the value is low.
+
 ## Corrections to earlier claims
 
 - **`frontal` at CS16 is the frontal bone**, not frontal cortex. I had marked

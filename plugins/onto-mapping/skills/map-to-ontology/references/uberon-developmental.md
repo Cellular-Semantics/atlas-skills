@@ -584,6 +584,83 @@ those. Uberon has `UBERON:0009708` and `UBERON:0009709` for them.
 Two structures with a stated end bound inside the window of their parent is a
 reliable signal that the parent term is too coarse for the stage.
 
+## How much this is actually worth
+
+A systematic HDCA run — 38 mature terms trawled through Uberon's develops-from
+relations (`RO:0002202`, `RO:0002207`, `RO:0002225`, `RO:0002254`), crossed to
+EHDAA2, 167 candidates — produced **one accepted substitution**:
+`embryo limb` at CS13 to `UBERON:0004347 limb bud`.
+
+| verdict | n |
+|---|---|
+| samples all fetal, mature term already correct | 64 |
+| no stage evidence on the candidate | 51 |
+| precursor gone by the earliest sample | 27 |
+| stage window overlaps, went to review | 25 |
+| **of those, substitutions accepted** | **1** |
+
+Read those numbers before investing in this route. **91 of 167 candidates (54%)
+were out of scope** because the samples are fetal or the precursor had already
+closed — the CS20 ceiling biting at corpus scale, which an embryonic-filtered
+sample set hides. **51 (31%) had no stage evidence**, consistent with the 11 of
+23 candidate terms that carried no EHDAA2 xref in a separate hand-worked run.
+
+The honest conclusion: **this is a judgement-time check, not a pipeline stage.**
+Automating a trawl over every mature term to find one substitution is not worth
+the apparatus. Invoking the bracket when a reader has a specifically embryonic
+record and a specifically mature organ name is cheap and occasionally decisive.
+Keep it in the skill; do not build it into a build.
+
+### The trawl direction decides what you can find
+
+That run searched **backwards only** — from a mature term to its precursors.
+Every near-miss it surfaced has that shape: `retina` to optic cup, `heart` to
+heart tube, `dorsal root ganglion` to trunk neural crest. All are `develops_from`
+going `out`.
+
+Backwards answers one question: *is the sample too early for this term?* It
+cannot answer the other two:
+
+- **Too late.** `Mesencephalon` at CS18 needs `develops_from` going `in`.
+- **Too vague for the stage.** `gonad` at CS20 in a female donor is the
+  strongest result anyone has got from this route, and a backwards trawl cannot
+  reach it. `UBERON:0000992 ovary` is `subClassOf` gonad and `develops_from`
+  `UBERON:0009117 indifferent gonad` — so it is reachable going `in` from gonad,
+  never going `out`. EHDAA2 puts `indifferent gonad` at CS15-CS17 and `ovary` at
+  CS18-, which is what makes the call.
+
+A trawl that only walks backwards will under-report this route's value and then
+correctly conclude the value is low. Search all three directions or say which
+you searched.
+
+### Abutting windows are a handover, not a licence
+
+When a precursor's end bound equals the sample's stage, be careful. For
+`spinal cord` at CS12 the two windows abut exactly:
+
+| | CS12 | CS13 |
+|---|---|---|
+| `UBERON:0006241` future spinal cord (CS10-CS12) | in range | refuted |
+| `UBERON:0002240` spinal cord (CS13-) | refuted | in range |
+
+No gap, no overlap. That is clean modelling, and it is tempting to read it as
+licence to substitute. Two reasons not to be confident:
+
+- `ends_during_or_before CS12` is an **upper bound**, so the structure may have
+  ended before CS12. The precursor is *permitted* at CS12, not asserted.
+- A recorded stage carries roughly a stage of noise. If the sample is really
+  CS13, the mature term was right all along.
+
+Against that, the mature term is **positively excluded** at CS12 — EHDAA2 says
+spinal cord cannot exist before CS13 — so declining the substitution keeps a
+term the ontology rules out. Neither choice is safe.
+
+**So report both, with the conflict.** Where a pipeline forces one term, the
+mature-term fallback applies and the refutation goes in the report: that is the
+more robust choice under stage noise, and it is what an independent HDCA review
+chose for exactly this record. Do not record a boundary substitution as though
+the bracket settled it.
+
 ## What a real corpus does to this
 
 Run against 361 distinct (stage, tissue) pairs from HDCA, the route's behaviour
