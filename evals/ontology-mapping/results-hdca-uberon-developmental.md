@@ -163,6 +163,15 @@ the route exists to catch.
 
 ## Full-corpus sweep (all 361 in-range pairs)
 
+> **The sweep is not the route, and its numbers are not the route's numbers.**
+> It implements steps 2-4 of the recipe — match a string into EHDAA2, read the
+> bracket — and stops. It never crosswalks back to Uberon, so it never produces
+> the thing a mapping is actually for, and it reads one string at a time with no
+> access to sibling fields, study context or the rest of the record, which rung 0
+> exists to make you read. A deliberately poor matcher, in other words. Treat the
+> output as a coverage census plus a stress test of one step. The one number it
+> cannot give is the method's false-positive rate.
+
 `sweep-hdca-corpus.py` runs every in-range pair offline against the cached
 authority. 557 atomic (stage, component) checks:
 
@@ -192,9 +201,22 @@ The sharpest is `outflow tract` at CS14, matched to `outflow tract muscle`
 CS12-open and would not have been refuted at all. A worse match manufactured a
 confident refutation of a correct annotation.
 
-So the false-positive rate is not a property of the method. It is 0% when
-refutations are restricted to matches you would defend, and 92% when they are
-not. That rule is now in the reference.
+So the refutations track match quality, not the brackets. Stated carefully:
+**with this matcher**, restricting refutations to matches you would defend
+leaves 6 of 6 standing, and allowing substring matches adds 25 of which 23 are
+junk. That is an argument for the rule — a partial match generates candidates,
+never refutations — and it is a real hazard for an agent too, which can also
+make a sloppy match. It is not a measurement of what the skill does, because
+the skill would not have made most of these matches.
+
+`spine; thoracic` is the clearest demonstration that the matcher is the straw
+man here. SKILL.md's rung 2 already gives this exact case as a worked example:
+combine the fields, get `thoracic spine`, and land on
+`UBERON:0006073 thoracic region of vertebral column` by exact synonym in one
+lexical call, with no EHDAA2 and no graph. The sweep split the string, threw
+`spine` away, matched the bare word `thoracic` to `thoracic duct`, and refuted
+it. Same for `frontal` in a brain study, which is
+`UBERON:0001870 frontal cortex` by label.
 
 Two of the substring refutations are real: `knee joint` and `hip joint` at CS16
 against the joint primordia, both CS19-. EHDAA2's plain `knee` and `hip` are

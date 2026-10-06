@@ -1,5 +1,21 @@
 # Refutation review: every bracket refutation on the HDCA corpus
 
+> **What produced these candidates was a deliberately dumb matcher.** It reads one
+> string at a time with no sibling fields and no study context, and it stops at the
+> EHDAA2 bracket without crosswalking back to Uberon — so nothing here is a mapping.
+> The `verdict` column is judgement applied *after the fact* to a bad matcher's output.
+> Several "wrong" rows are wrong because the skill, reading the whole record, would
+> never have made that match: `spine; thoracic` is `thoracic spine`, i.e.
+> `UBERON:0006073`, which is SKILL.md's own rung-2 worked example.
+
+**Superseded in part by `results-end-to-end.md`.** Working the records whole
+overturned two verdicts here: `frontal` at CS16 is the frontal bone (the record
+says `anatomical_site=calvaria`), so marking that match wrong was itself wrong;
+and the two joint rows judged sound do not survive, because `UBERON:0001485`
+and `UBERON:0001486` have no EHDAA2 xref and the proper route never reaches the
+joint-primordium terms the sweep matched. Net effect: every surviving
+refutation came from an exact or substituted match, none from substring.
+
 Generated from `sweep-hdca-corpus.py`. The **verdict** column is a human judgement,
 not a measurement — no ontology can settle it, and `verify-ehdaa2-claims.py` does not
 guard it. It is recorded here so it can be disagreed with rather than inherited.

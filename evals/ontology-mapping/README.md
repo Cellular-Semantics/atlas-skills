@@ -29,6 +29,14 @@ suite and nothing here interferes with it.
   record but one is a real string from the HDCA `embryonic_tissue_fields`
   corpus; the exception is constructed, because no HDCA pair landed on a term
   affected by the OLS4 end-bound loss and that hole needs a regression case.
+- `results-end-to-end.md` — **the one to read.** 19 HDCA records worked whole,
+  from every field in the record through to a Uberon CURIE with a reason. Three
+  refutations in 19 records, against 47 from the mechanical sweep; the
+  difference is that a record read whole produces a defensible candidate, and a
+  defensible candidate is rarely refuted. Two answers improve on the existing
+  curated term.
+- `review-refutations.md` — the sweep's refutations with per-row judgement.
+  Partly superseded by the end-to-end run, which overturned two of them.
 - `plan-hdca-uberon-developmental.md` / `results-hdca-uberon-developmental.md` —
   how the subset was chosen, and what running it found. The results are where
   the two bridge hazards and the extraembryonic blind spot came from; none was
