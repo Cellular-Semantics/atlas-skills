@@ -41,8 +41,16 @@ suite and nothing here interferes with it.
   edge whenever it points at the same stage as the start edge, so a check
   written against OLS4 would confirm the reference's own worked examples to be
   wrong. It also tests for that data loss, so we find out when it is fixed.
+- `sweep-hdca-corpus.py` — runs every in-range (stage, tissue) pair from the
+  HDCA corpus through the EHDAA2 brackets, offline, and prints the refutations
+  grouped by how the candidate was matched. Decides nothing; the grouping is
+  what makes the output judgeable, and it is where the reference's "only refute
+  on a match you would defend" rule came from. Output must be deterministic —
+  an early version built its variant list as a set and the headline counts
+  moved between runs.
 - `mutate-ehdaa2-claims.py` — measures what the verifier catches, by breaking
-  the reference fifteen ways and confirming each is caught. Currently **15/15**.
+  the reference seventeen ways and confirming each is caught. Currently
+  **17/17**.
   Run it after editing either file; a drop means the verifier lost coverage.
 - `verify-hsapdv-claims.py` — checks every HsapDv CURIE, ID:label pair, label
   phrase and interval number asserted in the skill text and the cases against

@@ -21,7 +21,7 @@ series of near-identical strings**, which lexical matching structurally cannot.
 | tier | pairs | refuted | notes |
 |---|---|---|---|
 | A — exact EHDAA2 label, refuted | 3 | 3 | all repaired by navigation, reported previously |
-| B — no EHDAA2 label | 6 | 2 | the 84% case; both refutations unrepairable |
+| B — no EHDAA2 label | 6 | 2 | the 84% case; both refutations unrepairable. Now superseded by the full-corpus sweep below |
 | C — bracket passes | 4 | 0 | but two needed sub-structure brackets to answer well |
 | D — boundary | 2 | 0 | start bound read as inclusive, correctly |
 | E — must not trigger | 3 | 0 | stayed out in all three |
@@ -160,6 +160,78 @@ refutation must reach the report, or the fallback becomes the same wrong answer
 the route exists to catch.
 
 `docs/onto-query-gaps.md` collects the five package changes these imply.
+
+## Full-corpus sweep (all 361 in-range pairs)
+
+`sweep-hdca-corpus.py` runs every in-range pair offline against the cached
+authority. 557 atomic (stage, component) checks:
+
+| outcome | checks |
+|---|---|
+| no EHDAA2 candidate found at all | 300 |
+| candidate found, bracket does not refute | 208 |
+| candidate found, **bracket refutes** | 47 |
+| candidate found, no bracket asserted | 2 |
+
+The 47 refutations are 31 distinct (component, stage, candidate) triples, and
+sorting them by how the candidate was matched is the finding:
+
+| match type | distinct refutations | sound |
+|---|---|---|
+| exact label | 5 | 5 |
+| rung-2 substitution | 1 | 1 |
+| substring / token overlap | 25 | 2 |
+
+**The brackets were never wrong. The matches were.** Six of six refutations from
+a principled match held up. Twenty-three of twenty-five from substring matching
+were artefacts of a shared word — `Membrane` matching `anal membrane`, `stroma`
+matching `corneal stroma mesenchyme`, `thoracic` matching `thoracic duct`.
+
+The sharpest is `outflow tract` at CS14, matched to `outflow tract muscle`
+(CS12-CS13) and "refuted". The term the annotator meant, `heart outflow`, is
+CS12-open and would not have been refuted at all. A worse match manufactured a
+confident refutation of a correct annotation.
+
+So the false-positive rate is not a property of the method. It is 0% when
+refutations are restricted to matches you would defend, and 92% when they are
+not. That rule is now in the reference.
+
+Two of the substring refutations are real: `knee joint` and `hip joint` at CS16
+against the joint primordia, both CS19-. EHDAA2's plain `knee` and `hip` are
+CS16- and in range, so the joint really does form later than the region. The
+rule is not "never use substring" — it is "do not refute on one".
+
+Splitting composites also turned out to be unsafe. `brain; stroma` means stroma
+*of brain*, and `spinal cord; brachial` is the brachial spinal cord; the second
+component is a modifier, not a second structure. Both spellings appear in the
+corpus, which is how you can tell.
+
+**Deterministic output matters here.** The first version of the sweep built its
+variant list as a set, and Python randomises string hashing per process, so the
+same string matched `exact` on one run and `substitution` on the next and the
+headline table moved. Fixed to an ordered list, exact spellings first.
+
+## Fetal coverage: there is none
+
+Asked directly, the answer is a clean negative.
+
+- Across all ~45 ontologies in Ubergraph there are **23** distinct
+  existence-relation links to HsapDv, every one to a coarse stage
+  (`prenatal stage`, `fetal stage`, `postnatal stage`). **None** points at the
+  weekly fetal terms `HsapDv:0000046`-`0000075`.
+- The older EHDAA is not served by OLS4 at all.
+- EHDAA2 stops at CS20, about 7.5 pcw.
+
+So past the embryonic period there is no stage-anchored anatomy resource
+anywhere queryable, and the route has nothing to offer. The verifier now fails
+if any weekly-fetal link ever appears, so we find out if that changes.
+
+The same gap shows in Uberon's own precursor vocabulary: of the 247 terms named
+with one of the seven precursor patterns, only **79 (32%)** carry an EHDAA2
+xref. `X anlage` (12 terms) and `X rudiment` (2) have none at all; `presumptive
+X` has 4 of 44, most of those being zebrafish- and frog-oriented. Two thirds of
+the precursor vocabulary has no bracket available at any stage, embryonic
+included.
 
 ## What this run cannot tell you
 

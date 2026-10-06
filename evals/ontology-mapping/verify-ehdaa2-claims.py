@@ -233,6 +233,36 @@ def load_naming() -> dict:
                 n += 1
         return n
 
+    prec = sparql(f"""
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
+        SELECT (COUNT(DISTINCT ?u) AS ?n) (COUNT(DISTINCT ?v) AS ?w) WHERE {{
+          GRAPH <{UBERON_GRAPH}> {{
+            ?u rdfs:label ?l .
+            OPTIONAL {{ ?u oboInOwl:hasDbXref ?x .
+                       FILTER(STRSTARTS(STR(?x),"EHDAA2:")
+                              || STRSTARTS(STR(?x),"RETIRED_EHDAA2:"))
+                       BIND(?u AS ?v) }}
+          }}
+          FILTER(STRSTARTS(STR(?u),"{OBO}UBERON_"))
+          FILTER(STRSTARTS(LCASE(?l),"future ") || STRSTARTS(LCASE(?l),"presumptive ")
+                 || CONTAINS(LCASE(?l)," primordium") || CONTAINS(LCASE(?l)," anlage")
+                 || CONTAINS(LCASE(?l)," rudiment") || CONTAINS(LCASE(?l)," bud")
+                 || CONTAINS(LCASE(?l),"developing "))
+        }}
+    """)[0]
+
+    # Any anatomy->fetal-stage link anywhere in Ubergraph? The reference claims none.
+    weekly = sparql(f"""
+        SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE {{
+          VALUES ?p {{ <{OBO}RO_0002496> <{OBO}RO_0002497>
+                      <{OBO}RO_0002488> <{OBO}RO_0002492> }}
+          GRAPH <http://reasoner.renci.org/nonredundant> {{ ?s ?p ?stage . }}
+          FILTER(STRSTARTS(STR(?stage),"{OBO}HsapDv_"))
+          FILTER(?stage IN ({", ".join(f"<{OBO}HsapDv_{n:07d}>" for n in range(46, 76))}))
+        }}
+    """)[0]
+
     go = sparql("""
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
@@ -265,6 +295,9 @@ def load_naming() -> dict:
         "presumptive_with_future": cross("presumptive ", "future "),
         "go_regulation": int(go["n_reg"]["value"]),
         "go_with_control_syn": int(go["n_ctrl"]["value"]),
+        "precursor_terms": int(prec["n"]["value"]),
+        "precursor_with_ehdaa2": int(prec["w"]["value"]),
+        "weekly_fetal_links": int(weekly["n"]["value"]),
         "spinal_cord_dev": {g: dev_count(g)
                             for g in ("nonredundant", "redundant", "ontology")},
     }
@@ -521,7 +554,14 @@ def check_naming_advice(auth, texts, fail):
          r"exactly \*\*{n}\*\* carry"),
         ("spinal cord direct develops_from", n["spinal_cord_dev"]["nonredundant"],
          r"there\s+is exactly \*\*(?:one|{n})\*\*"),
+        ("precursor terms", n["precursor_terms"], r"the {n} terms named with one"),
+        ("precursor terms with a bracket", n["precursor_with_ehdaa2"],
+         r"only \*\*{n}\s*\(\d+%\)\*\* carry an EHDAA2 xref"),
     ]
+    if n["weekly_fetal_links"] != 0:
+        fail("naming", f"{n['weekly_fetal_links']} terms now link to a weekly fetal "
+                       "HsapDv stage; the reference says none do, and the 'no fetal "
+                       "resource' claim needs rewriting")
     for name, v, ctx in claims:
         pat = ctx.replace("{n}", str(v))
         pat = re.sub(r"(?<!\\)(?<!\\s)\s(?![*+?{])", r"\\s+", pat)
@@ -534,6 +574,48 @@ def check_naming_advice(auth, texts, fail):
                          rf"(?:{want} terms|posterior neural tube)", text):
             fail("naming", f"the {g} graph returns {want} develops_from edges for "
                            "spinal cord; the worked block does not say so")
+
+
+def check_sweep_counts(auth, texts, fail):
+    """Recompute the sweep's refutation counts and compare with the stated table.
+
+    Only the count columns are checkable. Whether a refutation is *sound* is a
+    judgement over 25 cases that no ontology can settle, so that column is
+    unguarded by construction and the reference says so.
+
+    Skipped when the corpus is not on this machine.
+    """
+    sweep = ROOT / "sweep-hdca-corpus.py"
+    corpus = Path(
+        "/Users/do12/Documents/GitHub/HDCA_metadata/reports/embryonic_tissue_fields.csv"
+    )
+    if not (sweep.exists() and corpus.exists()):
+        print("sweep counts: skipped (corpus not present on this machine)")
+        return
+    import subprocess
+    r = subprocess.run(["uv", "run", str(sweep), str(corpus)],
+                       capture_output=True, text=True, cwd=REPO)
+    got = dict(re.findall(r"^\s+(exact|substitution|substring)\s+(\d+) distinct",
+                          r.stdout, re.M))
+    if not got:
+        fail("sweep", f"could not read counts from the sweep: {r.stdout[-200:]}")
+        return
+    text = "\n".join(t for _, t in texts)
+    rows = {
+        "exact": r"\| exact label \| (\d+) \|",
+        "substitution": r"\| rung-2 substitution \| (\d+) \|",
+        "substring": r"\| substring / token overlap \| (\d+) \|",
+    }
+    for how, pat in rows.items():
+        stated = re.findall(pat, text)
+        if not stated:
+            fail("sweep", f"no table row states the {how} refutation count")
+            continue
+        if any(v != got[how] for v in stated):
+            fail("sweep", f"{how} refutations: sweep says {got[how]}, "
+                          f"the reference says {stated}")
+    print(f"sweep counts: exact {got['exact']}, substitution {got['substitution']}, "
+          f"substring {got['substring']} (soundness column is unguarded by design)")
 
 
 def check_claimed_absences(auth, texts, fail):
@@ -724,6 +806,7 @@ def main() -> int:
     counts = check_counts(auth, texts, fail)
     check_navigation_table(auth, texts, fail)
     check_claimed_absences(auth, texts, fail)
+    check_sweep_counts(auth, texts, fail)
     check_naming_advice(auth, texts + curie_only, fail)
     hi_cs, lo_cs = check_stage_ceiling(auth, texts, fail)
 

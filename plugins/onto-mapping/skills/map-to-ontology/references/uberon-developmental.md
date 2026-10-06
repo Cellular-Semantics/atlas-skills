@@ -151,6 +151,21 @@ silent on the last fortnight of the embryonic period and on everything fetal.
 For a sample past about 7.5 pcw, EHDAA2 has no bracket to offer and you should
 say so rather than reading the absence as a negative result.
 
+**There is no other resource to fall back on.** Across all ~45 ontologies in
+Ubergraph there are 23 distinct existence-relation links to HsapDv, every one of
+them to a coarse stage — `prenatal stage`, `fetal stage`, `postnatal stage` —
+and **none to the weekly fetal terms** `HsapDv:0000046`-`0000075`. The older
+EHDAA is not served by OLS4 at all. So for a fetal sample there is no
+stage-anchored anatomy anywhere queryable, and this route has nothing to offer
+past CS20. Say that plainly rather than implying a check was performed.
+
+The same gap shows in how little of Uberon's precursor vocabulary is reachable:
+of the 247 terms named with one of the seven precursor patterns, only **79
+(32%)** carry an EHDAA2 xref, so two thirds have no bracket available at any
+stage. `X anlage` (12 terms) and `X rudiment` (2) have none at all, and
+`presumptive X` has 4 of 44 — most of those terms are zebrafish- and
+frog-oriented.
+
 **57 classes are anchored to Carnegie substages instead** —
 `HsapDv:0000031`-`0000035`, that is CS05a/b/c and CS06a/b — of which 39 carry a
 Uberon xref. Those substage terms have no dpf annotations of their own (see
@@ -623,6 +638,67 @@ route exists to catch. And do not keep walking the chain looking for something
 that fits — a term three hops away with a window that happens to span the stage
 is not evidence about what was dissected, and the fallback is honest in a way
 that is not.
+
+### Only refute on a match you would defend
+
+**This is the rule that decides whether the route helps or harms.** Swept across
+every in-range pair in the HDCA corpus — 557 atomic (stage, component) checks —
+the brackets produced 31 distinct refutations. Sorted by how the candidate term
+was found:
+
+The counts are reproducible with `sweep-hdca-corpus.py` and are checked. The
+soundness column is a judgement over 25 cases that no ontology can settle, so
+it is the one number here nothing guards — treat it as an argument, not a
+measurement.
+
+| how the EHDAA2 term was matched | distinct refutations | sound on inspection |
+|---|---|---|
+| exact label | 5 | 5 |
+| rung-2 substitution | 1 | 1 |
+| substring / token overlap | 25 | 2 |
+
+**The bracket was never the problem. The match was.** Every refutation from an
+exact or substituted match held up. Of the 25 from substring matching, 23 were
+nonsense produced by a term that merely shared a word:
+
+```
+'Membrane'       -> anal membrane                 CS17-CS18   "refuted" at CS14
+'Proximal'       -> optic vesicle proximal part    CS12-CS13   "refuted" at CS16
+'stroma'         -> corneal stroma mesenchyme      CS20-        "refuted" at CS16
+'thoracic'       -> thoracic duct                  CS18-        "refuted" at CS15
+'gonad'          -> gonadal vein                   CS19-        "refuted" at CS17
+'outflow tract'  -> outflow tract muscle           CS12-CS13   "refuted" at CS14
+```
+
+The last is the clearest: `heart outflow` is CS12-open and would not have been
+refuted at all. A worse match produced a confident refutation of a correct
+annotation.
+
+So: **a substring or partial match generates candidates, never refutations.**
+Before letting a bracket overturn an annotation, ask whether you would defend
+the EHDAA2 term as naming the same structure the annotator meant. If the answer
+is "it shares a word", the bracket result is void. Refute only on an exact label
+match, a synonym, or a substitution you can state — and say which in the report,
+because that is what makes the refutation auditable.
+
+The two sound substring refutations show the rule is not "never use substring".
+`knee joint` and `hip joint` at CS16 matched `knee joint primordium` and
+`hip joint primordium`, both CS19-, and both refutations are real — the joints
+form later than the regions do. EHDAA2's plain `knee` and `hip` are CS16- and in
+range. The difference is that "knee joint" really does name the joint.
+
+### Components of a composite are not independent structures
+
+Splitting `brain; stroma` into `brain` and `stroma` produced the corneal-stroma
+nonsense above. The string means *stroma of brain*; the second component is a
+modifier, not a second structure. The same goes for `spinal cord; brachial`
+(brachial spinal cord), `forelimb; Proximal`, `yolk sac; Membrane`.
+
+Before mapping a component separately, check whether it can stand alone as the
+name of a structure. A bare qualifier — `Proximal`, `Distal`, `Membrane`,
+`stroma`, `thoracic` — cannot, and the way these appear elsewhere in the same
+column usually shows the intended compound. `spinal cord; brachial` and
+`brachial spinal cord` are both in the HDCA corpus.
 
 ### Label identity across the bridge is not term identity
 
