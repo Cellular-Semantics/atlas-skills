@@ -22,9 +22,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-REPO = Path(__file__).parent.parent.parent
-DOC = REPO / "plugins/onto-mapping/skills/map-to-ontology/references/uberon-developmental.md"
-VERIFY = REPO / "evals/ontology-mapping/verify-ehdaa2-claims.py"
+REPO = next(q for q in Path(__file__).parents if (q / "plugins").is_dir())
+DOC = REPO / "docs/archive/ehdaa2-investigation/uberon-developmental.md"
+VERIFY = REPO / "docs/archive/ehdaa2-investigation/verify-ehdaa2-claims.py"
 
 # (error class, text to find, what to replace it with)
 MUTATIONS = [

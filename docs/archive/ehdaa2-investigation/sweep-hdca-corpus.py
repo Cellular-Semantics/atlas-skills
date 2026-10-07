@@ -30,7 +30,6 @@ CORPUS = (sys.argv[1] if len(sys.argv) > 1 else
 if not AUTH.exists():
     sys.exit(f"no authority at {AUTH}; run verify-ehdaa2-claims.py first")
 
-AUTH="/Users/do12/Documents/GitHub/skills/atlas-skills-uberon/evals/ontology-mapping/.ehdaa2-authority.json"
 a=json.load(open(AUTH)); lab=a["labels"]; rel=a["relations"]; xr=a["xrefs"]
 CS={3:1,5:2,7:3,8:4,9:5,11:6,13:7,14:8,16:9,17:10,18:11,19:12,20:13,21:14,22:15,23:16,24:17,25:18,26:19,27:20}
 def win(c):

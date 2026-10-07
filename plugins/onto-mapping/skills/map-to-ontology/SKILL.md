@@ -18,18 +18,6 @@ in the input against the number in the label gives the wrong term every time.
 That file records the release it was written against; check it with
 `$OQ release -o hsapdv --expect <version>`.
 
-**If you are mapping anatomy on a human embryonic sample, read
-[`references/uberon-developmental.md`](references/uberon-developmental.md).**
-Annotators name the mature organ — `kidney`, `limb`, `lung` — and at Carnegie
-stages the thing in the sample is its precursor. That failure is invisible to
-lexical probing, because the string matched a real term. EHDAA2 states when each
-structure exists at Carnegie-stage resolution and xrefs across to Uberon, which
-makes it a candidate-generation route no lexical probe can reach. It is bounded:
-EHDAA2 stops at CS20, and its existence axioms can only rule a candidate out,
-never confirm one. **It is also low-yield** — a systematic HDCA trawl over 38
-mature terms accepted one substitution — so reach for it when a record is
-specifically embryonic and names a mature organ, not as a routine step.
-
 Week-to-stage conversion defaults to the UK clinical convention (`N weeks` = N
 *completed* weeks), names the adjacent term, and states the assumption. **If
 the caller states which interpretation they want, use theirs** and say which

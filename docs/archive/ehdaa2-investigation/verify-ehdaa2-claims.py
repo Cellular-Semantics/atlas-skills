@@ -58,7 +58,7 @@ _OPENER = urllib.request.build_opener(urllib.request.HTTPSHandler(context=_SSL))
 urllib.request.install_opener(_OPENER)
 
 ROOT = Path(__file__).parent
-REPO = ROOT.parent.parent
+REPO = next(q for q in ROOT.parents if (q / "plugins").is_dir())
 CACHE = ROOT / ".ehdaa2-authority.json"
 OWL_URL = "http://purl.obolibrary.org/obo/ehdaa2.owl"
 SPARQL = "https://ubergraph.apps.renci.org/sparql"
@@ -68,14 +68,14 @@ OLS4_GRAPH = "https://www.ebi.ac.uk/ols4/api/ontologies/ehdaa2/terms/{iri}/graph
 EXPECTED_RELEASE = "2024-01-11"
 
 TARGETS = [
-    "plugins/onto-mapping/skills/map-to-ontology/references/uberon-developmental.md",
+    "docs/archive/ehdaa2-investigation/uberon-developmental.md",
     "plugins/onto-mapping/skills/map-to-ontology/SKILL.md",
 ]
 # Scanned for CURIEs and xref pairs only. Its `record` values are annotation
 # strings, and its `tests` prose is argument rather than assertion, so the
 # label and window regexes would read both as claims about the ontology.
 CURIE_ONLY = [
-    "evals/ontology-mapping/cases-uberon-developmental.json",
+    "docs/archive/ehdaa2-investigation/cases-uberon-developmental.json",
 ]
 
 EHDAA2_CURIE = r"(?:RETIRED_)?EHDAA2:\d{7}"
