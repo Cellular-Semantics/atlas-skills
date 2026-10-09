@@ -249,7 +249,8 @@ Searching these is worse than useless. A lexical probe on `15` can match an
 unrelated term whose label or definition happens to contain 15, and a rank is
 reported for it, which reads as signal when it is noise.
 
-For these the route is **convert, construct, verify** — not search:
+For these the route is **convert, construct, verify** — not search. Report it as
+`convert`:
 
 1. **Read the field key, because the value does not carry the information.**
    `15` means nothing. `age=15` beside `age_units=weeks post conception` means
@@ -342,7 +343,10 @@ Generate candidates. The moves are listed cheapest first, but this is a menu,
 not a staircase: **the last failure signal chooses the next move.** Do not run
 them all.
 
-### The exact probe
+Each move has a short name, given beside its heading. Use those names when you
+report which moves you made.
+
+### The exact probe &nbsp;`exact`
 
 ```
 $OQ lexical -q "<string>" -o <ontology> --probes exact --compact
@@ -369,7 +373,7 @@ something.
 → Hits came back: go to **Prune**, however few. One hit is not an answer.
 → Nothing came back: try the stemmed probe, or go to another Find move.
 
-### The stemmed probe
+### The stemmed probe &nbsp;`stemmed`
 
 ```
 $OQ lexical -q "<string>" -o <ontology> --probes exact,stemmed --compact
@@ -388,7 +392,7 @@ failure.
 40% of a result set. Those are leads, not candidates, and never sufficient on
 their own.
 
-### Names the ontology might actually use
+### Names the ontology might actually use &nbsp;`alt-names`
 
 Reach for this when the probes returned nothing, or returned only the wrong
 kind of thing. Use what you know about how ontologies word things: formal over
@@ -433,7 +437,7 @@ strict: `full reproductive tract` returns **zero** because no term carries all
 three tokens. That is informative — drop the weakest token and try again rather
 than concluding the term does not exist.
 
-### Search inside a region
+### Search inside a region &nbsp;`region`
 
 Reach for this when the string is ambiguous on its own but the record says
 where in the body the sample came from. This is what the *discriminates* tags
@@ -461,7 +465,7 @@ labels, where a synonym is noise. Human developmental stage terms are labelled
 amount of trying `12 pcw`, `wk 12` or `12 weeks PCF` will hit one. Read the
 convention off twenty real labels and construct the string.
 
-### Common ancestors
+### Common ancestors &nbsp;`common-ancestors`
 
 Reach for this when every hit is more specific than the input, or when the hits
 each cover only *part* of it (`Cornea/Conjunctiva` returning cornea terms and
@@ -512,7 +516,7 @@ nothing but `anatomical structure` or `metabolic process`, check whether
 curated predicates, because information content is comparable between rows only
 when every row came from the same traversal.
 
-### Parts and inhabitants of a structure
+### Parts and inhabitants of a structure &nbsp;`relations`
 
 ```
 $OQ relations <CURIE> -p part_of -d in -t <ontology> --direct
@@ -532,7 +536,7 @@ asserted edges: `UBERON:0002240 develops_from` gives 1 edge direct and 29
 through the closure, mostly upper ontology. Direct first; closure only when the
 direct edge leads somewhere unusable.
 
-### Outside Ubergraph
+### Outside Ubergraph &nbsp;`outside-ubergraph`
 
 ```
 $OQ neighbours <CURIE> -o <ontology> -p <PREDICATE> -t <TARGET>
@@ -699,7 +703,11 @@ For each record:
   fields described the same thing, say which you judged most granular; where a
   value was an abbreviation or a description, say what you expanded or read it
   as; where the organ came from a study name rather than the record, say so
-- which Find moves you used, and which one produced the answer
+- which moves you used, and which one produced the answer. Name them with these
+  words exactly, so that one report can be compared with another:
+  `convert`, `exact`, `stemmed`, `alt-names`, `region`, `common-ancestors`,
+  `relations`, `outside-ubergraph`. Describe anything else in prose, but do not
+  invent a new name for one of these
 - the runners-up you rejected, each with a short reason
 - any validator that flagged rather than rejected, and what you did
 - anything in the input you could not account for

@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""Run real tissue descriptions through the installed map-to-ontology skill.
+
+    python3 evals/ontology-mapping/run-batch.py --slice evals/ontology-mapping/slice-20.txt
+    python3 evals/ontology-mapping/run-batch.py --units U002,U089 --dry-run
+
+This is not a scorer. The descriptions it runs have no expected answers, so
+nothing here decides whether a mapping is right -- it produces mappings and the
+reasoning behind them for a person to review. `check.py` is the scorer, and it
+needs a gold set that this run is meant to help create.
+
+Isolation comes from `evals/runner.py`: a fresh temporary directory per unit, so
+no project CLAUDE.md and no .claude/skills are in scope and the only thing
+answering is the installed plugin. Check which build that is before trusting a
+run -- `claude plugin list` -- because a plugin installed from a marketplace copy
+does not change when the working tree does.
+"""
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import pathlib
+import sys
+
+HERE = pathlib.Path(__file__).parent
+ROOT = HERE.parent.parent
+sys.path.insert(0, str(ROOT / "evals"))
+
+from runner import invoke  # noqa: E402
+
+SHEET = ROOT / "docs" / "fetal-tissue-review-sheet.tsv"
+
+ALLOWED = ["Skill", "Bash(uvx:*)", "Bash(python3:*)", "Read", "Write"]
+
+PROMPT = """\
+Map the tissue described by this record to a term in the Uberon anatomy ontology.
+
+The record comes from a review table of human fetal single-cell datasets. Each
+field is reproduced exactly as it appears in its source column; `tissue_obs` and
+`tissue_dataset_metadata` are separate columns and their key-value pairs are the
+submitter's own, not a controlled vocabulary.
+
+{record}
+
+Work it as the map-to-ontology skill directs, then end your reply with a single
+fenced ```json block holding the report that skill asks for:
+
+{{"curie": "UBERON:...", "label": "...", "unresolved": false,
+  "why_this_not_that": "...",
+  "input_read_as": "what you took the input to be, which field you searched and why",
+  "moves_used": ["..."], "answered_by": "...",
+  "rejected": [{{"curie": "...", "label": "...", "reason": "..."}}],
+  "validators_flagged": [], "unaccounted": [], "unavailable": []}}
+
+Set `unresolved` to true, with `curie` null, if the record cannot honestly be
+mapped to one term.
+"""
+
+
+def record_text(row: dict) -> str:
+    lines = [f"publication_id           {row['publication_id']}"]
+    for col in ("tissue_obs", "tissue_dataset_metadata", "tissue_study_level", "tissue_caveat"):
+        val = (row[col] or "").strip()
+        if val and val != "{}":
+            lines.append(f"{col:<24} {val}")
+    lines.append(f"{'libraries':<24} {row['libraries']}  ({row['donors']} donors, {row['n_cells']} cells)")
+    if row["stages"]:
+        lines.append(f"{'stages':<24} {row['stages']}")
+    return "\n".join(lines)
+
+
+def extract(answer: str) -> dict | None:
+    """Pull the last fenced json block out of the reply."""
+    best = None
+    for chunk in answer.split("```"):
+        text = chunk[4:] if chunk.startswith("json") else chunk
+        text = text.strip()
+        if text.startswith("{"):
+            try:
+                best = json.loads(text)
+            except json.JSONDecodeError:
+                continue
+    return best
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--slice", type=pathlib.Path)
+    ap.add_argument("--units")
+    ap.add_argument("--out", type=pathlib.Path, default=HERE / "runs" / "batch.json")
+    ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--max-cost-usd", type=float, default=15.0)
+    ap.add_argument("--timeout", type=int, default=900)
+    a = ap.parse_args()
+
+    ids = []
+    if a.slice:
+        ids += [ln.strip() for ln in a.slice.read_text().splitlines() if ln.strip()]
+    if a.units:
+        ids += [u.strip() for u in a.units.split(",") if u.strip()]
+    rows = {r["unit_id"]: r for r in csv.DictReader(SHEET.open(), delimiter="\t")}
+    missing = [u for u in ids if u not in rows]
+    if missing:
+        print(f"unknown unit(s): {missing}")
+        return 2
+
+    a.out.parent.mkdir(parents=True, exist_ok=True)
+    transcripts = a.out.parent / "transcripts"
+    transcripts.mkdir(exist_ok=True)
+
+    results, spent = [], 0.0
+    for i, uid in enumerate(ids, 1):
+        row = rows[uid]
+        prompt = PROMPT.format(record=record_text(row))
+        if a.dry_run:
+            print(f"=== {uid}  {row['publication_id']}\n{record_text(row)}\n")
+            continue
+        if spent >= a.max_cost_usd:
+            print(f"stopping at {uid}: spent ${spent:.2f} of ${a.max_cost_usd:.2f}")
+            break
+        run = invoke(prompt, {"name": uid, "allowed_tools": ALLOWED,
+                              "timeout_seconds": a.timeout, "max_turns": 40},
+                     transcripts / f"{uid}.jsonl")
+        spent += run.cost_usd or 0.0
+        report = extract(run.answer or "")
+        oq = [t for t in run.tool_calls
+              if t["name"] == "Bash" and "oq " in str(t["input"].get("command", ""))]
+        results.append({
+            "unit_id": uid, "publication_id": row["publication_id"],
+            "record": {c: row[c] for c in ("tissue_obs", "tissue_dataset_metadata",
+                                           "tissue_study_level", "tissue_caveat")},
+            "report": report, "raw_answer": run.answer, "error": run.error,
+            "turns": run.turns, "cost_usd": run.cost_usd,
+            "oq_calls": [t["input"].get("command", "") for t in oq],
+        })
+        a.out.write_text(json.dumps(results, indent=1))
+        got = (report or {}).get("curie") or ("unresolved" if report else "NO REPORT")
+        print(f"[{i:>2}/{len(ids)}] {uid} {row['publication_id'][:26]:<26} "
+              f"{str(got):<16} {run.turns:>2} turns  ${run.cost_usd or 0:.2f}"
+              + (f"  ERROR {run.error}" if run.error else ""))
+
+    if not a.dry_run:
+        print(f"\n{len(results)} units, ${spent:.2f}; reports in {a.out}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
