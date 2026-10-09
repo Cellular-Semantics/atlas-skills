@@ -118,6 +118,15 @@ def _build_parser() -> argparse.ArgumentParser:
         "the default search minus the stemmed set.",
     )
     lex.add_argument(
+        "--compact",
+        action="store_true",
+        help="return curie, label, which field matched and the matching synonym "
+        "only -- no definitions, no full synonym sets. For reading a wide result "
+        "set to decide what is worth looking at properly. Measured on uberon "
+        "'skin' (121 hits, 33.7 kB): definitions are 23%% of that and full synonym "
+        "sets 30%%, and both are things you only need once a candidate survives.",
+    )
+    lex.add_argument(
         "--rows",
         type=int,
         default=DEFAULT_ROWS,
@@ -215,7 +224,14 @@ def _build_parser() -> argparse.ArgumentParser:
     term = _sub(
         sub, "term", help.TERM, help.TERM_EPILOG, help="annotations and relations for one term"
     )
-    term.add_argument("curie", metavar="CURIE")
+    term.add_argument(
+        "curie",
+        metavar="CURIE",
+        nargs="+",
+        help="one or more terms. Pass the whole shortlist at once: adjudication "
+        "is comparison, and what separates candidates is visible side by side "
+        "and has to be reconstructed when they are fetched one at a time.",
+    )
     term.add_argument(
         "-o",
         "--ontology",
@@ -449,7 +465,10 @@ def _run(args: argparse.Namespace) -> dict:
         probes = tuple(s.strip() for s in args.probes.split(",") if s.strip())
         # One config lookup, shared across every query string.
         cfg = search_config(t, args.ontology)
-        results = [lexical(t, q, args.ontology, probes, args.rows, config=cfg) for q in args.query]
+        results = [
+            lexical(t, q, args.ontology, probes, args.rows, config=cfg, compact=args.compact)
+            for q in args.query
+        ]
         warnings = [
             f"{r['query']!r}: probe {name!r} returned {info['returned']} of "
             f"{info['num_found']} hits; raise --rows to see the rest"
@@ -472,7 +491,12 @@ def _run(args: argparse.Namespace) -> dict:
         return _envelope(
             "lexical",
             "ols4",
-            {"queries": args.query, "ontology": args.ontology, "probes": list(probes)},
+            {
+                "queries": args.query,
+                "ontology": args.ontology,
+                "probes": list(probes),
+                "compact": args.compact,
+            },
             results,
             warnings,
         )
@@ -559,11 +583,11 @@ def _run(args: argparse.Namespace) -> dict:
         )
 
     if args.command == "term":
-        res = ug.term(args.curie, args.ontology)
+        res = ug.terms(args.curie, args.ontology)
         return _envelope(
             "term",
             "ubergraph",
-            {"curie": args.curie, "ontology": args.ontology},
+            {"curies": args.curie, "ontology": args.ontology},
             res,
             res.pop("warnings"),
         )
