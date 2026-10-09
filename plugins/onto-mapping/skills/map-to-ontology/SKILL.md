@@ -135,9 +135,93 @@ wrong. Most records are settled by Find and Prune alone.
 
 ## Stage 1 — Prepare
 
-Read the whole record, all fields together. Nothing is queried here, and most
-of the decisions that settle a hard record are made here. A query cannot
-recover a string that was never assembled.
+Read the whole record, all of it together. Nothing is queried here, and most of
+the decisions that settle a hard record are made here. A query cannot recover a
+string that was never assembled.
+
+### First, work out what you have been given
+
+**There is no fixed input shape, so do not assume one.** This is a judgement
+step, not a lookup, and latent knowledge is the right tool for it — you are not
+querying yet. Write down which of these you are holding, because the next move
+is different for each.
+
+**A set of key–value fields.** The commonest case and the least predictable:
+the keys are whatever the submitter chose, and the values may be spelled out,
+abbreviated, or written as a description. Read every key — the key types the
+value, so `bone=frontal` is a bone and not the frontal cortex, and no amount of
+study context will tell you that if you only read the value.
+
+**One string and nothing else.** There is nothing to disambiguate with. If the
+string is ambiguous it stays ambiguous: say so rather than picking the reading
+that happens to return a term.
+
+**A string plus a chunk of free text** — a curation note, a methods paragraph,
+a sample description. See below; this text is mostly not for searching.
+
+**Only a study or dataset name.** Not ideal, and sometimes all there is.
+`bayraktar_2024_heart` tells you the organ and nothing else. It can supply
+context but can never be the answer on its own, and the report has to say the
+organ came from the study name rather than from the record.
+
+**Nothing usable.** Say so and stop.
+
+### When several fields describe the same thing
+
+Fields often repeat a structure at different grain:
+
+```
+Region=Telencephalon | Subregion=Cortex | dissection=Occipital cortex
+```
+
+**Rank them by granularity and search with the most granular.** `occipital
+cortex` is the mapping; `Telencephalon` and `Cortex` are not rivals to it and
+not extra search tokens. Searching the coarse field throws away everything the
+submitter knew, and joining all three gives a conjunctive query that returns
+nothing.
+
+The coarse fields are not spare, though. They are **checkable context**: the
+granular term should sit inside the coarse one. If `occipital cortex` does not
+come back as part of the telencephalon, then either the mapping is wrong or the
+record is, and which one it is belongs in the report. That is a stronger use
+than disambiguation, because it can fail.
+
+Granularity is not the same as field order, and the most granular field is
+often the one with the least tidy name — `dissection`, `Corrected_tissue`, a
+free-text note. Judge it on the values, not the keys.
+
+### When a value is not a name
+
+Three ways a value can fail to be the thing you search, each wanting different
+handling:
+
+- **An abbreviation.** `LI`, `SI`, `CS14`, `Pons/Cereb`. Expand it before
+  searching, using a sibling field where there is one — `organ=LI` beside
+  `organism part=liver` settles what `LI` meant here, and it is not what `LI`
+  usually means. Where no sibling settles it, say which expansion you assumed.
+- **A description rather than a name.** `full reproductive tract`, `heart
+  without node`, `right ventricle and papillaries`. Work out the structure
+  being described and name it the way an ontology would. Do not search the
+  description.
+- **A quantity or a code.** Covered below — these do not reach a lexical probe
+  at all.
+
+### When you are given free text
+
+A curation note or a methods paragraph is **not a search string**, and
+tokenising it produces noise with a rank attached. It has two honest uses:
+
+1. **Mine it for a name.** If the text states the structure outright — "samples
+   were taken from the outer cortex of the kidney" — lift that phrase and
+   search it. This is reading, not extraction: take the phrase an author wrote,
+   not a bag of words.
+2. **Otherwise, hold it back for Confirm.** A paragraph of description
+   discriminates between candidate definitions far better than it searches,
+   because a definition is also a paragraph of description and the two can be
+   read against each other. A long context that returns nothing as a query can
+   be decisive as a comparison.
+
+Tag it `discriminates` and say which of the two uses you made of it.
 
 ### Could a plain lexical match get this wrong?
 
@@ -535,10 +619,39 @@ For each, read:
 - the synonyms with their scope;
 - `in taxon` and stage links, against whatever you tagged *validates*.
 
-Then bring in the items you tagged **discriminates**, location above all, and
-ask whether each candidate sits where the record says it sits. This is what
-decides `cortex of kidney` against `cerebral cortex`, and it is the stage those
-tags were written for.
+Then bring in the items you tagged **discriminates**. This is the stage those
+tags were written for, and there are three distinct things to do with them.
+
+**Ask whether the candidate sits where the record says it sits.** Location above
+all. This is what decides `cortex of kidney` against `cerebral cortex`.
+
+**Check the candidate against the coarser field, as a test that can fail.**
+Where Prepare found several fields at different grain, the granular term you
+searched should sit inside the coarse one:
+
+```
+$OQ relations <CANDIDATE> -p part_of -d out -t <ontology>
+```
+
+If `occipital cortex` does not reach the telencephalon, either the mapping is
+wrong or the record is. Say which you concluded and why. A coarse field used
+only to disambiguate can never catch an error; used this way it can.
+
+**It cannot catch the wrong term from the right region, so read the label back
+as well.** `UBERON:0016540 occipital cortex` and `UBERON:0016530 parietal
+cortex` differ by one digit, and both return 34 part_of terms including the
+telencephalon: the containment check passes identically for the term you meant
+and for its sibling. Every candidate you carry forward should have had its
+label read beside its CURIE — which is one reason to fetch the shortlist in a
+single `term` call, where the labels sit side by side and a swapped digit shows
+up as the wrong name rather than as a plausible result.
+
+**Read free text against the definitions, not against the labels.** A curation
+note or methods paragraph that was useless as a query is often decisive here,
+because a definition is also a paragraph of description and the two can be read
+against each other — one will mention a boundary, a neighbouring structure or a
+developmental origin that the other either matches or contradicts. This is why
+that text was held back rather than searched.
 
 Check `found` on every block. An empty block means one of three things and they
 call for different responses: the ontology is not in Ubergraph, the CURIE is not
@@ -582,6 +695,10 @@ For each record:
 
 - the CURIE and label, or `unresolved`
 - the one-line why-this-not-that
+- what you took the input to be, and which field you searched. Where several
+  fields described the same thing, say which you judged most granular; where a
+  value was an abbreviation or a description, say what you expanded or read it
+  as; where the organ came from a study name rather than the record, say so
 - which Find moves you used, and which one produced the answer
 - the runners-up you rejected, each with a short reason
 - any validator that flagged rather than rejected, and what you did
