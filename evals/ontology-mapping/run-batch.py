@@ -24,7 +24,7 @@ import pathlib
 import subprocess
 import sys
 import tempfile
-import time
+import threading
 
 HERE = pathlib.Path(__file__).parent
 ROOT = HERE.parent.parent
@@ -127,15 +127,23 @@ def stream_invoke(prompt: str, name: str, allowed: list[str], timeout: int,
         proc.stdin.write(prompt)
         proc.stdin.close()
         seen = set()
-        deadline = time.time() + timeout
+        # A watchdog, not a check inside the loop. The deadline has to fire when
+        # *nothing* is arriving, which is exactly the case a per-line check
+        # cannot see: an earlier version only tested the clock as each line came
+        # in, so a hung stream blocked forever instead of timing out.
+        timed_out = threading.Event()
+
+        def _kill():
+            timed_out.set()
+            proc.kill()
+
+        watchdog = threading.Timer(timeout, _kill)
+        watchdog.daemon = True
+        watchdog.start()
         try:
             for line in proc.stdout:
                 tf.write(line)
                 tf.flush()
-                if time.time() > deadline:
-                    proc.kill()
-                    result.setdefault("error", f"timed out after {timeout}s")
-                    break
                 try:
                     ev = json.loads(line)
                 except json.JSONDecodeError:
@@ -158,7 +166,10 @@ def stream_invoke(prompt: str, name: str, allowed: list[str], timeout: int,
                               "error": "agent error" if ev.get("is_error") else None}
                     answer_parts.append(ev.get("result") or "")
         finally:
+            watchdog.cancel()
             proc.wait(timeout=30)
+    if timed_out.is_set():
+        result["error"] = f"timed out after {timeout}s"
     return {"answer": "".join(answer_parts), "tool_calls": tool_calls,
             "turns": result.get("turns", 0), "cost_usd": result.get("cost", 0.0),
             "error": result.get("error")}
