@@ -232,16 +232,35 @@ def _build_parser() -> argparse.ArgumentParser:
         help="survey labels to read a naming convention",
     )
     coh.add_argument("-o", "--ontology", required=True, metavar="NAME")
-    g = coh.add_mutually_exclusive_group(required=True)
-    g.add_argument(
+    coh.add_argument(
         "--sibling-of",
         metavar="CURIE",
-        help="co-children of this term's direct parents",
+        help="co-children of this term's direct parents. Cannot be combined "
+        "with --under or a text filter.",
     )
-    g.add_argument(
+    coh.add_argument(
         "--label-contains",
         metavar="SUBSTRING",
-        help="terms whose asserted label contains this substring, case-insensitive",
+        help="terms whose asserted label contains this substring, case-insensitive. "
+        "Labels only -- use this to read a naming convention, where a synonym "
+        "would be noise.",
+    )
+    coh.add_argument(
+        "--text-contains",
+        metavar="SUBSTRING",
+        help="terms whose label OR any synonym contains this substring, with the "
+        "matched field reported. Use this when looking for a term rather than for "
+        "a convention: UBERON:0006073 is labelled 'thoracic region of vertebral "
+        "column' and carries 'thoracic spine' only as a synonym, so "
+        "--label-contains would miss it.",
+    )
+    coh.add_argument(
+        "--under",
+        metavar="CURIE",
+        help="restrict to terms inside this region, over subClassOf and part_of. "
+        "Composes with either text filter. This is the move for a record whose "
+        "own text is ambiguous but whose other fields say where in the body it "
+        "came from -- 'cortex' with a kidney in the record.",
     )
     coh.add_argument(
         "--limit",
@@ -671,7 +690,14 @@ def _run(args: argparse.Namespace) -> dict:
         )
 
     if args.command == "cohort":
-        res = ug.cohort(args.ontology, args.sibling_of, args.label_contains, args.limit)
+        res = ug.cohort(
+            args.ontology,
+            args.sibling_of,
+            args.label_contains,
+            args.text_contains,
+            args.under,
+            args.limit,
+        )
         warnings = ["the limit was reached; results are incomplete"] if res["truncated"] else []
         return _envelope(
             "cohort",
@@ -680,6 +706,8 @@ def _run(args: argparse.Namespace) -> dict:
                 "ontology": args.ontology,
                 "sibling_of": args.sibling_of,
                 "label_contains": args.label_contains,
+                "text_contains": args.text_contains,
+                "under": args.under,
                 "limit": args.limit,
             },
             res,
