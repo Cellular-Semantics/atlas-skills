@@ -152,11 +152,12 @@ def stream_invoke(prompt: str, name: str, allowed: list[str], timeout: int,
                     for b in (ev.get("message") or {}).get("content") or []:
                         if b.get("type") == "text":
                             answer_parts.append(b.get("text") or "")
-                            for uid in extract("".join(answer_parts)):
+                            found = extract("".join(answer_parts))
+                            for uid, report in found.items():
                                 if uid not in seen:
                                     seen.add(uid)
                                     if on_report:
-                                        on_report(uid)
+                                        on_report(uid, report)
                         elif b.get("type") == "tool_use":
                             tool_calls.append({"name": b.get("name"),
                                                "input": b.get("input", {})})
@@ -223,15 +224,39 @@ def main() -> int:
         # context grows as it goes, so later records are slower than earlier
         # ones and a flat timeout kills the tail.
         timeout = a.timeout * len(recs) if a.batch_size > 1 else a.timeout
-        def progress(uid, _seen=[], _n=len(recs)):  # noqa: B006 - per-batch counter
-            _seen.append(uid)
-            print(f"      · {uid} reported ({len(_seen)}/{_n})", flush=True)
+        by_uid = {r["unit_id"]: r for r in recs}
+        live = []
+
+        # Loop variables are bound as defaults: the callback fires during this
+        # iteration, but leaving them free makes it look like a late-binding bug.
+        def progress(uid, report, _by=by_uid, _live=live, _n=len(recs),
+                     _done=results, _out=a.out):
+            """Persist each report the moment it arrives.
+
+            The results file used to be written once per batch, so a batch that
+            died part way through left nothing on disk even though its finished
+            reports were sitting in the transcript. Cost and turn counts are not
+            known until the process ends, so they are filled in afterwards.
+            """
+            row = _by.get(uid)
+            if row is None:
+                return                       # a unit_id we did not ask for
+            _live.append({
+                "unit_id": uid, "publication_id": row["publication_id"],
+                "record": {c: row[c] for c in ("tissue_obs", "tissue_dataset_metadata",
+                                               "tissue_study_level", "tissue_caveat")},
+                "report": report, "error": None, "batch_size": _n,
+                "turns": None, "cost_usd": None, "oq_calls": [], "raw_answer": None,
+            })
+            _out.write_text(json.dumps(_done + _live, indent=1))
+            print(f"      · {uid} reported ({len(_live)}/{_n}) — saved", flush=True)
 
         run = stream_invoke(prompt, name, ALLOWED, timeout,
                             25 + 15 * len(recs), transcripts / f"{name}.jsonl",
                             on_report=progress)
         spent += run["cost_usd"] or 0.0
         parsed = extract(run["answer"] or "")
+        live.clear()               # superseded by the complete rows built below
         oq = [t for t in run["tool_calls"]
               if t["name"] == "Bash" and "oq " in str(t["input"].get("command", ""))]
         for row in recs:
