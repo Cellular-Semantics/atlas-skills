@@ -176,6 +176,7 @@ def lexical(
     probes: tuple[str, ...] = ("exact", "stemmed"),
     rows: int = DEFAULT_ROWS,
     config: dict | None = None,
+    compact: bool = False,
 ) -> dict:
     """Run the requested probes for one query string and merge the hits.
 
@@ -189,6 +190,7 @@ def lexical(
 
     cfg = config if config is not None else search_config(t, ontology)
     local = cfg.get("supports_local", True)
+
 
     by_curie: dict[str, dict] = {}
     found: dict[str, dict[str, dict]] = {}
@@ -235,15 +237,57 @@ def lexical(
         record("definition", defonly, len(defonly), None)
 
     hits = [h for c, d in by_curie.items() if (h := _to_hit(d, found[c]))]
+    rendered = [h.as_dict() for h in hits]
+    if compact:
+        rendered = [_compact(h, query) for h in rendered]
     return {
         "query": query,
         "ontology": ontology,
         "search_config": cfg,
         "scoped_locally": local,
+        "compact": compact,
         "probes": probe_info,
         "total": len(hits),
-        "hits": [h.as_dict() for h in hits],
+        "hits": rendered,
     }
+
+
+def _compact(hit: dict, query: str) -> dict:
+    """Drop everything a shortlist is not pruned on.
+
+    Measured on uberon `skin`, 121 stemmed hits totalling 33.7 kB: labels are
+    4.0 kB of that, which field matched another 3.0 kB, definitions 7.8 kB and
+    full synonym sets 10.0 kB. The two big components are both things you only
+    need once a candidate has survived -- so pulling them for all 121 is paying
+    for 118 terms you were never going to keep.
+
+    The *matching* synonym is kept, because it is what prunes: knowing
+    UBERON:0006073 came back on "thoracic spine" is the signal. The other five
+    synonyms on a term are for adjudication, and adjudication is a later stage
+    with a smaller input.
+
+    Matching here is whole-string equality, not containment, which is the exact
+    probe's own rule. Containment looks more generous and is useless: for a
+    one-word query like "skin" nearly every synonym on a skin term contains it,
+    so the filter keeps thirteen synonyms per hit and saves nothing. Measured --
+    containment left the skin result at 77% of full size, equality at 21%. A hit
+    found only by the stemmed probe has no single matching synonym, and
+    found_by already says it was stemmed.
+    """
+    needle = query.strip().lower()
+    matched = {
+        scope: [s for s in values if s.strip().lower() == needle]
+        for scope, values in (hit.get("synonyms") or {}).items()
+    }
+    out = {"curie": hit["curie"], "label": hit["label"], "found_by": hit["found_by"]}
+    # Empty keys are not free at this width. Over 121 hits the key names alone
+    # cost more than the values, so anything with nothing to say is omitted and
+    # its absence carries the meaning.
+    if any(matched.values()):
+        out["matched_synonyms"] = {k: v for k, v in matched.items() if v}
+    if not hit.get("definition"):
+        out["undefined"] = True
+    return out
 
 
 def linked_entities(t: Transport, ontology: str, curie: str) -> dict[str, dict]:

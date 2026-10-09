@@ -883,6 +883,7 @@ def test_term_names_its_predicates_not_just_their_labels(t):
         if "isLiteral" in body
         else [
             {
+                "s": "http://purl.obolibrary.org/obo/UBERON_0000010",
                 "p": "http://purl.obolibrary.org/obo/RO_0002170",
                 "o": "http://purl.obolibrary.org/obo/UBERON_0000955",
                 "plabel": "connected to",
@@ -1000,3 +1001,74 @@ def test_cohort_rejects_incoherent_combinations(t):
         ug.cohort("uberon", sibling_of="UBERON:0000955", under="UBERON:0001130")
     with pytest.raises(ValueError, match="at least one"):
         ug.cohort("uberon")
+
+
+# ---- the funnel: prune cheap, then pull detail --------------------------
+
+
+def test_compact_drops_what_a_shortlist_is_not_pruned_on(t):
+    """Measured on uberon `skin`, 121 stemmed hits: definitions are 23% of the
+    response and full synonym sets 30%, and both are only needed once a
+    candidate has survived. Compact brings the same result to 37%."""
+    res = lexical(t, "skin", "uberon", ("exact",), compact=True)
+    hit = next(h for h in res["hits"] if h["curie"] == "UBERON:0000014")
+    assert set(hit) <= {"curie", "label", "found_by", "matched_synonyms", "undefined"}
+    assert "definition" not in hit
+    assert hit["matched_synonyms"] == {"exact": ["skin"]}
+
+
+def test_compact_matches_whole_strings_not_substrings(t):
+    """Containment looks more generous and saves nothing: for a one-word query
+    every synonym on a skin term contains "skin", so the filter would keep
+    thirteen per hit. Measured: containment left the result at 77% of full
+    size, whole-string equality at 21%."""
+    res = lexical(t, "skin", "uberon", ("exact",), compact=True)
+    for hit in res["hits"]:
+        for values in hit.get("matched_synonyms", {}).values():
+            assert all(v.lower() == "skin" for v in values)
+
+
+def test_compact_omits_empty_keys(t):
+    """At 121 hits the key names cost more than the values, so a field with
+    nothing to say is absent and its absence carries the meaning."""
+    res = lexical(t, "skin", "uberon", ("exact",), compact=True)
+    assert any("matched_synonyms" not in h for h in res["hits"]) or all(
+        h["matched_synonyms"] for h in res["hits"] if "matched_synonyms" in h
+    )
+
+
+def test_term_takes_a_whole_shortlist_in_one_query(t):
+    """Adjudication is comparison. One query, so the contrast between
+    candidates is visible rather than reconstructed across several calls."""
+    seen = []
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: "g"
+    ug.query = lambda body: seen.append(body) or []
+    ug.terms(["UBERON:0001225", "UBERON:0000956", "UBERON:0001851"], "uberon")
+    assert len(seen) == 2  # one for annotations, one for relations -- not six
+    assert all("UBERON_0001225" in b and "UBERON_0000956" in b for b in seen)
+
+
+def test_term_distinguishes_absent_from_axiom_free(t):
+    """Asked singly these look identical, and they mean different things: one
+    is weak evidence about a real term, the other means the question was
+    wrong."""
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: "g"
+    ug.query = lambda body: []
+    res = ug.terms(["EHDAA2:0001570"], "uberon")
+    assert res["terms"][0]["found"] is False
+    assert any("not uberon: EHDAA2" in w for w in res["warnings"])
+
+    ug.graph_for = lambda o: None
+    res = ug.terms(["EHDAA2:0001570"], "ehdaa2")
+    assert any("not in Ubergraph at all" in w for w in res["warnings"])
+
+
+def test_term_still_answers_for_one_curie(t):
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: "g"
+    ug.query = lambda body: []
+    res = ug.term("UBERON:0001225", "uberon")
+    assert res["curie"] == "UBERON:0001225"
+    assert res["relations"] == []

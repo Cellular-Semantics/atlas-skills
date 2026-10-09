@@ -293,28 +293,61 @@ SELECT ?other ?label WHERE {{
     # ---- term detail -----------------------------------------------------
 
     def term(self, curie: str, ontology: str) -> dict:
-        """Asserted annotations plus pruned relations, with labels resolved.
+        """One term's asserted annotations plus pruned relations."""
+        res = self.terms([curie], ontology)
+        block = res["terms"][0]
+        return {
+            "curie": block["curie"],
+            "ontology": ontology,
+            "annotations": block["annotations"],
+            "relations": block["relations"],
+            "warnings": res["warnings"],
+        }
+
+    def terms(self, curies: list[str], ontology: str) -> dict:
+        """Asserted annotations plus pruned relations, for one or many terms.
+
+        Adjudication is comparison, not lookup. What separates a shortlist is
+        usually a contrast between candidates -- this one is part of the kidney
+        and that one of the collecting duct system; this one carries a taxon
+        restriction the record contradicts -- and a contrast is visible when the
+        candidates are side by side and has to be reconstructed when they are
+        not. So the whole shortlist is one call, answered from one query.
 
         Annotations come from the per-ontology asserted graph. Relations come
         from the nonredundant graph, which is pruned but *not* free of closure
         noise -- UBERON:0010409 carries fifteen "existence starts during or
         after" edges there. The noise is reported rather than guessed at.
+
+        Each block says whether anything was found for that CURIE. Asked one at
+        a time, "this term has no further axioms" and "this term is not in the
+        ontology you named" produce the same empty-looking answer; one is weak
+        evidence and the other means the question was wrong.
         """
+        if not curies:
+            raise ValueError("no curies given")
         warnings: list[str] = []
         graph = self.graph_for(ontology)
-        annotations: dict[str, list[str]] = {}
+        values = _values(curies)
+
+        annotations: dict[str, dict[str, list[str]]] = {c: {} for c in curies}
         if graph is None:
-            warnings.append(f"{ontology} is not in Ubergraph; asserted annotations unavailable")
+            warnings.append(
+                f"{ontology} is not in Ubergraph; asserted annotations unavailable. "
+                "An empty result here is the backend not holding this ontology, "
+                "not a term without axioms."
+            )
         else:
             for r in self.query(f"""
-SELECT ?p ?v WHERE {{
-  GRAPH <{graph}> {{ <{to_iri(curie)}> ?p ?v . FILTER(isLiteral(?v)) }}
+SELECT ?s ?p ?v WHERE {{
+  VALUES ?s {{ {values} }}
+  GRAPH <{graph}> {{ ?s ?p ?v . FILTER(isLiteral(?v)) }}
 }}"""):
-                annotations.setdefault(_short(r["p"]), []).append(r["v"])
+                annotations[to_curie(r["s"])].setdefault(_short(r["p"]), []).append(r["v"])
 
         rows = self.query(f"""
-SELECT ?p ?o ?plabel ?olabel WHERE {{
-  VALUES ?s {{ <{to_iri(curie)}> }}
+SELECT ?s ?p ?o ?plabel ?olabel WHERE {{
+  VALUES ?s {{ {values} }}
   GRAPH <{NONREDUNDANT_GRAPH}> {{ ?s ?p ?o . FILTER(isIRI(?o)) }}
   OPTIONAL {{ GRAPH ?g1 {{ ?o rdfs:label ?olabel }} }}
   OPTIONAL {{ GRAPH ?g2 {{ ?p rdfs:label ?plabel }} }}
@@ -322,11 +355,12 @@ SELECT ?p ?o ?plabel ?olabel WHERE {{
         # Keyed by the predicate's CURIE, not its label. The label alone is a
         # dead end: a caller who sees "connected to" here has nothing to pass to
         # `relations -p`. This is the discovery half of that loop.
-        rels: dict[str, dict] = {}
+        rels: dict[str, dict[str, dict]] = {c: {} for c in curies}
         for r in rows:
+            subj = to_curie(r["s"])
             pcurie = to_curie(r["p"])
             obj = to_curie(r["o"])
-            entry = rels.setdefault(
+            entry = rels[subj].setdefault(
                 pcurie, {"predicate": pcurie, "label": r.get("plabel"), "terms": {}}
             )
             if entry["label"] is None and r.get("plabel"):
@@ -334,30 +368,57 @@ SELECT ?p ?o ?plabel ?olabel WHERE {{
             t = entry["terms"].setdefault(obj, {"curie": obj, "labels": []})
             if (lab := r.get("olabel")) and lab not in t["labels"]:
                 t["labels"].append(lab)
+
         warnings.append(
             "relations come from the nonredundant graph, which still contains "
             "closure noise; treat these as inferred rather than asserted"
         )
-        if not rels:
-            warnings.append(
-                f"no relations found for {curie}. If {ontology} is not in Ubergraph "
-                "this is silence from the backend rather than a term without "
-                "axioms -- try `oq neighbours` instead, which reads OLS4."
-            )
-        return {
-            "curie": curie,
-            "ontology": ontology,
-            "annotations": annotations,
-            "relations": [
-                {
-                    "predicate": e["predicate"],
-                    "label": e["label"],
-                    "terms": sorted(e["terms"].values(), key=lambda d: d["curie"]),
-                }
-                for _, e in sorted(rels.items(), key=lambda kv: (kv[1]["label"] or "", kv[0]))
-            ],
-            "warnings": warnings,
-        }
+        empty = [c for c in curies if not annotations[c] and not rels[c]]
+        if empty:
+            # Three different situations produce the same empty block, and they
+            # call for different responses, so name them rather than leaving the
+            # caller to read silence.
+            if graph is None:
+                why = (
+                    f"{ontology} is not in Ubergraph at all, so this is silence "
+                    "from the backend. Try `oq neighbours`, which reads OLS4."
+                )
+            else:
+                mismatched = sorted(
+                    {c.split(":")[0] for c in empty if not c.lower().startswith(ontology.lower())}
+                )
+                why = (
+                    f"{ontology} is in Ubergraph, so either these terms are not in "
+                    "it or they carry no axioms."
+                )
+                if mismatched:
+                    why += (
+                        f" Prefixes seen here that are not {ontology}: "
+                        f"{', '.join(mismatched)}. Pass the ontology each CURIE "
+                        "belongs to."
+                    )
+            warnings.append(f"nothing found for {', '.join(empty)}. {why}")
+
+        blocks = []
+        for c in curies:
+            labels = annotations[c].get("label") or []
+            blocks.append({
+                "curie": c,
+                "label": labels[0] if labels else None,
+                "found": bool(annotations[c] or rels[c]),
+                "annotations": annotations[c],
+                "relations": [
+                    {
+                        "predicate": e["predicate"],
+                        "label": e["label"],
+                        "terms": sorted(e["terms"].values(), key=lambda d: d["curie"]),
+                    }
+                    for _, e in sorted(
+                        rels[c].items(), key=lambda kv: (kv[1]["label"] or "", kv[0])
+                    )
+                ],
+            })
+        return {"ontology": ontology, "terms": blocks, "warnings": warnings}
 
     # ---- cross-references ------------------------------------------------
 
