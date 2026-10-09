@@ -11,7 +11,7 @@ Every ID:label pair, label phrase and interval number was verified against live 
 
 ## A. Post-conception weeks
 
-Cardinal integer weeks. Default to the UK clinical reading (N *completed* weeks), name the adjacent term, state the assumption. Includes the bare-number case, where the value carries no searchable text and the lexical rungs must be skipped.
+Cardinal integer weeks. Default to the UK clinical reading (N *completed* weeks), name the adjacent term, state the assumption. Includes the bare-number case, where the value carries no searchable text and no lexical probe can help.
 
 ### `pcw-20`  ·  n=70
 
@@ -59,9 +59,9 @@ Same arithmetic behind a different spelling. 16 wpf = 112 dpf -> 17th-week term.
 
 **Expected** `HsapDv:0000053` — 16th week post-fertilization stage
 
-The value carries no searchable text. Observed failure: the agent read the ladder as 'always run rungs 1 and 2 on the raw input' and lexically searched '15', which cannot work -- no HsapDv label contains that digit -- and returns false leads with a rank attached. The information is in the sibling field, not the value: 15 completed weeks post conception = 105 dpf = the 16th week term. A correct run skips the lexical rungs, names age_units as what made it answerable, and verifies with `oq term`.
+The value carries no searchable text. Observed failure: the agent searched the raw input anyway and lexically searched '15', which cannot work -- no HsapDv label contains that digit -- and returns false leads with a rank attached. The information is in the sibling field, not the value: 15 completed weeks post conception = 105 dpf = the 16th week term. A correct run does not search at all, names age_units as what made it answerable, and verifies with `oq term`.
 
-*must name alternative: `HsapDv:0000052` — 15th week post-fertilization stage  ·  must mention: `age_units`  ·  expected rung: 3*
+*must name alternative: `HsapDv:0000052` — 15th week post-fertilization stage  ·  must mention: `age_units`  ·  must use: convert · must not use: exact, stemmed*
 
 
 ## B. Gestational / LMP conversion
@@ -160,9 +160,9 @@ The stage is stated. No arithmetic, and it beats a conflicting age.
 
 **Expected** `HsapDv:0000021` — Carnegie stage 14
 
-'CS14' is an exact synonym on the term. Should finish at the cheapest rung without arithmetic.
+'CS14' is an exact synonym on the term. Should finish on the exact probe alone, without arithmetic.
 
-*max rung: 1*
+*max moves: 1 (exact)*
 
 ### `cs-prefixed-label`  ·  n=162
 
