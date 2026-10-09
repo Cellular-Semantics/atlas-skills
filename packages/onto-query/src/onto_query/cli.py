@@ -173,9 +173,12 @@ def _build_parser() -> argparse.ArgumentParser:
         "-p",
         "--predicate",
         default="part_of",
-        choices=sorted(PREDICATES),
-        metavar="NAME",
-        help="one of: " + ", ".join(sorted(PREDICATES)),
+        metavar="NAME|CURIE",
+        help="a shorthand name (" + ", ".join(sorted(PREDICATES)) + ") or any "
+        "predicate CURIE, e.g. RO:0002170 for 'connected to'. The shorthands are "
+        "aliases, not a limit. `oq term <CURIE> -o <ontology>` lists the "
+        "predicates a term actually carries, with their CURIEs, and is the way to "
+        "find out what to pass here.",
     )
     rel.add_argument(
         "-d",
@@ -192,6 +195,21 @@ def _build_parser() -> argparse.ArgumentParser:
         metavar="NAME",
         help="restrict the other end to this ontology. Without it, terms from "
         "every ontology in the store come back.",
+    )
+    rel.add_argument(
+        "--graph",
+        default="redundant",
+        choices=("redundant", "nonredundant"),
+        metavar="REDUNDANT|NONREDUNDANT",
+        help="which Ubergraph inference graph to read. 'redundant' is the "
+        "transitive closure, so a 'direct' edge is not what you get: "
+        "UBERON:0002240 develops_from gives 29 edges there and 1 "
+        "(posterior neural tube) in 'nonredundant'.",
+    )
+    rel.add_argument(
+        "--direct",
+        action="store_true",
+        help="sugar for --graph nonredundant",
     )
 
     term = _sub(
@@ -288,6 +306,24 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     nb.add_argument("curie", metavar="CURIE")
     nb.add_argument("-o", "--ontology", required=True, metavar="NAME")
+    nb.add_argument(
+        "-p",
+        "--predicate",
+        action="append",
+        default=[],
+        metavar="NAME|CURIE",
+        help="keep only relations on this predicate. Repeatable. Takes a CURIE "
+        "such as RO:0002496, or an IRI. Without it the whole one-hop "
+        "neighbourhood comes back.",
+    )
+    nb.add_argument(
+        "-t",
+        "--target-ontology",
+        default=None,
+        metavar="NAME",
+        help="keep only relations whose other end is in this ontology, matched "
+        "on the CURIE prefix.",
+    )
 
     cw = _sub(
         sub,
@@ -478,7 +514,17 @@ def _run(args: argparse.Namespace) -> dict:
         )
 
     if args.command == "relations":
-        res = ug.relations(args.curie, args.predicate, args.direction, args.target_ontology)
+        graph = "nonredundant" if args.direct else args.graph
+        res = ug.relations(
+            args.curie, args.predicate, args.direction, args.target_ontology, graph
+        )
+        warnings = []
+        if graph == "redundant":
+            warnings.append(
+                "answered from the redundant graph, which is the transitive "
+                "closure: these are not direct edges. Use --direct for the "
+                "asserted-and-pruned nonredundant graph."
+            )
         return _envelope(
             "relations",
             "ubergraph",
@@ -487,9 +533,10 @@ def _run(args: argparse.Namespace) -> dict:
                 "predicate": args.predicate,
                 "direction": args.direction,
                 "target_ontology": args.target_ontology,
+                "graph": graph,
             },
             res,
-            [],
+            warnings,
         )
 
     if args.command == "term":
@@ -564,8 +611,14 @@ def _run(args: argparse.Namespace) -> dict:
         )
 
     if args.command == "neighbours":
-        res = neighbours(t, args.ontology, args.curie)
-        warnings = []
+        res = neighbours(
+            t,
+            args.ontology,
+            args.curie,
+            tuple(args.predicate),
+            args.target_ontology,
+        )
+        warnings = list(res.pop("warnings"))
         if ext := res["external_targets"]:
             warnings.append(
                 f"points outside {args.ontology} at: {', '.join(ext)}. Those targets "
@@ -580,7 +633,12 @@ def _run(args: argparse.Namespace) -> dict:
         return _envelope(
             "neighbours",
             "ols4",
-            {"curie": args.curie, "ontology": args.ontology},
+            {
+                "curie": args.curie,
+                "ontology": args.ontology,
+                "predicates": list(args.predicate) or None,
+                "target_ontology": args.target_ontology,
+            },
             res,
             warnings,
         )

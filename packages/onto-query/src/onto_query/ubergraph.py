@@ -62,12 +62,26 @@ class SeedLimitExceeded(ValueError):
 
 
 def _pred(name: str) -> str:
-    try:
+    """Resolve a predicate to a SPARQL term.
+
+    PREDICATES is an alias table, not an allowlist. A CURIE is passed straight
+    through, so any RO predicate is reachable -- `connected to`, `attaches to`,
+    the existence predicates -- without the table having to know about it. A
+    bare word must be a known alias, so a typo like 'part-of' still fails
+    loudly instead of querying an IRI that does not exist.
+    """
+    if name in PREDICATES:
         return PREDICATES[name]
-    except KeyError:
-        raise ValueError(
-            f"unknown predicate {name!r}; expected any of {sorted(PREDICATES)}"
-        ) from None
+    if ":" in name and not name.startswith(("http://", "https://")):
+        return f"<{to_iri(name)}>"
+    if name.startswith(("http://", "https://")):
+        return f"<{name}>"
+    raise ValueError(
+        f"unknown predicate {name!r}: not one of the aliases {sorted(PREDICATES)}, "
+        "and not a CURIE. Pass a CURIE such as RO:0002170 to use any other "
+        "predicate; `oq term <CURIE> -o <ontology>` lists the predicates a term "
+        "actually carries, with their CURIEs."
+    )
 
 
 def _values(curies: list[str]) -> str:
@@ -135,6 +149,18 @@ class Ubergraph:
                 "set by sense first (measured: 718 seeds times out)"
             )
 
+        # Deliberately stricter than _pred. common-ancestors ranks its output by
+        # information content, and IC is only comparable across rows because every
+        # row came from the same traversal. An arbitrary predicate here would make
+        # the number meaningless, so this one keeps the curated set.
+        unknown = [p for p in predicates if p not in PREDICATES]
+        if unknown:
+            raise ValueError(
+                f"common-ancestors takes only the curated predicates "
+                f"{sorted(PREDICATES)}; got {unknown}. This is not the same rule as "
+                "`relations`, which accepts any predicate CURIE: the traversal here "
+                "is fixed so that information content stays comparable between rows."
+            )
         pvals = " ".join(_pred(p) for p in predicates)
         defined_by = defined_by_iri(target_ontology)
 
@@ -211,6 +237,7 @@ SELECT ?s ?label ?ic WHERE {{
         predicate: str = "part_of",
         direction: str = "in",
         target_ontology: str | None = None,
+        graph: str = "redundant",
     ) -> dict:
         """Terms standing in a named relation to ``curie``.
 
@@ -218,9 +245,22 @@ SELECT ?s ?label ?ic WHERE {{
         region); ``"out"`` asks what the term points at. Cross-ontology works:
         part_of retina returns 55 CL terms. located_in (RO:0001025) returns
         nothing for CL->Uberon in practice -- part_of carries that relationship.
+
+        ``graph`` chooses between Ubergraph's two inference graphs, and the
+        difference is large. For ``UBERON:0002240 develops_from`` out:
+        nonredundant gives one edge (posterior neural tube), redundant gives 29,
+        mostly upper-ontology terms reached through the closure. Direct first,
+        closure only when the direct edge leads somewhere unusable.
         """
         if direction not in ("in", "out"):
             raise ValueError("direction must be 'in' or 'out'")
+        try:
+            graph_iri = {
+                "redundant": REDUNDANT_GRAPH,
+                "nonredundant": NONREDUNDANT_GRAPH,
+            }[graph]
+        except KeyError:
+            raise ValueError("graph must be 'redundant' or 'nonredundant'") from None
         p = _pred(predicate)
         pattern = f"?other {p} ?anchor ." if direction == "in" else f"?anchor {p} ?other ."
         restrict = ""
@@ -229,7 +269,7 @@ SELECT ?s ?label ?ic WHERE {{
         rows = self.query(f"""
 SELECT ?other ?label WHERE {{
   VALUES ?anchor {{ <{to_iri(curie)}> }}
-  GRAPH <{REDUNDANT_GRAPH}> {{ {pattern} }}
+  GRAPH <{graph_iri}> {{ {pattern} }}
   GRAPH <{ONTOLOGY_GRAPH}> {{
     {restrict}
     ?other rdfs:label ?label .
@@ -244,6 +284,7 @@ SELECT ?other ?label WHERE {{
             "predicate": predicate,
             "direction": direction,
             "target_ontology": target_ontology,
+            "graph": graph,
             "total": len(seen),
             "terms": [{"curie": c, "labels": ls} for c, ls in sorted(seen.items())],
         }
@@ -277,24 +318,43 @@ SELECT ?p ?o ?plabel ?olabel WHERE {{
   OPTIONAL {{ GRAPH ?g1 {{ ?o rdfs:label ?olabel }} }}
   OPTIONAL {{ GRAPH ?g2 {{ ?p rdfs:label ?plabel }} }}
 }}""")
-        rels: dict[str, dict[str, dict]] = {}
+        # Keyed by the predicate's CURIE, not its label. The label alone is a
+        # dead end: a caller who sees "connected to" here has nothing to pass to
+        # `relations -p`. This is the discovery half of that loop.
+        rels: dict[str, dict] = {}
         for r in rows:
-            pred = r.get("plabel") or _short(r["p"])
+            pcurie = to_curie(r["p"])
             obj = to_curie(r["o"])
-            entry = rels.setdefault(pred, {}).setdefault(obj, {"curie": obj, "labels": []})
-            if (lab := r.get("olabel")) and lab not in entry["labels"]:
-                entry["labels"].append(lab)
+            entry = rels.setdefault(
+                pcurie, {"predicate": pcurie, "label": r.get("plabel"), "terms": {}}
+            )
+            if entry["label"] is None and r.get("plabel"):
+                entry["label"] = r["plabel"]
+            t = entry["terms"].setdefault(obj, {"curie": obj, "labels": []})
+            if (lab := r.get("olabel")) and lab not in t["labels"]:
+                t["labels"].append(lab)
         warnings.append(
             "relations come from the nonredundant graph, which still contains "
             "closure noise; treat these as inferred rather than asserted"
         )
+        if not rels:
+            warnings.append(
+                f"no relations found for {curie}. If {ontology} is not in Ubergraph "
+                "this is silence from the backend rather than a term without "
+                "axioms -- try `oq neighbours` instead, which reads OLS4."
+            )
         return {
             "curie": curie,
             "ontology": ontology,
             "annotations": annotations,
-            "relations": {
-                p: sorted(v.values(), key=lambda d: d["curie"]) for p, v in sorted(rels.items())
-            },
+            "relations": [
+                {
+                    "predicate": e["predicate"],
+                    "label": e["label"],
+                    "terms": sorted(e["terms"].values(), key=lambda d: d["curie"]),
+                }
+                for _, e in sorted(rels.items(), key=lambda kv: (kv[1]["label"] or "", kv[0]))
+            ],
             "warnings": warnings,
         }
 

@@ -1,0 +1,54 @@
+{
+ "kind": "ols4-graph",
+ "payload": "ehdaa2|http://purl.obolibrary.org/obo/EHDAA2_0001570",
+ "response": {
+  "nodes": [
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001570",
+    "label": "pronephros"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/CARO_0000055",
+    "label": "multi-tissue structure"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001601",
+    "label": "urinary system"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/HsapDv_0000016",
+    "label": "CS09"
+   },
+   {
+    "iri": "http://purl.obolibrary.org/obo/EHDAA2_0004055",
+    "label": "5-7 cervical nephrotomes"
+   }
+  ],
+  "edges": [
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0001570",
+    "target": "http://purl.obolibrary.org/obo/CARO_0000055",
+    "uri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+    "label": "subClassOf"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0001570",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0001601",
+    "uri": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "label": "part of"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0001570",
+    "target": "http://purl.obolibrary.org/obo/HsapDv_0000016",
+    "uri": "http://purl.obolibrary.org/obo/RO_0002496",
+    "label": "existence starts during or after"
+   },
+   {
+    "source": "http://purl.obolibrary.org/obo/EHDAA2_0004055",
+    "target": "http://purl.obolibrary.org/obo/EHDAA2_0001570",
+    "uri": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "label": "part of"
+   }
+  ]
+ }
+}
