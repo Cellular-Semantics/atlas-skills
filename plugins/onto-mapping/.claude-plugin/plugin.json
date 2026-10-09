@@ -1,6 +1,6 @@
 {
   "name": "onto-mapping",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Map free-text metadata fields to ontology terms using lexical and graph evidence, with the judgement left in the transcript.",
   "author": {
     "name": "Cellular Semantics",
