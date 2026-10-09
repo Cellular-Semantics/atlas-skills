@@ -34,32 +34,36 @@ SHEET = ROOT / "docs" / "fetal-tissue-review-sheet.tsv"
 ALLOWED = ["Skill", "Bash(uvx:*)", "Bash(python3:*)", "Read", "Write"]
 
 PROMPT = """\
-Map the tissue described by this record to a term in the Uberon anatomy ontology.
+Map the tissue described by each of these {n} records to a term in the Uberon
+anatomy ontology.
 
-The record comes from a review table of human fetal single-cell datasets. Each
+The records come from a review table of human fetal single-cell datasets. Each
 field is reproduced exactly as it appears in its source column; `tissue_obs` and
 `tissue_dataset_metadata` are separate columns and their key-value pairs are the
-submitter's own, not a controlled vocabulary.
+submitter's own, not a controlled vocabulary. The records are unrelated to each
+other except that all are human fetal tissue.
 
-{record}
+{records}
 
-Work it as the map-to-ontology skill directs, then end your reply with a single
-fenced ```json block holding the report that skill asks for:
+Work them as the map-to-ontology skill directs, then end your reply with a
+single fenced ```json block holding one object per record, keyed by unit_id:
 
-{{"curie": "UBERON:...", "label": "...", "unresolved": false,
+{{"U001": {{"curie": "UBERON:...", "label": "...", "unresolved": false,
   "why_this_not_that": "...",
   "input_read_as": "what you took the input to be, which field you searched and why",
   "moves_used": ["..."], "answered_by": "...",
   "rejected": [{{"curie": "...", "label": "...", "reason": "..."}}],
-  "validators_flagged": [], "unaccounted": [], "unavailable": []}}
+  "validators_flagged": [], "unaccounted": [], "unavailable": []}},
+ "U002": {{...}}}}
 
-Set `unresolved` to true, with `curie` null, if the record cannot honestly be
-mapped to one term.
+Set `unresolved` to true, with `curie` null, for any record that cannot honestly
+be mapped to one term.
 """
 
 
 def record_text(row: dict) -> str:
-    lines = [f"publication_id           {row['publication_id']}"]
+    lines = [f"=== {row['unit_id']} ===",
+             f"publication_id           {row['publication_id']}"]
     for col in ("tissue_obs", "tissue_dataset_metadata", "tissue_study_level", "tissue_caveat"):
         val = (row[col] or "").strip()
         if val and val != "{}":
@@ -92,6 +96,12 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--max-cost-usd", type=float, default=15.0)
     ap.add_argument("--timeout", type=int, default=900)
+    ap.add_argument("--batch-size", type=int, default=1,
+                    help="records per agent process. The skill text and the "
+                         "per-session release check are re-read on every turn of "
+                         "every process, so batching amortises both; measured at "
+                         "~31k of context per turn against ~3k of oq output for a "
+                         "whole single-record run.")
     a = ap.parse_args()
 
     ids = []
@@ -110,34 +120,52 @@ def main() -> int:
     transcripts.mkdir(exist_ok=True)
 
     results, spent = [], 0.0
-    for i, uid in enumerate(ids, 1):
-        row = rows[uid]
-        prompt = PROMPT.format(record=record_text(row))
+    groups = [ids[i:i + a.batch_size] for i in range(0, len(ids), a.batch_size)]
+    for gi, group in enumerate(groups, 1):
+        recs = [rows[u] for u in group]
+        prompt = PROMPT.format(n=len(recs), records="\n\n".join(record_text(r) for r in recs))
         if a.dry_run:
-            print(f"=== {uid}  {row['publication_id']}\n{record_text(row)}\n")
+            print(f"=== batch {gi} ({len(recs)} records)\n{prompt}\n")
             continue
         if spent >= a.max_cost_usd:
-            print(f"stopping at {uid}: spent ${spent:.2f} of ${a.max_cost_usd:.2f}")
+            print(f"stopping before batch {gi}: spent ${spent:.2f} of ${a.max_cost_usd:.2f}")
             break
-        run = invoke(prompt, {"name": uid, "allowed_tools": ALLOWED,
-                              "timeout_seconds": a.timeout, "max_turns": 40},
-                     transcripts / f"{uid}.jsonl")
+        name = group[0] if len(group) == 1 else f"{group[0]}-x{len(group)}"
+        run = invoke(prompt, {"name": name, "allowed_tools": ALLOWED,
+                              "timeout_seconds": a.timeout,
+                              # Each record needs its own probes, so the turn
+                              # budget has to scale or a batch dies mid-way
+                              # through its last records.
+                              "max_turns": 25 + 15 * len(recs)},
+                     transcripts / f"{name}.jsonl")
         spent += run.cost_usd or 0.0
-        report = extract(run.answer or "")
+        parsed = extract(run.answer or "") or {}
+        # One record is reported bare; a batch is keyed by unit_id. Accept both
+        # so --batch-size 1 keeps working unchanged.
+        if len(recs) == 1 and "curie" in parsed:
+            parsed = {group[0]: parsed}
         oq = [t for t in run.tool_calls
               if t["name"] == "Bash" and "oq " in str(t["input"].get("command", ""))]
-        results.append({
-            "unit_id": uid, "publication_id": row["publication_id"],
-            "record": {c: row[c] for c in ("tissue_obs", "tissue_dataset_metadata",
-                                           "tissue_study_level", "tissue_caveat")},
-            "report": report, "raw_answer": run.answer, "error": run.error,
-            "turns": run.turns, "cost_usd": run.cost_usd,
-            "oq_calls": [t["input"].get("command", "") for t in oq],
-        })
+        for row in recs:
+            uid = row["unit_id"]
+            report = parsed.get(uid)
+            results.append({
+                "unit_id": uid, "publication_id": row["publication_id"],
+                "record": {c: row[c] for c in ("tissue_obs", "tissue_dataset_metadata",
+                                               "tissue_study_level", "tissue_caveat")},
+                "report": report, "error": run.error,
+                # Shared across the batch; divided so per-record figures stay
+                # comparable with single-record runs.
+                "batch_size": len(recs), "turns": run.turns,
+                "cost_usd": (run.cost_usd or 0.0) / len(recs),
+                "oq_calls": [t["input"].get("command", "") for t in oq],
+                "raw_answer": run.answer if report is None else None,
+            })
         a.out.write_text(json.dumps(results, indent=1))
-        got = (report or {}).get("curie") or ("unresolved" if report else "NO REPORT")
-        print(f"[{i:>2}/{len(ids)}] {uid} {row['publication_id'][:26]:<26} "
-              f"{str(got):<16} {run.turns:>2} turns  ${run.cost_usd or 0:.2f}"
+        got = sum(1 for r in recs if parsed.get(r["unit_id"]))
+        print(f"[batch {gi:>2}/{len(groups)}] {name:<14} {got}/{len(recs)} reported  "
+              f"{run.turns:>3} turns  ${run.cost_usd or 0:.2f}  "
+              f"(${(run.cost_usd or 0)/len(recs):.2f}/record)"
               + (f"  ERROR {run.error}" if run.error else ""))
 
     if not a.dry_run:
