@@ -105,12 +105,16 @@ Cheapest rung first. Leave a rung when you hit one of its named failure signals.
 Most records finish at rung 1 or 2, and spending heavily on an easy record is as
 much a failure as getting a hard one wrong.
 
-**Rung 0 chooses where you enter.** It is not a warm-up for rung 1. Some inputs
-carry no searchable text at all, and for those the lexical rungs are not a
-cheap first try — they are a waste that produces false leads. Rung 0 says which
-of those you have.
+**Rung 0 chooses where you enter, and builds what you enter with.** It is not a
+warm-up for rung 1. Some inputs carry no searchable text at all, and for those
+the lexical rungs are not a cheap first try — they are a waste that produces
+false leads. Rung 0 says which of those you have, and for the rest it produces
+the string rung 1 searches and the context every later rung judges against.
 
-### Rung 0 — triage
+Most of the decisions that settle a hard record are made here, before any query
+runs. A query cannot recover a string that was never assembled.
+
+### Rung 0 — read the record, build the query
 
 Read the whole record, all fields together, and write down three things.
 
@@ -162,21 +166,76 @@ mapping. Say so and stop — do not pick the most common convention and hope.
 A mixed string (`6months old human thymus`) is a quantity wrapped in words.
 Extract the quantity and take this route; do not search the whole string.
 
-**What is each field for?** Give every field exactly one role and say which:
+**Write the string you are going to search, and the context you will judge it
+against.** Two things, written down, before any query. Not a label on each
+field — a partition of the record into one string and a block of supporting
+context.
 
-- **Search term** — joins the lexical query.
-- **Structural constraint** — narrows candidates through the graph, not through
-  text. A region constrains which cell types are plausible.
-- **Validator** — never enters the search; only checks the answer at the end.
-  Species and developmental stage are usually validators.
+**1. The query string.** One string, constructed, not copied. It is often
+*several fields joined the way an ontology would word them*, and that joining
+is the single most productive move available before a query runs:
 
-Putting a validator into the search is a common way to get nothing back.
-Leaving a search term out throws away signal.
+| record | the string to search |
+|---|---|
+| `structure=spine`, `region=thoracic` | `thoracic spine` — an exact synonym of `UBERON:0006073` |
+| `bone=frontal`, `anatomical_site=calvaria` | `frontal bone` — the key types the value |
+| `obs_tissue=spinal cord; brachial` | `brachial spinal cord` — not two structures |
+| `obs_tissue=brain; stroma` | `stroma of brain` — the second part modifies the first |
+
+Say which fields went into it. If two readings are both plausible, write both
+strings and probe both — that costs one invocation, because `-q` repeats.
+
+A separator is not an instruction to split. `brain; stroma` and
+`spinal cord; brachial` are each one structure with a modifier, and mapping the
+halves independently gives two wrong answers rather than one. Both spellings
+appear in real corpora, which is how you can tell the separator is doing no
+semantic work.
+
+**2. The context block.** Everything that did not go into the string, each item
+tagged with *when it gets used*. The tag names the step that reads it, so a tag
+nothing reads is a tag worth deleting:
+
+- **Disambiguates** — consumed *now*, while building the string. One field
+  settling what another one means. `Subregion=Thalamus` is ambiguous between
+  the dorsal thalamus and the union; `obs_tissue=dorsal plus ventral thalamus`
+  settles it, and the settling happens before the query, not after.
+- **Discriminates** — held back for adjudication, to separate rivals a query
+  returns, and to supply a region to search within when the lexical route fails
+  outright. **Gross anatomical location belongs here, and it is the most useful
+  thing in the block.** `cortex` is `cortex of kidney` or `cerebral cortex`
+  depending on what else the record says.
+- **Validates** — checked against the chosen term at the end. Species,
+  developmental stage.
+- **Unexplained** — nothing accounts for it yet. Goes in the report.
+
+**Composing is not filtering, and location can do either.** A field goes into
+the string when the fields *together name one structure* — `spine` + `thoracic`
+is `thoracic spine`, `kidney` + `cortex` is `kidney cortex`. A field stays in
+the context block when it merely describes circumstances the term is not named
+after. The test is whether a curator would write the joined phrase on a slide
+label.
+
+Get this backwards and you get nothing back, because a multi-token query is
+conjunctive and strict: every token must appear somewhere in the term. Adding
+`human`, `adult` or `10x` to a query is how a real term returns zero hits.
+
+A location that did not compose into a name is not spent. It discriminates
+between rivals at adjudication, and it names a region to search inside when the
+lexical route fails outright.
+
+**Sex is the exception** — the one piece of context that genuinely constrains
+rather than discriminates, and latent knowledge usually settles it without a
+query. A record marked female does not need the graph to rule out
+`prostate gland`.
 
 ### Rung 1 — exact, then stemmed
 
 Only if rung 0 found searchable text. A quantity or an identifier does not
 reach this rung at all.
+
+Search **the string rung 0 built**, not the raw field value. Where rung 0 wrote
+down two plausible readings, probe both — `-q` repeats, so that is still one
+invocation:
 
 ```
 $OQ lexical -q "<string>" -o <ontology> --probes exact
@@ -192,18 +251,60 @@ UBERON:0001003  skin epidermis  broad_synonym
 UBERON:0002199  integument      related_synonym
 ```
 
-A **broad** synonym matching your text means the term is *narrower* than your
-text. A **narrow** synonym matching means it is *broader*. Those are different
-mistakes, and the scope tells you which one you are about to make.
+The channel is the part of this result worth trusting. Rank is not comparable
+within the lexical band, but which field matched is reliable, and it tells you
+the *grain* of what you found rather than merely that you found something.
 
-**Exit if** the exact probe returns exactly one term — on any channel — and
-`$OQ term` on it shows nothing in the record contradicting the context: wrong
-taxon, wrong stage, a definition about a different sense of the word.
+**One hit is not an exit.** A count is the weakest signal available here, and
+on its own it will walk you into a wrong answer without raising anything.
 
-One term, not one strong-channel term. If several come back you have rivals and
-must adjudicate, even when only one matched a label or exact synonym. `skin`
-returns four; `zone of skin` is the only exact-synonym hit, but `skin of body`
-is a real rival.
+`cortex` against Uberon returns **exactly one** exact hit: `UBERON:0001851
+cortex`, whose definition is *"Outermost layer of an organ"* and whose only
+parent is `organ part`. It is a generic grouping class. Almost no record that
+says "cortex" means it — they mean the cerebral cortex, or the kidney cortex,
+or the adrenal cortex, all of which exist as terms and none of which carries
+`cortex` as a whole-string synonym. The count rule fires, the single hit looks
+clean, and nothing in the result says you are about to be wrong.
+
+So treat a hit as a **candidate with evidence attached**, and read the evidence
+before deciding. Every lexical hit already carries its definition and its
+synonyms with scopes, so the first screen costs no further query:
+
+**Screen first, on what you already have.**
+
+- Does the definition describe the thing the record means, or a different sense
+  of the word? `Outermost layer of an organ` is not a brain region.
+- Is it a grouping class rather than a structure? A one-line genus-only
+  definition and a parent like `organ part`, `anatomical structure` or
+  `organ component` are the tell.
+- Which channel matched, and how much of your string did it consume? A **broad**
+  synonym matching means the term is *narrower* than your text; a **narrow**
+  synonym matching means it is *broader*. A hit arriving **only** on narrow
+  synonyms is its own signal: the ontology has a grouping term and nothing at
+  the grain you asked for. `frontal bone` reaches `UBERON:0000209 tetrapod
+  frontal bone` that way.
+
+**Then confirm, on the context you wrote down.** Bring in the items you tagged
+*discriminates* — gross anatomical location above all — and ask whether the
+candidate sits where the record says it sits.
+
+In the `cortex` case that context does two jobs. It **refutes**: a record
+mentioning kidney makes `UBERON:0001851` wrong, because the hit is a grouping
+class over every organ's outer layer and the record is about one organ. And it
+**supplies the next query**: `kidney` + `cortex` compose into `kidney cortex`,
+which is where rung 2 starts. Refuting a hit without having somewhere to go next
+is only half the move.
+
+**Exit when you can write the why-this-not-that line**, not when a count comes
+out at one. That means: the definition fits, the channel is consistent with the
+grain you wanted, nothing in the context contradicts it, and you can name what
+you rejected. A single hit that passes all of that is a fine exit and most
+records do reach it at this rung — the point is that the passing, not the
+counting, is what licenses it.
+
+If several come back you have rivals and must adjudicate, even when only one
+matched a label or exact synonym. `skin` returns four; `zone of skin` is the
+only exact-synonym hit, but `skin of body` is a real rival.
 
 If exact returns nothing or several, add the stemmed probe:
 
@@ -222,10 +323,14 @@ reliably, and it is unreliable within the lexical band (`skin of body` ranks
 40% of a result set. Those are leads, not candidates, and do not satisfy the
 exit test on their own.
 
-**Go to rung 2 if**: exact gave nothing; exact gave more than one term; or the
-stemmed probe returned hundreds of terms all more specific than your string
-(`skin` returns 121, `muscle` 768). That is recall working correctly, and the
-job from here is reduction.
+**Go to rung 2 if**: exact gave nothing; it gave rivals you cannot separate on
+definition, channel and context; every hit was screened out as the wrong sense
+or a grouping class; or the stemmed probe returned hundreds of terms all more
+specific than your string (`skin` returns 121, `muscle` 768). That last is
+recall working correctly, and the job from here is reduction.
+
+A single hit that fails the screen is a rung-2 trigger like any other, and it
+is the one most easily mistaken for success.
 
 ### Rung 2 — names the ontology might actually use
 
