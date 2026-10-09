@@ -21,6 +21,7 @@ Nothing here scores or selects. Every function returns annotated evidence.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 
 from .curies import defined_by_iri, to_curie, to_iri
@@ -482,24 +483,102 @@ SELECT ?s ?label ?src WHERE {{
         ontology: str,
         sibling_of: str | None = None,
         label_contains: str | None = None,
+        text_contains: str | None = None,
+        under: str | None = None,
         limit: int = 500,
     ) -> dict:
-        """Read a naming convention off real labels rather than guessing at it.
+        """Survey a set of terms, by naming convention or by where they sit.
 
         ``label_contains`` surveys an ontology for a wording pattern: one query
         over hsapdv for labels containing "week" returns 30 terms, all of the
         form "9th week post-fertilization stage", none of which carry any
-        synonym at all. No amount of trying "12 pcw" will ever hit one.
+        synonym at all. No amount of trying "12 pcw" will ever hit one. It
+        matches ``rdfs:label`` and nothing else, deliberately -- for reading a
+        convention off real labels, a synonym would be noise.
+
+        ``text_contains`` matches the label *or any synonym*, and reports which
+        field matched. Use it when you are looking for a term rather than for a
+        convention, because the string a record carries is very often not the
+        label. ``UBERON:0006073`` is labelled "thoracic region of vertebral
+        column" and carries "thoracic spine" only as an exact synonym, so a
+        label-only filter misses it -- and this is the route a caller reaches
+        for *after* the direct lexical probe has already failed, which is the
+        worst possible place for a silent miss.
 
         ``sibling_of`` returns the co-children of a term's direct parents.
+
+        ``under`` restricts to terms inside a region, and composes with either
+        text filter. This is the route for a record whose own text is ambiguous
+        but whose other fields say where in the body it came from: "cortex"
+        matches 150 Uberon labels, and the handful inside the kidney are the
+        ones such a record means.
+
+        The traversal for ``under`` is subClassOf *and* part_of, and the part_of
+        leg is not optional: ``cortex of kidney`` is part of the kidney, not a
+        subclass of it, so a subsumption-only reading returns nothing here. It
+        reads the redundant graph, which is reflexive over subClassOf, so the
+        anchor comes back in its own cohort. That row is flagged ``is_anchor``
+        rather than dropped.
         """
-        if (sibling_of is None) == (label_contains is None):
-            raise ValueError("give exactly one of sibling_of or label_contains")
+        if label_contains is not None and text_contains is not None:
+            raise ValueError("give at most one of label_contains or text_contains")
+        filters = [label_contains, text_contains]
+        if sibling_of is not None and under is not None:
+            raise ValueError("sibling_of and under cannot be combined")
+        if sibling_of is not None and any(f is not None for f in filters):
+            raise ValueError("sibling_of cannot be combined with a text filter")
+        if sibling_of is None and under is None and not any(f is not None for f in filters):
+            raise ValueError(
+                "give at least one of sibling_of, label_contains, text_contains or under"
+            )
         graph = self.graph_for(ontology)
         if graph is None:
             raise ValueError(f"{ontology} is not in Ubergraph")
 
-        if label_contains is not None:
+        # Only the label-or-synonym path needs the matched property bound. The
+        # other bodies are left byte-identical to what they were, because the
+        # test cassette keys fixtures on the exact query string: gratuitously
+        # reformatting a working query silently invalidates its recording.
+        if text_contains is not None:
+            needle = text_contains.lower()
+            match_block = f"""    VALUES ?field {{ rdfs:label oio:hasExactSynonym oio:hasBroadSynonym
+                     oio:hasNarrowSynonym oio:hasRelatedSynonym }}
+    ?s ?field ?matched .
+    FILTER(CONTAINS(LCASE(STR(?matched)), "{needle}"))"""
+            select = "?s ?label ?field ?matched"
+        else:
+            match_block = (
+                f'    FILTER(CONTAINS(LCASE(STR(?label)), "{label_contains.lower()}"))'
+                if label_contains is not None
+                else ""
+            )
+            select = "?s ?label"
+
+        if under is not None:
+            # Anchor bound first, so the closure scan is bounded by it rather
+            # than by the text pattern. In the redundant graph part_of is
+            # carried as a plain predicate, shorthand for the existential.
+            body = f"""
+SELECT {select} WHERE {{
+  VALUES ?anchor {{ <{to_iri(under)}> }}
+  VALUES ?p {{ rdfs:subClassOf obo:BFO_0000050 }}
+  GRAPH <{REDUNDANT_GRAPH}> {{ ?s ?p ?anchor . }}
+  GRAPH <{graph}> {{
+    ?s rdfs:label ?label .
+    FILTER NOT EXISTS {{ ?s owl:deprecated true }}
+{match_block}
+  }}
+}} LIMIT {limit}"""
+        elif text_contains is not None:
+            body = f"""
+SELECT {select} WHERE {{
+  GRAPH <{graph}> {{
+    ?s rdfs:label ?label .
+    FILTER NOT EXISTS {{ ?s owl:deprecated true }}
+{match_block}
+  }}
+}} LIMIT {limit}"""
+        elif label_contains is not None:
             body = f"""
 SELECT ?s ?label WHERE {{
   GRAPH <{graph}> {{
@@ -523,16 +602,42 @@ SELECT ?s ?label WHERE {{
 }} LIMIT {limit}"""
 
         rows = self.query(body)
-        seen: dict[str, list[str]] = {}
+        seen: dict[str, dict] = {}
         for r in rows:
-            seen.setdefault(to_curie(r["s"]), []).append(r["label"])
+            curie = to_curie(r["s"])
+            e = seen.setdefault(curie, {"labels": [], "matched_fields": {}})
+            if r["label"] not in e["labels"]:
+                e["labels"].append(r["label"])
+            if r.get("field"):
+                field = _short(r["field"])
+                if field != "label":
+                    # oio:hasExactSynonym -> exact_synonym, matching lexical
+                    field = re.sub(r"(?<!^)(?=[A-Z])", "_", field.replace("has", "", 1)).lower()
+                matched = r.get("matched")
+            else:
+                # No ?field bound means the body filtered on rdfs:label itself.
+                field, matched = "label", r["label"]
+            vals = e["matched_fields"].setdefault(field, [])
+            if matched and matched not in vals:
+                vals.append(matched)
+
+        terms = []
+        for c, e in sorted(seen.items()):
+            row = {"curie": c, "labels": e["labels"]}
+            if label_contains is not None or text_contains is not None:
+                row["matched_fields"] = e["matched_fields"]
+            if c == under:
+                row["is_anchor"] = True
+            terms.append(row)
         return {
             "ontology": ontology,
             "sibling_of": sibling_of,
             "label_contains": label_contains,
+            "text_contains": text_contains,
+            "under": under,
             "total": len(seen),
             "truncated": len(rows) >= limit,
-            "terms": [{"curie": c, "labels": ls} for c, ls in sorted(seen.items())],
+            "terms": terms,
         }
 
 

@@ -384,11 +384,14 @@ def test_cohort_reads_a_naming_convention(t):
     assert any("week post-fertilization stage" in lab for lab in labels)
 
 
-def test_cohort_requires_exactly_one_mode(t):
+def test_cohort_requires_a_mode(t):
+    """`under` composes with a text filter rather than excluding it, so the old
+    "exactly one mode" rule no longer holds. What still has to hold is that
+    some selector was given, and that sibling_of is not mixed with anything."""
     ug = Ubergraph(t)
-    with pytest.raises(ValueError, match="exactly one"):
+    with pytest.raises(ValueError, match="at least one"):
         ug.cohort("hsapdv")
-    with pytest.raises(ValueError, match="exactly one"):
+    with pytest.raises(ValueError, match="cannot be combined"):
         ug.cohort("hsapdv", sibling_of="HsapDv:0000046", label_contains="week")
 
 
@@ -914,3 +917,86 @@ def test_term_names_its_predicates_not_just_their_labels(t):
 )
 def test_to_curie_only_shortens_what_it_can_shorten(iri, expected):
     assert curies.to_curie(iri) == expected
+
+
+# ---- cohort: the location query ----------------------------------------
+
+
+def test_cohort_under_traverses_part_of_as_well_as_subclass(t):
+    """`cortex of kidney` is *part of* the kidney, not a subclass of it, so a
+    subsumption-only reading of "under" returns nothing for the case this
+    command exists to serve."""
+    seen = []
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: "g"
+    ug.query = lambda body: seen.append(body) or []
+    ug.cohort("uberon", under="UBERON:0002113", text_contains="cortex")
+    assert "rdfs:subClassOf obo:BFO_0000050" in seen[0]
+
+
+def test_cohort_text_contains_searches_synonyms_label_contains_does_not(t):
+    """The distinction that makes the location query usable.
+
+    `spine` under the vertebral column: label-only finds 10 terms and none of
+    the regional ones, because UBERON:0006073 is labelled "thoracic region of
+    vertebral column" and carries "thoracic spine" only as an exact synonym.
+    Verified live 2026-10-09. The location query is reached *after* a direct
+    lexical probe has already failed, so a silent miss there is the worst kind.
+    """
+    seen = []
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: "g"
+    ug.query = lambda body: seen.append(body) or []
+
+    ug.cohort("uberon", text_contains="spine", under="UBERON:0001130")
+    assert "oio:hasExactSynonym" in seen[0]
+    assert "oio:hasBroadSynonym" in seen[0]
+
+    seen.clear()
+    ug.cohort("uberon", label_contains="spine", under="UBERON:0001130")
+    assert "hasExactSynonym" not in seen[0]
+
+
+def test_cohort_reports_which_field_matched(t):
+    """Same signal as a lexical probe's matched_fields: a broad synonym
+    matching means the term is narrower than the text."""
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: "g"
+    ug.query = lambda body: [
+        {
+            "s": "http://purl.obolibrary.org/obo/UBERON_0006073",
+            "label": "thoracic region of vertebral column",
+            "field": "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym",
+            "matched": "thoracic spine",
+        }
+    ]
+    res = ug.cohort("uberon", text_contains="spine", under="UBERON:0001130")
+    assert res["terms"][0]["matched_fields"] == {"exact_synonym": ["thoracic spine"]}
+
+
+def test_cohort_flags_the_anchor_rather_than_dropping_it(t):
+    """The redundant graph is reflexive over subClassOf, so the anchor subsumes
+    itself. Nothing here selects, so it is flagged, not removed."""
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: "g"
+    ug.query = lambda body: [
+        {
+            "s": "http://purl.obolibrary.org/obo/UBERON_0001130",
+            "label": "vertebral column",
+            "field": "http://www.w3.org/2000/01/rdf-schema#label",
+            "matched": "vertebral column",
+        }
+    ]
+    res = ug.cohort("uberon", text_contains="column", under="UBERON:0001130")
+    assert res["terms"][0]["is_anchor"] is True
+
+
+def test_cohort_rejects_incoherent_combinations(t):
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: "g"
+    with pytest.raises(ValueError, match="at most one"):
+        ug.cohort("uberon", label_contains="a", text_contains="b")
+    with pytest.raises(ValueError, match="cannot be combined"):
+        ug.cohort("uberon", sibling_of="UBERON:0000955", under="UBERON:0001130")
+    with pytest.raises(ValueError, match="at least one"):
+        ug.cohort("uberon")
