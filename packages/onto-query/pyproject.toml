@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "onto-query"
-version = "0.2.0"
+version = "0.3.0"
 description = "Evidence-returning query primitives over OLS4 and Ubergraph. No scoring, no selection."
 requires-python = ">=3.11"
 dependencies = []

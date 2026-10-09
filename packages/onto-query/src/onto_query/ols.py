@@ -272,14 +272,34 @@ def linked_entities(t: Transport, ontology: str, curie: str) -> dict[str, dict]:
     return out
 
 
-def neighbours(t: Transport, ontology: str, curie: str) -> dict:
-    """The one-hop neighbourhood of a term, from OLS4's term graph.
+def neighbours(
+    t: Transport,
+    ontology: str,
+    curie: str,
+    predicates: tuple[str, ...] = (),
+    target_ontology: str | None = None,
+) -> dict:
+    """The one-hop neighbourhood of a term, from OLS4.
 
     Asserted direct relations in both directions, with predicate and node
-    labels already resolved, in a single request. This is the way to get
-    relations for an ontology Ubergraph does not hold -- EHDAA2's link to
-    HsapDv (`existence starts during or after` -> Carnegie stage 12) is only
-    visible here.
+    labels resolved. This is the way to get relations for an ontology Ubergraph
+    does not hold -- EHDAA2's link to HsapDv (`existence starts during or
+    after` -> Carnegie stage 09) is only visible here.
+
+    Two endpoints, because neither alone is correct:
+
+    * **Outgoing** comes from the v2 class record's ``relatedTo``, which keeps
+      every OWL restriction with its ``owl:onProperty`` intact. The v1 term
+      graph deduplicates edges by source and target, so a term asserting two
+      predicates against the *same* target silently loses one of them.
+      ``EHDAA2:0001570 pronephros`` is CS09-to-CS09 in the released OWL and
+      reads through v1 as CS09-with-no-end -- an annotation twenty stages too
+      late would pass. Verified live 2026-10-09: v1 returns only RO:0002496,
+      v2 returns both RO:0002496 and RO:0002497.
+    * **Incoming** has no v2 equivalent -- ``linksTo`` is outgoing and carries
+      no predicate -- so it still comes from the v1 graph, and still carries
+      v1's deduplication. That limitation is reported in ``warnings`` rather
+      than hidden.
 
     Complementary to `relations` rather than a substitute: this is one hop and
     asserted, where Ubergraph gives inference closure. Neither offers what the
@@ -288,28 +308,111 @@ def neighbours(t: Transport, ontology: str, curie: str) -> dict:
     from .curies import to_curie, to_iri
 
     iri = to_iri(curie)
+    warnings: list[str] = []
+    wanted = {to_iri(p) if ":" in p else p for p in predicates}
+
+    def keep(pred_iri: str, other_curie: str) -> bool:
+        if wanted and pred_iri not in wanted:
+            return False
+        return not (
+            target_ontology
+            and not other_curie.lower().startswith(target_ontology.lower() + ":")
+        )
+
+    # ---- outgoing, from v2 -------------------------------------------------
+    out: dict[str, list[dict]] = {}
+    label = None
+    try:
+        v2 = t.ols4_v2_class(ontology, iri)
+    except Exception as exc:  # reported in warnings, not swallowed
+        v2 = {}
+        warnings.append(
+            f"the v2 class record for {curie} was unavailable ({exc}); outgoing "
+            "relations fall back to the v1 term graph, which drops one edge when "
+            "two predicates share a target"
+        )
+    else:
+        linked = v2.get("linkedEntities") or {}
+
+        def _label(entity_iri: str) -> str | None:
+            labs = (linked.get(entity_iri) or {}).get("label")
+            if isinstance(labs, list):
+                return labs[0] if labs else None
+            return labs
+
+        label = _label(iri) or (
+            v2.get("label")[0] if isinstance(v2.get("label"), list) else v2.get("label")
+        )
+        for rel in v2.get("relatedTo") or []:
+            pred_iri = rel.get("property")
+            value = rel.get("value")
+            if not pred_iri or not value:
+                continue
+            other = to_curie(value)
+            if not keep(pred_iri, other):
+                continue
+            pred = _label(pred_iri) or to_curie(pred_iri)
+            entry = {
+                "curie": other,
+                "label": _label(value),
+                "predicate": to_curie(pred_iri),
+            }
+            row = out.setdefault(pred, [])
+            if entry not in row:
+                row.append(entry)
+
+    # ---- incoming, from v1 -------------------------------------------------
     doc = t.ols4_graph(ontology, iri)
     labels = {n["iri"]: n.get("label") for n in doc.get("nodes") or []}
-
-    out: dict[str, list[dict]] = {}
+    label = label or labels.get(iri)
     inc: dict[str, list[dict]] = {}
+    v1_out: dict[str, list[dict]] = {}
     for e in doc.get("edges") or []:
-        pred = e.get("label") or e.get("uri", "")
-        if e.get("source") == iri:
-            other, bucket = e.get("target"), out
-        elif e.get("target") == iri:
+        pred_iri = e.get("uri") or ""
+        pred = e.get("label") or pred_iri
+        if e.get("target") == iri and e.get("source") != iri:
             other, bucket = e.get("source"), inc
+        elif e.get("source") == iri:
+            other, bucket = e.get("target"), v1_out
         else:
             continue  # an edge between two neighbours, not involving the term
-        entry = {"curie": to_curie(other), "label": labels.get(other)}
+        other_curie = to_curie(other)
+        if not keep(pred_iri, other_curie):
+            continue
+        entry = {
+            "curie": other_curie,
+            "label": labels.get(other),
+            "predicate": to_curie(pred_iri) if pred_iri else None,
+        }
         row = bucket.setdefault(pred, [])
         if entry not in row:
             row.append(entry)
 
+    if inc:
+        warnings.append(
+            "incoming relations come from OLS4's v1 term graph, which has no v2 "
+            "equivalent. v1 deduplicates edges by source and target, so if two "
+            "predicates point at this term from the same source, only one is "
+            "shown. Outgoing relations are not affected."
+        )
+    # Visible proof that the v2 route recovered something, rather than a claim.
+    n_v2 = sum(len(v) for v in out.values())
+    n_v1 = sum(len(v) for v in v1_out.values())
+    if out and n_v2 > n_v1:
+        warnings.append(
+            f"v2 reports {n_v2} outgoing relations where the v1 term graph reports "
+            f"{n_v1}; the difference is edges v1 drops when two predicates share a "
+            "target"
+        )
+    if not out and v1_out:
+        out = v1_out
+
     return {
         "curie": curie,
         "ontology": ontology,
-        "label": labels.get(iri),
+        "label": label,
+        "predicates": list(predicates) or None,
+        "target_ontology": target_ontology,
         "outgoing": {k: sorted(v, key=lambda d: d["curie"]) for k, v in sorted(out.items())},
         "incoming": {k: sorted(v, key=lambda d: d["curie"]) for k, v in sorted(inc.items())},
         "external_targets": sorted(
@@ -320,6 +423,7 @@ def neighbours(t: Transport, ontology: str, curie: str) -> dict:
                 if not d["curie"].startswith(curie.split(":")[0] + ":")
             }
         ),
+        "warnings": warnings,
     }
 
 

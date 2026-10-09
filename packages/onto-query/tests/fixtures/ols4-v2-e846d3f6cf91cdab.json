@@ -1,0 +1,426 @@
+{
+ "kind": "ols4-v2",
+ "payload": "ehdaa2|http://purl.obolibrary.org/obo/EHDAA2_0001570",
+ "response": {
+  "appearsIn": [
+   "ehdaa2"
+  ],
+  "curie": "EHDAA2:0001570",
+  "directAncestor": [
+   "http://purl.obolibrary.org/obo/CARO_0000000",
+   "http://purl.obolibrary.org/obo/CARO_0000003",
+   "http://purl.obolibrary.org/obo/CARO_0000006",
+   "http://purl.obolibrary.org/obo/CARO_0000055"
+  ],
+  "directParent": [
+   "http://purl.obolibrary.org/obo/CARO_0000055"
+  ],
+  "hasDirectChildren": false,
+  "hasDirectParents": true,
+  "hasHierarchicalChildren": true,
+  "hasHierarchicalParents": true,
+  "hierarchicalAncestor": [
+   "http://purl.obolibrary.org/obo/AEO_0000103",
+   "http://purl.obolibrary.org/obo/CARO_0000000",
+   "http://purl.obolibrary.org/obo/CARO_0000003",
+   "http://purl.obolibrary.org/obo/CARO_0000006",
+   "http://purl.obolibrary.org/obo/CARO_0000011",
+   "http://purl.obolibrary.org/obo/CARO_0000032",
+   "http://purl.obolibrary.org/obo/CARO_0000054",
+   "http://purl.obolibrary.org/obo/CARO_0000055",
+   "http://purl.obolibrary.org/obo/EHDAA2_0001330",
+   "http://purl.obolibrary.org/obo/EHDAA2_0001601"
+  ],
+  "hierarchicalParent": [
+   "http://purl.obolibrary.org/obo/CARO_0000055",
+   {
+    "type": [
+     "reification"
+    ],
+    "value": "http://purl.obolibrary.org/obo/EHDAA2_0001601",
+    "axioms": [
+     {
+      "childRelationToParent": "http://purl.obolibrary.org/obo/BFO_0000050"
+     }
+    ]
+   }
+  ],
+  "hierarchicalProperty": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+  "imported": false,
+  "iri": "http://purl.obolibrary.org/obo/EHDAA2_0001570",
+  "isDefiningOntology": false,
+  "isObsolete": false,
+  "isPreferredRoot": false,
+  "label": [
+   "pronephros"
+  ],
+  "linkedEntities": {
+   "EHDAA2:0001570": {
+    "url": "http://purl.obolibrary.org/obo/EHDAA2_0001570",
+    "source": "https://raw.githubusercontent.com/biopragmatics/bioregistry/main/exports/registry/registry.json",
+    "curie": "EHDAA2:0001570"
+   },
+   "http://purl.obolibrary.org/obo/AEO_0000103": {
+    "definedBy": [
+     "aeo"
+    ],
+    "numAppearsIn": 2.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "body"
+    ],
+    "curie": "AEO:0000103",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/BFO_0000050": {
+    "definedBy": [
+     "ro"
+    ],
+    "numAppearsIn": 172.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "part of"
+    ],
+    "curie": "RO_",
+    "type": [
+     "entity",
+     "objectProperty",
+     "property"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/CARO_0000000": {
+    "definedBy": [
+     "caro"
+    ],
+    "numAppearsIn": 26.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "anatomical entity"
+    ],
+    "curie": "CARO:0000000",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/CARO_0000003": {
+    "definedBy": [
+     "caro"
+    ],
+    "numAppearsIn": 20.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "connected anatomical structure"
+    ],
+    "curie": "CARO:0000003",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/CARO_0000006": {
+    "definedBy": [
+     "caro"
+    ],
+    "numAppearsIn": 20.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "material anatomical entity"
+    ],
+    "curie": "CARO:0000006",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/CARO_0000011": {
+    "definedBy": [
+     "caro"
+    ],
+    "numAppearsIn": 5.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "connected anatomical system"
+    ],
+    "curie": "CARO:0000011",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/CARO_0000032": {
+    "definedBy": [
+     "caro"
+    ],
+    "numAppearsIn": 8.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "organism subdivision"
+    ],
+    "curie": "CARO:0000032",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/CARO_0000054": {
+    "definedBy": [
+     "caro"
+    ],
+    "numAppearsIn": 5.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "anatomical group"
+    ],
+    "curie": "CARO:0000054",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/CARO_0000055": {
+    "definedBy": [
+     "caro"
+    ],
+    "numAppearsIn": 5.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "multi-tissue structure"
+    ],
+    "curie": "CARO:0000055",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/EHDAA2_0001330": {
+    "numAppearsIn": 1.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "organ system group"
+    ],
+    "curie": "EHDAA2:0001330",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/EHDAA2_0001601": {
+    "numAppearsIn": 1.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "urinary system"
+    ],
+    "curie": "EHDAA2:0001601",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/HsapDv_0000016": {
+    "definedBy": [
+     "hsapdv"
+    ],
+    "numAppearsIn": 3.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "Carnegie stage 09"
+    ],
+    "curie": "HsapDv:0000016",
+    "type": [
+     "class",
+     "entity"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/RO_0002496": {
+    "definedBy": [
+     "ro"
+    ],
+    "numAppearsIn": 44.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "existence starts during or after"
+    ],
+    "curie": "RO:0002496",
+    "type": [
+     "entity",
+     "objectProperty",
+     "property"
+    ]
+   },
+   "http://purl.obolibrary.org/obo/RO_0002497": {
+    "definedBy": [
+     "ro"
+    ],
+    "numAppearsIn": 41.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "existence ends during or before"
+    ],
+    "curie": "RO:0002497",
+    "type": [
+     "entity",
+     "objectProperty",
+     "property"
+    ]
+   },
+   "http://www.geneontology.org/formats/oboInOwl#hasOBONamespace": {
+    "definedBy": [
+     "oio"
+    ],
+    "numAppearsIn": 171.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "has_obo_namespace"
+    ],
+    "curie": "OIO:hasOBONamespace",
+    "type": [
+     "annotationProperty",
+     "entity",
+     "property"
+    ]
+   },
+   "http://www.geneontology.org/formats/oboInOwl#id": {
+    "definedBy": [
+     "oio"
+    ],
+    "numAppearsIn": 183.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "id"
+    ],
+    "curie": "OIO:id",
+    "type": [
+     "annotationProperty",
+     "entity",
+     "property"
+    ]
+   },
+   "http://www.w3.org/2000/01/rdf-schema#label": {
+    "definedBy": [
+     "rdfs"
+    ],
+    "numAppearsIn": 204.0,
+    "hasLocalDefinition": true,
+    "label": [
+     "label"
+    ],
+    "curie": "RDFS:label",
+    "type": [
+     "entity",
+     "property"
+    ]
+   },
+   "http://www.w3.org/2000/01/rdf-schema#subClassOf": {
+    "definedBy": [
+     "rdfs"
+    ],
+    "numAppearsIn": 8.0,
+    "hasLocalDefinition": false,
+    "label": [
+     "subClassOf"
+    ],
+    "curie": "RDFS:subClassOf",
+    "type": [
+     "entity",
+     "property"
+    ]
+   }
+  },
+  "linksTo": [
+   "http://purl.obolibrary.org/obo/AEO_0000103",
+   "http://purl.obolibrary.org/obo/BFO_0000050",
+   "http://purl.obolibrary.org/obo/CARO_0000000",
+   "http://purl.obolibrary.org/obo/CARO_0000003",
+   "http://purl.obolibrary.org/obo/CARO_0000006",
+   "http://purl.obolibrary.org/obo/CARO_0000011",
+   "http://purl.obolibrary.org/obo/CARO_0000032",
+   "http://purl.obolibrary.org/obo/CARO_0000054",
+   "http://purl.obolibrary.org/obo/CARO_0000055",
+   "http://purl.obolibrary.org/obo/EHDAA2_0001330",
+   "http://purl.obolibrary.org/obo/EHDAA2_0001601",
+   "http://purl.obolibrary.org/obo/HsapDv_0000016",
+   "http://purl.obolibrary.org/obo/RO_0002496",
+   "http://purl.obolibrary.org/obo/RO_0002497",
+   "http://www.geneontology.org/formats/oboInOwl#hasOBONamespace",
+   "http://www.geneontology.org/formats/oboInOwl#id",
+   "http://www.w3.org/2000/01/rdf-schema#label",
+   "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+  ],
+  "numDescendants": 0.0,
+  "numHierarchicalDescendants": 1.0,
+  "ontologyId": "ehdaa2",
+  "ontologyIri": "http://purl.obolibrary.org/obo/ehdaa2.owl",
+  "relatedTo": [
+   {
+    "property": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "value": "http://purl.obolibrary.org/obo/EHDAA2_0001601",
+    "type": [
+     "related"
+    ],
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.w3.org/2002/07/owl#Restriction",
+    "http://www.w3.org/2002/07/owl#onProperty": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "http://www.w3.org/2002/07/owl#someValuesFrom": "http://purl.obolibrary.org/obo/EHDAA2_0001601",
+    "isObsolete": false
+   },
+   {
+    "property": "http://purl.obolibrary.org/obo/RO_0002496",
+    "value": "http://purl.obolibrary.org/obo/HsapDv_0000016",
+    "type": [
+     "related"
+    ],
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.w3.org/2002/07/owl#Restriction",
+    "http://www.w3.org/2002/07/owl#onProperty": "http://purl.obolibrary.org/obo/RO_0002496",
+    "http://www.w3.org/2002/07/owl#someValuesFrom": "http://purl.obolibrary.org/obo/HsapDv_0000016",
+    "isObsolete": false
+   },
+   {
+    "property": "http://purl.obolibrary.org/obo/RO_0002497",
+    "value": "http://purl.obolibrary.org/obo/HsapDv_0000016",
+    "type": [
+     "related"
+    ],
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.w3.org/2002/07/owl#Restriction",
+    "http://www.w3.org/2002/07/owl#onProperty": "http://purl.obolibrary.org/obo/RO_0002497",
+    "http://www.w3.org/2002/07/owl#someValuesFrom": "http://purl.obolibrary.org/obo/HsapDv_0000016",
+    "isObsolete": false
+   }
+  ],
+  "searchableAnnotationValues": [
+   false
+  ],
+  "shortForm": "EHDAA2_0001570",
+  "type": [
+   "class",
+   "entity"
+  ],
+  "http://www.geneontology.org/formats/oboInOwl#hasOBONamespace": "human_developmental_anatomy",
+  "http://www.geneontology.org/formats/oboInOwl#id": "EHDAA2:0001570",
+  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.w3.org/2002/07/owl#Class",
+  "http://www.w3.org/2000/01/rdf-schema#label": "pronephros",
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf": [
+   "http://purl.obolibrary.org/obo/CARO_0000055",
+   {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.w3.org/2002/07/owl#Restriction",
+    "http://www.w3.org/2002/07/owl#onProperty": "http://purl.obolibrary.org/obo/BFO_0000050",
+    "http://www.w3.org/2002/07/owl#someValuesFrom": "http://purl.obolibrary.org/obo/EHDAA2_0001601",
+    "isObsolete": false
+   },
+   {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.w3.org/2002/07/owl#Restriction",
+    "http://www.w3.org/2002/07/owl#onProperty": "http://purl.obolibrary.org/obo/RO_0002496",
+    "http://www.w3.org/2002/07/owl#someValuesFrom": "http://purl.obolibrary.org/obo/HsapDv_0000016",
+    "isObsolete": false
+   },
+   {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.w3.org/2002/07/owl#Restriction",
+    "http://www.w3.org/2002/07/owl#onProperty": "http://purl.obolibrary.org/obo/RO_0002497",
+    "http://www.w3.org/2002/07/owl#someValuesFrom": "http://purl.obolibrary.org/obo/HsapDv_0000016",
+    "isObsolete": false
+   }
+  ]
+ }
+}
