@@ -1,5 +1,12 @@
 # onto-query gaps found while building the EHDAA2 route
 
+> **Status, 2026-10-11.** Gaps 1, 2, 3 and the filter half of 4 are fixed in
+> onto-query 0.3.0 (`pkg-onto-query--v0.3.0`). Gap 4's `--depth` is still open
+> and deliberately held back. Gap 5 was never confirmed: `term` does warn when
+> the ontology is absent from Ubergraph, so the report may have described the
+> relations half, which had no guard and now does. Treat 5 as unverified rather
+> than outstanding.
+
 Five changes the reference doc currently works around. All are generic — a
 parameter on an existing command, or a correctness fix — and none is specific
 to developmental mapping. Listed worst first.

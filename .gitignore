@@ -28,3 +28,8 @@ docs/archive/ehdaa2-investigation/sweep-latest.json
 evals/ontology-mapping/runs/transcripts/
 evals/ontology-mapping/runs/*.json
 .DS_Store
+
+# Per-worker slice files are scratch for a particular parallel run; the named
+# slices (slice-20.txt, slice-50.txt) are the ones worth keeping.
+evals/ontology-mapping/s50-*.txt
+evals/ontology-mapping/slice-*-p[0-9].txt

@@ -109,7 +109,8 @@ def extract(text: str) -> dict:
 
 
 def stream_invoke(prompt: str, name: str, allowed: list[str], timeout: int,
-                  max_turns: int, transcript: pathlib.Path, on_report=None):
+                  max_turns: int, transcript: pathlib.Path, on_report=None,
+                  model: str | None = None):
     """Run one agent process, writing the transcript as it arrives.
 
     runner.invoke captures output and writes it only after the process exits,
@@ -118,7 +119,10 @@ def stream_invoke(prompt: str, name: str, allowed: list[str], timeout: int,
     long batch can be watched and a killed one can still be salvaged.
     """
     cmd = ["claude", "-p", "--output-format", "stream-json", "--verbose",
-           "--max-turns", str(max_turns), "--allowedTools", *allowed]
+           "--max-turns", str(max_turns)]
+    if model:
+        cmd += ["--model", model]
+    cmd += ["--allowedTools", *allowed]
     answer_parts, tool_calls, result = [], [], {}
     with tempfile.TemporaryDirectory(prefix=f"eval-{name}-") as cwd, \
          transcript.open("w") as tf:
@@ -185,6 +189,11 @@ def main() -> int:
     ap.add_argument("--max-cost-usd", type=float, default=15.0)
     ap.add_argument("--timeout", type=int, default=900,
                 help="per record; multiplied by batch size")
+    ap.add_argument("--model", default=None,
+                    help="model alias passed to `claude -p --model`, e.g. sonnet. "
+                         "Changes what is under test: the skill is judgement, so a "
+                         "cheaper model is a different experiment, not a cheaper "
+                         "run of the same one.")
     ap.add_argument("--batch-size", type=int, default=5,
                     help="records per agent process. The skill text and the "
                          "per-session release check are re-read on every turn of "
@@ -253,7 +262,7 @@ def main() -> int:
 
         run = stream_invoke(prompt, name, ALLOWED, timeout,
                             25 + 15 * len(recs), transcripts / f"{name}.jsonl",
-                            on_report=progress)
+                            on_report=progress, model=a.model)
         spent += run["cost_usd"] or 0.0
         parsed = extract(run["answer"] or "")
         live.clear()               # superseded by the complete rows built below
@@ -266,7 +275,7 @@ def main() -> int:
                 "unit_id": uid, "publication_id": row["publication_id"],
                 "record": {c: row[c] for c in ("tissue_obs", "tissue_dataset_metadata",
                                                "tissue_study_level", "tissue_caveat")},
-                "report": report, "error": run["error"],
+                "report": report, "error": run["error"], "model": a.model or "default",
                 "batch_size": len(recs), "turns": run["turns"],
                 # Cost is shared across whatever the batch actually reported, so
                 # a per-record figure stays comparable with single-record runs.
