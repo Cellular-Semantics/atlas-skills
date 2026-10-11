@@ -34,7 +34,22 @@ can search and read relations but not reason — say so in the report.
 
 ## Working a batch
 
-You may be given one record or many. **Per session, once only:**
+You may be given one record or many. Working several in one session is much
+cheaper than one at a time, because this file and the release check are read
+once rather than once per record — measured at roughly half the cost and half
+the turns per record at a batch of five.
+
+**How many records to take at once, and which model to run, are the caller's
+choice, not this skill's.** A skill cannot select a model; set it for the
+session (`claude --model …`, `/model`, or settings) and send records in groups.
+Judgement is what this skill is for, so a cheaper model is a different
+experiment rather than a cheaper run of the same one — on 49 records a smaller
+model agreed on 38 and named a mean 1.5 rejected rivals against 4.5, naming
+none at all on 19 of them. Those 19 fail the exit test below whatever term they
+reached. If nobody reviews the output, that matters; if a curator signs it off,
+it may not.
+
+**Per session, once only:**
 
 ```
 $OQ release -o <ontology>
