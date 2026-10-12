@@ -335,6 +335,59 @@
     "narrow"
    ],
    "tests": "Every hit arrives on narrow_synonym only: tetrapod frontal bone, tetrapod parietal bone, and two actinopterygian terms. Two things to get right. The channel says the ontology has no term at the grain asked for, only a broader grouping. And the result contains the wrong bone and the wrong taxon, so a report that does not reject parietal and the fish terms has not read the hits. Reading the field key is what makes 'frontal' a bone rather than the frontal cortex."
+  },
+  {
+   "id": "one-annotation-short-path",
+   "record": {
+    "study_level": "dorsal root ganglion"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0000044"
+   ],
+   "must_use": [
+    "exact"
+   ],
+   "answered_by_any_of": [
+    "exact"
+   ],
+   "max_moves": 1,
+   "must_not_use": [
+    "stemmed",
+    "alt-names",
+    "region",
+    "common-ancestors",
+    "relations"
+   ],
+   "tests": "The proportion case for the short path. The record is one field, the field is the exact label of UBERON:0000044, and nothing else in the record discriminates. One probe settles it. Observed before the rule existed: three lexical probes and two term calls, none of which changed the answer. Getting the term right while spending five calls is a failure of this case."
+  },
+  {
+   "id": "short-path-must-not-fire-on-a-grouping-class",
+   "record": {
+    "tissue": "cortex"
+   },
+   "target": "uberon",
+   "accepted": [],
+   "expect_unresolved": true,
+   "must_not_answer": [
+    "UBERON:0001851"
+   ],
+   "tests": "The short path's guard rail, and the reason it is not the old count rule. This record is one-annotation and `cortex` returns exactly one exact hit matched on the label, so conditions 1-3 all hold. Condition 4 must stop it: UBERON:0001851 is defined 'Outermost layer of an organ' with organ part as its only parent. Taking the short path here is the failure."
+  },
+  {
+   "id": "short-path-must-not-fire-when-context-discriminates",
+   "record": {
+    "region": "apex",
+    "publication_id": "bayraktar_2024_heart"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0002098"
+   ],
+   "must_use": [
+    "exact"
+   ],
+   "tests": "Not one-annotation: the organ comes from the publication rather than from any tissue field, and it is doing the work -- 'apex' alone is heart, lung or tongue. A bare probe on 'apex' returns no exact hit at all, so the short path cannot fire, but the record must still be recognised as carrying a second annotation rather than as a one-field record that failed."
   }
  ]
 }

@@ -164,6 +164,23 @@ structure*; the test is whether a curator would write the phrase on a slide
 label. A multi-token query is conjunctive, so adding `human` or `adult` returns
 zero.
 
+### Is this a one-annotation record?
+
+Ask it explicitly, because the answer licenses the short path below. A record
+is **one-annotation** when everything it says about the target ontology reduces
+to a single name — one field, or several that compose into one name — and
+nothing left over discriminates between candidates.
+
+`study_level=dorsal root ganglion` is one-annotation. So is `structure=spine` +
+`region=thoracic`, because the two compose. `region=apex` with
+`publication_id=…_heart` is **not**: the organ comes from outside the tissue
+fields and is doing real work.
+
+Developmental stage does not make a record multi-annotation. It is carried as a
+validator, but Uberon's stage axioms are too coarse to separate candidates at
+the grain these records use — see the developmental survey for what is and is
+not usable. Note it as unchecked and do not spend moves on it.
+
 ### Write the context
 
 Tag everything not in the string by the stage that reads it:
@@ -192,6 +209,36 @@ $OQ lexical -q "<string>" -o <ont> --probes exact --compact
 Whole-string match on label or any synonym. Search **the string Prepare built**.
 `found_by.exact.matched_fields` names the channel, which is the trustworthy
 part: it tells you the *grain* of what you found. Any hits → **Prune**.
+
+**For a one-annotation record, drop `--compact`.** You are about to decide on
+the definition, and compact omits it to save bandwidth you are not spending
+here. One full probe beats a compact probe plus a `term` call.
+
+#### The short path
+
+**Stop after this probe — no further move — when all four hold:**
+
+1. Prepare called the record **one-annotation**.
+2. The probe returned **exactly one** term.
+3. It matched on **label or exact synonym**. Broad, narrow and related do not
+   qualify: those scopes mean the term is wider or narrower than your text, and
+   that difference is worth a second move.
+4. It passes the Prune screen — the definition is about the right sense, and it
+   is **not a grouping class**.
+
+Then write the why-this-not-that line and finish. `dorsal root ganglion` is the
+whole of its record and is the exact label of `UBERON:0000044`; it needs one
+probe, and a run that spent three probes and two `term` calls on it settled
+nothing the first call had not.
+
+**This is not the count rule that used to live here, and the difference is
+condition 4.** The old rule exited on one term and nothing else, which `cortex`
+defeats: exactly one hit, matched on the label, and `UBERON:0001851` is a
+grouping class defined "Outermost layer of an organ" that almost no record
+means. One hit is still not an exit. One hit *that survives the screen*, on a
+record with nothing else to say, is.
+
+If any condition fails, carry on as normal.
 
 ### `stemmed`
 
@@ -322,8 +369,11 @@ nothing says you are wrong.
 Screen on:
 
 - **Sense** — does it describe what the record means, or another sense?
-- **Grouping class or structure?** A bare one-word label under `organ part`,
-  `anatomical structure` or `organ component` is the tell.
+- **Grouping class or structure?** Read the definition for a genus with no real
+  differentia — "Outermost layer of an organ", "any X of the body", wording that
+  would fit a dozen structures. A bare one-word label under `organ part`,
+  `anatomical structure` or `organ component` is the other tell. The short path
+  rests on this screen, so apply it there even when the match looks perfect.
 - **Channel.** A **broad** synonym matching means the term is *narrower* than
   your text; a **narrow** synonym means *broader*. Hits arriving **only** on
   narrow synonyms mean the ontology has no term at your grain — `frontal bone`
