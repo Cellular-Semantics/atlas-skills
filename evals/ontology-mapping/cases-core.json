@@ -362,7 +362,7 @@
    "tests": "The proportion case for the short path. The record is one field, the field is the exact label of UBERON:0000044, and nothing else in the record discriminates. One probe settles it. Observed before the rule existed: three lexical probes and two term calls, none of which changed the answer. Getting the term right while spending five calls is a failure of this case."
   },
   {
-   "id": "short-path-must-not-fire-on-a-grouping-class",
+   "id": "short-path-must-not-fire-on-an-ambiguous-string",
    "record": {
     "tissue": "cortex"
    },
@@ -372,7 +372,10 @@
    "must_not_answer": [
     "UBERON:0001851"
    ],
-   "tests": "The short path's guard rail, and the reason it is not the old count rule. This record is one-annotation and `cortex` returns exactly one exact hit matched on the label, so conditions 1-3 all hold. Condition 4 must stop it: UBERON:0001851 is defined 'Outermost layer of an organ' with organ part as its only parent. Taking the short path here is the failure."
+   "tests": "The short path's guard rail. This record is one-annotation and `cortex` returns exactly one exact hit matched on the label, so conditions 1-3 all hold. Condition 4 must stop it, and the reason is the string rather than the term: `cortex` is a short common ambiguous word, flagged in Prepare before any query ran, and the record gives nothing to say which cortex is meant. Answering UBERON:0001851 is the failure; so is reaching it by a grouping-class argument, which needs a parent the probe never returned.",
+   "must_mention": [
+    "ambiguous"
+   ]
   },
   {
    "id": "short-path-must-not-fire-when-context-discriminates",

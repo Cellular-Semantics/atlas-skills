@@ -164,6 +164,20 @@ structure*; the test is whether a curator would write the phrase on a slide
 label. A multi-token query is conjunctive, so adding `human` or `adult` returns
 zero.
 
+### Could a plain lexical match get this wrong?
+
+Signals that it could: the string names more than one thing
+(`Cornea/Conjunctiva`); it carries a number, unit or abbreviation (`12 pcw`,
+`wk 8`, `LI`); it reads as a description rather than a name
+(`full reproductive tract`); or it is a **short common ambiguous word** —
+`skin`, `muscle`, `brain`, `cortex`.
+
+That last class is the one that bites hardest, because a probe on it often
+returns a clean-looking hit. `cortex` returns exactly one exact term on the
+label. The record almost certainly means the cerebral, renal or adrenal cortex,
+and nothing in the result says which. **Flag the string here**; it is what the
+short path below checks against.
+
 ### Is this a one-annotation record?
 
 Ask it explicitly, because the answer licenses the short path below. A record
@@ -223,8 +237,8 @@ here. One full probe beats a compact probe plus a `term` call.
 3. It matched on **label or exact synonym**. Broad, narrow and related do not
    qualify: those scopes mean the term is wider or narrower than your text, and
    that difference is worth a second move.
-4. It passes the Prune screen — the definition is about the right sense, and it
-   is **not a grouping class**.
+4. Prepare did **not** flag the string as ambiguous, and the definition the
+   probe returned is about the sense the record means.
 
 Then write the why-this-not-that line and finish. `dorsal root ganglion` is the
 whole of its record and is the exact label of `UBERON:0000044`; it needs one
@@ -233,10 +247,15 @@ nothing the first call had not.
 
 **This is not the count rule that used to live here, and the difference is
 condition 4.** The old rule exited on one term and nothing else, which `cortex`
-defeats: exactly one hit, matched on the label, and `UBERON:0001851` is a
-grouping class defined "Outermost layer of an organ" that almost no record
-means. One hit is still not an exit. One hit *that survives the screen*, on a
-record with nothing else to say, is.
+defeats: one hit, matched on the label, and `UBERON:0001851` is defined
+"Outermost layer of an organ" — not what any record means by cortex. What stops
+it is that Prepare flagged `cortex` as a short common ambiguous word before any
+query ran. One hit is still not an exit; one hit on an unflagged string, with a
+definition that fits and nothing else in the record to weigh, is.
+
+**Both halves of condition 4 are already in your hands.** The flag came from
+reading the record and the definition came back with the probe, so nothing here
+needs a second call. Do not spend a `term` call to confirm a short-path match.
 
 If any condition fails, carry on as normal.
 
@@ -362,18 +381,21 @@ Read names. No further query — the definition and scoped synonyms are already 
 the result.
 
 **One hit is not an exit.** `cortex` returns **exactly one** exact hit,
-`UBERON:0001851`, defined "Outermost layer of an organ", parent `organ part`. A
-grouping class almost no record means. The count fires, the hit looks clean, and
-nothing says you are wrong.
+`UBERON:0001851`, defined "Outermost layer of an organ" — not what a record
+means by cortex, which is the cerebral, renal or adrenal one. The count fires,
+the hit looks clean, and nothing in the result says you are wrong. What says so
+is the string: Prepare flagged it as a short common ambiguous word.
 
 Screen on:
 
 - **Sense** — does it describe what the record means, or another sense?
-- **Grouping class or structure?** Read the definition for a genus with no real
-  differentia — "Outermost layer of an organ", "any X of the body", wording that
-  would fit a dozen structures. A bare one-word label under `organ part`,
-  `anatomical structure` or `organ component` is the other tell. The short path
-  rests on this screen, so apply it there even when the match looks perfect.
+- **Grouping class or structure?** Worth asking when you are choosing between
+  several hits, or weighing a term you reached by climbing the graph — a
+  cross-cutting parent can top a result set without being anybody's mapping.
+  The tells are a definition with a genus and no real differentia, and a bare
+  label sitting under `organ part`, `anatomical structure` or `organ component`.
+  **Not a test for a single direct hit**: nothing is being grouped there, and
+  the second tell needs a parent the probe did not return.
 - **Channel.** A **broad** synonym matching means the term is *narrower* than
   your text; a **narrow** synonym means *broader*. Hits arriving **only** on
   narrow synonyms mean the ontology has no term at your grain — `frontal bone`
