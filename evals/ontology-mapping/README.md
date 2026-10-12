@@ -36,6 +36,11 @@ python evals/ontology-mapping/verify-hsapdv-claims.py --offline  # cached
 
 Needs an interpreter with CA certificates; Homebrew's python3 fails TLS here.
 
+The EHDAA2 stage-bracket investigation that lived here has been withdrawn and
+moved to `docs/archive/ehdaa2-investigation/` — record, not guidance. See its
+README for why, and `docs/uberon-developmental-survey-brief.md` for what
+replaces it.
+
 ## Two layers, both required
 
 `packages/onto-query/tests` pins the query layer: the JSON envelope, the
