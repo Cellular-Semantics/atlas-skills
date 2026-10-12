@@ -22,7 +22,7 @@ Model and batch size are the caller's: a skill cannot select a model, and an age
 
 ## Evidence
 
-70 real HDCA tissue descriptions, run against the installed plugin in isolated temp directories. Results in `docs/fetal-tissue-slice-results.tsv` and `docs/fetal-tissue-opus-vs-sonnet.tsv`.
+70 real HDCA tissue descriptions, run against the installed plugin in isolated temp directories. Results in `docs/hdca-fetal-tissue/` (see its README).
 
 Terse+batched matched verbose+single on 12/12 identical inputs at half the cost. A smaller model agreed on 38/49 but named a mean 1.5 rejected rivals against 4.5, and none at all on 19 — those fail the skill's own exit test whatever term they reached.
 

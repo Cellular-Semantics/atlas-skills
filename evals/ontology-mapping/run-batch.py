@@ -31,7 +31,7 @@ ROOT = HERE.parent.parent
 sys.path.insert(0, str(ROOT / "evals"))
 
 
-SHEET = ROOT / "docs" / "fetal-tissue-review-sheet.tsv"
+SHEET = ROOT / "docs" / "hdca-fetal-tissue" / "review-sheet.tsv"
 
 ALLOWED = ["Skill", "Bash(uvx:*)", "Bash(python3:*)", "Read", "Write"]
 
