@@ -21,6 +21,7 @@ Nothing here scores or selects. Every function returns annotated evidence.
 
 from __future__ import annotations
 
+import math
 import re
 from dataclasses import dataclass, field
 
@@ -31,6 +32,18 @@ ONTOLOGY_GRAPH = "http://reasoner.renci.org/ontology"
 NONREDUNDANT_GRAPH = "http://reasoner.renci.org/nonredundant"
 REDUNDANT_GRAPH = "http://reasoner.renci.org/redundant"
 IC_PREDICATE = "http://reasoner.renci.org/vocab/normalizedInformationContent"
+
+# Ubergraph also asserts normalizedSubClassInformationContent. Neither is what
+# you want for comparing two candidates from one ontology: both are computed
+# over the whole store, so a Uberon term's score depends on how much CL, GO and
+# the rest happen to hang off it, and the subClassOf-only one saturates -- any
+# term with no subclasses scores 100 however coarse it is anatomically. `abdomen`
+# and `liver` both score 100 there, which is useless for choosing between them.
+#
+# SPECIFICITY_PREDICATES is the traversal used instead: subClassOf and part_of,
+# the two relations essentially every OBO ontology carries, counted over terms
+# the queried ontology itself defines.
+SPECIFICITY_PREDICATES = ("rdfs:subClassOf", "obo:BFO_0000050")
 
 PREFIXES = """
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -290,6 +303,107 @@ SELECT ?other ?label WHERE {{
             "terms": [{"curie": c, "labels": ls} for c, ls in sorted(seen.items())],
         }
 
+    # ---- specificity -----------------------------------------------------
+
+    def _ontology_size(self, ontology: str) -> int:
+        """Non-deprecated classes the ontology itself defines."""
+        key = f"_size_{ontology}"
+        if (n := getattr(self, key, None)) is not None:
+            return n
+        rows = self.query(f"""
+SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE {{
+  GRAPH <{ONTOLOGY_GRAPH}> {{
+    ?s rdfs:isDefinedBy <{defined_by_iri(ontology)}> .
+    ?s rdfs:label ?l .
+    FILTER NOT EXISTS {{ ?s owl:deprecated true }}
+  }}
+}}""")
+        n = int(rows[0]["n"]) if rows else 0
+        setattr(self, key, n)
+        return n
+
+    def specificity(self, curies: list[str], ontology: str) -> dict[str, dict]:
+        """How specific each term is, within the ontology that defines it.
+
+        Information content over the term's descendants by subClassOf *and*
+        part_of, counting only terms the queried ontology defines, normalised
+        against that ontology's size. Both choices matter.
+
+        part_of is included because leaving it out makes the measure useless for
+        anatomy: over subClassOf alone `liver` and `abdomen` have one subclass
+        each and score identically, where over subClassOf+part_of the abdomen
+        contains 651 Uberon terms and the liver 75 -- which is the anatomical
+        fact you wanted in the first place.
+
+        Scoping to the ontology stops the score depending on how much of CL, GO
+        or anything else happens to hang off the term. Two Uberon candidates are
+        then compared on Uberon's own structure.
+
+        This ranks terms by how much they subsume. It does **not** say which one
+        a record means: `thoracic wall` has 2 Uberon descendants and `rib` 72, so
+        the wall scores far higher, and for a record reading "3rd to 6th rib" the
+        rib is still the answer. Use it to tell parent from child on one path,
+        not to choose between terms the text has not already narrowed to.
+        """
+        if not curies:
+            return {}
+        total = self._ontology_size(ontology)
+        if not total:
+            return {}
+        rows = self.query(f"""
+SELECT ?s (COUNT(DISTINCT ?d) AS ?n) WHERE {{
+  VALUES ?s {{ {_values(curies)} }}
+  VALUES ?p {{ {' '.join(SPECIFICITY_PREDICATES)} }}
+  GRAPH <{REDUNDANT_GRAPH}> {{ ?d ?p ?s }}
+  GRAPH <{ONTOLOGY_GRAPH}> {{
+    ?d rdfs:isDefinedBy <{defined_by_iri(ontology)}> .
+    FILTER NOT EXISTS {{ ?d owl:deprecated true }}
+  }}
+}} GROUP BY ?s""")
+        ceiling = -math.log(1 / total)
+        out: dict[str, dict] = {}
+        for r in rows:
+            n = int(r["n"])
+            out[to_curie(r["s"])] = {
+                "descendants": n,
+                "ic": round(-math.log(n / total) / ceiling * 100, 2) if n else None,
+                "scope": ontology,
+                "predicates": ["subClassOf", "part_of"],
+                "ontology_size": total,
+            }
+        return out
+
+    def subsumption(self, curies: list[str], ontology: str) -> dict[str, list[str]]:
+        """Which of these terms lie under which others, over subClassOf+part_of.
+
+        This is what makes the specificity score usable. A score can always be
+        compared, but comparing it only means something when one candidate
+        actually sits under the other: `internal female genitalia` under
+        `internal genitalia` is a grain choice and the more specific term wins,
+        while `thoracic wall` and `rib` are on different axes and the wall's
+        much higher score says nothing about which a record means.
+
+        Returned as {curie: [ancestors among the set]}, so an empty list means a
+        candidate shares no path with any other and has to be decided on the
+        text.
+        """
+        if len(curies) < 2:
+            return {c: [] for c in curies}
+        rows = self.query(f"""
+SELECT ?s ?o WHERE {{
+  VALUES ?s {{ {_values(curies)} }}
+  VALUES ?o {{ {_values(curies)} }}
+  VALUES ?p {{ {' '.join(SPECIFICITY_PREDICATES)} }}
+  FILTER(?s != ?o)
+  GRAPH <{REDUNDANT_GRAPH}> {{ ?s ?p ?o }}
+}}""")
+        out: dict[str, list[str]] = {c: [] for c in curies}
+        for r in rows:
+            sub, anc = to_curie(r["s"]), to_curie(r["o"])
+            if sub in out and anc not in out[sub]:
+                out[sub].append(anc)
+        return out
+
     # ---- term detail -----------------------------------------------------
 
     def term(self, curie: str, ontology: str) -> dict:
@@ -399,6 +513,21 @@ SELECT ?s ?p ?o ?plabel ?olabel WHERE {{
                     )
             warnings.append(f"nothing found for {', '.join(empty)}. {why}")
 
+        spec, subsumes = {}, {}
+        if graph is not None:
+            live = [c for c in curies if c not in empty]
+            try:
+                spec = self.specificity(live, ontology)
+                subsumes = self.subsumption(live, ontology)
+            except Exception as exc:  # enrichment, never the point of the command
+                warnings.append(f"specificity unavailable ({exc})")
+        if len(curies) > 1 and spec and not any(subsumes.values()):
+            warnings.append(
+                "none of these candidates subsumes another, so they sit on "
+                "different branches: compare their specificity scores only as a "
+                "description of each, never as a reason to prefer one"
+            )
+
         blocks = []
         for c in curies:
             labels = annotations[c].get("label") or []
@@ -406,6 +535,8 @@ SELECT ?s ?p ?o ?plabel ?olabel WHERE {{
                 "curie": c,
                 "label": labels[0] if labels else None,
                 "found": bool(annotations[c] or rels[c]),
+                "specificity": spec.get(c),
+                "subsumed_by": subsumes.get(c),
                 "annotations": annotations[c],
                 "relations": [
                     {

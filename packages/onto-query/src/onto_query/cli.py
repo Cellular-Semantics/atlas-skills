@@ -237,7 +237,8 @@ def _build_parser() -> argparse.ArgumentParser:
         "--ontology",
         required=True,
         metavar="NAME",
-        help="the ontology whose asserted graph the annotations come from",
+        help="the ontology whose asserted graph the annotations come from, and "
+        "the scope the specificity score is computed within",
     )
 
     coh = _sub(

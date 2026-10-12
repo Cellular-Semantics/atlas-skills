@@ -437,6 +437,31 @@ Then spend the **discriminates** tags:
   beside CURIEs** — which one batched `term` call makes easy.
 - **Read free text against definitions**, not labels.
 
+### Choosing the grain
+
+Two candidates often differ only in how specific they are, and `term` gives you
+what settles it. Each block carries a **`specificity`** score — information
+content over `subClassOf` and `part_of`, counted over terms the queried ontology
+itself defines — and **`subsumed_by`**, naming which other candidates on your
+shortlist it sits under.
+
+**The score decides only when one candidate subsumes another.** Then prefer the
+more specific term the record's own words justify, keeping sex, side and region
+where the record states them. For `uterus | cervix | vagina`:
+`internal female genitalia` (53.1) sits under `internal genitalia` (45.8), so
+take the sexed term — the record says which sex.
+
+**Where `subsumed_by` is empty for every candidate the score says nothing**, and
+the command warns you. Those candidates are on different branches, and a higher
+score means only that the term subsumes fewer things. `thoracic wall` scores
+92.8 against `rib` 55.5 because Uberon holds two thoracic walls and seventy-two
+ribs; for a record reading `3rd to 6th rib` the rib is still the answer, and no
+amount of specificity will say so. The text decides.
+
+A near-tie is informative in itself: `caudate-putamen` 71.9 against
+`dorsal striatum` 71.2 means the two sit at the same grain, so what matters is
+the argument rather than the choice.
+
 Check `found` on every block: absent ontology, CURIE not in the ontology named,
 or genuinely no axioms are three different things and the warnings say which.
 
