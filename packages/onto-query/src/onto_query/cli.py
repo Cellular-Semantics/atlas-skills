@@ -118,6 +118,15 @@ def _build_parser() -> argparse.ArgumentParser:
         "the default search minus the stemmed set.",
     )
     lex.add_argument(
+        "--compact",
+        action="store_true",
+        help="return curie, label, which field matched and the matching synonym "
+        "only -- no definitions, no full synonym sets. For reading a wide result "
+        "set to decide what is worth looking at properly. Measured on uberon "
+        "'skin' (121 hits, 33.7 kB): definitions are 23%% of that and full synonym "
+        "sets 30%%, and both are things you only need once a candidate survives.",
+    )
+    lex.add_argument(
         "--rows",
         type=int,
         default=DEFAULT_ROWS,
@@ -173,9 +182,12 @@ def _build_parser() -> argparse.ArgumentParser:
         "-p",
         "--predicate",
         default="part_of",
-        choices=sorted(PREDICATES),
-        metavar="NAME",
-        help="one of: " + ", ".join(sorted(PREDICATES)),
+        metavar="NAME|CURIE",
+        help="a shorthand name (" + ", ".join(sorted(PREDICATES)) + ") or any "
+        "predicate CURIE, e.g. RO:0002170 for 'connected to'. The shorthands are "
+        "aliases, not a limit. `oq term <CURIE> -o <ontology>` lists the "
+        "predicates a term actually carries, with their CURIEs, and is the way to "
+        "find out what to pass here.",
     )
     rel.add_argument(
         "-d",
@@ -193,11 +205,33 @@ def _build_parser() -> argparse.ArgumentParser:
         help="restrict the other end to this ontology. Without it, terms from "
         "every ontology in the store come back.",
     )
+    rel.add_argument(
+        "--graph",
+        default="redundant",
+        choices=("redundant", "nonredundant"),
+        metavar="REDUNDANT|NONREDUNDANT",
+        help="which Ubergraph inference graph to read. 'redundant' is the "
+        "transitive closure, so a 'direct' edge is not what you get: "
+        "UBERON:0002240 develops_from gives 29 edges there and 1 "
+        "(posterior neural tube) in 'nonredundant'.",
+    )
+    rel.add_argument(
+        "--direct",
+        action="store_true",
+        help="sugar for --graph nonredundant",
+    )
 
     term = _sub(
         sub, "term", help.TERM, help.TERM_EPILOG, help="annotations and relations for one term"
     )
-    term.add_argument("curie", metavar="CURIE")
+    term.add_argument(
+        "curie",
+        metavar="CURIE",
+        nargs="+",
+        help="one or more terms. Pass the whole shortlist at once: adjudication "
+        "is comparison, and what separates candidates is visible side by side "
+        "and has to be reconstructed when they are fetched one at a time.",
+    )
     term.add_argument(
         "-o",
         "--ontology",
@@ -214,16 +248,35 @@ def _build_parser() -> argparse.ArgumentParser:
         help="survey labels to read a naming convention",
     )
     coh.add_argument("-o", "--ontology", required=True, metavar="NAME")
-    g = coh.add_mutually_exclusive_group(required=True)
-    g.add_argument(
+    coh.add_argument(
         "--sibling-of",
         metavar="CURIE",
-        help="co-children of this term's direct parents",
+        help="co-children of this term's direct parents. Cannot be combined "
+        "with --under or a text filter.",
     )
-    g.add_argument(
+    coh.add_argument(
         "--label-contains",
         metavar="SUBSTRING",
-        help="terms whose asserted label contains this substring, case-insensitive",
+        help="terms whose asserted label contains this substring, case-insensitive. "
+        "Labels only -- use this to read a naming convention, where a synonym "
+        "would be noise.",
+    )
+    coh.add_argument(
+        "--text-contains",
+        metavar="SUBSTRING",
+        help="terms whose label OR any synonym contains this substring, with the "
+        "matched field reported. Use this when looking for a term rather than for "
+        "a convention: UBERON:0006073 is labelled 'thoracic region of vertebral "
+        "column' and carries 'thoracic spine' only as a synonym, so "
+        "--label-contains would miss it.",
+    )
+    coh.add_argument(
+        "--under",
+        metavar="CURIE",
+        help="restrict to terms inside this region, over subClassOf and part_of. "
+        "Composes with either text filter. This is the move for a record whose "
+        "own text is ambiguous but whose other fields say where in the body it "
+        "came from -- 'cortex' with a kidney in the record.",
     )
     coh.add_argument(
         "--limit",
@@ -288,6 +341,24 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     nb.add_argument("curie", metavar="CURIE")
     nb.add_argument("-o", "--ontology", required=True, metavar="NAME")
+    nb.add_argument(
+        "-p",
+        "--predicate",
+        action="append",
+        default=[],
+        metavar="NAME|CURIE",
+        help="keep only relations on this predicate. Repeatable. Takes a CURIE "
+        "such as RO:0002496, or an IRI. Without it the whole one-hop "
+        "neighbourhood comes back.",
+    )
+    nb.add_argument(
+        "-t",
+        "--target-ontology",
+        default=None,
+        metavar="NAME",
+        help="keep only relations whose other end is in this ontology, matched "
+        "on the CURIE prefix.",
+    )
 
     cw = _sub(
         sub,
@@ -394,7 +465,10 @@ def _run(args: argparse.Namespace) -> dict:
         probes = tuple(s.strip() for s in args.probes.split(",") if s.strip())
         # One config lookup, shared across every query string.
         cfg = search_config(t, args.ontology)
-        results = [lexical(t, q, args.ontology, probes, args.rows, config=cfg) for q in args.query]
+        results = [
+            lexical(t, q, args.ontology, probes, args.rows, config=cfg, compact=args.compact)
+            for q in args.query
+        ]
         warnings = [
             f"{r['query']!r}: probe {name!r} returned {info['returned']} of "
             f"{info['num_found']} hits; raise --rows to see the rest"
@@ -417,7 +491,12 @@ def _run(args: argparse.Namespace) -> dict:
         return _envelope(
             "lexical",
             "ols4",
-            {"queries": args.query, "ontology": args.ontology, "probes": list(probes)},
+            {
+                "queries": args.query,
+                "ontology": args.ontology,
+                "probes": list(probes),
+                "compact": args.compact,
+            },
             results,
             warnings,
         )
@@ -478,7 +557,17 @@ def _run(args: argparse.Namespace) -> dict:
         )
 
     if args.command == "relations":
-        res = ug.relations(args.curie, args.predicate, args.direction, args.target_ontology)
+        graph = "nonredundant" if args.direct else args.graph
+        res = ug.relations(
+            args.curie, args.predicate, args.direction, args.target_ontology, graph
+        )
+        warnings = []
+        if graph == "redundant":
+            warnings.append(
+                "answered from the redundant graph, which is the transitive "
+                "closure: these are not direct edges. Use --direct for the "
+                "asserted-and-pruned nonredundant graph."
+            )
         return _envelope(
             "relations",
             "ubergraph",
@@ -487,17 +576,18 @@ def _run(args: argparse.Namespace) -> dict:
                 "predicate": args.predicate,
                 "direction": args.direction,
                 "target_ontology": args.target_ontology,
+                "graph": graph,
             },
             res,
-            [],
+            warnings,
         )
 
     if args.command == "term":
-        res = ug.term(args.curie, args.ontology)
+        res = ug.terms(args.curie, args.ontology)
         return _envelope(
             "term",
             "ubergraph",
-            {"curie": args.curie, "ontology": args.ontology},
+            {"curies": args.curie, "ontology": args.ontology},
             res,
             res.pop("warnings"),
         )
@@ -564,8 +654,14 @@ def _run(args: argparse.Namespace) -> dict:
         )
 
     if args.command == "neighbours":
-        res = neighbours(t, args.ontology, args.curie)
-        warnings = []
+        res = neighbours(
+            t,
+            args.ontology,
+            args.curie,
+            tuple(args.predicate),
+            args.target_ontology,
+        )
+        warnings = list(res.pop("warnings"))
         if ext := res["external_targets"]:
             warnings.append(
                 f"points outside {args.ontology} at: {', '.join(ext)}. Those targets "
@@ -580,7 +676,12 @@ def _run(args: argparse.Namespace) -> dict:
         return _envelope(
             "neighbours",
             "ols4",
-            {"curie": args.curie, "ontology": args.ontology},
+            {
+                "curie": args.curie,
+                "ontology": args.ontology,
+                "predicates": list(args.predicate) or None,
+                "target_ontology": args.target_ontology,
+            },
             res,
             warnings,
         )
@@ -613,7 +714,14 @@ def _run(args: argparse.Namespace) -> dict:
         )
 
     if args.command == "cohort":
-        res = ug.cohort(args.ontology, args.sibling_of, args.label_contains, args.limit)
+        res = ug.cohort(
+            args.ontology,
+            args.sibling_of,
+            args.label_contains,
+            args.text_contains,
+            args.under,
+            args.limit,
+        )
         warnings = ["the limit was reached; results are incomplete"] if res["truncated"] else []
         return _envelope(
             "cohort",
@@ -622,6 +730,8 @@ def _run(args: argparse.Namespace) -> dict:
                 "ontology": args.ontology,
                 "sibling_of": args.sibling_of,
                 "label_contains": args.label_contains,
+                "text_contains": args.text_contains,
+                "under": args.under,
                 "limit": args.limit,
             },
             res,

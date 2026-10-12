@@ -246,9 +246,69 @@ def test_empty_seeds_rejected(t):
         Ubergraph(t).common_ancestors([], "uberon")
 
 
-def test_unknown_predicate_rejected(t):
-    with pytest.raises(ValueError, match="unknown predicate"):
+def test_common_ancestors_keeps_the_curated_predicate_set(t):
+    """Deliberately stricter than `relations`.
+
+    common-ancestors ranks by information content, and IC is only comparable
+    between rows because every row came from the same traversal. A free
+    predicate here would make the number meaningless, so a CURIE is refused
+    even though `relations` accepts one.
+    """
+    with pytest.raises(ValueError, match="curated predicates"):
         Ubergraph(t).common_ancestors(["UBERON:0000964"], "uberon", predicates=("foo",))
+    with pytest.raises(ValueError, match="curated predicates"):
+        Ubergraph(t).common_ancestors(
+            ["UBERON:0000964"], "uberon", predicates=("RO:0002170",)
+        )
+
+
+def test_relations_takes_any_predicate_curie():
+    """The six shorthands are an alias table, not an allowlist.
+
+    Every RO predicate has to be reachable -- connected_to, attaches_to, the
+    existence predicates -- without the table knowing about it in advance.
+    """
+    from onto_query.ubergraph import _pred
+
+    assert _pred("RO:0002170") == "<http://purl.obolibrary.org/obo/RO_0002170>"
+    assert _pred("http://purl.obolibrary.org/obo/RO_0002170") == (
+        "<http://purl.obolibrary.org/obo/RO_0002170>"
+    )
+
+
+def test_relations_still_rejects_a_mistyped_shorthand():
+    """A bare word that is not an alias is a typo, not a predicate.
+
+    Passing it through would query an IRI that does not exist and return an
+    empty result, which reads as 'no such relation'.
+    """
+    from onto_query.ubergraph import _pred
+
+    with pytest.raises(ValueError, match="not a CURIE"):
+        _pred("part-of")
+
+
+def test_relations_can_ask_for_direct_edges(t):
+    """Measured in docs/onto-query-gaps.md: UBERON:0002240 develops_from gives
+    1 edge in nonredundant and 29 in redundant, so the default buries the
+    direct parent in the closure."""
+    import onto_query.ubergraph as ub
+
+    seen = []
+    ug = Ubergraph(t)
+    ug.query = lambda body: seen.append(body) or []
+    ug.relations("UBERON:0002240", "develops_from", "out", graph="nonredundant")
+    assert ub.NONREDUNDANT_GRAPH in seen[0]
+    assert ub.REDUNDANT_GRAPH not in seen[0]
+
+    seen.clear()
+    ug.relations("UBERON:0002240", "develops_from", "out")
+    assert ub.REDUNDANT_GRAPH in seen[0]
+
+
+def test_relations_rejects_an_unknown_graph(t):
+    with pytest.raises(ValueError, match="redundant"):
+        Ubergraph(t).relations("UBERON:0002240", graph="ontology")
 
 
 # ---- bounding discipline ------------------------------------------------
@@ -324,11 +384,14 @@ def test_cohort_reads_a_naming_convention(t):
     assert any("week post-fertilization stage" in lab for lab in labels)
 
 
-def test_cohort_requires_exactly_one_mode(t):
+def test_cohort_requires_a_mode(t):
+    """`under` composes with a text filter rather than excluding it, so the old
+    "exactly one mode" rule no longer holds. What still has to hold is that
+    some selector was given, and that sibling_of is not mixed with anything."""
     ug = Ubergraph(t)
-    with pytest.raises(ValueError, match="exactly one"):
+    with pytest.raises(ValueError, match="at least one"):
         ug.cohort("hsapdv")
-    with pytest.raises(ValueError, match="exactly one"):
+    with pytest.raises(ValueError, match="cannot be combined"):
         ug.cohort("hsapdv", sibling_of="HsapDv:0000046", label_contains="week")
 
 
@@ -528,7 +591,9 @@ def test_neighbours_finds_cross_ontology_edges_ubergraph_cannot(t):
     res = neighbours(t, "ehdaa2", "EHDAA2:0000997")
     assert res["label"] == "liver"
     starts = res["outgoing"]["existence starts during or after"]
-    assert starts == [{"curie": "HsapDv:0000019", "label": "CS12"}]
+    assert starts == [
+        {"curie": "HsapDv:0000019", "label": "CS12", "predicate": "RO:0002496"}
+    ]
     assert res["external_targets"] == ["AEO", "CARO", "HsapDv"]
 
 
@@ -750,3 +815,260 @@ def test_release_cli_envelope(t, cache, monkeypatch, capsys):
     assert out["backend"] == "ols4+ubergraph"
     assert out["result"]["agree"] is True
     assert "warnings" not in out["result"], "warnings belong in the envelope, once"
+
+
+def test_neighbours_keeps_both_predicates_against_one_target(t):
+    """The gap-1 regression.
+
+    OLS4's v1 term graph deduplicates edges by source and target, so a term
+    asserting two predicates against the *same* target loses one of them with
+    no warning. EHDAA2:0001570 pronephros is CS09-to-CS09 in the released OWL;
+    through v1 it reads as CS09 with no end bound, and an annotation twenty
+    stages too late would pass unchallenged. Fixtures recorded live 2026-10-09:
+    v1 carries only RO:0002496, v2 carries both.
+    """
+    from onto_query.ols import neighbours
+
+    res = neighbours(t, "ehdaa2", "EHDAA2:0001570")
+    preds = {
+        d["predicate"]
+        for terms in res["outgoing"].values()
+        for d in terms
+        if d["curie"] == "HsapDv:0000016"
+    }
+    assert preds == {"RO:0002496", "RO:0002497"}
+
+
+def test_neighbours_says_the_incoming_side_is_still_v1(t):
+    """v2's relatedTo is outgoing only and linksTo carries no predicate, so
+    incoming edges still come from v1 and still carry its deduplication. The
+    limitation is reported rather than hidden."""
+    from onto_query.ols import neighbours
+
+    res = neighbours(t, "ehdaa2", "EHDAA2:0001570")
+    assert res["incoming"]
+    assert any("v1 term graph" in w for w in res["warnings"])
+
+
+def test_neighbours_filters_by_predicate(t):
+    from onto_query.ols import neighbours
+
+    res = neighbours(t, "ehdaa2", "EHDAA2:0001570", predicates=("RO:0002497",))
+    assert [d["curie"] for terms in res["outgoing"].values() for d in terms] == [
+        "HsapDv:0000016"
+    ]
+
+
+def test_neighbours_filters_by_target_ontology(t):
+    from onto_query.ols import neighbours
+
+    res = neighbours(t, "ehdaa2", "EHDAA2:0001570", target_ontology="hsapdv")
+    assert {
+        d["curie"] for terms in res["outgoing"].values() for d in terms
+    } == {"HsapDv:0000016"}
+
+
+def test_term_names_its_predicates_not_just_their_labels(t):
+    """`term` is the discovery half of the loop that `relations -p` completes.
+
+    Keyed by label alone, a caller who sees "connected to" has nothing to pass
+    to `relations`. The CURIE is what makes the output actionable.
+    """
+    import onto_query.ubergraph as ub
+
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: None
+    ug.query = lambda body: (
+        []
+        if "isLiteral" in body
+        else [
+            {
+                "s": "http://purl.obolibrary.org/obo/UBERON_0000010",
+                "p": "http://purl.obolibrary.org/obo/RO_0002170",
+                "o": "http://purl.obolibrary.org/obo/UBERON_0000955",
+                "plabel": "connected to",
+                "olabel": "brain",
+            }
+        ]
+    )
+    res = ug.term("UBERON:0000010", "uberon")
+    assert res["relations"] == [
+        {
+            "predicate": "RO:0002170",
+            "label": "connected to",
+            "terms": [{"curie": "UBERON:0000955", "labels": ["brain"]}],
+        }
+    ]
+    assert ub.NONREDUNDANT_GRAPH
+
+
+@pytest.mark.parametrize(
+    "iri,expected",
+    [
+        ("http://www.w3.org/2000/01/rdf-schema#subClassOf", "rdfs:subClassOf"),
+        ("http://www.w3.org/2002/07/owl#deprecated", "owl:deprecated"),
+        # Uberon's own predicate namespace. The tail has an underscore but is
+        # not PREFIX_LOCALID, and splitting on it produced the plausible-looking
+        # non-CURIE "core#extends:fibers_into".
+        (
+            "http://purl.obolibrary.org/obo/uberon/core#extends_fibers_into",
+            "http://purl.obolibrary.org/obo/uberon/core#extends_fibers_into",
+        ),
+    ],
+)
+def test_to_curie_only_shortens_what_it_can_shorten(iri, expected):
+    assert curies.to_curie(iri) == expected
+
+
+# ---- cohort: the location query ----------------------------------------
+
+
+def test_cohort_under_traverses_part_of_as_well_as_subclass(t):
+    """`cortex of kidney` is *part of* the kidney, not a subclass of it, so a
+    subsumption-only reading of "under" returns nothing for the case this
+    command exists to serve."""
+    seen = []
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: "g"
+    ug.query = lambda body: seen.append(body) or []
+    ug.cohort("uberon", under="UBERON:0002113", text_contains="cortex")
+    assert "rdfs:subClassOf obo:BFO_0000050" in seen[0]
+
+
+def test_cohort_text_contains_searches_synonyms_label_contains_does_not(t):
+    """The distinction that makes the location query usable.
+
+    `spine` under the vertebral column: label-only finds 10 terms and none of
+    the regional ones, because UBERON:0006073 is labelled "thoracic region of
+    vertebral column" and carries "thoracic spine" only as an exact synonym.
+    Verified live 2026-10-09. The location query is reached *after* a direct
+    lexical probe has already failed, so a silent miss there is the worst kind.
+    """
+    seen = []
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: "g"
+    ug.query = lambda body: seen.append(body) or []
+
+    ug.cohort("uberon", text_contains="spine", under="UBERON:0001130")
+    assert "oio:hasExactSynonym" in seen[0]
+    assert "oio:hasBroadSynonym" in seen[0]
+
+    seen.clear()
+    ug.cohort("uberon", label_contains="spine", under="UBERON:0001130")
+    assert "hasExactSynonym" not in seen[0]
+
+
+def test_cohort_reports_which_field_matched(t):
+    """Same signal as a lexical probe's matched_fields: a broad synonym
+    matching means the term is narrower than the text."""
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: "g"
+    ug.query = lambda body: [
+        {
+            "s": "http://purl.obolibrary.org/obo/UBERON_0006073",
+            "label": "thoracic region of vertebral column",
+            "field": "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym",
+            "matched": "thoracic spine",
+        }
+    ]
+    res = ug.cohort("uberon", text_contains="spine", under="UBERON:0001130")
+    assert res["terms"][0]["matched_fields"] == {"exact_synonym": ["thoracic spine"]}
+
+
+def test_cohort_flags_the_anchor_rather_than_dropping_it(t):
+    """The redundant graph is reflexive over subClassOf, so the anchor subsumes
+    itself. Nothing here selects, so it is flagged, not removed."""
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: "g"
+    ug.query = lambda body: [
+        {
+            "s": "http://purl.obolibrary.org/obo/UBERON_0001130",
+            "label": "vertebral column",
+            "field": "http://www.w3.org/2000/01/rdf-schema#label",
+            "matched": "vertebral column",
+        }
+    ]
+    res = ug.cohort("uberon", text_contains="column", under="UBERON:0001130")
+    assert res["terms"][0]["is_anchor"] is True
+
+
+def test_cohort_rejects_incoherent_combinations(t):
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: "g"
+    with pytest.raises(ValueError, match="at most one"):
+        ug.cohort("uberon", label_contains="a", text_contains="b")
+    with pytest.raises(ValueError, match="cannot be combined"):
+        ug.cohort("uberon", sibling_of="UBERON:0000955", under="UBERON:0001130")
+    with pytest.raises(ValueError, match="at least one"):
+        ug.cohort("uberon")
+
+
+# ---- the funnel: prune cheap, then pull detail --------------------------
+
+
+def test_compact_drops_what_a_shortlist_is_not_pruned_on(t):
+    """Measured on uberon `skin`, 121 stemmed hits: definitions are 23% of the
+    response and full synonym sets 30%, and both are only needed once a
+    candidate has survived. Compact brings the same result to 37%."""
+    res = lexical(t, "skin", "uberon", ("exact",), compact=True)
+    hit = next(h for h in res["hits"] if h["curie"] == "UBERON:0000014")
+    assert set(hit) <= {"curie", "label", "found_by", "matched_synonyms", "undefined"}
+    assert "definition" not in hit
+    assert hit["matched_synonyms"] == {"exact": ["skin"]}
+
+
+def test_compact_matches_whole_strings_not_substrings(t):
+    """Containment looks more generous and saves nothing: for a one-word query
+    every synonym on a skin term contains "skin", so the filter would keep
+    thirteen per hit. Measured: containment left the result at 77% of full
+    size, whole-string equality at 21%."""
+    res = lexical(t, "skin", "uberon", ("exact",), compact=True)
+    for hit in res["hits"]:
+        for values in hit.get("matched_synonyms", {}).values():
+            assert all(v.lower() == "skin" for v in values)
+
+
+def test_compact_omits_empty_keys(t):
+    """At 121 hits the key names cost more than the values, so a field with
+    nothing to say is absent and its absence carries the meaning."""
+    res = lexical(t, "skin", "uberon", ("exact",), compact=True)
+    assert any("matched_synonyms" not in h for h in res["hits"]) or all(
+        h["matched_synonyms"] for h in res["hits"] if "matched_synonyms" in h
+    )
+
+
+def test_term_takes_a_whole_shortlist_in_one_query(t):
+    """Adjudication is comparison. One query, so the contrast between
+    candidates is visible rather than reconstructed across several calls."""
+    seen = []
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: "g"
+    ug.query = lambda body: seen.append(body) or []
+    ug.terms(["UBERON:0001225", "UBERON:0000956", "UBERON:0001851"], "uberon")
+    assert len(seen) == 2  # one for annotations, one for relations -- not six
+    assert all("UBERON_0001225" in b and "UBERON_0000956" in b for b in seen)
+
+
+def test_term_distinguishes_absent_from_axiom_free(t):
+    """Asked singly these look identical, and they mean different things: one
+    is weak evidence about a real term, the other means the question was
+    wrong."""
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: "g"
+    ug.query = lambda body: []
+    res = ug.terms(["EHDAA2:0001570"], "uberon")
+    assert res["terms"][0]["found"] is False
+    assert any("not uberon: EHDAA2" in w for w in res["warnings"])
+
+    ug.graph_for = lambda o: None
+    res = ug.terms(["EHDAA2:0001570"], "ehdaa2")
+    assert any("not in Ubergraph at all" in w for w in res["warnings"])
+
+
+def test_term_still_answers_for_one_curie(t):
+    ug = Ubergraph(t)
+    ug.graph_for = lambda o: "g"
+    ug.query = lambda body: []
+    res = ug.term("UBERON:0001225", "uberon")
+    assert res["curie"] == "UBERON:0001225"
+    assert res["relations"] == []

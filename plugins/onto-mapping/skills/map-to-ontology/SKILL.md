@@ -5,408 +5,400 @@ description: Map free-text metadata fields to ontology terms by working out what
 
 # Mapping free text to ontology terms
 
-You are mapping one or more free-text metadata fields to terms in a target
-ontology. The tools return evidence. None of them returns an answer, a score or
-a ranking you should trust — every choice is yours, and the reason for it has to
-end up in your report.
+The tools return evidence, never an answer, a score or a trustworthy ranking.
+Every choice is yours and the reason has to end up in your report.
 
-**If you are mapping to HsapDv, read
-[`references/hsapdv.md`](references/hsapdv.md) first.** Its prenatal stage
-labels are ordinals that run one ahead of the age they denote — "9th week
-post-fertilization stage" means a fetus of eight weeks — so matching the number
-in the input against the number in the label gives the wrong term every time.
-That file records the release it was written against; check it with
-`$OQ release -o hsapdv --expect <version>`.
-
-Week-to-stage conversion defaults to the UK clinical convention (`N weeks` = N
-*completed* weeks), names the adjacent term, and states the assumption. **If
-the caller states which interpretation they want, use theirs** and say which
-you applied.
-
-Two things to avoid, because they are the failure modes this exists to replace:
-
-- Picking a term because it came back first. No relevance score is returned to
-  you. Rank, where it is reported, is a loose signal only (see rung 1).
-- Mechanically transforming the input string — stripping, splitting, stemming —
-  and searching the fragments. Work out what the text *means*, then work out
-  what the ontology probably *calls* that.
+**Mapping to HsapDv? Read [`references/hsapdv.md`](references/hsapdv.md) first.**
+Prenatal stage labels are ordinals running one ahead of the age they denote —
+"9th week post-fertilization stage" means a fetus of eight weeks — so matching
+the number in the input to the number in the label is wrong every time.
 
 ## The tool
 
-Every invocation looks like this. Keep the quotes — an unquoted command in a
-variable does not word-split under zsh, which is the default shell on macOS:
-
 ```
-uvx --from "${OQ_FROM:-git+https://github.com/Cellular-Semantics/atlas-skills@pkg-onto-query--v0.2.0#subdirectory=packages/onto-query}" oq <command>
+uvx --from "${OQ_FROM:-git+https://github.com/Cellular-Semantics/atlas-skills@pkg-onto-query--v0.3.0#subdirectory=packages/onto-query}" oq <command>
 ```
 
-That default is the pinned release and is what you should normally run. If
-`$OQ_BIN` is set in the environment, run `"$OQ_BIN" <command>` instead — a
-project developing `onto-query` points it at a local build. In that case
-`oq --version` reports something other than the pinned version, and any
-behaviour you record is that build's rather than the release's, so say which
-you ran.
+Keep the quotes; an unquoted command in a variable does not word-split under
+zsh. If `$OQ_BIN` is set, run `"$OQ_BIN" <command>` instead and say so, because
+that is a local build rather than the pin. **Needs onto-query ≥ 0.3.0.**
 
-Every command prints one JSON object:
-`{tool, version, command, backend, params, warnings, result}`.
+Every command prints `{tool, version, command, backend, params, warnings,
+result}`. **Read `warnings` every time** — they carry the things that cost you a
+wrong answer. `$OQ <command> --help` gives the exact result shape.
 
-**Read `warnings` every time.** They carry things that will otherwise cost you a
-wrong answer: that an ontology isn't in Ubergraph, that local scoping was
-unavailable, that a high-scoring candidate misses one of your seeds, that part_of
-was dropped from a traversal.
+**Ubergraph** holds ~45 OBO ontologies with inference closure, common ancestors
+and information content. **OLS4** holds 287 lexically, plus one-hop relations
+and hierarchy walks. For an ontology outside Ubergraph (EHDAA2, EHDA, VHOG) you
+can search and read relations but not reason — say so in the report.
 
-Run `$OQ <command> --help` when you need the exact result shape; each one
-documents its output and how to read it.
+## Working a batch
 
-## Which backend can do what
+You may be given one record or many. Working several in one session is much
+cheaper than one at a time, because this file and the release check are read
+once rather than once per record — measured at roughly half the cost and half
+the turns per record at a batch of five.
 
-Check this before planning, with `$OQ ontologies`.
+**How many records to take at once, and which model to run, are the caller's
+choice, not this skill's.** A skill cannot select a model; set it for the
+session (`claude --model …`, `/model`, or settings) and send records in groups.
+Judgement is what this skill is for, so a cheaper model is a different
+experiment rather than a cheaper run of the same one — on 49 records a smaller
+model agreed on 38 and named a mean 1.5 rejected rivals against 4.5, naming
+none at all on 19 of them. Those 19 fail the exit test below whatever term they
+reached. If nobody reviews the output, that matters; if a curator signs it off,
+it may not.
 
-- **Ubergraph holds ~45 OBO ontologies** (Uberon, CL, GO, PATO, MONDO, HsapDv,
-  EMAPA, MA, ZFA, FBbt, NCBITaxon and more). For these you get inference
-  closure, common ancestors and information content.
-- **OLS4 holds 287**, lexically, plus one-hop asserted relations and
-  subsumption/hierarchy walks.
-- For a target ontology **outside** Ubergraph (EHDAA2, EHDA, VHOG, AAO …) you
-  can search and read relations but not reason. Either work with that, or
-  `$OQ crosswalk` into a resident ontology, reason there, and say in your report
-  that you did.
-
-## Check the release first
-
-Once per ontology per session, before any of the rungs:
+**Per session, once only:**
 
 ```
 $OQ release -o <ontology>
 ```
 
-The two backends reload on unrelated schedules and nothing in an ordinary
-response says which release answered it, so an answer assembled from both can
-quietly be assembled from two different ontologies. Read `agree`:
+Read `agree`: `true`, proceed; `false`, the backends serve different releases,
+so name the backend behind every claim; `null`, Ubergraph lacks this ontology.
 
-- **`true`** — proceed, and you need not check again today.
-- **`false`** — the backends serve different releases. Finish the mapping if
-  you can, but name the backend behind every claim in your report, and treat
-  any disagreement between them as the version gap until shown otherwise.
-- **`null`** — one backend does not have this ontology at all. For Ubergraph
-  that is the "outside Ubergraph" case above, not a version problem.
+Then work each record independently and completely before starting the next —
+do not batch the lexical probes of different records together, because the
+judgement for one record must not be contaminated by another's candidates.
+Reuse what you learned about the ontology's naming conventions; do not reuse a
+mapping. Emit one report object per record.
 
-The result is cached by date, so a second call on the same day costs nothing
-and returns `from_cache: true`. If a `previous` block says the release moved
-since the last check, re-derive anything you had written down about this
-ontology rather than trusting it.
+## The shape of the work
 
-Pass `--expect <version>` when a reference file records the release it was
-written against — see the HsapDv note for a worked case.
+**Prepare → Find → Prune → Confirm → Judge.**
 
-## Work the ladder
+One rule holds it together: **never pull detail on a candidate you could have
+rejected from its name.** Measured on Uberon `skin` — 121 hits, 33.7 kB — the
+labels are 4.0 kB and the definitions and synonyms 17.8 kB. Read names, fetch
+detail only for survivors.
 
-Cheapest rung first. Leave a rung when you hit one of its named failure signals.
-Most records finish at rung 1 or 2, and spending heavily on an easy record is as
-much a failure as getting a hard one wrong.
+Two failure modes this exists to replace: picking a term because it came back
+first, and mechanically splitting or stemming the input and searching the
+fragments. Work out what the text *means*, then what the ontology *calls* it.
 
-**Rung 0 chooses where you enter.** It is not a warm-up for rung 1. Some inputs
-carry no searchable text at all, and for those the lexical rungs are not a
-cheap first try — they are a waste that produces false leads. Rung 0 says which
-of those you have.
+Spending heavily on an easy record is as much a failure as getting a hard one
+wrong. Most records finish at Find and Prune.
 
-### Rung 0 — triage
+---
 
-Read the whole record, all fields together, and write down three things.
+## 1 · Prepare
 
-**Could a plain lexical match get this wrong?** Signals that it could: more than
-one field; the string names more than one thing (`Cornea/Conjunctiva`); it
-carries a number, unit or abbreviation (`12 pcw`, `wk 8`); it is a short common
-ambiguous word (`skin`, `muscle`, `brain`); it reads as a description rather
-than a name (`full reproductive tract`).
+No queries. Most of what settles a hard record is decided here.
 
-**Is the string searchable at all?** Ask it concretely: could a curator find
-this term by typing this string into a search box? If the answer is no, no
-lexical probe will help: **skip rungs 1 and 2 and enter at rung 3**, whose
-tools — `cohort` and `term` — are the ones that work on a quantity.
+### What have you been given?
 
-The answer is no whenever the value is a quantity or a code rather than a name:
+Latent knowledge is the right tool; write down which of these it is.
 
-| value | why searching fails |
+- **Key–value fields.** Keys are whatever the submitter chose. Read every key —
+  the key types the value, so `bone=frontal` is a bone, not the frontal cortex.
+- **One string, no context.** If ambiguous it stays ambiguous. Say so.
+- **A string plus free text** — see below.
+- **Only a study name.** `bayraktar_2024_heart` gives the organ and nothing
+  else. It can supply context, never the answer; say the organ came from there.
+- **Nothing usable.** Say so and stop.
+
+### Several fields, different grain
+
+`Region=Telencephalon | Subregion=Cortex | dissection=Occipital cortex`
+
+**Search the most granular; the coarse ones are checkable context**, not rivals
+and not extra tokens. Judge grain on the *values* — the most granular field
+often has the least tidy key. Beware: a `dissection` field may instead name a
+*block* that is coarser than the annotation (`Pons/Cereb`), in which case say
+which you mapped and why.
+
+### A value that is not a name
+
+- **Abbreviation** — expand before searching, using a sibling field where there
+  is one. `organ=LI` beside `organism part=liver` means liver, not large
+  intestine. State any expansion you assumed.
+- **Description** — `heart without node`, `full reproductive tract`. Work out
+  the structure and name it as an ontology would. Do not search the description.
+- **Quantity or code** — does not reach a lexical probe. See below.
+
+### Free text
+
+Not a search string; tokenising it yields noise with a rank attached. Two uses:
+**lift a phrase** if the author names the structure outright, or **hold it for
+Confirm** and read it against candidate definitions — a definition is also a
+paragraph of description, and the two compare in a way neither searches.
+
+### Is it searchable at all? `convert`
+
+A quantity or a code is not. `15`, `20 PCW`, `8+3`, `GSM4116579`, `D12` — no
+target label contains them, and a probe on `15` matches unrelated terms and
+reports a rank, which reads as signal.
+
+For these: **convert, construct, verify.**
+
+1. **Read the field key** — `age=15` beside `age_units=weeks post conception`
+   means something; `15` alone means nothing.
+2. **Use the ontology's advice document** for the convention, or read it off
+   twenty real labels with `$OQ cohort -o <ont> --label-contains "<pattern>"`.
+3. **Construct the term, then verify** with `$OQ term <CURIE> -o <ont>`,
+   checking its annotations bracket your value. A lexical hit is not the test.
+
+**No unit and no reference point anywhere in the record → not mappable.** That
+is a question for the submitter. Do not pick the commonest convention and hope.
+
+### Write the query string
+
+One string, constructed, often several fields joined as an ontology would word
+them:
+
+| record | search |
 |---|---|
-| `15`, `84`, `12.2` | the target term's label contains no digit from this |
-| `20 PCW`, `8+3`, `6wk`, `47 day` | the quantity is the content; `PCW` is not in any label |
-| `GSM4116579`, `D12`, `S3` | an identifier, not a description |
+| `structure=spine`, `region=thoracic` | `thoracic spine` → UBERON:0006073 |
+| `bone=frontal`, `site=calvaria` | `frontal bone` |
+| `obs_tissue=spinal cord; brachial` | `brachial spinal cord` |
+| `tissue=cortex`, `organ=kidney` | `kidney cortex` → UBERON:0001225 |
 
-Searching these is worse than useless. A lexical probe on `15` can match an
-unrelated term whose label or definition happens to contain 15, and a rank is
-reported for it, which reads as signal when it is noise.
+Probe both readings where two are plausible — `-q` repeats, so it is one call.
 
-For these the route is **convert, construct, verify** — not search:
+**A separator is not an instruction to split.** `brain; stroma` is stroma of
+brain. Mapping halves separately gives two wrong answers instead of one.
 
-1. **Read the field key, because the value does not carry the information.**
-   `15` means nothing. `age=15` beside `age_units=weeks post conception` means
-   something specific, and `development_stage=15` beside
-   `gestational_age_units=weeks` means something two terms away from it. The
-   key and its sibling unit fields tell you the quantity and the reference
-   point; the number alone tells you neither.
-2. **Use the target ontology's advice document** for the conversion and the
-   naming convention — `references/hsapdv.md` for developmental stage. Where no
-   advice document covers it yet, read the convention off the ontology with a
-   rung-3 cohort survey:
-   `$OQ cohort -o <ontology> --label-contains "<pattern>"`.
-3. **Construct the term you believe is right, then verify it** with
-   `$OQ term <CURIE> -o <ontology>`, checking that its own annotations bracket
-   your value. That is the exit test for this route; a lexical hit is not.
+**Composing is not filtering.** Join fields when they *together name one
+structure*; the test is whether a curator would write the phrase on a slide
+label. A multi-token query is conjunctive, so adding `human` or `adult` returns
+zero.
 
-**If no field in the record supplies the unit or the reference point, the value
-is not mappable.** `15` with nothing to say whether that is weeks, months,
-years, post-conception or post-menstrual is a question for the submitter, not a
-mapping. Say so and stop — do not pick the most common convention and hope.
+### Write the context
 
-A mixed string (`6months old human thymus`) is a quantity wrapped in words.
-Extract the quantity and take this route; do not search the whole string.
+Tag everything not in the string by the stage that reads it:
 
-**What is each field for?** Give every field exactly one role and say which:
+- **disambiguates** — used now, while building the string.
+- **discriminates** — held for Confirm. **Gross location belongs here** and is
+  the most useful thing in the block.
+- **validates** — species, stage. Checked at Confirm.
+- **unexplained** — goes in the report.
 
-- **Search term** — joins the lexical query.
-- **Structural constraint** — narrows candidates through the graph, not through
-  text. A region constrains which cell types are plausible.
-- **Validator** — never enters the search; only checks the answer at the end.
-  Species and developmental stage are usually validators.
+**Sex is the one real constraint**, and latent knowledge usually settles it.
 
-Putting a validator into the search is a common way to get nothing back.
-Leaving a search term out throws away signal.
+---
 
-### Rung 1 — exact, then stemmed
+## 2 · Find
 
-Only if rung 0 found searchable text. A quantity or an identifier does not
-reach this rung at all.
+A menu, not a staircase: **the last failure signal chooses the next move.** Do
+not run them all. Report moves by the slug beside each heading.
+
+### `exact`
 
 ```
-$OQ lexical -q "<string>" -o <ontology> --probes exact
+$OQ lexical -q "<string>" -o <ont> --probes exact --compact
 ```
 
-Whole-string match against the label or any synonym, case-insensitive. Each hit
-reports **which field matched**, in `found_by.exact.matched_fields`:
+Whole-string match on label or any synonym. Search **the string Prepare built**.
+`found_by.exact.matched_fields` names the channel, which is the trustworthy
+part: it tells you the *grain* of what you found. Any hits → **Prune**.
+
+### `stemmed`
 
 ```
-UBERON:0000014  zone of skin    exact_synonym
-UBERON:0002097  skin of body    related_synonym
-UBERON:0001003  skin epidermis  broad_synonym
-UBERON:0002199  integument      related_synonym
+$OQ lexical -q "<string>" -o <ont> --probes exact,stemmed --compact
 ```
 
-A **broad** synonym matching your text means the term is *narrower* than your
-text. A **narrow** synonym matching means it is *broader*. Those are different
-mistakes, and the scope tells you which one you are about to make.
+Good recall, untrustworthy order. Hundreds of more-specific terms (`skin` 121,
+`muscle` 768) is recall working; that is a Prune problem. `rank` is unreliable
+within the band (`skin of body` ranks 46th) — never choose on it.
+`--probes definition` gives leads, never sufficient alone.
 
-**Exit if** the exact probe returns exactly one term — on any channel — and
-`$OQ term` on it shows nothing in the record contradicting the context: wrong
-taxon, wrong stage, a definition about a different sense of the word.
+### `alt-names`
 
-One term, not one strong-channel term. If several come back you have rivals and
-must adjudicate, even when only one matched a label or exact synonym. `skin`
-returns four; `zone of skin` is the only exact-synonym hit, but `skin of body`
-is a real rival.
+When probes return nothing or the wrong kind of thing. Formal over colloquial;
+`system`, `tract`, `region`, `zone`; Latinate; singular; species-neutral.
 
-If exact returns nothing or several, add the stemmed probe:
+**Substitute one word at a time**, holding the rest fixed:
 
-```
-$OQ lexical -q "<string>" -o <ontology> --probes exact,stemmed
-```
+| given | also try |
+|---|---|
+| future X | presumptive X, X primordium, X anlage, X bud, developing X |
+| control of X | regulation of X, X regulation |
+| X formation | X development, X morphogenesis, X differentiation |
+| upper / lower X | fore-/hind-, superior/inferior, cranial/caudal X |
+| X layer | X lamina, stratum X, X zone |
 
-Tokenised and stemmed — `muscles` and `muscle` behave identically — with
-definitions excluded. Good recall, untrustworthy ordering.
-
-`rank` is reported and is worth exactly this much: it separates match channels
-reliably, and it is unreliable within the lexical band (`skin of body` ranks
-46th, `muscle organ` 360th). Never choose on it.
-
-`--probes definition` adds terms matching only in their definition text — about
-40% of a result set. Those are leads, not candidates, and do not satisfy the
-exit test on their own.
-
-**Go to rung 2 if**: exact gave nothing; exact gave more than one term; or the
-stemmed probe returned hundreds of terms all more specific than your string
-(`skin` returns 121, `muscle` 768). That is recall working correctly, and the
-job from here is reduction.
-
-### Rung 2 — names the ontology might actually use
-
-Before querying, write down several candidate names. Use what you know about
-how ontologies word things: formal over colloquial; `system`, `tract`, `region`,
-`zone` as head nouns; Latinate alternatives; singular; species-neutral.
-
-For `full reproductive tract`: reproductive system, reproductive tract, female
-reproductive system, genital tract, reproductive organ system.
-
-**Combine fields here**, and do it before reaching for the graph. If the record
-has more than one search-term field, some candidates should be those fields
-joined the way an ontology would word them. `spine` plus `thoracic` gives
-`thoracic spine` and `thoracic vertebral column`, both exact synonyms of one
-Uberon term — no graph query needed.
-
-Also write down what *shape* you expect the answer to have: "a part of the eye",
-"a grouping term over two named structures", "a stage term with a week number".
-The shape tells you which rung-3 move to make if this fails.
+**Synonyms will not do this for you.** Uberon has 39 `future X` and 44
+`presumptive X` terms and only **9 of each** carry the other spelling, so
+`future midbrain` returns nothing while `presumptive midbrain` is real. GO has
+**3161** `regulation of X` and **4** with a `control of X` synonym. Work out the
+*kind* of thing first — precursor, process and cell layer have different
+vocabularies.
 
 ```
-$OQ lexical -o <ontology> --probes exact -q "<name1>" -q "<name2>" -q "<name3>"
+$OQ lexical -o <ont> --probes exact --compact -q "<n1>" -q "<n2>" -q "<n3>"
 ```
 
-All candidates in one invocation. Exit on the same test as rung 1.
+`full reproductive tract` returns **zero** because no term carries all three
+tokens. Informative: drop the weakest token, do not conclude the term is absent.
 
-A multi-token query is conjunctive and strict: `full reproductive tract` returns
-**zero** because no term carries all three tokens. That is informative — drop
-the weakest token and try again rather than concluding the term does not exist.
+### `region`
 
-**Go to rung 3 if**: nothing came back for any candidate; every hit is more
-specific than the input; or the hits each cover only *part* of the input
-(`Cornea/Conjunctiva` returning cornea terms and conjunctiva terms separately).
-
-### Rung 3 — structural
-
-The failure signal chooses the move. Do not run all of them.
-
-**Hits all too specific, or each covering only part of the input** → common
-ancestors.
+When the string is ambiguous but the record says where in the body it came from.
 
 ```
-$OQ common-ancestors -s <CURIE> -s <CURIE> -t <ontology>
+$OQ cohort -o <ont> --text-contains "<word>" --under <REGION-CURIE>
 ```
 
-**Choosing the seed set is the judgement this tool cannot make**, and it decides
-everything. Two quite different situations:
+Narrows before any name is read: `cortex` matches 150 Uberon labels, 14 inside
+the kidney. **Use `--text-contains`, not `--label-contains`** — the record's
+string is often not the label. `spine` under UBERON:0001130 gives 10 terms by
+label with none of them regional, against 16 by label-or-synonym including the
+cervical, thoracic and lumbar regions, all reachable only by synonym.
 
-- *Co-annotation* — the seeds genuinely describe one thing (a sample annotated
-  `Cornea/Conjunctiva`; a set of cell types from one dataset). The set comes
-  from the data, so the common ancestor **is** the mapping.
-- *Hit set* — the seeds merely share a word. This is a discovery move, telling
-  you which region of the ontology your word lives in. Its output is candidates
-  to inspect, never an answer.
+`--label-contains` is for reading a naming convention, where synonyms are noise.
 
-For a hit set, **never pass the whole thing in.** Read the hits, decide how many
-distinct senses are present, and run the query once per coherent sense. All 75
-Uberon `muscl*` terms together give `anatomical structure`; split by sense, the
-gut layers give `muscular coat` and the body-region muscles give a band around
-`skeletal musculature`. The whole 768-term set would simply time out.
+### `common-ancestors`
 
-**Read the shape of the IC column, not the top row:**
-
-- *One clear winner.* Cornea + conjunctiva → `ocular surface region` at 57.29,
-  next at 44.61. Take it.
-- *A band, then a cliff.* Glycolysis + TCA cycle → four candidates between
-  56.75 and 60.34, then a 39-point drop. The band is your shortlist.
-- *A low ceiling.* Cornea + femur → nothing above 33.75, on a cross-cutting
-  grouping class. These share no meaningful ancestor, which is itself an answer.
-
-IC is comparable within one result set only — never across ontologies or
-queries.
-
-**Read `missing_seeds`, not just the full-coverage rows.** A candidate that
-misses one or two seeds and outranks everything on IC usually means your
-partition is wrong. `zone of skin` has the highest IC of anything returned for
-the 82 skin-zone seeds and covers 81 — and the seed it misses is `skin of body`,
-which should not have been in the set. The command warns when this happens.
-
-The traversal covers **part_of as well as subclass**, and for grouping terms the
-part_of leg does the work — in GO as much as in Uberon. If a result looks like
-nothing but `anatomical structure` or `metabolic process`, check whether
-`--predicates` dropped part_of.
-
-**You need the inhabitants or parts of a structure** →
+When every hit is more specific than the input, or hits each cover only part of
+it (`Cornea/Conjunctiva`).
 
 ```
-$OQ relations <CURIE> -p part_of -d in -t <ontology>
+$OQ common-ancestors -s <CURIE> -s <CURIE> -t <ont>
 ```
 
-`in` is what points at the term, `out` is what the term points at. Use part_of
-for cells in a region; `located_in` returns nothing in practice. `overlaps` is a
-looser alternative worth trying.
+**The seed set is the judgement the tool cannot make.** *Co-annotation* — seeds
+genuinely describe one thing — means the common ancestor **is** the mapping.
+*Hit set* — seeds merely share a word — is discovery, giving candidates only.
+**Never pass a whole hit set in**: split by sense and run once per sense. All 75
+Uberon `muscl*` terms give `anatomical structure`; split, the gut layers give
+`muscular coat`. The full 768 times out.
 
-**You need to learn how the ontology words a family of things** →
+**Read the shape of the IC column, not the top row.** One clear winner (cornea +
+conjunctiva → `ocular surface region` 57.29, next 44.61: take it). A band then a
+cliff (glycolysis + TCA: four within 56.75–60.34, then −39: that band is your
+shortlist). A low ceiling (cornea + femur, nothing above 33.75: they share no
+meaningful ancestor, which is an answer). IC compares **within one result set
+only**.
 
-```
-$OQ cohort -o <ontology> --label-contains "<word>"
-$OQ cohort -o <ontology> --sibling-of <CURIE>
-```
+**Read `missing_seeds`.** A near-miss outranking every full-coverage row usually
+means the partition is wrong — `zone of skin` tops the 82 skin-zone seeds and
+misses only `skin of body`, which should not have been in the set.
 
-Do this *instead of* guessing at abbreviations. Human developmental stage terms
-are labelled `9th week post-fertilization stage` and carry **no synonyms at
-all**, so no amount of trying `12 pcw`, `wk 12` or `12 weeks PCF` will hit one.
-Read the convention off twenty real labels and construct the string.
+Traversal covers **part_of as well as subclass**; if everything looks like
+`anatomical structure`, check `--predicates` kept part_of. This command takes
+only curated predicates, because IC compares only across one fixed traversal.
 
-**The target ontology is not in Ubergraph** → you still have
-
-```
-$OQ neighbours <CURIE> -o <ontology>      # one-hop asserted relations
-$OQ hierarchy <CURIE> -o <ontology> -d up|down
-$OQ crosswalk <xref-CURIE> -t <ontology>  # bridge into a resident ontology
-```
-
-`neighbours` is how EHDAA2's staging link surfaces
-(`existence starts during or after → HsapDv:0000019`); it exists nowhere else.
-`hierarchy` fetches both subsumption and hierarchical walks and reports the
-difference, which matters: EHDAA2 liver has 0 descendants by subsumption and 26
-with part_of.
-
-**You need to know what else a term is called elsewhere** →
+### `relations`
 
 ```
-$OQ xrefs <CURIE> -o <ontology>
+$OQ relations <CURIE> -p part_of -d in -t <ont> --direct
 ```
 
-Treat an xref as a pointer, not as equivalence. SKOS mappings, reported
-separately, are the stronger claim.
+`in` points at the term, `out` is what it points at. `-p` takes **any predicate
+CURIE** — `RO:0002170` connected to, `RO:0002134` innervates. `$OQ term` lists
+what a term carries, with CURIEs ready to pass back.
 
-### Rung 4 — adjudicate
+**`--direct` matters.** Without it you get the closure: `UBERON:0002240
+develops_from` gives 1 direct edge and 29 through closure.
+
+### `outside-ubergraph`
 
 ```
-$OQ term <CURIE> -o <ontology>
+$OQ neighbours <CURIE> -o <ont> -p <PRED> -t <TARGET>
+$OQ hierarchy <CURIE> -o <ont> -d up|down
+$OQ crosswalk <xref-CURIE> -t <ont>     $OQ xrefs <CURIE> -o <ont>
 ```
 
-On a shortlist of no more than about five. For each, read:
+`neighbours` is the only route to EHDAA2's staging links. `hierarchy` reports
+subsumption and hierarchical walks separately — EHDAA2 liver has 0 descendants
+by subsumption and 26 with part_of. An xref is a pointer, not equivalence; SKOS
+mappings are the stronger claim. `neighbours` incoming comes from an endpoint
+that dedupes by source and target and warns when that applies.
 
-- the definition, against the original string;
-- the logical axioms — often more decisive than the definition;
-- the synonyms with their scope;
-- `in taxon` and stage links, against whatever you called a validator.
+---
 
-A validator contradiction is evidence to report, not a gate to apply silently.
-Computed taxon constraints are sometimes wrong. Say what it said and what you
-did about it.
+## 3 · Prune
 
-### Rung 5 — unresolved
+Read names. No further query — the definition and scoped synonyms are already in
+the result.
 
-A legitimate outcome and far better than a confident wrong answer. Two laps
-through rungs 2–4 with nothing new learned means rung 5, not a third lap.
+**One hit is not an exit.** `cortex` returns **exactly one** exact hit,
+`UBERON:0001851`, defined "Outermost layer of an organ", parent `organ part`. A
+grouping class almost no record means. The count fires, the hit looks clean, and
+nothing says you are wrong.
 
-## The exit test
+Screen on:
 
-Before reporting a term, write one line: **why this term and not its nearest
-rival.**
+- **Sense** — does it describe what the record means, or another sense?
+- **Grouping class or structure?** A bare one-word label under `organ part`,
+  `anatomical structure` or `organ component` is the tell.
+- **Channel.** A **broad** synonym matching means the term is *narrower* than
+  your text; a **narrow** synonym means *broader*. Hits arriving **only** on
+  narrow synonyms mean the ontology has no term at your grain — `frontal bone`
+  reaches `UBERON:0000209 tetrapod frontal bone` that way.
+- **Grain** — all hits far more specific than your string means your string is a
+  grouping term; the answer is probably their common ancestor.
 
-- Cannot name a rival → you have not looked at enough. Go back.
-- Can name one but cannot separate them → report both, or escalate a rung to
-  find something that separates them.
-- The only evidence is a related- or broad-synonym hit, or a definition-only
-  match → not sufficient on its own. Find a second, independent line.
+Survivors → Confirm. Nothing survives → back to Find, knowing why. **A single
+hit that fails the screen is a Find trigger, and the one most easily mistaken
+for success.**
+
+No limit on shortlist size. If it feels unmanageable you cannot yet say what
+distinguishes its members, which is a Prepare problem.
+
+---
+
+## 4 · Confirm
+
+```
+$OQ term <CURIE> <CURIE> <CURIE> -o <ont>
+```
+
+**Pass the whole shortlist.** Adjudication is comparison: what separates
+candidates is a contrast between them, visible side by side and reconstructed
+otherwise. Read the definition against the original string, the logical axioms
+(often more decisive), synonym scopes, and `in taxon` / stage links against
+whatever you tagged *validates*.
+
+Then spend the **discriminates** tags:
+
+- **Does the candidate sit where the record says?** Location decides
+  `cortex of kidney` against `cerebral cortex`.
+- **Check against the coarser field — a test that can fail.**
+  `$OQ relations <CAND> -p part_of -d out -t <ont>`. If `occipital cortex` does
+  not reach the telencephalon, the mapping or the record is wrong; say which.
+  **It cannot catch the wrong term from the right region**: `UBERON:0016540
+  occipital cortex` and `UBERON:0016530 parietal cortex` differ by a digit and
+  both return 34 part_of terms including the telencephalon. **Read labels back
+  beside CURIEs** — which one batched `term` call makes easy.
+- **Read free text against definitions**, not labels.
+
+Check `found` on every block: absent ontology, CURIE not in the ontology named,
+or genuinely no axioms are three different things and the warnings say which.
+
+A validator contradiction is evidence to report, not a silent gate. Computed
+taxon constraints are sometimes wrong — say what it said and what you did.
+
+---
+
+## 5 · Judge
+
+Write one line: **why this term and not its nearest rival.**
+
+- No rival nameable → you have not looked enough. Back to Find.
+- Cannot separate two → report both, or make one Find move aimed at what would
+  separate them.
+- Only a related/broad-synonym hit or a definition-only match → not sufficient.
 
 **Two independent channels agreeing is the strongest evidence available.** `skin`
-reaches `skin of body` twice over: as a related synonym, and as the top
-full-coverage common ancestor of the 82 skin-zone terms. Those routes share no
-assumptions. When you can say that, say it.
+reaches `skin of body` as a related synonym *and* as the top full-coverage
+common ancestor of the 82 skin-zone terms; those routes share no assumptions.
 
-If you cannot write that line, you have not finished, however good the match
-felt.
+**Unresolved is legitimate** and far better than a confident wrong answer. Two
+passes through Find and Prune with nothing new learned means unresolved.
 
 ## Report
 
-For each record:
+Per record: the CURIE and label or `unresolved`; the why-this-not-that line;
+what you took the input to be and which field you searched (say which field you
+judged most granular, what you expanded an abbreviation to, and if the organ
+came from a study name); which moves you used and which answered, named exactly
+`convert`, `exact`, `stemmed`, `alt-names`, `region`, `common-ancestors`,
+`relations`, `outside-ubergraph`; the runners-up rejected, each with a reason;
+any validator that flagged rather than rejected; anything unaccounted for; and
+any move unavailable because the ontology is not in Ubergraph.
 
-- the CURIE and label, or `unresolved`
-- the one-line why-this-not-that
-- which rung you exited at
-- the runners-up you rejected, each with a short reason
-- any validator that flagged rather than rejected, and what you did
-- anything in the input you could not account for
-- where a graph move was unavailable because the ontology is not in Ubergraph
-
-The rejections are the audit trail. A mapping without them cannot be debugged
-six months later, which is the state this skill exists to get out of.
+**The rejections are the audit trail.** A mapping without them cannot be
+debugged six months later, which is the state this skill exists to escape.
