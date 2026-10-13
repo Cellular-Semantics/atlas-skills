@@ -16,7 +16,7 @@ the number in the input to the number in the label is wrong every time.
 ## The tool
 
 ```
-uvx --from "${OQ_FROM:-git+https://github.com/Cellular-Semantics/atlas-skills@pkg-onto-query--v0.3.0#subdirectory=packages/onto-query}" oq <command>
+uvx --from "${OQ_FROM:-git+https://github.com/Cellular-Semantics/atlas-skills@pkg-onto-query--v0.4.0#subdirectory=packages/onto-query}" oq <command>
 ```
 
 Keep the quotes; an unquoted command in a variable does not word-split under
@@ -164,6 +164,37 @@ structure*; the test is whether a curator would write the phrase on a slide
 label. A multi-token query is conjunctive, so adding `human` or `adult` returns
 zero.
 
+### Could a plain lexical match get this wrong?
+
+Signals that it could: the string names more than one thing
+(`Cornea/Conjunctiva`); it carries a number, unit or abbreviation (`12 pcw`,
+`wk 8`, `LI`); it reads as a description rather than a name
+(`full reproductive tract`); or it is a **short common ambiguous word** —
+`skin`, `muscle`, `brain`, `cortex`.
+
+That last class is the one that bites hardest, because a probe on it often
+returns a clean-looking hit. `cortex` returns exactly one exact term on the
+label. The record almost certainly means the cerebral, renal or adrenal cortex,
+and nothing in the result says which. **Flag the string here**; it is what the
+short path below checks against.
+
+### Is this a one-annotation record?
+
+Ask it explicitly, because the answer licenses the short path below. A record
+is **one-annotation** when everything it says about the target ontology reduces
+to a single name — one field, or several that compose into one name — and
+nothing left over discriminates between candidates.
+
+`study_level=dorsal root ganglion` is one-annotation. So is `structure=spine` +
+`region=thoracic`, because the two compose. `region=apex` with
+`publication_id=…_heart` is **not**: the organ comes from outside the tissue
+fields and is doing real work.
+
+Developmental stage does not make a record multi-annotation. It is carried as a
+validator, but Uberon's stage axioms are too coarse to separate candidates at
+the grain these records use — see the developmental survey for what is and is
+not usable. Note it as unchecked and do not spend moves on it.
+
 ### Write the context
 
 Tag everything not in the string by the stage that reads it:
@@ -192,6 +223,41 @@ $OQ lexical -q "<string>" -o <ont> --probes exact --compact
 Whole-string match on label or any synonym. Search **the string Prepare built**.
 `found_by.exact.matched_fields` names the channel, which is the trustworthy
 part: it tells you the *grain* of what you found. Any hits → **Prune**.
+
+**For a one-annotation record, drop `--compact`.** You are about to decide on
+the definition, and compact omits it to save bandwidth you are not spending
+here. One full probe beats a compact probe plus a `term` call.
+
+#### The short path
+
+**Stop after this probe — no further move — when all four hold:**
+
+1. Prepare called the record **one-annotation**.
+2. The probe returned **exactly one** term.
+3. It matched on **label or exact synonym**. Broad, narrow and related do not
+   qualify: those scopes mean the term is wider or narrower than your text, and
+   that difference is worth a second move.
+4. Prepare did **not** flag the string as ambiguous, and the definition the
+   probe returned is about the sense the record means.
+
+Then write the why-this-not-that line and finish. `dorsal root ganglion` is the
+whole of its record and is the exact label of `UBERON:0000044`; it needs one
+probe, and a run that spent three probes and two `term` calls on it settled
+nothing the first call had not.
+
+**This is not the count rule that used to live here, and the difference is
+condition 4.** The old rule exited on one term and nothing else, which `cortex`
+defeats: one hit, matched on the label, and `UBERON:0001851` is defined
+"Outermost layer of an organ" — not what any record means by cortex. What stops
+it is that Prepare flagged `cortex` as a short common ambiguous word before any
+query ran. One hit is still not an exit; one hit on an unflagged string, with a
+definition that fits and nothing else in the record to weigh, is.
+
+**Both halves of condition 4 are already in your hands.** The flag came from
+reading the record and the definition came back with the probe, so nothing here
+needs a second call. Do not spend a `term` call to confirm a short-path match.
+
+If any condition fails, carry on as normal.
 
 ### `stemmed`
 
@@ -315,15 +381,21 @@ Read names. No further query — the definition and scoped synonyms are already 
 the result.
 
 **One hit is not an exit.** `cortex` returns **exactly one** exact hit,
-`UBERON:0001851`, defined "Outermost layer of an organ", parent `organ part`. A
-grouping class almost no record means. The count fires, the hit looks clean, and
-nothing says you are wrong.
+`UBERON:0001851`, defined "Outermost layer of an organ" — not what a record
+means by cortex, which is the cerebral, renal or adrenal one. The count fires,
+the hit looks clean, and nothing in the result says you are wrong. What says so
+is the string: Prepare flagged it as a short common ambiguous word.
 
 Screen on:
 
 - **Sense** — does it describe what the record means, or another sense?
-- **Grouping class or structure?** A bare one-word label under `organ part`,
-  `anatomical structure` or `organ component` is the tell.
+- **Grouping class or structure?** Worth asking when you are choosing between
+  several hits, or weighing a term you reached by climbing the graph — a
+  cross-cutting parent can top a result set without being anybody's mapping.
+  The tells are a definition with a genus and no real differentia, and a bare
+  label sitting under `organ part`, `anatomical structure` or `organ component`.
+  **Not a test for a single direct hit**: nothing is being grouped there, and
+  the second tell needs a parent the probe did not return.
 - **Channel.** A **broad** synonym matching means the term is *narrower* than
   your text; a **narrow** synonym means *broader*. Hits arriving **only** on
   narrow synonyms mean the ontology has no term at your grain — `frontal bone`
@@ -334,6 +406,13 @@ Screen on:
 Survivors → Confirm. Nothing survives → back to Find, knowing why. **A single
 hit that fails the screen is a Find trigger, and the one most easily mistaken
 for success.**
+
+**If more than one candidate survives, you may not choose between them here.**
+A probe result shows you labels, synonyms and definitions; it does not show you
+which candidate sits under which, or how much each subsumes, and those are what
+separate two plausible terms. Pass every survivor to `term` in one call and
+decide there. Choosing from the probe alone is how the same record gets mapped
+three different ways on three runs.
 
 No limit on shortlist size. If it feels unmanageable you cannot yet say what
 distinguishes its members, which is a Prepare problem.
@@ -346,7 +425,9 @@ distinguishes its members, which is a Prepare problem.
 $OQ term <CURIE> <CURIE> <CURIE> -o <ont>
 ```
 
-**Pass the whole shortlist.** Adjudication is comparison: what separates
+**Pass the whole shortlist — this is the only place the grain evidence
+exists.** Specificity and `subsumed_by` are computed here and nowhere else, so
+a rival rejected before this call was rejected on the label alone. Adjudication is comparison: what separates
 candidates is a contrast between them, visible side by side and reconstructed
 otherwise. Read the definition against the original string, the logical axioms
 (often more decisive), synonym scopes, and `in taxon` / stage links against
@@ -364,6 +445,31 @@ Then spend the **discriminates** tags:
   both return 34 part_of terms including the telencephalon. **Read labels back
   beside CURIEs** — which one batched `term` call makes easy.
 - **Read free text against definitions**, not labels.
+
+### Choosing the grain
+
+Two candidates often differ only in how specific they are, and `term` gives you
+what settles it. Each block carries a **`specificity`** score — information
+content over `subClassOf` and `part_of`, counted over terms the queried ontology
+itself defines — and **`subsumed_by`**, naming which other candidates on your
+shortlist it sits under.
+
+**The score decides only when one candidate subsumes another.** Then prefer the
+more specific term the record's own words justify, keeping sex, side and region
+where the record states them. For `uterus | cervix | vagina`:
+`internal female genitalia` (53.1) sits under `internal genitalia` (45.8), so
+take the sexed term — the record says which sex.
+
+**Where `subsumed_by` is empty for every candidate the score says nothing**, and
+the command warns you. Those candidates are on different branches, and a higher
+score means only that the term subsumes fewer things. `thoracic wall` scores
+92.8 against `rib` 55.5 because Uberon holds two thoracic walls and seventy-two
+ribs; for a record reading `3rd to 6th rib` the rib is still the answer, and no
+amount of specificity will say so. The text decides.
+
+A near-tie is informative in itself: `caudate-putamen` 71.9 against
+`dorsal striatum` 71.2 means the two sit at the same grain, so what matters is
+the argument rather than the choice.
 
 Check `found` on every block: absent ontology, CURIE not in the ontology named,
 or genuinely no axioms are three different things and the warnings say which.

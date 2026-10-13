@@ -335,6 +335,103 @@
     "narrow"
    ],
    "tests": "Every hit arrives on narrow_synonym only: tetrapod frontal bone, tetrapod parietal bone, and two actinopterygian terms. Two things to get right. The channel says the ontology has no term at the grain asked for, only a broader grouping. And the result contains the wrong bone and the wrong taxon, so a report that does not reject parietal and the fish terms has not read the hits. Reading the field key is what makes 'frontal' a bone rather than the frontal cortex."
+  },
+  {
+   "id": "one-annotation-short-path",
+   "record": {
+    "study_level": "dorsal root ganglion"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0000044"
+   ],
+   "must_use": [
+    "exact"
+   ],
+   "answered_by_any_of": [
+    "exact"
+   ],
+   "max_moves": 1,
+   "must_not_use": [
+    "stemmed",
+    "alt-names",
+    "region",
+    "common-ancestors",
+    "relations"
+   ],
+   "tests": "The proportion case for the short path. The record is one field, the field is the exact label of UBERON:0000044, and nothing else in the record discriminates. One probe settles it. Observed before the rule existed: three lexical probes and two term calls, none of which changed the answer. Getting the term right while spending five calls is a failure of this case."
+  },
+  {
+   "id": "short-path-must-not-fire-on-an-ambiguous-string",
+   "record": {
+    "tissue": "cortex"
+   },
+   "target": "uberon",
+   "accepted": [],
+   "expect_unresolved": true,
+   "must_not_answer": [
+    "UBERON:0001851"
+   ],
+   "tests": "The short path's guard rail. This record is one-annotation and `cortex` returns exactly one exact hit matched on the label, so conditions 1-3 all hold. Condition 4 must stop it, and the reason is the string rather than the term: `cortex` is a short common ambiguous word, flagged in Prepare before any query ran, and the record gives nothing to say which cortex is meant. Answering UBERON:0001851 is the failure; so is reaching it by a grouping-class argument, which needs a parent the probe never returned.",
+   "must_mention": [
+    "ambiguous"
+   ]
+  },
+  {
+   "id": "short-path-must-not-fire-when-context-discriminates",
+   "record": {
+    "region": "apex",
+    "publication_id": "bayraktar_2024_heart"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0002098"
+   ],
+   "must_use": [
+    "exact"
+   ],
+   "tests": "Not one-annotation: the organ comes from the publication rather than from any tissue field, and it is doing the work -- 'apex' alone is heart, lung or tongue. A bare probe on 'apex' returns no exact hit at all, so the short path cannot fire, but the record must still be recognised as carrying a second annotation rather than as a one-field record that failed."
+  },
+  {
+   "id": "grain-prefer-the-sexed-term-when-subsumed",
+   "record": {
+    "location": "uterus | cervix | vagina",
+    "Characteristics[organism part]": "full reproductive tract"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0003975"
+   ],
+   "must_not_answer": [
+    "UBERON:0004175"
+   ],
+   "must_use": [
+    "exact"
+   ],
+   "must_mention": [
+    "specific"
+   ],
+   "tests": "A grain choice the specificity score settles. internal female genitalia (IC 53.1) is subsumed by internal genitalia (45.8), so they lie on one path and the more specific term wins -- the record names three female organs, so dropping sex discards what it says. Across four batch sizes this record split between the two terms, which is what the rule exists to stop."
+  },
+  {
+   "id": "grain-score-must-not-decide-across-branches",
+   "record": {
+    "Anatomical segment(s) (see diagram in link)": "12 (3rd to 6th rib, right)",
+    "Characteristics[organism part]": "rib"
+   },
+   "target": "uberon",
+   "accepted": [
+    "UBERON:0002228",
+    "UBERON:0016403"
+   ],
+   "tests": "Both terms are defensible and the case is about the reasoning, not the term. 'rib' reads the value as the bone; 'thoracic wall' reads it as the dissected block spanning ribs 3-6, which would include skin, muscle and fascia. A run must name whichever it did not take and say which reading it chose. What it may not do is prefer thoracic wall on its specificity score: that score is 92.8 against rib's 55.5 only because Uberon defines two thoracic walls and seventy-two ribs, neither subsumes the other, and `term` warns as much. An earlier version of this case asserted rib outright, which was written from the score rather than from what the record denotes.",
+   "must_name_rival_from": [
+    "UBERON:0002228",
+    "UBERON:0016403"
+   ],
+   "must_use": [
+    "exact"
+   ]
   }
  ]
 }

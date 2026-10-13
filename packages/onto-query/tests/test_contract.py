@@ -1072,3 +1072,44 @@ def test_term_still_answers_for_one_curie(t):
     res = ug.term("UBERON:0001225", "uberon")
     assert res["curie"] == "UBERON:0001225"
     assert res["relations"] == []
+
+
+# ---- specificity, and when it may be used ------------------------------
+
+
+def test_specificity_is_scoped_to_the_queried_ontology(t):
+    """Ubergraph's own IC is computed over the whole store, so a Uberon term's
+    score depends on how much CL or GO happens to hang off it. This counts only
+    terms the queried ontology defines."""
+    seen = []
+    ug = Ubergraph(t)
+    ug._ontology_size = lambda o: 15045
+    ug.query = lambda body: seen.append(body) or []
+    ug.specificity(["UBERON:0002107"], "uberon")
+    assert "uberon.owl" in seen[0]
+    assert "rdfs:subClassOf obo:BFO_0000050" in seen[0]
+
+
+def test_specificity_needs_part_of_to_be_useful(t):
+    """Over subClassOf alone `liver` and `abdomen` have one subclass each and
+    score identically, which cannot choose between them. Over subClassOf and
+    part_of the abdomen holds 651 Uberon terms and the liver 75."""
+    from onto_query.ubergraph import SPECIFICITY_PREDICATES
+
+    assert "obo:BFO_0000050" in SPECIFICITY_PREDICATES
+
+
+def test_subsumption_reports_only_within_the_shortlist(t):
+    ug = Ubergraph(t)
+    ug.query = lambda body: [
+        {"s": "http://purl.obolibrary.org/obo/UBERON_0003975",
+         "o": "http://purl.obolibrary.org/obo/UBERON_0004175"}
+    ]
+    out = ug.subsumption(["UBERON:0003975", "UBERON:0004175"], "uberon")
+    assert out["UBERON:0003975"] == ["UBERON:0004175"]
+    assert out["UBERON:0004175"] == []
+
+
+def test_a_single_candidate_has_nothing_to_compare_against(t):
+    ug = Ubergraph(t)
+    assert ug.subsumption(["UBERON:0002107"], "uberon") == {"UBERON:0002107": []}

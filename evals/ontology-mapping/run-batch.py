@@ -21,10 +21,17 @@ import argparse
 import csv
 import json
 import pathlib
+import re
 import subprocess
 import sys
 import tempfile
 import threading
+
+# The skill tells the agent to `export OQ="uvx --from ... oq"` and then call
+# "$OQ lexical". Matching a literal lowercase "oq " therefore caught only the
+# first command of a run and silently dropped every call after it -- which made
+# two separate experiments report that a command was never used when it was.
+_OQ_CALL = re.compile(r"(?:\boq\b|\$\{?OQ\}?|\bOQ\b)\s+[a-z][a-z-]+", re.IGNORECASE)
 
 HERE = pathlib.Path(__file__).parent
 ROOT = HERE.parent.parent
@@ -228,7 +235,9 @@ def main() -> int:
         if spent >= a.max_cost_usd:
             print(f"stopping before batch {gi}: spent ${spent:.2f} of ${a.max_cost_usd:.2f}")
             break
-        name = group[0] if len(group) == 1 else f"{group[0]}-x{len(group)}"
+        stem = a.out.stem
+        base = group[0] if len(group) == 1 else f"{group[0]}-x{len(group)}"
+        name = f"{stem}--{base}"          # keyed by output file, so repeats cannot collide
         # Scale with batch size: batched records share one conversation whose
         # context grows as it goes, so later records are slower than earlier
         # ones and a flat timeout kills the tail.
@@ -267,7 +276,7 @@ def main() -> int:
         parsed = extract(run["answer"] or "")
         live.clear()               # superseded by the complete rows built below
         oq = [t for t in run["tool_calls"]
-              if t["name"] == "Bash" and "oq " in str(t["input"].get("command", ""))]
+              if t["name"] == "Bash" and _OQ_CALL.search(str(t["input"].get("command", "")))]
         for row in recs:
             uid = row["unit_id"]
             report = parsed.get(uid)
