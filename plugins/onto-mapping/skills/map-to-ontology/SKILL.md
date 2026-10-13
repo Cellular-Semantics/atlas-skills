@@ -16,7 +16,7 @@ the number in the input to the number in the label is wrong every time.
 ## The tool
 
 ```
-uvx --from "${OQ_FROM:-git+https://github.com/Cellular-Semantics/atlas-skills@pkg-onto-query--v0.3.0#subdirectory=packages/onto-query}" oq <command>
+uvx --from "${OQ_FROM:-git+https://github.com/Cellular-Semantics/atlas-skills@pkg-onto-query--v0.4.0#subdirectory=packages/onto-query}" oq <command>
 ```
 
 Keep the quotes; an unquoted command in a variable does not word-split under
