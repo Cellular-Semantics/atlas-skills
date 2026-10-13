@@ -407,6 +407,13 @@ Survivors → Confirm. Nothing survives → back to Find, knowing why. **A singl
 hit that fails the screen is a Find trigger, and the one most easily mistaken
 for success.**
 
+**If more than one candidate survives, you may not choose between them here.**
+A probe result shows you labels, synonyms and definitions; it does not show you
+which candidate sits under which, or how much each subsumes, and those are what
+separate two plausible terms. Pass every survivor to `term` in one call and
+decide there. Choosing from the probe alone is how the same record gets mapped
+three different ways on three runs.
+
 No limit on shortlist size. If it feels unmanageable you cannot yet say what
 distinguishes its members, which is a Prepare problem.
 
@@ -418,7 +425,9 @@ distinguishes its members, which is a Prepare problem.
 $OQ term <CURIE> <CURIE> <CURIE> -o <ont>
 ```
 
-**Pass the whole shortlist.** Adjudication is comparison: what separates
+**Pass the whole shortlist — this is the only place the grain evidence
+exists.** Specificity and `subsumed_by` are computed here and nowhere else, so
+a rival rejected before this call was rejected on the label alone. Adjudication is comparison: what separates
 candidates is a contrast between them, visible side by side and reconstructed
 otherwise. Read the definition against the original string, the logical axioms
 (often more decisive), synonym scopes, and `in taxon` / stage links against

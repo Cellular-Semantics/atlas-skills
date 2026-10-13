@@ -421,12 +421,17 @@
    },
    "target": "uberon",
    "accepted": [
-    "UBERON:0002228"
-   ],
-   "must_not_answer": [
+    "UBERON:0002228",
     "UBERON:0016403"
    ],
-   "tests": "The guard on the grain rule. thoracic wall scores 92.8 against rib 55.5, because Uberon defines two thoracic walls and seventy-two ribs -- but neither subsumes the other, so the score describes them rather than ranking them, and `term` warns as much. The record says rib. Answering thoracic wall because it scored higher is the failure this case catches."
+   "tests": "Both terms are defensible and the case is about the reasoning, not the term. 'rib' reads the value as the bone; 'thoracic wall' reads it as the dissected block spanning ribs 3-6, which would include skin, muscle and fascia. A run must name whichever it did not take and say which reading it chose. What it may not do is prefer thoracic wall on its specificity score: that score is 92.8 against rib's 55.5 only because Uberon defines two thoracic walls and seventy-two ribs, neither subsumes the other, and `term` warns as much. An earlier version of this case asserted rib outright, which was written from the score rather than from what the record denotes.",
+   "must_name_rival_from": [
+    "UBERON:0002228",
+    "UBERON:0016403"
+   ],
+   "must_use": [
+    "exact"
+   ]
   }
  ]
 }
