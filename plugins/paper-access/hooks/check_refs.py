@@ -28,10 +28,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-PACKAGE = (
-    "git+https://github.com/Cellular-Semantics/atlas-skills"
-    "@pkg-paper-access--v0.3.0#subdirectory=packages/paper-access"
-)
+# One literal, not two concatenated: the release tooling finds pins by pattern.
+PACKAGE = "git+https://github.com/Cellular-Semantics/atlas-skills@pkg-paper-access--v0.3.0#subdirectory=packages/paper-access"
 
 CHECKED_SUFFIXES = {".md", ".markdown", ".txt", ".json", ".yaml", ".yml"}
 

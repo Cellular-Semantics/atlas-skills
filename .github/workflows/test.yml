@@ -13,11 +13,28 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: false
-      - run: uvx ruff check packages/ plugins/
+      - run: uvx ruff check packages/ plugins/ scripts/ tests/
+
+  validate:
+    # The manifests as Claude Code reads them: the marketplace, and each plugin's
+    # manifest and skills. A marketplace run does not open the plugins' own
+    # files, so each plugin is validated separately as well.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install -g @anthropic-ai/claude-code
+      - run: |
+          claude plugin validate .
+          for p in plugins/*/; do claude plugin validate "$p"; done
 
   test:
     runs-on: ubuntu-latest
     strategy:
+      # One Python version failing says nothing about the others; see them all.
+      fail-fast: false
       matrix:
         python: ["3.11", "3.12", "3.13"]
     steps:
@@ -39,8 +56,29 @@ jobs:
       # pure functions and are: a rejection check that fails a correct answer
       # makes a green suite meaningless.
       - run: uv run pytest evals -q
-      # The plugin hooks, invoked as subprocesses the way the harness calls them.
+      # The plugin hooks, invoked as subprocesses the way the harness calls them,
+      # and the release tooling, against throwaway git repos.
       - run: uv run pytest tests -q
+
+  pins-report:
+    # Python-independent, so not in the matrix above.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: python3 scripts/versions.py report --check docs/pins.md
+
+  version-bumps:
+    # A change under plugins/<p>/ must bump that plugin's version, and a change to
+    # a package's code must bump the package's. Installed plugins refresh only
+    # when the version string changes, so an unbumped skill edit reaches nobody
+    # who already has the plugin -- and nothing else would notice.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - run: python3 scripts/versions.py check-bumps --base "origin/${{ github.base_ref }}"
 
   install-from-git:
     # The published contract: what a user gets from a SKILL.md command.
@@ -61,51 +99,57 @@ jobs:
         run: |
           echo "sha=${{ github.event.pull_request.head.sha || github.sha }}" >> "$GITHUB_OUTPUT"
       - run: |
-          uvx --from "git+https://github.com/${{ github.repository }}@${{ steps.rev.outputs.sha }}#subdirectory=packages/h5ad-obs" \
-            h5ad-obs --version
-      - run: |
-          uvx --from "git+https://github.com/${{ github.repository }}@${{ steps.rev.outputs.sha }}#subdirectory=packages/obs-column-eval" \
-            obs-column-eval --version
-      - run: |
-          uvx --from "git+https://github.com/${{ github.repository }}@${{ steps.rev.outputs.sha }}#subdirectory=packages/paper-access" \
-            paper-access --version
+          set -euo pipefail
+          for d in packages/*/; do
+            pkg=$(basename "$d")
+            uvx --from "git+https://github.com/${{ github.repository }}@${{ steps.rev.outputs.sha }}#subdirectory=packages/$pkg" \
+              "$(python3 scripts/versions.py cli "$pkg")" --version
+          done
 
   skill-pins-resolve:
-    # Every `uvx --from git+…@<tag>` line a SKILL.md tells a user to run, run
-    # as written. A pin to a tag that does not exist yet fails for everyone
-    # except the author, whose uv cache already holds the package — so this is
-    # not covered by anything above, and it is how a release breaks.
+    # Every `uvx --from git+...@<tag>` line a skill or hook on this branch tells a
+    # user to run, run as written. A pin to a tag that does not exist yet fails
+    # for everyone except the author, whose uv cache already holds the package.
+    #
+    # One exception: a pin to the package tag that the release workflow will cut
+    # from this commit -- the package's version here, not yet tagged. That tag
+    # cannot exist before merge, and release only runs after this job passes, so
+    # it is checked at this commit instead (see install_spec in versions.py).
+    #
+    # Pins at older plugin tags are the nightly workflow's job.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          # Tags, so versions.py can tell a tag still to be cut from a typo.
+          fetch-depth: 0
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: false
-      - name: Resolve every pin in every skill and hook
+      - name: Resolve every pin on this branch
+        env:
+          SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -uo pipefail
-          pins=$(grep -rhoE 'git\+https://github\.com/[^"]+#subdirectory=packages/[a-z0-9-]+' \
-                   plugins/ | sort -u)
-          if [ -z "$pins" ]; then
-            echo "no pins found, which means this grep is wrong rather than the repo"
+          rows=$(python3 scripts/versions.py pins --tags 0 --at "$SHA")
+          if [ -z "$rows" ]; then
+            echo "no pins found, which means the pattern is wrong rather than the repo"
             exit 1
           fi
           status=0
-          while read -r pin; do
-            # Every package's console script is named after its directory, and
-            # every CLI here supports --version. So the check is the user's own
-            # command, not an approximation of it.
-            cli=${pin##*subdirectory=packages/}
+          while IFS=$'\t' read -r pin where spec; do
+            cli=$(python3 scripts/versions.py cli "${pin##*subdirectory=packages/}")
             echo "::group::$cli  $pin"
-            if uvx --from "$pin" "$cli" --version; then
+            if [ "$spec" != "$pin" ]; then
+              echo "::notice::${pin%%#*} is cut on merge; checking this commit ($SHA) instead"
+            fi
+            if uvx --from "$spec" "$cli" --version; then
               echo "resolves"
             else
-              echo "DOES NOT RESOLVE. Either the tag was never pushed, or the"
-              echo "subdirectory is wrong. A user running this command gets the"
-              echo "same failure; the author does not, because their uv cache"
-              echo "already holds the package."
+              echo "DOES NOT RESOLVE. Either the tag was never pushed and is not"
+              echo "this commit's release, or the subdirectory is wrong."
               status=1
             fi
             echo "::endgroup::"
-          done <<< "$pins"
+          done <<< "$rows"
           exit $status

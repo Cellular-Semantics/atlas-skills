@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Set up the packages for local development and run their tests.
 #
-#   ./dev.sh              offline suites (a localhost range server; no network)
+#   ./dev.sh              offline suites, the release tooling and the pins report
 #   ./dev.sh -m live      also read a real remote h5ad
 #   ./dev.sh -q -k obs    any other pytest arguments pass straight through
 #
@@ -23,5 +23,10 @@ packages/obs-column-eval/.venv/bin/python -m pytest packages/obs-column-eval "$@
 packages/obs-column-eval/.venv/bin/python -m pytest evals "$@"
 # The plugin hooks, run as the harness runs them. A hook with its exit codes
 # backwards either wrecks a session or silently disables itself, and nothing
-# else would catch either.
+# else would catch either. Alongside them, the release tooling, against
+# throwaway git repos.
 packages/paper-access/.venv/bin/python -m pytest tests "$@"
+python3 scripts/versions.py report --check docs/pins.md
+if command -v claude >/dev/null; then
+  claude plugin validate . && for p in plugins/*/; do claude plugin validate "$p"; done
+fi
