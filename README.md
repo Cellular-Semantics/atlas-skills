@@ -228,7 +228,7 @@ automatic** — never tag by hand.
 | Skill or hook text only | that plugin's `plugin.json` | — |
 | Package code, compatible | its `pyproject.toml` (and `__version__`, where it is a literal) | to ship it: move the skills' pin to `pkg-<dir>--v<new>`, bump each pinning plugin, regenerate `docs/pins.md` |
 | CLI flags or output (breaking) | as above, minor while 0.x | update every skill that relies on the old behaviour |
-| Package tests, READMEs, `docs/` | nothing | — |
+| Package tests, READMEs, the top-level `docs/` | nothing | — |
 
 Patch for fixes, minor for new features. A released version never changes.
 

@@ -309,11 +309,13 @@ def test_pin_with_other_extras_spellings_keeps_them(repo: Path, prefix: str) -> 
 UNPINNED = "git+https://github.com/example/repo#subdirectory=packages/tool"
 
 
-def test_pin_without_a_ref_fails(repo: Path) -> None:
-    write(repo, "plugins/thing/skills/thing/SKILL.md", f'uvx --from "{UNPINNED}" tool\n')
+@pytest.mark.parametrize("prefix", ["", "tool[fast] @ ", "tool[fast]@"])
+def test_pin_without_a_ref_fails(repo: Path, prefix: str) -> None:
+    # Without spaces, the prefix's "@" must not be read as the ref.
+    write(repo, "plugins/thing/skills/thing/SKILL.md", f'uvx --from "{prefix}{UNPINNED}" tool\n')
     out = run(repo, "pins", "--tags", "0")
     assert out.returncode == 1 and "names no tag" in out.stderr
-    assert UNPINNED in out.stdout
+    assert f"{prefix}{UNPINNED}" in out.stdout
 
 
 def test_pin_without_a_ref_at_an_old_tag_only_is_listed(repo: Path) -> None:

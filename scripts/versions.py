@@ -45,10 +45,11 @@ ROOT = Path(__file__).resolve().parent.parent
 # `h5ad-obs[a,b] @ git+...` -- so that no form drops the extra here.
 PIN = re.compile(r"(?:[A-Za-z0-9][A-Za-z0-9._-]*[ \t]*\[[A-Za-z0-9._, \t-]*\][ \t]*@[ \t]*)?"
                  r"git\+https://github\.com/[^\"'\s]+#subdirectory=packages/[a-z0-9-]+")
-# The ref holds no "@" or space, and the URL itself holds an "@" only before the
-# ref, so this skips the "@" of a `name[extras] @` prefix. None for a pin with
-# no ref at all, which installs whatever the default branch holds today.
-PIN_PARTS = re.compile(r"@(?P<ref>[^#@\s]+)#subdirectory=packages/(?P<pkg>[a-z0-9-]+)$")
+# The ref is the "@..." straight after the repo path, so the "@" of a
+# `name[extras]@` prefix -- spaced or not -- is never taken for it. None for a
+# pin with no ref at all, which installs whatever the default branch holds today.
+PIN_PARTS = re.compile(r"github\.com/[^#@\s]+@(?P<ref>[^#@\s]+)"
+                       r"#subdirectory=packages/(?P<pkg>[a-z0-9-]+)$")
 
 # Changes under these never alter what a user runs, so they need no bump.
 # uv.lock included: `uvx --from git+...` resolves fresh and never reads it.

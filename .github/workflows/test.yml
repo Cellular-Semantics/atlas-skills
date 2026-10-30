@@ -131,7 +131,8 @@ jobs:
           SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -uo pipefail
-          rows=$(python3 scripts/versions.py pins --tags 0 --at "$SHA")
+          # Explicit: a pin with no tag makes `pins` exit 1, and that must fail here.
+          rows=$(python3 scripts/versions.py pins --tags 0 --at "$SHA") || exit 1
           if [ -z "$rows" ]; then
             echo "no pins found, which means the pattern is wrong rather than the repo"
             exit 1
