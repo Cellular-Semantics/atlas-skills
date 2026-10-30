@@ -22,7 +22,7 @@ transfers ~27 MB in ~8-13 s.
 ## Command
 
 ```sh
-uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@pkg-h5ad-obs--v0.3.0#subdirectory=packages/h5ad-obs" \
+uvx --from "h5ad-obs[parquet] @ git+https://github.com/Cellular-Semantics/atlas-skills@pkg-h5ad-obs--v0.3.0#subdirectory=packages/h5ad-obs" \
     h5ad-obs <url> [options]
 ```
 
@@ -97,7 +97,8 @@ command to run instead, rather than trying to parse HTML as HDF5.
 **CAP** (`celltype.info`) — use `cap h5ad-url` from the `cap-tools` plugin:
 
 ```sh
-h5ad-obs "$(cap h5ad-url https://celltype.info/project/934/dataset/3016 --format text)"
+uvx --from "h5ad-obs[parquet] @ git+https://github.com/Cellular-Semantics/atlas-skills@pkg-h5ad-obs--v0.3.0#subdirectory=packages/h5ad-obs" \
+    h5ad-obs "$(cap h5ad-url https://celltype.info/project/934/dataset/3016 --format text)"
 ```
 
 Many CAP datasets expose no public h5ad at all, and then this route is closed;
