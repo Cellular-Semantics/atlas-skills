@@ -1,21 +1,26 @@
 # Iterating on a package while a skill uses it
 
-How to change `packages/<x>` without a pushed tag for every edit, and what
-to do when the behaviour settles. Companion to the repo-level versioning
-rules in CLAUDE.md.
+How to change `packages/<x>` without a release for every edit, and how to
+release once the behaviour settles. Companion to "Making a change" in the
+README.
 
+The `--from` pin in SKILL.md is the only thing that selects a package version.
+`plugin.json`'s version selects which copy of the *plugin* an installed user
+has: Claude Code refreshes an installed plugin only when that string changes.
+So bumping the plugin does not pull new package code, but not bumping it means
+nobody already installed receives the new pin.
 
-The tag lives in the skill text, not in the plugin version. `plugin.json`'s
-version is metadata — nothing resolves against it — so bumping it does **not**
-pull new package code. The `--from` pin in SKILL.md is the only thing that
-selects a package version.
+Three loops, in increasing cost:
 
-Which gives three loops, in increasing cost:
+**Skill text or an advice document.** Load the plugin from your worktree for
+one session, no install needed:
 
-**Skill text or an advice document.** Edit it in the worktree. A project using
-a `directory` marketplace picks it up next session: no version bump, no
-reinstall, no tag. Bump `plugin.json` when you commit, per CLAUDE.md, but that
-is bookkeeping rather than a mechanism.
+```
+claude --plugin-dir plugins/onto-mapping
+```
+
+A project using a `directory` marketplace also picks up edits next session.
+Bump `plugin.json` when you open the PR; `version-bumps` will insist.
 
 **Package code, while the behaviour is still moving.** Set `OQ_BIN` (or the
 equivalent for that package) to an editable install and call the binary
@@ -32,24 +37,26 @@ caches the build: editing the source and re-running gives the stale version
 back, silently. Measured — a version bump in `__init__.py` was not picked up,
 while the editable install reported it immediately.
 
-**Releasing.** Once the behaviour has settled: bump the package version, tag
-`pkg-<dir>--vX.Y.Z`, push the tag, update the pin in every skill that uses it,
-and bump those plugins' versions — all in one commit, per CLAUDE.md's
-same-change rule. Then drop `OQ_BIN` from the consuming project so it runs the
-release.
+**Releasing.** Once the behaviour has settled: bump the package's
+`pyproject.toml` (and `__version__`, where it is a literal), move the pin in
+every skill that uses it, bump those plugins' versions, and regenerate
+`docs/pins.md`. One PR or two, as suits. On merge `release` tags the package,
+then the plugin — never tag by hand. Then drop `OQ_BIN` from the consuming
+project so it runs the release.
 
 A pin must resolve for someone with a cold cache. Check it the way CI does:
 
 ```
-uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@<tag>#subdirectory=packages/<dir>" <dir> --version
+uvx --no-cache --from "git+https://github.com/Cellular-Semantics/atlas-skills@<tag>#subdirectory=packages/<dir>" "$(python3 scripts/versions.py cli <dir>)" --version
 ```
 
-Note the CLI name must match the package directory — that is what the check
-invokes. `onto-query` carries a second console script for exactly this reason,
-alongside the short `oq` the skill types.
+`scripts/versions.py cli` prints the package's console script, preferring the
+one named after the directory: `onto-query` installs both `onto-query` and the
+short `oq` the skill types.
 
 ### Quoting
 
-Skills must write the full quoted command, not `CMD="uvx …"` then `$CMD`.
-Unquoted parameters do not word-split under zsh, the macOS default shell, so
-the variable form fails with `command not found: uvx --from …`.
+Skills must write the full quoted command, or a shell function, not
+`CMD="uvx …"` then `$CMD`. Unquoted parameters do not word-split under zsh, the
+macOS default shell, so the variable form fails with
+`command not found: uvx --from …`.

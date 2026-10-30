@@ -216,17 +216,49 @@ pure functions and both are.
 The picker's accuracy benchmark re-scores offline: the obs profiles it runs on
 are committed fixtures, not fetched.
 
-## Releasing
+## Making a change
 
 Each plugin versions independently, and so does each package. A repo-wide tag
 would mean an h5ad release forcing a re-pin in a plugin that does not use it.
+Bump what you changed, open a PR, merge. **Tagging and releasing are
+automatic** — never tag by hand.
+
+| You changed | Bump | Also |
+|---|---|---|
+| Skill or hook text only | that plugin's `plugin.json` | — |
+| Package code, compatible | its `pyproject.toml` (and `__version__`, where it is a literal) | to ship it: move the skills' pin to `pkg-<dir>--v<new>`, bump each pinning plugin, regenerate `docs/pins.md` |
+| CLI flags or output (breaking) | as above, minor while 0.x | update every skill that relies on the old behaviour |
+| Package tests, READMEs, the top-level `docs/` | nothing | — |
+
+Patch for fixes, minor for new features. A released version never changes.
+
+Before pushing:
 
 ```sh
-claude plugin tag plugins/remote-h5ad-obs     # remote-h5ad-obs--v0.3.0
+./dev.sh                                                     # everything CI runs offline
+python3 scripts/versions.py check-bumps --base origin/main   # did you bump what you changed?
+python3 scripts/versions.py report > docs/pins.md            # after moving a pin
 ```
 
-`claude plugin tag` checks that `plugin.json` and the marketplace entry agree
-before it writes the tag, and its format is fixed: `<plugin-name>--v<version>`.
+### When a check fails
+
+| Check | Fix |
+|---|---|
+| `version-bumps`: "the version is still X" | bump the version file it names |
+| `version-bumps`: "tag … already exists" | that version is released; bump past it |
+| `version-bumps`: "`__version__` … pyproject.toml says …" | make the two agree |
+| `pins-report`: "docs/pins.md is stale" | `python3 scripts/versions.py report > docs/pins.md` |
+| `skill-pins-resolve`: "DOES NOT RESOLVE" | the pin names a tag that doesn't exist — usually a typo, or the package version wasn't bumped to match |
+| `nightly` | an old release no longer installs or passes tests, usually a dependency change upstream; the job log names the tag |
+| `release` failed after merge | fix the cause, then re-run it: `gh workflow run release.yml`. A manual run only works on main, once `test` has passed there, and it also writes any GitHub Release an earlier run missed |
+
+## How releases are automated
+
+| | Plugin | Package |
+|---|---|---|
+| Version lives in | `plugins/<name>/.claude-plugin/plugin.json` | `packages/<dir>/pyproject.toml` |
+| Tag | `<name>--v<version>`, written by `claude plugin tag` | `pkg-<dir>--v<version>` |
+| Read by | a project's own marketplace entry (below) | the `uvx --from …@<tag>` line in each skill |
 
 **Package tags carry a `pkg-` prefix** — `pkg-paper-access--v0.1.0` — and are
 what the `uvx --from …@<tag>` lines in the skills pin to. The prefix is not
@@ -235,6 +267,38 @@ do, an unprefixed package tag would collide with the plugin tag at the same
 version number. One tag cannot mean two things, and the collision only bites
 when the two versions happen to coincide, which is exactly when nobody is
 looking for it.
+
+A plugin tag freezes its skills, and the skills hold the package pin — so each
+plugin release fixes exactly which package version it runs. `docs/pins.md` shows
+that mapping for main.
+
+| Workflow | When | What |
+|---|---|---|
+| `test` | every PR and push | lint; plugin validation; tests on Python 3.11–3.13; `docs/pins.md` current; every package installs from git; every skill and hook pin resolves; on PRs, `version-bumps` |
+| `release` | after `test` passes on main | tags any version that has no tag yet (packages first, then plugins) and writes a GitHub Release for each |
+| `nightly` | 03:17 UTC daily | re-installs every pin used by main and the newest 3 releases of each plugin, and runs the package tests at each pinned tag |
+
+Why nightly: `uvx` resolves dependencies fresh and ignores `uv.lock`, so a tag
+that worked when it was cut can break later with no commit. The newest 3
+releases of each plugin are the supported ones; older tags still install, but
+nothing checks them.
+
+A pin to a package version released in the same PR can't resolve before merge,
+since its tag doesn't exist yet. CI checks that pin against the PR's commit
+instead, and `release` tags the package before the plugin. For the minute or two
+between merge and `release` finishing, main points at a tag that doesn't exist yet.
+
+### Using a release in a project
+
+Each plugin's GitHub Release carries a `git-subdir` entry for it. Add that entry
+to the project's own `.claude-plugin/marketplace.json`, give that marketplace a
+name unique to the project, and point `.claude/settings.json` at it with
+`{"source": "directory", "path": "./"}`. Each plugin is then pinned on its own,
+and two projects on one machine can hold different releases.
+
+Do not pin by putting a `ref` on this marketplace instead. Claude Code keeps one
+registration per marketplace name per machine, so the project registered last
+sets the version for every project on that machine.
 
 ## Rules for changes
 
