@@ -5,6 +5,9 @@ name: release
 # so a tag always names a reviewed, green commit on main -- never a branch, and
 # never something cut by hand from a laptop.
 #
+# A manual run (`gh workflow run release.yml`, to retry a failed one) is held to
+# the same rule: main only, and only once `test` has passed on that commit.
+#
 # Packages are tagged before plugins: a plugin in the same push may pin them,
 # and its pins are checked against the freshly pushed tags before it is tagged.
 
@@ -21,15 +24,31 @@ concurrency:
 
 permissions:
   contents: write
+  actions: read   # a manual run checks that `test` passed
+
+# -eo pipefail, not the bare `bash -e` a step gets by default: a crash on the
+# left of a pipe must fail the step, not read as "nothing to release".
+defaults:
+  run:
+    shell: bash
 
 jobs:
   release:
-    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    if: (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
       SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
     steps:
+      - name: A manual run needs test to have passed on this commit
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          n=$(gh run list -R "$GITHUB_REPOSITORY" --workflow test.yml --commit "$SHA" \
+                --event push --status success --json databaseId -q length)
+          if [ "$n" -eq 0 ]; then
+            echo "::error::test has not passed on $SHA. Wait for it, or fix it, then re-run."
+            exit 1
+          fi
       - uses: actions/checkout@v5
         with:
           ref: ${{ env.SHA }}
@@ -56,11 +75,12 @@ jobs:
           while IFS=$'\t' read -r kind name version tag path; do
             [ -n "$tag" ] || continue
             [ "$kind" = package ] || continue
+            # Cold-cache install of the commit the tag will name, before the tag
+            # exists: a pushed tag is public, and a broken one costs a version.
+            uvx --from "git+https://github.com/${{ github.repository }}@$SHA#subdirectory=$path" \
+              "$(python3 scripts/versions.py cli "$name")" --version
             git tag -a "$tag" -m "$name $version" "$SHA"
             git push origin "$tag"
-            # Cold-cache check, exactly as a user's skill will call it.
-            uvx --from "git+https://github.com/${{ github.repository }}@$tag#subdirectory=$path" \
-              "$(python3 scripts/versions.py cli "$name")" --version
             echo "released $tag" >> "$GITHUB_STEP_SUMMARY"
           done < untagged.tsv
 
@@ -87,8 +107,13 @@ jobs:
       - name: GitHub Releases
         run: |
           set -euo pipefail
+          # Every current version, not just this run's tags: a tag pushed by an
+          # earlier run that failed before this step still gets its Release.
+          python3 scripts/versions.py current > "$RUNNER_TEMP/current.tsv"
           while IFS=$'\t' read -r kind name version tag path; do
             [ -n "$tag" ] || continue
+            git rev-parse -q --verify "refs/tags/$tag" > /dev/null || continue
+            if gh release view "$tag" > /dev/null 2>&1; then continue; fi
             prefix=${tag%"$version"}
             prev=$(git tag --list "${prefix}*" --sort=-v:refname | grep -vx "$tag" | head -1 || true)
             {
@@ -119,4 +144,5 @@ jobs:
             # means nothing when every plugin and package has its own version line.
             gh release create "$tag" --verify-tag --latest=false \
               --title "$name $version" --notes-file notes.md
-          done < untagged.tsv
+            echo "wrote the GitHub Release for $tag" >> "$GITHUB_STEP_SUMMARY"
+          done < "$RUNNER_TEMP/current.tsv"

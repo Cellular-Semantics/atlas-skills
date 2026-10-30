@@ -250,7 +250,7 @@ python3 scripts/versions.py report > docs/pins.md            # after moving a pi
 | `pins-report`: "docs/pins.md is stale" | `python3 scripts/versions.py report > docs/pins.md` |
 | `skill-pins-resolve`: "DOES NOT RESOLVE" | the pin names a tag that doesn't exist — usually a typo, or the package version wasn't bumped to match |
 | `nightly` | an old release no longer installs or passes tests, usually a dependency change upstream; the job log names the tag |
-| `release` failed after merge | fix the cause, then re-run it: `gh workflow run release.yml` |
+| `release` failed after merge | fix the cause, then re-run it: `gh workflow run release.yml`. A manual run only works on main, once `test` has passed there, and it also writes any GitHub Release an earlier run missed |
 
 ## How releases are automated
 

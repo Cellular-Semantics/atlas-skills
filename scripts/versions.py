@@ -3,6 +3,7 @@
 
     versions.py check-bumps --base origin/main   changed plugin/package => version bumped
     versions.py untagged                         releases whose tag does not exist yet
+    versions.py current                          every release at its current version
     versions.py pins [--tags N] [--at SHA]       every package pin users can be running
     versions.py report [--check FILE]            the plugin -> package table (docs/pins.md)
     versions.py cli <dir> [--at REF]             the console script packages/<dir> installs
@@ -40,9 +41,13 @@ ROOT = Path(__file__).resolve().parent.parent
 # `name[extras] @ ` in front so that CI installs exactly what the skill does --
 # a pin whose extra went missing would otherwise pass here and fail for users.
 # The CLI's name comes from the package's [project.scripts]: see `cli`.
-PIN = re.compile(r"(?:[a-z0-9-]+\[[a-z0-9,-]+\] @ )?"
+# Any spelling PEP 508 allows -- `h5ad_obs[a, b]@git+...` as well as
+# `h5ad-obs[a,b] @ git+...` -- so that no form drops the extra here.
+PIN = re.compile(r"(?:[A-Za-z0-9][A-Za-z0-9._-]*[ \t]*\[[A-Za-z0-9._, \t-]*\][ \t]*@[ \t]*)?"
                  r"git\+https://github\.com/[^\"'\s]+#subdirectory=packages/[a-z0-9-]+")
-# The ref holds no "@" or space, so this skips the " @ " of a `name[extras] @` prefix.
+# The ref holds no "@" or space, and the URL itself holds an "@" only before the
+# ref, so this skips the "@" of a `name[extras] @` prefix. None for a pin with
+# no ref at all, which installs whatever the default branch holds today.
 PIN_PARTS = re.compile(r"@(?P<ref>[^#@\s]+)#subdirectory=packages/(?P<pkg>[a-z0-9-]+)$")
 
 # Changes under these never alter what a user runs, so they need no bump.
@@ -190,6 +195,21 @@ def pending() -> list[tuple[Release, str]]:
     return out
 
 
+def current() -> int:
+    """`kind name version tag path` for every release at its current version,
+    tagged or not, packages first.
+
+    The release workflow writes a GitHub Release for each of these whose tag
+    exists but has no Release yet. `untagged` alone would miss a tag pushed by
+    an earlier run that then failed before writing its Release.
+    """
+    for rel in sorted(releases(), key=lambda r: r.kind != "package"):
+        v = rel.version_at(None)
+        if v:
+            print(f"{rel.kind}\t{rel.name}\t{v}\t{rel.tag(v)}\t{rel.path}")
+    return 0
+
+
 def untagged() -> int:
     """`kind name version tag path`, one line per release still to be cut.
 
@@ -206,7 +226,11 @@ def untagged() -> int:
 
 def pins_at(ref: str | None, plugin: Release) -> set[str]:
     if ref is None:
-        files = [p for p in (ROOT / plugin.path).rglob("*") if p.is_file()]
+        # Tracked and new files, as they are on disk, but not ignored ones
+        # (caches, venvs): what CI would see once this is committed.
+        names = git("ls-files", "--cached", "--others", "--exclude-standard",
+                    "--", plugin.path).splitlines()
+        files = [ROOT / n for n in names if (ROOT / n).is_file()]
         texts = [p.read_text(errors="replace") for p in files]
     else:
         names = git("ls-tree", "-r", "--name-only", ref, "--", plugin.path).split()
@@ -250,9 +274,16 @@ def install_spec(pin: str, at: str | None, to_cut: set[str]) -> str:
 def pins(n_tags: int, at: str | None) -> int:
     """`pin  where  spec-to-install`, one line per distinct pin."""
     to_cut = {rel.tag(v) for rel, v in pending() if rel.kind == "package"}
+    unpinned = []
     for pin, where in sorted(collect_pins(n_tags).items()):
         print(f"{pin}\t{' '.join(sorted(where))}\t{install_spec(pin, at, to_cut)}")
-    return 0
+        # Only on HEAD: a released tag cannot be fixed, and must not block releases.
+        if PIN_PARTS.search(pin) is None and any(w.endswith("@HEAD") for w in where):
+            unpinned.append(pin)
+    for pin in unpinned:
+        print(f"FAIL  {pin} names no tag, so users get whatever the default branch "
+              f"holds today. Pin it to a pkg-<dir>--v<version> tag.", file=sys.stderr)
+    return 1 if unpinned else 0
 
 
 # --- report ------------------------------------------------------------------
@@ -282,7 +313,11 @@ def report_text(n_tags: int) -> str:
                 lines.append(f"| `{rel.name}` | {label} | — | — |")
             for pin in found:
                 m = PIN_PARTS.search(pin)
-                lines.append(f"| `{rel.name}` | {label} | `{m['pkg']}` | `{m['ref']}` |")
+                if m is None:
+                    pkg = pin.rsplit("subdirectory=packages/", 1)[1]
+                    lines.append(f"| `{rel.name}` | {label} | `{pkg}` | **no tag** |")
+                else:
+                    lines.append(f"| `{rel.name}` | {label} | `{m['pkg']}` | `{m['ref']}` |")
     return "\n".join(lines) + "\n"
 
 
@@ -336,6 +371,7 @@ def main() -> int:
     b = sub.add_parser("check-bumps")
     b.add_argument("--base", required=True, help="ref to compare against, e.g. origin/main")
     sub.add_parser("untagged")
+    sub.add_parser("current")
     p = sub.add_parser("pins")
     # The supported window: the newest N releases of each plugin. Older tags
     # still install, but nobody is told they work.
@@ -354,6 +390,8 @@ def main() -> int:
         return check_bumps(a.base)
     if a.cmd == "untagged":
         return untagged()
+    if a.cmd == "current":
+        return current()
     if a.cmd == "pins":
         return pins(a.tags, a.at)
     if a.cmd == "cli":

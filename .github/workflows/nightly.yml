@@ -73,7 +73,9 @@ jobs:
               cd "$wt/$path" &&
               uv venv -q &&
               uv pip install -q -e ".[test]" &&
-              uv run pytest -q
+              # Not `uv run`: it re-syncs the venv to a committed uv.lock, which
+              # would undo the fresh resolution this job exists to test.
+              .venv/bin/python -m pytest -q
             ) || { echo "::error::$ref: package tests fail on a fresh install"; status=1; }
             echo "::endgroup::"
           done <<< "$refs"
