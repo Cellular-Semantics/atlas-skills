@@ -10,7 +10,7 @@ of those rows is what a project pinned to that tag actually runs.
 | Plugin | Plugin version | Package | Package tag |
 |---|---|---|---|
 | `atlas-tools` | 0.4.0 (main) | — | — |
-| `author-annotation-columns` | 0.4.0 (main) | `h5ad-obs` | `pkg-h5ad-obs--v0.3.0` |
+| `author-annotation-columns` | 0.4.1 (main) | `h5ad-obs` | `pkg-h5ad-obs--v0.3.0` |
 | `onto-mapping` | 0.5.0 (main) | `onto-query` | `pkg-onto-query--v0.4.0` |
 | `paper-access` | 0.3.1 (main) | `paper-access` | `pkg-paper-access--v0.3.0` |
-| `remote-h5ad-obs` | 0.3.0 (main) | `h5ad-obs` | `pkg-h5ad-obs--v0.3.0` |
+| `remote-h5ad-obs` | 0.3.1 (main) | `h5ad-obs` | `pkg-h5ad-obs--v0.3.0` |
