@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "h5ad-obs"
-version = "0.3.0"
+version = "0.3.1"
 description = "Read the obs table out of a remote .h5ad over HTTP range requests, without downloading the matrix."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -16,19 +16,23 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
 dependencies = [
+  # Left open on purpose: it is the set of CAs we trust, and a frozen copy goes
+  # stale. Everything else may take patch releases only -- `uvx` resolves fresh
+  # on every cold cache and ignores uv.lock, so these ranges are the only thing
+  # holding a released tag to what was tested.
   "certifi",
-  "fsspec>=2024.2",
-  "aiohttp",
-  "h5py",
-  "numpy",
-  "pandas",
+  "fsspec~=2026.9.0",
+  "aiohttp~=3.14.5",
+  "h5py~=3.16.0",
+  "numpy~=2.4.6",
+  "pandas~=3.1.0",
 ]
 
 [project.optional-dependencies]
 # Parquet output only. CSV and TSV need nothing extra, and pyarrow is a large
 # wheel to pull on first run -- so it is opt-in rather than a hard dependency.
-parquet = ["pyarrow"]
-test = ["pytest>=8", "pyarrow"]
+parquet = ["pyarrow~=26.0.0"]
+test = ["pytest>=8", "pyarrow~=26.0.0"]
 
 [project.urls]
 Homepage = "https://github.com/Cellular-Semantics/atlas-skills"

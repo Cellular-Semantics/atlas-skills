@@ -38,7 +38,7 @@ record for is a paper to fetch, not a paper with no supplements.
 ## The mechanical half
 
 ```bash
-alias paper-access='uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@pkg-paper-access--v0.3.0#subdirectory=packages/paper-access" paper-access'
+alias paper-access='uvx --from "git+https://github.com/Cellular-Semantics/atlas-skills@pkg-paper-access--v0.3.1#subdirectory=packages/paper-access" paper-access'
 
 # What files does this paper have? Free: reads the XML already on disk.
 paper-access supplements list --store <store> --id <id>
