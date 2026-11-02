@@ -1,14 +1,16 @@
 [project]
 name = "paper-access"
-version = "0.3.0"
+version = "0.3.1"
 description = "Retrieve the text of a list of papers and record honestly what arrived: JATS XML, an ASTA index probe, an open-access PDF, or an ask."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [{ name = "Cellular Semantics" }]
 dependencies = [
-    "httpx>=0.27",
-    "jsonschema>=4.22",
+    # Patch releases only: `uvx` resolves fresh on every cold cache and ignores
+    # uv.lock, so these ranges are what holds a released tag to what was tested.
+    "httpx~=0.28.1",
+    "jsonschema~=4.26.0",
 ]
 
 [project.optional-dependencies]
@@ -16,8 +18,8 @@ dependencies = [
 # from the base install because a caller who only wants Europe PMC's XML should
 # not have to build PyMuPDF to get it.
 text-access = [
-    "curl-cffi>=0.7.0",
-    "pymupdf4llm>=0.0.17",
+    "curl-cffi~=0.17.0",
+    "pymupdf4llm~=1.28.2",  # 2.0 is an empty shim: the code moved into pymupdf 2.x
 ]
 test = [
     "pytest>=8.0",
