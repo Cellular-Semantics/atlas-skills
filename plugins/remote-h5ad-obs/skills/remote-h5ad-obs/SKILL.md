@@ -28,8 +28,8 @@ uvx --from "h5ad-obs[parquet] @ git+https://github.com/Cellular-Semantics/atlas-
 
 Needs `uv` and, on first run, network access to GitHub. Expect the first
 invocation to take a minute while uv builds h5py, pandas and aiohttp; cached
-thereafter. Expects `h5ad-obs` 0.2.0 or later (`h5ad-obs --version`), the release
-that added `--profile`.
+thereafter. Expects `h5ad-obs` v0.3.0 or later (`h5ad-obs --version`): 0.2.0
+added `--profile`, and 0.3.0 the measurement column it reports.
 
 **Options:**
 

@@ -43,8 +43,8 @@ cheaper than untangling them later.
 - an atlas comparison that needs author fields rather than harmonised ones
 
 Not needed if the portal's standardised `cell_type`, `tissue`,
-`development_stage` or `disease` is what the user wants — read those directly
-with `remote-h5ad-obs`.
+`development_stage` or `disease` is what the user wants — read just those, with
+the step 1 command below and `--columns cell_type tissue development_stage disease`.
 
 ## Read obs once, then profile it locally
 
