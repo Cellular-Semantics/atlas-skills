@@ -161,6 +161,44 @@ obs[["Organ", "Organ_part"]].value_counts()        # the tissue hierarchy, as us
 obs[["Developmental_stage", "Postnatal_age_years"]].value_counts()
 ```
 
+### Write `picks.json` first
+
+Before telling the user anything, write what the pickers returned to
+`picks.json` beside `obs.parquet`. Copy the column names and reasoning
+**verbatim** from the agents' answers. Do not add, drop, rename or recase a
+column here: this file records what was picked, and the summary you give the
+user is written from it, not the other way round.
+
+```json
+{
+  "schema_version": 1,
+  "source": "obs.parquet",
+  "dataset": "<the h5ad URL you read>",
+  "requested": ["cell_type", "tissue"],
+  "picks": {
+    "cell_type": ["author_cell_type", "celltype.l2"],
+    "tissue": []
+  },
+  "reasoning": {
+    "author-celltype-picker": "<its reasoning, verbatim>",
+    "author-sample-field-picker": "<its reasoning, verbatim>"
+  }
+}
+```
+
+- `source` is the obs table the columns are in, relative to `picks.json`.
+- `requested` lists the field types the user asked for. `picks` has a key for
+  each one, with `[]` where the picker found nothing. A field type that was
+  asked for and then left out of `picks` looks like one nobody searched.
+- `reasoning` has one entry per agent you dispatched, under that agent's name.
+
+The full contract is a JSON Schema, `picks.schema.json`, in
+[`packages/obs-column-eval`](https://github.com/Cellular-Semantics/atlas-skills/tree/main/packages/obs-column-eval/src/obs_column_eval/schemas).
+For several datasets, write one `picks.json` per dataset, each beside its own
+`obs.parquet`.
+
+### Then report
+
 Tell the user: which columns were picked for which field type and why, how many
 distinct values each holds, how they nest where there is more than one, and how
 they line up against the portal's standardised field if there is one. A picked
