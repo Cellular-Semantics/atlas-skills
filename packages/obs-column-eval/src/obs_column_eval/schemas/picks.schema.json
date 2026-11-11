@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cellular-semantics.org/atlas-skills/picks.schema.json",
+  "title": "AuthorAnnotationPicks",
+  "description": "The author-annotation-columns skill's report for one dataset: which obs columns hold the authors' own annotations, per field type, which obs table those names were read from, and why. The skill writes it as `picks.json` beside the obs table it pulled, from what its picker sub-agents returned, before telling the user anything. Every column named here is a claim that the column exists in `source` and carries the authors' annotation for that field type; a column name the picker invented, misspelt, or took from the portal's standardised fields is the failure this file exists to make checkable. The two shapes the pickers themselves return are declared under `$defs` (`CellTypePickerResult`, `SampleFieldPickerResult`).",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "description": "Version of this schema the report was written against.",
+      "const": 1
+    },
+    "source": {
+      "description": "The obs table the column names were read from: the `obs.parquet` the skill pulled, or a `.csv` / `.tsv` obs table. A relative path is resolved against the directory holding this report. Recorded so that a checker can confirm every picked column is really in it.",
+      "type": "string",
+      "minLength": 1
+    },
+    "dataset": {
+      "description": "Where the obs came from: the h5ad URL that was read, or a dataset id. Optional, for tracing a report back to its input; not checked.",
+      "type": "string"
+    },
+    "requested": {
+      "description": "The field types the user asked for. `picks` has a key for each, so that a field type asked for and silently dropped is distinguishable from one searched and found empty.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/FieldType" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "picks": {
+      "description": "Picked columns, keyed by field type, in the order the picker gave them. `[]` is a real answer: the dataset has no author column for that field type. Only field types in `requested` appear.",
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/FieldType" },
+      "additionalProperties": { "$ref": "#/$defs/Columns" },
+      "minProperties": 1
+    },
+    "reasoning": {
+      "description": "Each picker's reasoning, verbatim, keyed by the sub-agent that gave it. Recorded so that a reader can see why a column was taken or rejected, and which agent made the call.",
+      "type": "object",
+      "properties": {
+        "author-celltype-picker": { "type": "string", "minLength": 1 },
+        "author-sample-field-picker": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false,
+      "minProperties": 1
+    }
+  },
+  "required": ["schema_version", "source", "requested", "picks", "reasoning"],
+  "additionalProperties": false,
+  "$defs": {
+    "FieldType": {
+      "description": "`cell_type` maps to CL, `tissue` to UBERON, `development_stage` to HsapDv / MmusDv, `disease` to MONDO. `other_stage` is menstrual, oestrous and cell-cycle phase: kept apart so that a value mapper does not send it to a developmental-stage ontology.",
+      "type": "string",
+      "enum": ["cell_type", "tissue", "development_stage", "other_stage", "disease"]
+    },
+    "Column": {
+      "description": "An obs column name, exactly as it appears in the obs table, including case. Never one of the portal's standardised fields: CELLxGENE's `cell_type`, `tissue`, `development_stage` and `disease`, or any `*_ontology_term_id`. The match is case-sensitive on purpose: CELLxGENE's column is `disease` and an author's is often `Disease`.",
+      "type": "string",
+      "minLength": 1,
+      "not": { "pattern": "^(cell_type|tissue|development_stage|disease)$|_ontology_term_id$" }
+    },
+    "Columns": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Column" },
+      "uniqueItems": true
+    },
+    "CellTypePickerResult": {
+      "description": "What `author-celltype-picker` returns.",
+      "type": "object",
+      "properties": {
+        "picks": { "$ref": "#/$defs/Columns" },
+        "reasoning": { "type": "string", "minLength": 1 }
+      },
+      "required": ["picks", "reasoning"],
+      "additionalProperties": false
+    },
+    "SampleFieldPickerResult": {
+      "description": "What `author-sample-field-picker` returns: a key for each field type it was asked for, `[]` where it found nothing.",
+      "type": "object",
+      "properties": {
+        "tissue": { "$ref": "#/$defs/Columns" },
+        "development_stage": { "$ref": "#/$defs/Columns" },
+        "other_stage": { "$ref": "#/$defs/Columns" },
+        "disease": { "$ref": "#/$defs/Columns" },
+        "reasoning": { "type": "string", "minLength": 1 }
+      },
+      "required": ["reasoning"],
+      "minProperties": 2,
+      "additionalProperties": false
+    }
+  }
+}
