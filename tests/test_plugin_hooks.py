@@ -173,3 +173,113 @@ def test_a_record_carrying_supplements_is_denied_just_the_same():
     filename rather than on anything about the contents."""
     result = run(DENY, write_of("/x/10.1038_y/availability.json"))
     assert result.returncode == 2
+
+
+# -- author-annotation-columns: the picks check ------------------------
+
+PICKS_HOOKS = HOOKS.parent.parent / "author-annotation-columns" / "hooks"
+CHECK_PICKS = PICKS_HOOKS / "check_picks.py"
+
+# The installed checker, so the hook is exercised end to end without uvx or
+# the network. CI installs obs-column-eval into the same environment.
+LOCAL_CHECKER = Path(sys.executable).parent / "obs-column-eval"
+needs_checker = pytest.mark.skipif(not LOCAL_CHECKER.exists(),
+                                   reason="obs-column-eval is not installed here")
+
+
+def picks_report(tmp_path: Path, cell_type: list[str]) -> Path:
+    """A report beside a TSV obs: TSV so these tests need no pyarrow."""
+    (tmp_path / "obs.tsv").write_text("\tauthor_cell_type\tOrgan\nc1\tT\tlung\n")
+    path = tmp_path / "picks.json"
+    path.write_text(json.dumps({
+        "schema_version": 1, "source": "obs.tsv", "requested": ["cell_type"],
+        "picks": {"cell_type": cell_type},
+        "reasoning": {"author-celltype-picker": "author labels"},
+    }))
+    return path
+
+
+def run_picks(path: Path, **env: str):
+    return run(CHECK_PICKS, write_of(str(path)),
+               env={"OBS_COLUMN_EVAL_BIN": str(LOCAL_CHECKER), **env})
+
+
+@needs_checker
+def test_a_report_naming_real_columns_passes(tmp_path):
+    result = run_picks(picks_report(tmp_path, ["author_cell_type"]))
+    assert result.returncode == 0, result.stderr
+    assert result.stderr == ""
+
+
+@needs_checker
+def test_a_report_naming_an_invented_column_is_blocked(tmp_path):
+    result = run_picks(picks_report(tmp_path, ["author_cell_type", "celltype.l3"]))
+    assert result.returncode == 2
+    assert "`celltype.l3` is not a column" in result.stderr
+    # Not just a refusal: what to do about it.
+    assert "copy each column name exactly" in result.stderr
+
+
+@needs_checker
+def test_a_recased_column_is_blocked_with_the_real_name(tmp_path):
+    result = run_picks(picks_report(tmp_path, ["Author_Cell_Type"]))
+    assert result.returncode == 2
+    assert "did you mean `author_cell_type`" in result.stderr
+
+
+@needs_checker
+def test_a_report_that_is_not_json_is_blocked(tmp_path):
+    path = tmp_path / "picks.json"
+    path.write_text("{\"picks\": ")
+    assert run_picks(path).returncode == 2
+
+
+def test_only_a_file_named_picks_json_is_checked(tmp_path):
+    other = tmp_path / "report.json"
+    other.write_text(json.dumps({"picks": {"cell_type": ["nope"]}}))
+    result = run(CHECK_PICKS, write_of(str(other)),
+                 env={"OBS_COLUMN_EVAL_BIN": "/nonexistent"})
+    assert result.returncode == 0
+    assert result.stderr == ""
+
+
+def test_a_scoring_picks_file_is_not_mistaken_for_a_report(tmp_path):
+    """`obs-column-eval score` reads `{dataset_id: ...}` files that are also
+    called picks.json. They have none of a report's keys."""
+    path = tmp_path / "picks.json"
+    path.write_text(json.dumps({"0054013c": {"picks": ["x"], "reasoning": "y"}}))
+    result = run(CHECK_PICKS, write_of(str(path)),
+                 env={"OBS_COLUMN_EVAL_BIN": "/nonexistent"})
+    assert result.returncode == 0
+    assert result.stderr == ""
+
+
+def test_a_picks_checker_that_cannot_run_says_so(tmp_path):
+    """A missing checker must read as 'unchecked', never as 'checked and fine',
+    and must not block the session."""
+    result = run_picks(picks_report(tmp_path, ["nope"]),
+                       OBS_COLUMN_EVAL_BIN="/nonexistent/obs-column-eval")
+    assert result.returncode == 0
+    assert "unchecked" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "payload",
+    ["", "not json at all", "[]", "{}", '{"tool_input": {}}', '{"tool_input": null}'],
+)
+def test_malformed_input_does_not_block_a_picks_write(payload):
+    assert run(CHECK_PICKS, payload).returncode == 0
+
+
+def test_the_picks_manifest_runs_after_the_write():
+    """PostToolUse: the check reads the file, so it has to be on disk."""
+    manifest = json.loads((PICKS_HOOKS / "hooks.json").read_text())
+    events = manifest["hooks"]
+    assert set(events) == {"PostToolUse"}
+    (entry,) = events["PostToolUse"]
+    assert "Write" in entry["matcher"] and "Edit" in entry["matcher"]
+    (hook,) = entry["hooks"]
+    assert hook["command"].endswith('/hooks/check_picks.py"')
+    assert "${CLAUDE_PLUGIN_ROOT}" in hook["command"]
+    assert CHECK_PICKS.is_file()
+

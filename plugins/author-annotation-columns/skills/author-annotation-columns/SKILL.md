@@ -197,6 +197,14 @@ The full contract is a JSON Schema, `picks.schema.json`, in
 For several datasets, write one `picks.json` per dataset, each beside its own
 `obs.parquet`.
 
+A hook checks every `picks.json` as it is written: the shape, a key for every
+requested field type, and that every picked column exists in `source`, spelt
+and cased exactly as obs has it. If the hook rejects the write, its message
+names the column and the nearest real one. Go back to the picker's answer and
+the profile and fix the report. Do not rename a column until the check
+passes, and never report a column that failed it. The first check of a session
+installs the checker, which takes a little longer.
+
 ### Then report
 
 Tell the user: which columns were picked for which field type and why, how many
