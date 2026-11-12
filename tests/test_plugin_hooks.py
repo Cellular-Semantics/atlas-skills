@@ -212,7 +212,7 @@ def test_a_report_naming_real_columns_passes(tmp_path):
 
 
 @needs_checker
-def test_a_report_naming_an_invented_column_is_blocked(tmp_path):
+def test_a_report_naming_an_invented_column_is_flagged(tmp_path):
     result = run_picks(picks_report(tmp_path, ["author_cell_type", "celltype.l3"]))
     assert result.returncode == 2
     assert "`celltype.l3` is not a column" in result.stderr
@@ -221,14 +221,14 @@ def test_a_report_naming_an_invented_column_is_blocked(tmp_path):
 
 
 @needs_checker
-def test_a_recased_column_is_blocked_with_the_real_name(tmp_path):
+def test_a_recased_column_is_flagged_with_the_real_name(tmp_path):
     result = run_picks(picks_report(tmp_path, ["Author_Cell_Type"]))
     assert result.returncode == 2
     assert "did you mean `author_cell_type`" in result.stderr
 
 
 @needs_checker
-def test_a_report_that_is_not_json_is_blocked(tmp_path):
+def test_a_report_that_is_not_json_is_flagged(tmp_path):
     path = tmp_path / "picks.json"
     path.write_text("{\"picks\": ")
     assert run_picks(path).returncode == 2

@@ -4,8 +4,15 @@
 Each column in a report claims to exist in obs. A picker that invents, misspells
 or recases a name, or picks a portal field, writes a report that reads perfectly
 well and is wrong, and a summary written from it hides the mistake. This
-rejects the write instead, and tells the model which name failed and the
-nearest real one.
+flags the report straight after it is written and tells the model which name
+failed and the nearest real one, so the report is fixed before anything is
+said from it.
+
+It does not stop the write: a PostToolUse hook runs after the file is on disk.
+Exit 2 sends stderr back to the model, which is what gets the report fixed.
+The harm is reporting a column that is not in obs, not the file existing for a
+moment, so a check after the write is enough, and it checks exactly what was
+written rather than a replay of an edit.
 
 Self-scoping: it acts only on a file named ``picks.json`` that looks like a
 report. A ``{dataset_id: ...}`` scoring file, the other picks.json in this
@@ -19,7 +26,7 @@ PostToolUse on Write and Edit.
 
 Exit codes:
     0 -- not a report, or a report that passes
-    2 -- a report that fails; Claude sees stderr
+    2 -- a report that fails; the file is written, and Claude sees stderr
 """
 
 from __future__ import annotations

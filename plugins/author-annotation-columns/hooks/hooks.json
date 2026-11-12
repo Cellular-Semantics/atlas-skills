@@ -1,5 +1,5 @@
 {
-  "description": "Checks every picks.json the skill writes: the report matches its schema, every requested field type has an answer, and every picked column exists in the obs table the report names. A picker that invents, misspells or recases a column, or picks a portal field, is caught here before the user is told about it.",
+  "description": "Checks every picks.json the skill writes: the report matches its schema, every requested field type has an answer, and every picked column exists in the obs table the report names. A picker that invents, misspells or recases a column, or picks a portal field, is flagged straight after the write, so the report is fixed before the user is told anything. It does not stop the write itself.",
   "hooks": {
     "PostToolUse": [
       {
