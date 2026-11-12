@@ -33,7 +33,10 @@ have one. See [`docs/sample-fields.md`](../../docs/sample-fields.md).
   and of what each picker sub-agent returns. The tests hold the frozen picks
   and the hand-curated entries to it. One frozen answer fails, and should: it
   picked `BICCN_ontology_term_id`, and no `*_ontology_term_id` column is ever a
-  pick.
+  pick. `check-picks` holds a report to the schema and checks that every
+  picked column is in the obs the report names. That is what the plugin's hook
+  runs. It needs the `check` extra (`jsonschema`, `pyarrow`), so scoring stays
+  dependency-free.
 
 ## Use
 
@@ -47,6 +50,7 @@ obs-column-eval curation                      # the raw CL_KG sheets
 obs-column-eval score picks.json --baseline
 obs-column-eval candidates <profiles-dir>     # what to hand-curate next
 obs-column-eval schema                        # the picks.json contract
+obs-column-eval check-picks picks.json        # ... a report held to it (needs [check])
 ```
 
 `picks.json` takes three shapes. `{dataset_id: [column, ...]}` and
