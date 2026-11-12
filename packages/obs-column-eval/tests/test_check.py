@@ -68,11 +68,34 @@ def test_a_portal_field_is_caught_even_though_it_exists(workdir):
     assert not result["ok"]
 
 
-def test_shape_failures_stop_before_the_obs_is_read(workdir):
-    result = check_report(write(workdir, source="nowhere.parquet",
-                                picks={"celltype": ["x"]}))
-    assert not result["ok"]
-    assert all("source" not in p.split(":")[0] for p in result["problems"])
+def test_a_schema_failure_does_not_hide_a_missing_column(workdir):
+    """Found in a live test: a portal-field pick stopped the check, and the
+    misspelt column beside it went unreported until the first was fixed."""
+    result = check_report(write(workdir, picks={
+        "cell_type": ["author_cell_type", "cell_type"],
+        "tissue": ["layer_dissection"], "disease": []}))
+    assert len(result["problems"]) == 2
+    assert any("`cell_type` is the portal's standardised field" in p
+               for p in result["problems"])
+    assert any("`layer_dissection` is not a column" in p for p in result["problems"])
+
+
+def test_a_misnamed_field_type_still_has_its_columns_checked(workdir):
+    result = check_report(write(workdir, picks={"celltype": ["nope"]}))
+    assert any("`nope` is not a column" in p for p in result["problems"])
+
+
+def test_unchecked_columns_are_said_to_be_unchecked(workdir):
+    result = check_report(write(workdir, source=""))
+    assert "columns not checked against obs: no usable `source`" in result["problems"]
+
+
+def test_the_portal_field_message_does_not_quote_a_regex(workdir):
+    result = check_report(write(workdir, picks={
+        "cell_type": ["cell_type_ontology_term_id"], "tissue": [], "disease": []}))
+    (problem,) = [p for p in result["problems"] if "never a pick" in p]
+    assert "pattern" not in problem
+    assert "is an ontology term id column, never a pick" in problem
 
 
 def test_a_missing_source_fails_rather_than_passing_unchecked(workdir):

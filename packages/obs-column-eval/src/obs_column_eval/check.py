@@ -56,8 +56,36 @@ def shape_problems(report: object) -> list[str]:
     out = []
     for err in sorted(validator.iter_errors(report), key=lambda e: list(e.path)):
         where = "/".join(str(p) for p in err.path) or "(top level)"
-        out.append(f"{where}: {err.message}")
+        out.append(f"{where}: {_readable(err)}")
     return out
+
+
+def _readable(err) -> str:
+    """The schema's message, except where it would show the model a regex.
+
+    The one `not` in the schema is the portal-field ban on a column name, and
+    its raw message quotes the pattern rather than saying what is wrong.
+    """
+    if err.validator == "not" and isinstance(err.instance, str):
+        col = err.instance
+        if col.endswith("_ontology_term_id"):
+            return (f"`{col}` is an ontology term id column, never a pick; "
+                    "pick the column holding the authors' labels")
+        return (f"`{col}` is the portal's standardised field, never a pick; "
+                "pick the authors' own column")
+    return err.message
+
+
+def _usable_picks(report: object) -> dict[str, list[str]]:
+    """Whatever column names can be read out of a report, valid or not.
+
+    Used so that a schema failure does not hide a missing column: every
+    problem is reported in one pass, not one per fix.
+    """
+    if not isinstance(report, dict) or not isinstance(report.get("picks"), dict):
+        return {}
+    return {str(ft): [c for c in cols if isinstance(c, str) and c]
+            for ft, cols in report["picks"].items() if isinstance(cols, list)}
 
 
 def consistency_problems(report: dict) -> list[str]:
@@ -144,24 +172,31 @@ def check_report(path: Path) -> dict:
         return result
 
     problems = shape_problems(report)
-    if problems:
-        result["problems"] = problems
-        return result
+    if not problems:
+        # It assumes the report's structure, so only on a report that has it.
+        problems = consistency_problems(report)
 
-    problems = consistency_problems(report)
-
-    source = Path(report["source"])
-    if not source.is_absolute():
-        source = path.parent / source
-    result["source"] = str(source)
-    if not source.exists():
-        problems.append(f"source: `{report['source']}` does not exist (resolved "
-                        f"to {source}), so no picked column can be confirmed")
+    # Existence runs whatever the schema said, on every name that can be read:
+    # one pass reports every problem, rather than one per round of fixes.
+    picks = _usable_picks(report)
+    raw_source = report.get("source") if isinstance(report, dict) else None
+    if not picks:
+        pass  # nothing to look up; the schema has already said why
+    elif not isinstance(raw_source, str) or not raw_source:
+        problems.append("columns not checked against obs: no usable `source`")
     else:
-        try:
-            problems += existence_problems(report["picks"], source_columns(source))
-        except ValueError as exc:
-            problems.append(f"source: {exc}")
+        source = Path(raw_source)
+        if not source.is_absolute():
+            source = path.parent / source
+        result["source"] = str(source)
+        if not source.exists():
+            problems.append(f"source: `{raw_source}` does not exist (resolved "
+                            f"to {source}), so no picked column can be confirmed")
+        else:
+            try:
+                problems += existence_problems(picks, source_columns(source))
+            except ValueError as exc:
+                problems.append(f"source: {exc}")
 
     result["problems"] = problems
     result["ok"] = not problems
