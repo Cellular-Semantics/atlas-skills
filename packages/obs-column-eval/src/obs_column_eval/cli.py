@@ -4,7 +4,8 @@ Everything prints JSON on stdout, so the eval runner can pipe it around without
 parsing prose.
 
     obs-column-eval datasets                  # the default subset
-    obs-column-eval datasets --all            # all 74
+    obs-column-eval datasets --all            # the whole test set
+    obs-column-eval datasets --tier n73       # one tier: n73 (frozen) or l4
     obs-column-eval gold                      # ground truth, by field type
     obs-column-eval gold --field-type tissue  # ... one field type
     obs-column-eval notes                     # why the awkward calls went that way
@@ -28,7 +29,7 @@ from .check import SCHEMA_PATH as PICKS_SCHEMA
 from .check import check_report
 from .curation import DATA, parse_curation
 from .gold import FIELD_TYPES, flatten, gold_set, notes
-from .manifest import full, subset, with_ground_truth
+from .manifest import TIERS, full, subset, with_ground_truth
 from .score import score_by_field_type, score_picks
 
 FROZEN_PICKS = DATA / "frozen" / "n73_picks.json"
@@ -87,7 +88,10 @@ def main(argv: list[str] | None = None) -> int:
 
     p_ds = sub.add_parser("datasets", help="The datasets to run, with ground truth.")
     p_ds.add_argument("--all", action="store_true",
-                      help="All 74 datasets, not the default subset. Slow and not free.")
+                      help="The whole test set, not the default subset. Slow and not free.")
+    p_ds.add_argument("--tier", choices=TIERS,
+                      help="One tier of the test set: n73 (the frozen published set) "
+                           "or l4 (added from the 2026-11 curation snapshot).")
 
     p_gold = sub.add_parser("gold", help="Ground truth per dataset, by field type.")
     p_gold.add_argument("--field-type", action="append", choices=FIELD_TYPES,
@@ -147,6 +151,8 @@ def main(argv: list[str] | None = None) -> int:
         return 1 if failed else 0
 
     if args.command == "datasets":
+        if args.tier:
+            return _emit(with_ground_truth(full(args.tier)))
         return _emit(with_ground_truth(full() if args.all else subset()))
 
     if args.command == "gold":

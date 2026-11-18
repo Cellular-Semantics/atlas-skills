@@ -187,14 +187,20 @@ def test_every_manifest_dataset_has_a_committed_profile():
     """Re-scoring the picker must need no network. A missing fixture silently
     turns an offline re-score into a 1.5 GB fetch."""
     import json as _json
+    import sys
 
     import benchmark
 
+    sys.path.insert(0, str(pathlib.Path(__file__).parent.parent
+                           / "packages/obs-column-eval/src"))
+    from obs_column_eval import full
+
     prov = _json.loads(benchmark.PROVENANCE.read_text())
     have = {p.stem for p in benchmark.PROFILES.glob("*.txt")}
-    assert len(have) == prov["n_datasets"] == 73
-    # The one absent dataset is absent for a recorded reason, not by accident.
-    assert set(prov["missing"]) & set(prov["missing"])
+    assert len(have) == prov["n_datasets"]
+    # Every dataset in the test set has a profile, or is absent for a recorded
+    # reason -- never by accident. No profile is left over from a dropped one.
+    assert set(full()) == have | set(prov["missing"])
     for dsid, reason in prov["missing"].items():
         assert dsid not in have
         assert len(reason) > 20, f"{dsid} is missing with no explanation"

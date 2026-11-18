@@ -53,13 +53,20 @@ Wilson intervals. A random-pick null over the actual obs schema sizes is compute
 alongside, because "found at least one" is unimpressive when a dataset has four
 cell-type columns out of forty.
 
+**The test set has grown, and the result above has not caught up.** The 2026-11
+curation snapshot (15 CL_KG sheets, pinned commit; see
+[`curation-review-2026-11-17.md`](curation-review-2026-11-17.md)) adds an `l4` tier of
+113 datasets, 112 of them readable, including eye and breast atlases that n73 has
+none of. That brings the test set to 187. The figures above are the frozen `n73` tier
+alone. No picker has been scored on `l4` yet.
+
 The gold set, the metrics and the frozen baseline all ship in
 [`packages/obs-column-eval`](../packages/obs-column-eval), so the numbers are
 reproducible rather than quoted.
 
 ## Reproducing it
 
-The obs profiles are **committed** under `evals/fixtures/profiles/` — 571 KB for the
+The obs profiles are **committed** under `evals/fixtures/profiles/` — about 1.4 MB for the
 whole test set. Re-scoring therefore needs no network and no re-reading of ~1.5 GB, and
 the scored inputs cannot shift under a CELLxGENE re-ingest.
 
@@ -118,11 +125,14 @@ rejects it unmutated.
 - **The curation is hand work, and is the thing being compared against.** Section 2 of
   the curation review lists columns it appears to be missing; until those are settled,
   reported precision understates the picker.
-- **One dataset cannot be read.** `b1b7e4e0` returns HTTP 403 from the CDN — withdrawn
-  or access-restricted, not malformed. It stays in the manifest rather than being
-  dropped, so coverage is not quietly overstated.
-- **Three of the 74 have no curated cell-type column.** For those the correct answer is
-  to pick nothing, which is a real case, but it means "curated columns" and "columns
+- **Two datasets cannot be read.** `b1b7e4e0` (n73) and `3006a39e` (l4) return HTTP
+  403 from the CDN — withdrawn or access-restricted, not malformed. They stay in the
+  manifest rather than being dropped, so coverage is not quietly overstated.
+- **n73 holds four datasets twice**, under two h5ad versions each. It is frozen as
+  measured; `l4` keeps one version per dataset. See section 2.2 of the 2026-11 review.
+- **Three of the 74 have no curated cell-type column**, and three readable l4
+  datasets have none either, each checked in section 3 of the 2026-11 review. For
+  those the correct answer is to pick nothing, which is a real case, but it means "curated columns" and "columns
   that exist" are not the same set.
 - **One picker rule was fitted on a single observation.** Rejecting transgenic driver
   lines (`cre`, with values `Calb2`, `Rorb`, `Gad2`) came from one Patch-seq dataset

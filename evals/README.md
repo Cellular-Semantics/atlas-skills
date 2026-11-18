@@ -63,7 +63,7 @@ failure there point at the same file.
 
 ```sh
 python3 evals/benchmark.py                 # the six default datasets
-python3 evals/benchmark.py --all           # all 74; slow, not free
+python3 evals/benchmark.py --all           # all 187 (n73 + l4); slow, not free
 python3 evals/benchmark.py --profiles-only # refresh the profile cache, no agent
 ```
 

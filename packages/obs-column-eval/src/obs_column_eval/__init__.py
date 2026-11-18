@@ -6,7 +6,8 @@ Five field types: ``cell_type``, ``tissue``, ``development_stage``,
 Two things live here, and nothing else:
 
 - the **gold set** -- a frozen snapshot of the CL_KG curation sheets (cell type
-  only), the 74-dataset CELLxGENE test set they cover, the frozen n=73 picks
+  only), the CELLxGENE test set they cover in two tiers (``n73``, frozen, and
+  ``l4``), the frozen n=73 picks
   that produced the published numbers, and the hand-curated per-dataset entries
   in ``data/sample_fields/`` that carry tissue, stage and disease;
 - the **metrics** -- Jaccard, precision, recall, hit rate, and a random-pick

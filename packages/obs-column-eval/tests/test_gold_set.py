@@ -5,6 +5,7 @@ every published number moves with it, so its shape is pinned here.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -12,6 +13,8 @@ import sys
 import pytest
 from obs_column_eval import full, parse_curation, score_picks, subset, with_ground_truth
 from obs_column_eval.cli import FROZEN_PICKS, main
+from obs_column_eval.curation import CURATION_DIR
+from obs_column_eval.manifest import TIERS
 
 FROZEN_SCORES = FROZEN_PICKS.parent / "n73_scores.json"
 
@@ -42,17 +45,62 @@ def test_celltype_filter_drops_the_other_author_categories():
         sum(len(v["columns"]) for v in unfiltered.values())
 
 
+def test_snapshot_matches_its_recorded_source():
+    """The sheets are a copy of CL_KG at one commit. A hand edit here would move
+    the gold set with no trace; fixes belong in `_CORRECTIONS` instead."""
+    source = json.loads((CURATION_DIR / "SOURCE.json").read_text())
+    assert len(source["commit"]) == 40
+    on_disk = {p.name for p in CURATION_DIR.glob("*.csv")}
+    assert on_disk == set(source["files"])
+    for name, entry in source["files"].items():
+        digest = hashlib.sha256((CURATION_DIR / name).read_bytes()).hexdigest()
+        assert digest == entry["sha256"], f"{name} differs from the recorded snapshot"
+
+
+def test_plugin_generated_curation_is_not_ground_truth():
+    """Issue #116's sheet was written with this plugin's own picks. Scoring the
+    plugin against it would be circular."""
+    source = json.loads((CURATION_DIR / "SOURCE.json").read_text())
+    assert "Curated_nlm-ckn_Datasets_Issue116.csv" in source["excluded"]
+    assert not any("Issue116" in p.name for p in CURATION_DIR.iterdir())
+
+
 def test_manifest_is_the_whole_test_set():
     manifest = full()
-    assert len(manifest) == 74
+    assert {e["tier"] for e in manifest.values()} == set(TIERS)
+    assert len(full("n73")) == 74
+    assert len(full("n73")) + len(full("l4")) == len(manifest)
     for dsid, entry in manifest.items():
         assert entry["url"].endswith(f"{dsid}.h5ad"), dsid
         assert entry["url"].startswith("https://datasets.cellxgene.cziscience.com/")
+        assert not entry.get("pending_choice"), f"{dsid}: version choice never settled"
 
 
-def test_one_manifest_entry_is_known_unreadable():
+def test_l4_holds_each_cellxgene_dataset_once():
+    """Two versions of one dataset are near-duplicates; scoring both would weight
+    it twice. l4 keeps one and lists the rest as aliases -- and adds nothing for
+    a dataset n73 already covers. (n73 itself is frozen and does hold four
+    datasets twice; see docs/curation-review-2026-11-17.md.)"""
+    n73_cxg = {c for e in full("n73").values() for c in e["cxg_dataset_ids"]}
+    seen: set[str] = set()
+    for dsid, entry in full("l4").items():
+        ids = set(entry["cxg_dataset_ids"])
+        assert ids, f"{dsid} has no CELLxGENE dataset id"
+        assert not ids & n73_cxg, f"{dsid} duplicates an n73 dataset"
+        assert not ids & seen, f"{dsid} duplicates another l4 entry"
+        seen |= ids
+        for alias in entry.get("aliases", []):
+            assert alias not in full(), f"{dsid}: alias {alias} is also scored"
+
+
+def test_unknown_tier_is_refused():
+    with pytest.raises(ValueError):
+        full("n74")
+
+
+def test_one_n73_entry_is_known_unreadable():
     """Kept rather than dropped: removing it would quietly overstate coverage."""
-    unreadable = [d for d, e in full().items() if not e["n_cells"]]
+    unreadable = [d for d, e in full("n73").items() if not e["n_cells"]]
     assert len(unreadable) == 1
 
 
@@ -78,7 +126,8 @@ def test_subset_covers_the_traps_the_rules_exist_for():
 def test_ground_truth_join_covers_every_dataset():
     truth = with_ground_truth()
     assert set(truth) == set(full())
-    assert sum(1 for e in truth.values() if not e["curated"]) == 3
+    n73 = with_ground_truth(full("n73"))
+    assert sum(1 for e in n73.values() if not e["curated"]) == 3
 
 
 def test_frozen_baseline_rescores_to_its_stored_value():
@@ -133,6 +182,11 @@ def test_cli_datasets_defaults_to_the_subset(capsys):
 
 def test_cli_datasets_all(capsys):
     assert main(["datasets", "--all"]) == 0
+    assert len(json.loads(capsys.readouterr().out)) == len(full())
+
+
+def test_cli_datasets_by_tier(capsys):
+    assert main(["datasets", "--tier", "n73"]) == 0
     assert len(json.loads(capsys.readouterr().out)) == 74
 
 

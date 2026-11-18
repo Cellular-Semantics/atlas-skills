@@ -7,7 +7,7 @@ the picker is *correct*, on datasets where curators have written down the
 answer.
 
     python3 evals/benchmark.py                  # the six default datasets
-    python3 evals/benchmark.py --all            # all 74; slow, not free
+    python3 evals/benchmark.py --all            # all 187 (n73 + l4); slow, not free
     python3 evals/benchmark.py --dataset e48806af-87d1-45ae-843a-c7ee06eac672
     python3 evals/benchmark.py --profiles-only  # refresh the profile cache, no agent
 
@@ -41,7 +41,7 @@ from graders import classify_error
 HERE = pathlib.Path(__file__).parent
 
 #: Profiles are COMMITTED, not cached. They are the deterministic output of a
-#: pinned CLI, 570 KB for the whole test set, and re-fetching them means ~1.5 GB
+#: pinned CLI, ~1.4 MB for the whole test set, and re-fetching them means several GB
 #: of range reads and the better part of an hour -- which made re-scoring the
 #: picker something you thought twice about. Committed, the accuracy arm needs
 #: no network at all, and anyone can reproduce a published number.
@@ -208,6 +208,8 @@ def write_provenance(profiles: dict, unreadable: list[str]) -> None:
 
     old = json.loads(PROVENANCE.read_text()) if PROVENANCE.exists() else {}
     old_missing = old.get("missing", {})
+    old_profiles = old.get("profiles", {})
+    today = time.strftime("%Y-%m-%d")
 
     version = _run([*H5AD_OBS, "--version"])
     captured_by = (version.stdout.strip() or version.stderr.strip()) or "unknown"
@@ -221,10 +223,16 @@ def write_provenance(profiles: dict, unreadable: list[str]) -> None:
         n_scanned = int(header.split("; ")[1].split()[0])
         size = path.stat().st_size
         total += size
+        sha = hashlib.sha256(text.encode()).hexdigest()[:16]
+        prior = old_profiles.get(dsid, {})
         entries[dsid] = {
             "n_rows": n_rows, "n_columns": n_cols, "n_scanned": n_scanned,
             "bytes": size,
-            "sha256": hashlib.sha256(text.encode()).hexdigest()[:16],
+            "sha256": sha,
+            # When this file was captured. An unchanged file keeps its date (or
+            # the run-wide date it had before per-file dates were recorded).
+            "captured": (prior.get("captured") or old.get("captured") or today)
+                        if prior.get("sha256") == sha else today,
         }
 
     PROVENANCE.write_text(json.dumps({
@@ -232,7 +240,7 @@ def write_provenance(profiles: dict, unreadable: list[str]) -> None:
                         "set, captured once and committed so re-scoring the picker "
                         "needs no network. Regenerate with `python3 evals/benchmark.py "
                         "--all --profiles-only --force-profiles`."),
-        "captured": time.strftime("%Y-%m-%d"),
+        "captured": today,
         "captured_by": captured_by,
         "commit": commit,
         "n_datasets": len(entries),
@@ -297,7 +305,7 @@ def pick(dsid: str, path: pathlib.Path, timeout: int, *, force: bool = False,
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("--all", action="store_true", help="All 74 datasets, not the six.")
+    ap.add_argument("--all", action="store_true", help="The whole test set (n73 + l4), not the six.")
     ap.add_argument("--dataset", action="append", default=[], help="Just this one (repeatable).")
     ap.add_argument("--jobs", type=int, default=3, help="Concurrent picker runs (default 3).")
     ap.add_argument("--profile-jobs", type=int, default=4,
@@ -330,6 +338,7 @@ def main() -> int:
     print(f"\n== profiles ({args.profile_jobs} at a time if fetching) ==")
     check_profile_provenance()
     profiles, unreadable = {}, []
+    already = {p.stem for p in PROFILES.glob("*.txt")}
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.profile_jobs) as pool:
         jobs = {pool.submit(profile, d, e, force=args.force_profiles): d
                 for d, e in chosen.items()}
@@ -342,12 +351,15 @@ def main() -> int:
                 print(f"  {dsid}  {cells:>9} cells  {path.stat().st_size:>6} B")
             else:
                 unreadable.append(dsid)
-    if args.force_profiles and args.all:
+    fetched = set(profiles) - already
+    if args.all and (args.force_profiles or fetched):
         # Only a full run can rewrite the manifest: a partial one would drop
-        # every dataset it did not look at.
+        # every dataset it did not look at. A run that only filled gaps -- new
+        # datasets added to the test set -- rewrites it too, keeping the
+        # capture date of every profile it did not touch.
         write_provenance(profiles, unreadable)
         print(f"  provenance rewritten: {PROVENANCE}")
-    elif args.force_profiles:
+    elif args.force_profiles or fetched:
         print("  ! provenance NOT rewritten -- it describes the whole test set, so "
               "only --all can regenerate it.")
 
