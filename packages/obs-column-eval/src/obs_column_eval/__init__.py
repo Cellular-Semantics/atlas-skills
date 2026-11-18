@@ -26,7 +26,9 @@ from .score import (
     hypergeom_p_hit,
     jaccard,
     score_by_field_type,
+    score_by_tier,
     score_picks,
+    summarise,
     wilson,
 )
 
@@ -38,4 +40,4 @@ except _metadata.PackageNotFoundError:  # a source tree, not an install
 __all__ = ["CURATION_DIR", "FIELD_TYPES", "__version__", "bootstrap_ci", "flatten",
            "full", "gold_set", "hypergeom_p_hit", "jaccard", "notes",
            "parse_curation", "sample_field_gold", "score_by_field_type",
-           "score_picks", "subset", "wilson", "with_ground_truth"]
+           "score_by_tier", "score_picks", "subset", "summarise", "wilson", "with_ground_truth"]

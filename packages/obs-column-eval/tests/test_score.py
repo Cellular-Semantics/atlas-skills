@@ -2,7 +2,15 @@
 from __future__ import annotations
 
 import pytest
-from obs_column_eval import bootstrap_ci, hypergeom_p_hit, jaccard, score_picks, wilson
+from obs_column_eval import (
+    bootstrap_ci,
+    hypergeom_p_hit,
+    jaccard,
+    score_by_tier,
+    score_picks,
+    summarise,
+    wilson,
+)
 
 
 def test_jaccard():
@@ -73,3 +81,48 @@ def test_null_model_needs_the_schema_size():
     assert row["n_obs_cols"] == 8
     assert 0 < row["null_hit_p"] < 1
     assert "null_hit_rate_expected" in with_schema["overall"]
+
+
+# --- tiers -------------------------------------------------------------------
+
+def _rows(scores: dict[str, float]) -> list[dict]:
+    return [{"dsid": d, "jaccard": j, "precision": j, "recall": j, "hit": int(j > 0)}
+            for d, j in scores.items()]
+
+
+MANIFEST = {
+    "a1": {"tier": "n73", "group": "Gut", "cxg_dataset_ids": ["A"]},
+    "a2": {"tier": "n73", "group": "Gut", "cxg_dataset_ids": ["A"]},  # same dataset
+    "b": {"tier": "n73", "group": "Lung", "cxg_dataset_ids": ["B"]},
+    "c": {"tier": "l4", "group": "Retina", "cxg_dataset_ids": ["C"]},
+}
+
+
+def test_each_tier_is_scored_as_listed():
+    out = score_by_tier(_rows({"a1": 1.0, "a2": 0.0, "b": 1.0, "c": 0.5}), MANIFEST)
+    assert out["tiers"]["n73"]["n"] == 3
+    assert out["tiers"]["n73"]["jaccard"]["mean"] == pytest.approx(2 / 3)
+    assert out["tiers"]["l4"]["n"] == 1
+
+
+def test_combined_figure_counts_a_dataset_once():
+    """Two versions of one CELLxGENE dataset weigh once in `all`, averaged,
+    and are a hit only if both were."""
+    out = score_by_tier(_rows({"a1": 1.0, "a2": 0.0, "b": 1.0, "c": 0.5}), MANIFEST)
+    both = out["all"]
+    assert both["n"] == 3 and both["n_entries"] == 4
+    assert both["jaccard"]["mean"] == pytest.approx((0.5 + 1.0 + 0.5) / 3)
+    assert both["hit_rate"]["k"] == 2
+
+
+def test_tier_scoring_reports_groups_and_strays():
+    out = score_by_tier(_rows({"c": 0.5, "zzz": 1.0}), MANIFEST)
+    assert out["by_group"]["l4"] == {"Retina": {"n": 1, "jaccard": 0.5}}
+    assert out["outside_test_set"] == ["zzz"]
+    assert "zzz" not in str(out["tiers"])
+
+
+def test_summarise_matches_score_picks():
+    scored = score_picks({"x": ["a"], "y": ["b", "c"]},
+                         {"x": {"columns": ["a"]}, "y": {"columns": ["b"]}})
+    assert summarise(scored["per_dataset"]) == scored["overall"]

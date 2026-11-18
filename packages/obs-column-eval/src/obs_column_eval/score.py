@@ -98,8 +98,14 @@ def score_picks(
 
         rows.append(row)
 
+    return {"overall": summarise(rows), "per_dataset": rows}
+
+
+def summarise(rows: list[Mapping]) -> dict:
+    """The ``overall`` block for a list of per-dataset rows: mean, sd and a
+    bootstrap 95% CI for each metric, and the hit rate with a Wilson CI."""
     n = len(rows)
-    overall = {"n": n}
+    overall: dict = {"n": n}
     for k in ("jaccard", "precision", "recall"):
         vals = [r[k] for r in rows]
         m = sum(vals) / n if n else 0.0
@@ -114,8 +120,62 @@ def score_picks(
     null_hit_ps = [r["null_hit_p"] for r in rows if "null_hit_p" in r]
     if null_hit_ps:
         overall["null_hit_rate_expected"] = sum(null_hit_ps) / len(null_hit_ps)
+    return overall
 
-    return {"overall": overall, "per_dataset": rows}
+
+def _unique_datasets(rows: list[Mapping], manifest: Mapping[str, dict]) -> list[dict]:
+    """Collapse rows that are versions of one CELLxGENE dataset into one row.
+
+    Versions are linked when they share a CxG dataset id. A merged row averages
+    jaccard, precision and recall across its versions, and counts as a hit only
+    if every version was a hit -- so a dataset scored twice weighs once.
+    """
+    groups: list[tuple[set[str], list[Mapping]]] = []
+    for row in rows:
+        ids = set(manifest[row["dsid"]].get("cxg_dataset_ids") or [row["dsid"]])
+        linked = [g for g in groups if g[0] & ids]
+        merged_ids = ids.union(*(g[0] for g in linked))
+        merged_rows = [row] + [r for g in linked for r in g[1]]
+        groups = [g for g in groups if g not in linked] + [(merged_ids, merged_rows)]
+    out = []
+    for _, members in groups:
+        out.append({
+            "dsid": sorted(r["dsid"] for r in members)[0],
+            "versions": sorted(r["dsid"] for r in members),
+            **{k: sum(r[k] for r in members) / len(members)
+               for k in ("jaccard", "precision", "recall")},
+            "hit": min(r["hit"] for r in members),
+        })
+    return out
+
+
+def score_by_tier(rows: list[Mapping], manifest: Mapping[str, dict]) -> dict:
+    """Split per-dataset rows by the test-set tier each dataset belongs to.
+
+    Returns ``{"tiers": {tier: overall}, "all": overall, "by_group": {tier:
+    {sheet: {"n", "jaccard"}}}, "outside_test_set": [dsid]}``.
+
+    Each tier is scored exactly as its datasets are listed, so ``n73`` still
+    reproduces its published figure, duplicates and all. ``all`` counts each
+    CELLxGENE dataset once (see ``_unique_datasets``): the four n73 holds under
+    two versions would otherwise weigh double in a combined figure.
+    """
+    inside = [r for r in rows if r["dsid"] in manifest]
+    tiers: dict[str, list[Mapping]] = {}
+    by_group: dict[str, dict[str, list[float]]] = {}
+    for row in inside:
+        entry = manifest[row["dsid"]]
+        tiers.setdefault(entry["tier"], []).append(row)
+        by_group.setdefault(entry["tier"], {}).setdefault(entry["group"], []).append(row["jaccard"])
+    unique = _unique_datasets(inside, manifest)
+    return {
+        "tiers": {t: summarise(rs) for t, rs in sorted(tiers.items())},
+        "all": {**summarise(unique), "n_entries": len(inside)},
+        "by_group": {t: {g: {"n": len(js), "jaccard": sum(js) / len(js)}
+                         for g, js in sorted(groups.items())}
+                     for t, groups in sorted(by_group.items())},
+        "outside_test_set": sorted(r["dsid"] for r in rows if r["dsid"] not in manifest),
+    }
 
 
 def score_by_field_type(

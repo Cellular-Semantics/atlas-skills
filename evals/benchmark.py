@@ -8,6 +8,8 @@ answer.
 
     python3 evals/benchmark.py                  # the six default datasets
     python3 evals/benchmark.py --all            # all 187 (n73 + l4); slow, not free
+    python3 evals/benchmark.py --tier l4        # one tier
+    python3 evals/benchmark.py --tier l4 --freeze   # ... and make it l4's frozen baseline
     python3 evals/benchmark.py --dataset e48806af-87d1-45ae-843a-c7ee06eac672
     python3 evals/benchmark.py --profiles-only  # refresh the profile cache, no agent
 
@@ -39,6 +41,9 @@ import time
 from graders import classify_error
 
 HERE = pathlib.Path(__file__).parent
+#: Where --freeze writes a tier's baseline: the working tree's obs-column-eval,
+#: so the new baseline ships with the package's next release.
+EVAL_SRC = HERE.parent / "packages" / "obs-column-eval" / "src"
 
 #: Profiles are COMMITTED, not cached. They are the deterministic output of a
 #: pinned CLI, ~1.4 MB for the whole test set, and re-fetching them means several GB
@@ -145,11 +150,20 @@ def _picker_provenance() -> dict:
     """
     out = {}
     listing = _run(["claude", "plugin", "list"]).stdout
-    match = re.search(r"author-annotation-columns@\S+\s+Version:\s*(\S+)\s+Scope:\s*(\S+)",
-                      listing, re.DOTALL)
-    if match:
-        out["plugin"] = (f"author-annotation-columns {match.group(1)} "
-                         f"({match.group(2)} scope)")
+    # Every install of the plugin, with its status. The one that ran is an
+    # enabled one, local scope first (that is what a working-tree run uses);
+    # taking the first listed would name a disabled install from another
+    # marketplace.
+    installs = re.findall(
+        r"author-annotation-columns@(\S+)\s+Version:\s*(\S+)(?:\s+Read from:[^\n]*)?"
+        r"\s+Scope:\s*(\S+)\s+Status:\s*\S+\s*(\w+)", listing)
+    enabled = [i for i in installs if i[3] == "enabled"]
+    enabled.sort(key=lambda i: i[2] != "local")
+    if enabled:
+        source, version, scope, _ = enabled[0]
+        out["plugin"] = f"author-annotation-columns {version} ({scope} scope, {source})"
+    else:
+        out["plugin"] = "author-annotation-columns: no enabled install found"
     sha = _run(["git", "rev-parse", "--short", "HEAD"], cwd=HERE).stdout.strip()
     if sha:
         out["commit"] = sha
@@ -160,8 +174,9 @@ def _picker_provenance() -> dict:
     return out
 
 
-def datasets(all_: bool, only: list[str]) -> dict[str, dict]:
-    out = _run([*EVAL_CLI, "datasets", *(["--all"] if all_ else [])])
+def datasets(all_: bool, only: list[str], tier: str | None = None) -> dict[str, dict]:
+    flags = ["--tier", tier] if tier else (["--all"] if all_ else [])
+    out = _run([*EVAL_CLI, "datasets", *flags])
     if out.returncode:
         sys.exit(f"obs-column-eval failed:\n{out.stderr}")
     chosen = json.loads(out.stdout)
@@ -303,9 +318,55 @@ def pick(dsid: str, path: pathlib.Path, timeout: int, *, force: bool = False,
     return row
 
 
+def _report(title: str, block: dict) -> None:
+    print(f"\n== {title} ==")
+    for metric in ("jaccard", "precision", "recall"):
+        m = block[metric]
+        print(f"  {metric:10s} {m['mean']:.3f}  95% CI {m['ci95'][0]:.2f}-{m['ci95'][1]:.2f}")
+    hit = block["hit_rate"]
+    print(f"  hit rate   {hit['k']}/{hit['n']}")
+
+
+def freeze_baseline(tier: str, picks: dict, result: dict, run_info: dict,
+                    chosen: dict) -> None:
+    """Write a run as a tier's frozen baseline, beside n73's in obs-column-eval.
+
+    Refuses a partial run: a baseline that silently covers part of a tier would
+    be compared against full runs later, and every delta would be wrong.
+    """
+    readable = set(chosen) - set(run_info["unreadable"])
+    missing = sorted(readable - set(picks))
+    if missing:
+        sys.exit(f"not freezing: no picks for {len(missing)} readable {tier} "
+                 f"datasets ({', '.join(missing[:5])}...). Re-run to fill them.")
+    frozen_dir = EVAL_SRC / "obs_column_eval" / "data" / "frozen"
+    (frozen_dir / f"{tier}_picks.json").write_text(
+        json.dumps(dict(sorted(picks.items())), indent=2) + "\n")
+    tier_block = result["by_tier"]["tiers"][tier]
+    (frozen_dir / f"{tier}_scores.json").write_text(json.dumps({
+        "overall": tier_block,
+        "_provenance": {
+            "note": f"The first picker scored on {tier}, frozen as its baseline. "
+                    "Later runs on this tier report their delta against it.",
+            "picker": run_info["picker"],
+            "date": run_info["date"],
+            "gold_snapshot": json.loads(
+                (frozen_dir.parent / "curation" / "SOURCE.json").read_text())["commit"],
+        },
+    }, indent=2) + "\n")
+    print(f"\nfrozen as the {tier} baseline -> {frozen_dir}/{tier}_*.json")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--all", action="store_true", help="The whole test set (n73 + l4), not the six.")
+    ap.add_argument("--tier", choices=("n73", "l4"),
+                    help="One tier of the test set instead of the six: n73 (frozen, "
+                         "published) or l4 (added from the 2026-11 snapshot).")
+    ap.add_argument("--freeze", action="store_true",
+                    help="With --tier l4: write this run's picks and scores as l4's "
+                         "frozen baseline in obs-column-eval. Only for a run that "
+                         "covered the whole tier. n73's baseline is never rewritten.")
     ap.add_argument("--dataset", action="append", default=[], help="Just this one (repeatable).")
     ap.add_argument("--jobs", type=int, default=3, help="Concurrent picker runs (default 3).")
     ap.add_argument("--profile-jobs", type=int, default=4,
@@ -331,8 +392,10 @@ def main() -> int:
                          "gitignored; this is the one that goes in a PR, so a change to "
                          "the picker shows up as a diff in review rather than a claim.")
     args = ap.parse_args()
+    if args.freeze and args.tier != "l4":
+        ap.error("--freeze needs --tier l4: n73's baseline is frozen as published")
 
-    chosen = datasets(args.all, args.dataset)
+    chosen = datasets(args.all, args.dataset, args.tier)
     print(f"{len(chosen)} datasets")
 
     print(f"\n== profiles ({args.profile_jobs} at a time if fetching) ==")
@@ -352,7 +415,8 @@ def main() -> int:
             else:
                 unreadable.append(dsid)
     fetched = set(profiles) - already
-    if args.all and (args.force_profiles or fetched):
+    whole = args.all or args.tier
+    if whole and (args.force_profiles or fetched):
         # Only a full run can rewrite the manifest: a partial one would drop
         # every dataset it did not look at. A run that only filled gaps -- new
         # datasets added to the test set -- rewrites it too, keeping the
@@ -361,7 +425,7 @@ def main() -> int:
         print(f"  provenance rewritten: {PROVENANCE}")
     elif args.force_profiles or fetched:
         print("  ! provenance NOT rewritten -- it describes the whole test set, so "
-              "only --all can regenerate it.")
+              "only --all or --tier can regenerate it.")
 
     if args.profiles_only:
         print(f"\n{len(profiles)} profiles under {PROFILES}")
@@ -411,21 +475,37 @@ def main() -> int:
     (out_dir / "scores.json").write_text(scored.stdout)
 
     # This benchmark is cell-type only: it exists to stay comparable to the
-    # frozen n=73, and the frozen picks speak to no other field type.
+    # frozen baselines, and the frozen picks speak to no other field type.
     result = result["by_field_type"]["cell_type"]
     overall = result["overall"]
-    print(f"\n== n={overall['n']} ==")
-    for metric in ("jaccard", "precision", "recall"):
-        block = overall[metric]
-        print(f"  {metric:10s} {block['mean']:.3f}  "
-              f"95% CI {block['ci95'][0]:.2f}-{block['ci95'][1]:.2f}")
-    hit = overall["hit_rate"]
-    print(f"  hit rate   {hit['k']}/{hit['n']}")
-    base = (result.get("baseline") or {}).get("overall")
-    if base:
-        delta = overall["jaccard"]["mean"] - base["jaccard"]["mean"]
-        print(f"  frozen n=73 picker on the same datasets: "
-              f"{base['jaccard']['mean']:.3f}  (delta {delta:+.3f})")
+    by_tier = result.get("by_tier", {})
+    baselines = (json.loads(scored.stdout).get("baseline") or {})
+    for tier, block in by_tier.get("tiers", {}).items():
+        _report(f"{tier} ({block['n']} scored)", block)
+        base = (baselines.get(tier) or {}).get("overall")
+        if base:
+            delta = block["jaccard"]["mean"] - base["jaccard"]["mean"]
+            print(f"  {baselines[tier]['source']}, same {base['n']} datasets: "
+                  f"{base['jaccard']['mean']:.3f}  (delta {delta:+.3f})")
+        else:
+            print(f"  no frozen {tier} baseline yet")
+    tiers = by_tier.get("tiers", {})
+    if len(tiers) > 1:
+        both = by_tier["all"]
+        _report(f"all ({both['n']} unique CELLxGENE datasets, "
+                f"{both['n_entries']} entries)", both)
+        if {"n73", "l4"} <= set(tiers):
+            gap = tiers["n73"]["jaccard"]["mean"] - tiers["l4"]["jaccard"]["mean"]
+            print(f"  gap n73 - l4: {gap:+.3f}  (how much the picker leans on the "
+                  "datasets it was developed against)")
+    for tier, groups in by_tier.get("by_group", {}).items():
+        if tier == "l4":
+            print("\n== l4 by sheet ==")
+            for group, g in sorted(groups.items(), key=lambda kv: kv[1]["jaccard"]):
+                print(f"  {g['jaccard']:.3f}  ({g['n']:>2})  {group}")
+    if by_tier.get("outside_test_set"):
+        print(f"\n  not in the test set, scored but in no tier: "
+              f"{', '.join(by_tier['outside_test_set'])}")
 
     print("\n== per dataset ==")
     for row in sorted(result["per_dataset"], key=lambda r: r["jaccard"]):
@@ -436,21 +516,26 @@ def main() -> int:
         if row["agent_extras"]:
             print(f"      extra : {', '.join(row['agent_extras'])}")
 
+    run_info = {
+        "date": time.strftime("%Y-%m-%d"),
+        "datasets": args.tier or ("all" if args.all else "subset"),
+        "n_scored": overall["n"],
+        "n_requested": len(chosen),
+        "unreadable": sorted(unreadable),
+        "no_picks_returned": sorted(r["dsid"] for r in failed),
+        "picker": _picker_provenance(),
+    }
+    if args.freeze:
+        freeze_baseline(args.tier, picks, result, run_info, chosen)
+
     if args.record:
         record = pathlib.Path(args.record)
         record.parent.mkdir(parents=True, exist_ok=True)
         record.write_text(json.dumps({
-            "run": {
-                "date": time.strftime("%Y-%m-%d"),
-                "datasets": "all" if args.all else "subset",
-                "n_scored": overall["n"],
-                "n_requested": len(chosen),
-                "unreadable": sorted(unreadable),
-                "no_picks_returned": sorted(r["dsid"] for r in failed),
-                "picker": _picker_provenance(),
-            },
+            "run": run_info,
             "overall": overall,
-            "baseline": result.get("baseline"),
+            "by_tier": by_tier,
+            "baseline": baselines,
             "per_dataset": result["per_dataset"],
         }, indent=2) + "\n")
         print(f"\nrecorded -> {record}")

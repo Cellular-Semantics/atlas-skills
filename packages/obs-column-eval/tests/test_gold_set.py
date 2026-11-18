@@ -121,6 +121,20 @@ def test_subset_covers_the_traps_the_rules_exist_for():
     # a range of obs sizes, so cost behaviour is exercised too
     sizes = [e["n_cells"] for e in truth.values()]
     assert min(sizes) < 5_000 and max(sizes) > 100_000
+    # both tiers, so the cheap run notices a picker that only suits n73
+    assert {full()[d]["tier"] for d in truth} == {"n73", "l4"}
+
+
+def test_cli_score_splits_cell_type_by_tier(capsys):
+    """Re-scoring the frozen n73 picks through the CLI gives back, in its n73
+    tier, exactly the stored figure: the split must not change a number."""
+    main(["score", str(FROZEN_PICKS)])
+    by_tier = json.loads(capsys.readouterr().out)["by_field_type"]["cell_type"]["by_tier"]
+    stored = json.loads(FROZEN_SCORES.read_text())["overall"]
+    assert set(by_tier["tiers"]) == {"n73"}
+    assert by_tier["tiers"]["n73"]["jaccard"]["mean"] == pytest.approx(stored["jaccard"]["mean"])
+    # n73 holds four datasets twice; the combined figure counts each once
+    assert by_tier["all"]["n_entries"] - by_tier["all"]["n"] == 4
 
 
 def test_ground_truth_join_covers_every_dataset():
@@ -208,7 +222,8 @@ def test_cli_score_baseline_is_like_for_like(capsys):
     main(["score", str(picks), "--baseline"])
     payload = json.loads(capsys.readouterr().out)
     scored = payload["by_field_type"]["cell_type"]
-    assert payload["baseline"]["n_shared_datasets"] == scored["overall"]["n"]
+    assert set(payload["baseline"]) <= {"n73", "l4"}
+    assert payload["baseline"]["n73"]["n_shared_datasets"] == scored["overall"]["n"]
 
 
 def test_cli_version():
@@ -249,15 +264,19 @@ def test_additions_do_not_leak_into_the_unfiltered_view():
 
 
 def test_predicted_label_columns_are_still_out():
-    """scanvi_label and transf_ann_level_* are model output, not author
-    assertion. Section 3.2 of the review is open; until it is settled they must
-    not drift into the gold set."""
+    """The gold set follows the curators dataset by dataset on predicted labels,
+    and adds none of its own. CL_KG#118 curated `predicted.celltype.l2` *in* on
+    c2054d78 (l4); the HLCA sheets leave scanvi_label and transf_ann_level_*
+    out on these two n73 datasets. Neither may change through `_ADDITIONS`:
+    that would move a frozen baseline on a judgment call that is the
+    curators' to make."""
     curation = parse_curation()
     for dsid in ("b13072bd-9cb6-42ca-9f4f-01252baef273",
                  "b351804c-293e-4aeb-9c4c-043db67f4540"):
         cols = curation[dsid]["columns"]
         assert "scanvi_label" not in cols
         assert not [c for c in cols if c.startswith("transf_ann_level_")]
+    assert curation["c2054d78-3e98-4313-a9e1-60c9a6100bee"]["columns"] == ["predicted.celltype.l2"]
 
 
 # --- field types and the generalised gold set --------------------------------
