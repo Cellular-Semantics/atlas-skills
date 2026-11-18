@@ -37,11 +37,14 @@ have one. See [`docs/sample-fields.md`](../../docs/sample-fields.md).
 
   Two are unreadable (HTTP 403) and are kept as such rather than dropped.
   `scripts/extend_manifest.py` rebuilds the manifest from the snapshot.
-- **The default subset** (`data/subset.json`) — six datasets, each with a written
-  reason for being there. Running all 187 is slow and not free; this is what the
-  eval runs by default.
-- **The frozen baseline** (`data/frozen/`) — the n=73 picks and scores behind the
-  published Jaccard 0.81, so a new run can be compared like for like.
+- **The default subset** (`data/subset.json`) — eight datasets, each with a
+  written reason for being there: six from n73 and two from l4 (breast, retina),
+  so the cheap run covers both tiers. Running all 187 is slow and not free; this
+  is what the eval runs by default.
+- **The frozen baselines** (`data/frozen/`) — one per tier, so a new run is
+  compared like for like. `n73_*` is the predecessor picker behind the
+  published Jaccard 0.81. `l4_*` is the first picker scored on l4, written by
+  `evals/benchmark.py --tier l4 --freeze`.
 - **The report contract** (`schemas/picks.schema.json`) — the shape of the
   `picks.json` the `author-annotation-columns` skill writes for each dataset,
   and of what each picker sub-agent returns. The tests hold the frozen picks
@@ -55,14 +58,14 @@ have one. See [`docs/sample-fields.md`](../../docs/sample-fields.md).
 ## Use
 
 ```sh
-obs-column-eval datasets                      # the six default datasets + ground truth
+obs-column-eval datasets                      # the eight default datasets + ground truth
 obs-column-eval datasets --all                # all 187
 obs-column-eval datasets --tier l4            # one tier: n73 or l4
 obs-column-eval gold                          # ground truth, keyed by field type
 obs-column-eval gold --field-type tissue      # one field type
 obs-column-eval notes                         # why the awkward calls went that way
 obs-column-eval curation                      # the raw CL_KG sheets
-obs-column-eval score picks.json --baseline
+obs-column-eval score picks.json --baseline   # per tier, vs each tier's frozen picks
 obs-column-eval candidates <profiles-dir>     # what to hand-curate next
 obs-column-eval schema                        # the picks.json contract
 obs-column-eval check-picks picks.json        # ... a report held to it (needs [check])

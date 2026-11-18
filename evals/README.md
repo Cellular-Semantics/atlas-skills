@@ -56,21 +56,27 @@ $0.20–0.50 per run, ~$2 for the suite. One run per case by default;
 | `label-beside-cluster-index` | rejecting `seurat_clusters` does not cost `author_cell_type` |
 | `standardised-request-does-not-trigger` | a request for the portal's `cell_type` must not spend a picker |
 
-Each is one of the six datasets in the benchmark subset, so a failure here and a
+Each is one of the datasets in the benchmark subset, so a failure here and a
 failure there point at the same file.
 
 ## `benchmark.py` — is the picker correct
 
 ```sh
-python3 evals/benchmark.py                 # the six default datasets
+python3 evals/benchmark.py                 # the eight default datasets
 python3 evals/benchmark.py --all           # all 187 (n73 + l4); slow, not free
+python3 evals/benchmark.py --tier l4       # one tier (~$24 for l4)
+python3 evals/benchmark.py --tier l4 --freeze  # ... and make it l4's baseline
 python3 evals/benchmark.py --profiles-only # refresh the profile cache, no agent
 ```
 
 **Cell type only.** Scored against the CL_KG gold set in
-`packages/obs-column-eval`, and reported next to the frozen n=73 picker on the
-same datasets, so a change is visible as a delta rather than an absolute. See
-[`docs/benchmark.md`](../docs/benchmark.md).
+`packages/obs-column-eval`. **The report is per tier**: n73 and l4 each get
+their own metrics and their own delta against that tier's frozen baseline, on
+the same datasets, so a change is visible as a delta rather than an absolute.
+A run covering both tiers adds an `all` figure that counts each CELLxGENE
+dataset once (n73 holds four twice; their scores are averaged), the n73 - l4
+gap (how much the picker leans on the datasets it was developed against), and
+l4 by curation sheet. See [`docs/benchmark.md`](../docs/benchmark.md).
 
 There is no equivalent arm for tissue, stage and disease yet — the gold set is
 one dataset. `obs-column-eval candidates evals/fixtures/profiles` narrows what

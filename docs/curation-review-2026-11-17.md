@@ -166,3 +166,43 @@ This is the open question from the 2026-09 review, section 3.2, in a new place.
 `predicted.celltype.l2` is an Azimuth prediction, not an author assertion. Curating it
 as other would settle `c2054d78` as "pick nothing". A "predicted cell type" `Content`
 value would settle it and the HLCA cases together.
+
+---
+
+## 4. Found after the upstream fix
+
+### 4.1 A curated column that is constant in obs. **Open; not changed on read.**
+
+`5dc1e511` (l4, `Curated_Breast_Data_KG_V2`, breast immune cells, 25,382 cells)
+curates `level0`, `level1`, `level1_global` and `level2`. In obs, `level1_global`
+is **constant**: `Immune` in every cell. It is the only curated cell-type column
+in all 185 readable datasets that does not vary.
+
+It looks like a slip copied from the sibling dataset. On `4484426f` (breast
+stroma) the same sheet curates `level1_global`, which varies there (4 values), and
+leaves out `level0_global`, which is constant there. So the curators skip constant
+columns elsewhere in this sheet.
+
+It matters because the picker's rule 4 rejects constant columns. As curated, a
+picker following its rules scores at most 0.75 on this dataset. Scores below take
+the sheet as written. **Question for the curators:** drop `level1_global` from
+`5dc1e511`? Because of this, the light subset uses `4484426f` as its breast case.
+
+### 4.2 A doublet flag curated as cell type. **Open; not changed on read.**
+
+`ac9c13da` (l4, `HCA CxG clean V6 - Immune`, rheumatoid arthritis) curates
+`rough_annot`, `fine_annot` **and `scrub_doublets`** as cell type.
+`scrub_doublets` is a boolean (`False`/`True`), the output of a doublet
+detector. The picker takes the first two and leaves it out (J = 0.67).
+**Question:** should `scrub_doublets` be `Other`?
+
+### 4.3 A curated `author_cell_type` that holds only numbers. **Open; not changed on read.**
+
+`7e07419c` (l4, Retina sheet) curates `author_cell_type`. Its 27 values are
+`'1.0'` … `'27.0'`, cluster numbers with no names. The picker's rule 3 rejects
+number-only columns, so it picks nothing and scores 0. This is the only l4 miss.
+The gold is not wrong as such: the column is what the authors submitted as their
+cell type. But the labels behind the numbers are not in the file. **Question:**
+keep it as cell type? If so, rule 3 may need an exception for a column the
+authors *named* as their cell type. That would be a picker change, scored against
+n73 as well.

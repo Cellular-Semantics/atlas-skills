@@ -158,6 +158,34 @@ def test_frozen_baseline_rescores_to_its_stored_value():
             pytest.approx(frozen["overall"][metric]["mean"], abs=1e-9), metric
 
 
+def test_l4_baseline_rescores_to_its_stored_value():
+    """The l4 baseline, like n73's, must survive a round trip through the
+    metrics and the shipped gold. A gold change that moves it fails here, and
+    then wants either a revert or a re-frozen baseline with a note why."""
+    frozen_dir = FROZEN_PICKS.parent
+    stored = json.loads((frozen_dir / "l4_scores.json").read_text())
+    picks = {d: v["picks"] for d, v in
+             json.loads((frozen_dir / "l4_picks.json").read_text()).items()}
+    assert set(picks) <= set(full("l4"))
+    # every readable l4 dataset, so later full runs compare like for like
+    assert len(picks) == len(full("l4")) - 1  # 3006a39e is HTTP 403
+    rescored = score_picks(picks, parse_curation())["overall"]
+    assert rescored["hit_rate"]["k"] == stored["overall"]["hit_rate"]["k"]
+    for metric in ("jaccard", "precision", "recall"):
+        assert rescored[metric]["mean"] == \
+            pytest.approx(stored["overall"][metric]["mean"], abs=1e-9), metric
+    prov = stored["_provenance"]
+    assert {"picker", "date", "gold_snapshot"} <= set(prov)
+
+
+def test_cli_baseline_covers_every_frozen_tier(capsys):
+    main(["score", str(FROZEN_PICKS.parent / "l4_picks.json"), "--baseline"])
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["baseline"]["l4"]["n_shared_datasets"] == 112
+    assert "0.6.0" in payload["baseline"]["l4"]["source"]
+    assert payload["baseline"]["n73"]["n_shared_datasets"] == 0
+
+
 def test_the_baselines_divergence_from_the_published_figure_is_accounted_for():
     """The shipped gold set is no longer the one the 0.8079 was scored against:
     an upstream typo fix, four capitalisation fixes, and the columns accepted in

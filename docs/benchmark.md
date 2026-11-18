@@ -58,7 +58,32 @@ curation snapshot (15 CL_KG sheets, pinned commit; see
 [`curation-review-2026-11-17.md`](curation-review-2026-11-17.md)) adds an `l4` tier of
 113 datasets, 112 of them readable, including eye and breast atlases that n73 has
 none of. That brings the test set to 187. The figures above are the frozen `n73` tier
-alone. No picker has been scored on `l4` yet.
+alone.
+
+### l4: the first run, frozen as l4's baseline
+
+The current picker (author-annotation-columns 0.6.0, commit `df56d43`, agent
+`e9cb8d7bc523`), on every readable l4 dataset, 2026-11-18, gold at CL_KG `c2891ee`.
+$20.80.
+
+| | l4 (n=112) | 95% CI |
+|---|---|---|
+| Jaccard | **0.943** | 0.91–0.97 |
+| Precision | 0.954 | 0.92–0.98 |
+| Recall | 0.980 | 0.96–1.00 |
+| Hit rate | 111/112 | |
+
+This is close to the 0.940 on n73. On datasets the picker was not developed
+against, including the eye and breast sheets n73 has none of, it does as well. By sheet,
+Retina is lowest (0.859, 13 datasets), then Breast (0.875, 4). Three of the
+misses are gold questions rather than picker errors
+([review §4](curation-review-2026-11-17.md#4-found-after-the-upstream-fix)):
+a constant curated column (`5dc1e511`), a doublet flag curated as cell type
+(`ac9c13da`), and a curated `author_cell_type` holding only numbers, which rule 3
+rejects (`7e07419c`, the one miss). Scores take the sheets as written.
+
+The picks and scores are frozen in `packages/obs-column-eval/data/frozen/l4_*`,
+and a test re-scores them. Later l4 runs report their delta against this.
 
 The gold set, the metrics and the frozen baseline all ship in
 [`packages/obs-column-eval`](../packages/obs-column-eval), so the numbers are

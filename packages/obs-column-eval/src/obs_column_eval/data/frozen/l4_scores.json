@@ -1,0 +1,48 @@
+{
+  "overall": {
+    "n": 112,
+    "jaccard": {
+      "mean": 0.9433035714285715,
+      "sd": 0.156993458631868,
+      "ci95": [
+        0.9116071428571428,
+        0.9699404761904763
+      ]
+    },
+    "precision": {
+      "mean": 0.9543154761904763,
+      "sd": 0.14905013794758334,
+      "ci95": [
+        0.9242559523809524,
+        0.9791666666666667
+      ]
+    },
+    "recall": {
+      "mean": 0.9800595238095238,
+      "sd": 0.11034660303504046,
+      "ci95": [
+        0.9569940476190476,
+        0.9970238095238095
+      ]
+    },
+    "hit_rate": {
+      "k": 111,
+      "n": 112,
+      "p": 0.9910714285714286,
+      "ci95": [
+        0.9511503338049636,
+        0.9984221859116149
+      ]
+    }
+  },
+  "_provenance": {
+    "note": "The first picker scored on l4, frozen as its baseline. Later runs on this tier report their delta against it.",
+    "picker": {
+      "plugin": "author-annotation-columns 0.6.0 (local scope, atlas-skills)",
+      "commit": "df56d43",
+      "agent_sha256": "e9cb8d7bc523"
+    },
+    "date": "2026-11-18",
+    "gold_snapshot": "c2891eef8e0c9a1c92cb4aeac187e65f935a8f78"
+  }
+}
