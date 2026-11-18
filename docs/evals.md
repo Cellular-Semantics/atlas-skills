@@ -57,9 +57,13 @@ packages/<name>-eval/              # only when gold data has versions and proven
 3. **Tags.** `smoke` (the quick check), `behaviour` (tool choice, traps),
    plus free-form topic tags (`picker`, `tissue`, ...). Keep tags lowercase,
    in kebab-case.
-4. **Benchmarks record their result.** A full run writes a committed summary
-   (e.g. `docs/benchmark-results.json`) with the plugin version, the commit and
-   the gold-set version. A change in accuracy shows up as a diff in review.
+4. **Every benchmark run is logged.** Each run writes one committed file to
+   the plugin's run log (`evals/runs/` today, `evals/<plugin>/runs/` after
+   #27). The file records the command, the plugin version and commit, the
+   exact models, the gold-set version, the metrics, the per-dataset results
+   and the cost. An index is generated from the files. Files are never
+   overwritten, so the log holds every run, not just the latest. A change in
+   accuracy shows up as a diff in review.
 5. **Gold data is pinned, never hand-edited.** A snapshot names the upstream
    commit and hashes every file. Fixes are applied on read, in code, with a
    review note. A frozen baseline is re-scored by a test, so a gold change that

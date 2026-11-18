@@ -38,6 +38,8 @@ import subprocess
 import sys
 import time
 
+from run_log import build_record, write_run
+
 from graders import classify_error
 
 HERE = pathlib.Path(__file__).parent
@@ -167,10 +169,21 @@ def _picker_provenance() -> dict:
     sha = _run(["git", "rev-parse", "--short", "HEAD"], cwd=HERE).stdout.strip()
     if sha:
         out["commit"] = sha
+        # Uncommitted changes to what is measured make the commit a lie.
+        dirty = _run(["git", "status", "--porcelain", "--", "plugins/author-annotation-columns",
+                      "packages/obs-column-eval"], cwd=HERE.parent).stdout.strip()
+        if dirty:
+            out["uncommitted_changes"] = True
     agent = HERE.parent / "plugins/author-annotation-columns/agents/author-celltype-picker.md"
     if agent.exists():
         import hashlib
         out["agent_sha256"] = hashlib.sha256(agent.read_bytes()).hexdigest()[:12]
+        declared = re.search(r"^model:\s*(\S+)", agent.read_text(), re.MULTILINE)
+        if declared:
+            out["declared_model"] = declared.group(1)
+    claude = _run(["claude", "--version"]).stdout.strip()
+    if claude:
+        out["claude_code"] = claude
     return out
 
 
@@ -299,7 +312,10 @@ def pick(dsid: str, path: pathlib.Path, timeout: int, *, force: bool = False,
         return {"dsid": dsid, "error": f"unparseable result: {out.stdout[:200]}"}
     text = event.get("result") or ""
     row = {"dsid": dsid, "cost_usd": event.get("total_cost_usd") or 0.0, "raw": text,
-           "subtype": event.get("subtype"), "turns": event.get("num_turns")}
+           "subtype": event.get("subtype"), "turns": event.get("num_turns"),
+           # Exact model ids, the dispatching wrapper's and the picker's: the
+           # agent declares an alias (`model: sonnet`), which moves over time.
+           "models": sorted(event.get("modelUsage") or {})}
     if event.get("is_error"):
         # Name the failure. "agent reported an error" covers a rate limit, a
         # turn-budget overrun and a genuine refusal, which need different
@@ -386,11 +402,13 @@ def main() -> int:
     ap.add_argument("--profiles-only", action="store_true",
                     help="Refresh profiles and stop. No agent, no spend.")
     ap.add_argument("--output-dir")
-    ap.add_argument("--record", metavar="PATH",
-                    help="Also write a committed summary here, e.g. "
-                         "docs/benchmark-results.json. Timestamped run directories are "
-                         "gitignored; this is the one that goes in a PR, so a change to "
-                         "the picker shows up as a diff in review rather than a claim.")
+    ap.add_argument("--log", action="store_true",
+                    help="Write this run to the run log (evals/runs/). Automatic for "
+                         "--all and --tier; use it to log a subset or --dataset run.")
+    ap.add_argument("--no-log", action="store_true",
+                    help="Do not log a run that would be logged by default.")
+    ap.add_argument("--note", default="",
+                    help="One line for the run log: why this run was made.")
     args = ap.parse_args()
     if args.freeze and args.tier != "l4":
         ap.error("--freeze needs --tier l4: n73's baseline is frozen as published")
@@ -516,29 +534,37 @@ def main() -> int:
         if row["agent_extras"]:
             print(f"      extra : {', '.join(row['agent_extras'])}")
 
+    picker = _picker_provenance()
+    picker["models_used"] = sorted({m for r in rows for m in r.get("models", [])})
+    if any("picks" in r and not r.get("models") for r in rows):
+        picker["models_note"] = "some picks came from a cache written before models were recorded"
+    scope = (args.tier or ("all" if args.all else "subset")) if not args.dataset else "datasets"
     run_info = {
         "date": time.strftime("%Y-%m-%d"),
-        "datasets": args.tier or ("all" if args.all else "subset"),
-        "n_scored": overall["n"],
+        "scope": scope,
+        "command": shlex.join(["python3", "evals/benchmark.py", *sys.argv[1:]]),
+        "note": args.note,
         "n_requested": len(chosen),
+        "n_scored": overall["n"],
+        "n_cached": sum(1 for r in rows if r.get("cached")),
         "unreadable": sorted(unreadable),
         "no_picks_returned": sorted(r["dsid"] for r in failed),
-        "picker": _picker_provenance(),
+        "cost_usd": round(spent, 2),
+        "picker": picker,
+        "gold_snapshot": json.loads((EVAL_SRC / "obs_column_eval" / "data" / "curation"
+                                     / "SOURCE.json").read_text())["commit"],
+        "profiles": json.loads(PROVENANCE.read_text()).get("captured_by"),
+        "results_dir": str(out_dir.relative_to(HERE.parent)) if out_dir.is_relative_to(HERE.parent)
+                       else str(out_dir),
     }
     if args.freeze:
         freeze_baseline(args.tier, picks, result, run_info, chosen)
 
-    if args.record:
-        record = pathlib.Path(args.record)
-        record.parent.mkdir(parents=True, exist_ok=True)
-        record.write_text(json.dumps({
-            "run": run_info,
-            "overall": overall,
-            "by_tier": by_tier,
-            "baseline": baselines,
-            "per_dataset": result["per_dataset"],
-        }, indent=2) + "\n")
-        print(f"\nrecorded -> {record}")
+    if (args.log or args.all or args.tier) and not args.no_log:
+        manifest = json.loads(_run([*EVAL_CLI, "datasets", "--all"]).stdout)
+        record = build_record(run=run_info, cell_type=result, baselines=baselines,
+                              manifest=manifest)
+        print(f"\nlogged -> {write_run(record)}")
 
     if unreadable:
         print(f"\nobs unreadable, not scored: {', '.join(unreadable)}")

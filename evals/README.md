@@ -87,11 +87,25 @@ Two stages, both cached under `evals/.cache/`. Profiling is deterministic and
 needs no agent, so a rerun costs no bandwidth; picks are cached too, so a spend
 ceiling or a Ctrl-C costs only the datasets still outstanding.
 
-`--record docs/benchmark-results.json` writes the committed summary. Timestamped
-run directories under `results/` are gitignored; the recorded file is the one
-that goes in a PR, so a change to the picker shows up as a diff in review rather
-than as a claim. It carries the plugin version, the commit, and a hash of the
-agent definition that produced the picks.
+### The run log
+
+Every `--all` or `--tier` run is logged: one committed JSON file per run in
+[`runs/`](runs/), with a generated index, [`runs/README.md`](runs/README.md).
+`--log` logs a smaller run too, `--no-log` skips one, and `--note "..."` says
+why the run was made. A run file records:
+- the command;
+- the plugin version, commit and agent hash, and the **exact models used**
+  (the agent declares an alias, `model: sonnet`, which moves over time);
+- the gold snapshot and profile reader;
+- per-tier metrics with the delta against each tier's frozen baseline;
+- per-dataset picks, misses and extras;
+- the cost.
+
+The full transcripts stay in the gitignored `results/` directory. A run file is
+never edited after it is written, apart from its `note`; after a hand edit,
+regenerate the index with `python3 evals/run_log.py`. A run file goes in the PR
+that it measures, so a change to the picker shows up as a diff in review rather
+than as a claim.
 
 ### This arm needs no tag
 
@@ -108,7 +122,7 @@ claude plugin install author-annotation-columns@atlas-skills --scope local
 
 H5AD_OBS_CMD="packages/h5ad-obs/.venv/bin/h5ad-obs" \
 OBS_COLUMN_EVAL_CMD="packages/obs-column-eval/.venv/bin/obs-column-eval" \
-  python3 evals/benchmark.py --all --record docs/benchmark-results.json
+  python3 evals/benchmark.py --all --note "why this run"
 ```
 
 Local scope writes to `.claude/settings.local.json`, which is gitignored, and

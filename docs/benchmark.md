@@ -21,8 +21,9 @@ field types.
 
 Exact agreement with curation on **63 of 73**. The full per-dataset breakdown — what was
 picked, what was curated, what was missed — is in
-[`benchmark-results.json`](benchmark-results.json), which also records the plugin
-version, commit and a hash of the agent definition that produced the picks.
+the run log, [`evals/runs/2026-09-29-n73-a505990.json`](../evals/runs/2026-09-29-n73-a505990.json),
+which also records the plugin version, commit and a hash of the agent definition
+that produced the picks. Every run since is in [`evals/runs/`](../evals/runs/README.md).
 
 **Precision is still a lower bound.** The figures above already include the gold-set
 corrections accepted in review on 2026-09-29 — four column names that matched nothing in
@@ -98,7 +99,7 @@ whole test set. Re-scoring therefore needs no network and no re-reading of ~1.5 
 the scored inputs cannot shift under a CELLxGENE re-ingest.
 
 ```sh
-python3 evals/benchmark.py --all --record docs/benchmark-results.json
+python3 evals/benchmark.py --all --note "why this run"     # logged to evals/runs/
 ```
 
 Picks are cached too, so this re-scores instantly until you clear

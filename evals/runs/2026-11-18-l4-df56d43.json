@@ -1,0 +1,1399 @@
+{
+  "schema": 1,
+  "run": {
+    "date": "2026-11-18",
+    "scope": "l4",
+    "command": "python3 evals/benchmark.py --tier l4 --freeze --max-cost-usd 30",
+    "note": "First run on l4; frozen as l4's baseline",
+    "n_requested": 113,
+    "n_scored": 112,
+    "n_cached": 1,
+    "unreadable": [
+      "3006a39e-5be2-477a-b18f-13d8cd6a0194"
+    ],
+    "no_picks_returned": [],
+    "cost_usd": 20.8,
+    "picker": {
+      "plugin": "author-annotation-columns 0.6.0 (local scope, atlas-skills)",
+      "commit": "df56d43",
+      "agent_sha256": "e9cb8d7bc523",
+      "declared_model": "sonnet",
+      "models_used": [],
+      "models_note": "not recorded: the run predates per-pick model capture"
+    },
+    "gold_snapshot": "c2891eef8e0c9a1c92cb4aeac187e65f935a8f78",
+    "profiles": "h5ad-obs 0.3.0",
+    "results_dir": "evals/results/benchmark-20261118-142546",
+    "backfilled_from": "evals/results/benchmark-20261118-142546 (gitignored) and the frozen l4 baseline"
+  },
+  "tiers": {
+    "l4": {
+      "overall": {
+        "n": 112,
+        "jaccard": {
+          "mean": 0.9433035714285715,
+          "sd": 0.156993458631868,
+          "ci95": [
+            0.9116071428571428,
+            0.9699404761904763
+          ]
+        },
+        "precision": {
+          "mean": 0.9543154761904763,
+          "sd": 0.14905013794758334,
+          "ci95": [
+            0.9242559523809524,
+            0.9791666666666667
+          ]
+        },
+        "recall": {
+          "mean": 0.9800595238095238,
+          "sd": 0.11034660303504046,
+          "ci95": [
+            0.9569940476190476,
+            0.9970238095238095
+          ]
+        },
+        "hit_rate": {
+          "k": 111,
+          "n": 112,
+          "p": 0.9910714285714286,
+          "ci95": [
+            0.9511503338049636,
+            0.9984221859116149
+          ]
+        }
+      }
+    }
+  },
+  "all": null,
+  "by_group": {
+    "l4": {
+      "Curated_Breast_Data_KG_V2": {
+        "n": 4,
+        "jaccard": 0.875
+      },
+      "Curated_Cornea_Limbus_Sclera_KG_V1": {
+        "n": 1,
+        "jaccard": 1.0
+      },
+      "Curated_Iris_Lens_Data_KG_V1": {
+        "n": 4,
+        "jaccard": 1.0
+      },
+      "Curated_RPE Choroid_Data_KG_V1": {
+        "n": 1,
+        "jaccard": 1.0
+      },
+      "Curated_Retina_ Data_KG_V1": {
+        "n": 13,
+        "jaccard": 0.8589743589743589
+      },
+      "Curated_data_KG_Mo_Group - KG": {
+        "n": 31,
+        "jaccard": 0.9376344086021505
+      },
+      "CxG author category field names - Brain_CxG_Author_Category_Filtered": {
+        "n": 32,
+        "jaccard": 0.9713541666666666
+      },
+      "GutAtlas.Org Author Category JB V1 - Colon Immune": {
+        "n": 1,
+        "jaccard": 1.0
+      },
+      "GutAtlas.Org Author Category JB V1 - Teichmann and Burclaff": {
+        "n": 2,
+        "jaccard": 1.0
+      },
+      "HCA CxG clean V6 - Gut": {
+        "n": 5,
+        "jaccard": 0.9333333333333333
+      },
+      "HCA CxG clean V6 - Immune": {
+        "n": 13,
+        "jaccard": 0.9551282051282051
+      },
+      "HCA CxG clean V6 - Kidney": {
+        "n": 5,
+        "jaccard": 0.95
+      }
+    }
+  },
+  "per_dataset": [
+    {
+      "dsid": "01a9a94d-b038-4b67-9658-de77e072f1a9",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "03af5481-a0b6-426c-86b4-9127ada17b53",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type",
+        "author_cluster_label"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "0649d7b7-b8ef-44d9-9abf-705e664fd522",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "06a7ffec-2697-4d6f-96f6-d00a34bedb3d",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "BICCN_class_label",
+        "BICCN_cluster_label",
+        "BICCN_subclass_label"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "070d3916-633e-43af-bcc6-30358a327161",
+      "tier": "l4",
+      "jaccard": 0.6667,
+      "picks": [
+        "BICCN_cluster_label",
+        "BICCN_subclass_label",
+        "RNA family"
+      ],
+      "missed": [],
+      "extra": [
+        "RNA family"
+      ]
+    },
+    {
+      "dsid": "080f9be4-0f94-48cb-a82f-db53df1542ff",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cluster_name"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "0b8711c0-5484-4f71-9050-cb5b5421c4c9",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "0bb62fec-0cf1-46e1-9d10-de65a6d4f814",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "supercluster_term"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "1523a519-375a-4cea-9456-d493e1a6d46b",
+      "tier": "l4",
+      "jaccard": 0.6667,
+      "picks": [
+        "author_cell_type",
+        "broad_celltype",
+        "compartment"
+      ],
+      "missed": [],
+      "extra": [
+        "compartment"
+      ]
+    },
+    {
+      "dsid": "15a8533e-ffa5-4dcf-8fb4-c8b7d5151f84",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "Cell.class_reannotated",
+        "Cell.group",
+        "Lineage"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "171ed79a-b829-4efb-98bf-14951e8a4c90",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "cell_type_original"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "1d6fb189-21a5-4e9b-9082-b6fe225374a9",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "BICCN_subclass_label",
+        "cluster",
+        "subcluster"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "1dbc9400-aeb1-44b4-ba4a-a738c368570f",
+      "tier": "l4",
+      "jaccard": 0.6667,
+      "picks": [
+        "BICCN_cluster_label",
+        "BICCN_subclass_label",
+        "RNA family"
+      ],
+      "missed": [],
+      "extra": [
+        "RNA family"
+      ]
+    },
+    {
+      "dsid": "1ff3a755-f3ae-41d2-95eb-b7dab87e7a09",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "Cell.class_reannotated",
+        "Cell.group",
+        "Lineage"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "2330673b-b5dc-4690-bbbe-8f409362df31",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "cell_type_annot",
+        "clust_annot"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "234f6d22-65df-4d90-9b4d-b631c7099013",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "2808a16d-64c5-451b-91a5-c1a2d9f270d5",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "ct_subcluster"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "29bc336a-b0f8-49d1-8cd8-d2cd878680f8",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "2b284c0b-8a93-4138-a466-9c2bbe9db733",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "level0",
+        "level0_global",
+        "level1",
+        "level1_global",
+        "level2"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "2d6a777f-8b44-4164-b141-fd9c1776346a",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "2e910e62-7eaf-4c06-80cb-8918e3eea16e",
+      "tier": "l4",
+      "jaccard": 0.1667,
+      "picks": [
+        "AC_cluster",
+        "AC_subclass",
+        "BC_subclass",
+        "RGC_cluster",
+        "author_cell_type",
+        "majorclass"
+      ],
+      "missed": [],
+      "extra": [
+        "AC_cluster",
+        "AC_subclass",
+        "BC_subclass",
+        "RGC_cluster",
+        "majorclass"
+      ]
+    },
+    {
+      "dsid": "2ed5317e-5cdd-40c9-9570-6601c386a705",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "cluster_layers"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "303e954f-33d7-473e-86f9-f96a18192bd2",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "31310843-6614-49b3-b2e2-3e85d9be1e66",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "subclass_transfer"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "35476cf7-35f1-4daf-8507-734403d09c27",
+      "tier": "l4",
+      "jaccard": 0.6,
+      "picks": [
+        "Main_cluster_name",
+        "Organ_cell_lineage",
+        "sub_cluster_name"
+      ],
+      "missed": [
+        "Matched_BCA_cell_name",
+        "Matched_MCA_cell_name"
+      ],
+      "extra": []
+    },
+    {
+      "dsid": "39f2c06e-4a70-4936-a645-7d6a61fc0c00",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "BICCN_subclass_label"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "3ba8c0d4-89c2-4c84-9d66-bb8e1a816286",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "3c75e9e9-b09a-4805-bcdd-4ecde45b98f8",
+      "tier": "l4",
+      "jaccard": 0.6667,
+      "picks": [
+        "Class",
+        "Subclass",
+        "Supertype"
+      ],
+      "missed": [],
+      "extra": [
+        "Class"
+      ]
+    },
+    {
+      "dsid": "3d04a6eb-2cd8-4546-9f79-61f739fe503e",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "BICCN_cluster_label",
+        "BICCN_subclass_label"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "4484426f-f83b-4bab-b06d-eb2e177aa031",
+      "tier": "l4",
+      "jaccard": 0.75,
+      "picks": [
+        "level1",
+        "level1_global",
+        "level2"
+      ],
+      "missed": [
+        "level0"
+      ],
+      "extra": []
+    },
+    {
+      "dsid": "45b78a7b-6def-40f2-b27f-8eab7848602f",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "Cell.Types"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "45f65bd0-f115-42e0-9af9-e409e58485f0",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "Annotation_Level1",
+        "Annotation_Level2",
+        "Annotation_Level3",
+        "Annotation_Level4",
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "4973ec05-e355-40fc-9f72-56423c12aae9",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "Cell_Type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "4a04c010-6fc1-440a-8b87-f12fefd5543a",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "_MajorType",
+        "_SubType"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "4df5ea20-265e-4cec-b09a-e590193576c2",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "4e6932db-5a78-40e4-b961-f87f66ba139a",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "scType_celltype"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "4e7af47a-f83f-4749-825c-0c6976ae07b7",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "504b7a5b-689b-4a0f-b7e0-02fe50a62dd5",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "cell_group",
+        "ct1",
+        "ct2",
+        "ct3"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "518edb4f-1e86-4af3-99e4-0a599a94e9fe",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "annotation_V2"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "532867bf-f240-4c4e-b94d-e0ed7f480b51",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "541de42d-9188-45f0-ba93-15b57eddd665",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "cell_class",
+        "cell_subcluster"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "56b8657c-ee0d-48e8-b9cb-8d69fe71f1bd",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "58ff1310-6627-4140-a7a4-0af2c59c02b3",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "59a999ca-31b3-4f0e-a4e6-70c240435e01",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "cell_type_annot",
+        "clust_annot"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "5a26b6b4-c656-42db-85a1-d2e531205317",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "Annotation"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "5b918503-ab77-42f9-aaab-8d4b6102dbde",
+      "tier": "l4",
+      "jaccard": 0.75,
+      "picks": [
+        "Cell.class",
+        "Cell.group",
+        "Lineage",
+        "sub_cluster"
+      ],
+      "missed": [],
+      "extra": [
+        "sub_cluster"
+      ]
+    },
+    {
+      "dsid": "5dc1e511-4c76-45ab-a148-87f94b83d9d5",
+      "tier": "l4",
+      "jaccard": 0.75,
+      "picks": [
+        "level0",
+        "level1",
+        "level2"
+      ],
+      "missed": [
+        "level1_global"
+      ],
+      "extra": []
+    },
+    {
+      "dsid": "5f36898f-78e7-4ba0-950e-a02beca606d4",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "Class",
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "6ad5ca98-d97d-4901-a765-e39b70ac2c02",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "CellType"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "6c779b98-f437-4cbf-9b81-a3e6be637419",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "Annotation"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "7021fffe-340b-4ce6-b03a-55e8d99f7bbe",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "731ad926-5b60-45bf-85de-e32d037c1944",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type",
+        "cell_type_group"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "744afc03-e10b-4908-9baa-096995a01cf2",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "781d308e-69cc-4129-8c2f-b370091a8cab",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "_MajorType",
+        "_SubType"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "7ac1b9e2-91f8-4a62-93a8-54638f2e618e",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "BICCN_class_label",
+        "BICCN_subclass_label",
+        "cluster"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "7ac6b92a-cbb7-472b-9380-27b5c4714702",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "annot_level0",
+        "annot_level1",
+        "annot_level3",
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "7afb64af-cd3b-44ed-bd2a-3d7bd8a98e13",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type1",
+        "author_cell_type2",
+        "author_cell_type_broad",
+        "author_cell_type_stroma"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "7d8af09a-2f96-49f9-a473-f561a332f25d",
+      "tier": "l4",
+      "jaccard": 0.6667,
+      "picks": [
+        "class",
+        "subclass.l1",
+        "subclass.l2"
+      ],
+      "missed": [],
+      "extra": [
+        "class"
+      ]
+    },
+    {
+      "dsid": "7e07419c-2b0b-4f4c-a653-f1a0e2636313",
+      "tier": "l4",
+      "jaccard": 0.0,
+      "picks": [],
+      "missed": [
+        "author_cell_type"
+      ],
+      "extra": []
+    },
+    {
+      "dsid": "82e26751-5d13-44c4-b436-6166d7ac1864",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "8b1e1941-cd79-48ba-81d1-43732803b9a5",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "Class",
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "9343817c-5c74-4548-a7d5-01990df5af7a",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "supercluster_term"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "969408c1-7fdf-4abe-bf6a-9d662e620c16",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "_MajorType",
+        "_SubType"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "9a305865-e7b0-4e8a-bbbf-0b63287e85fd",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type",
+        "initial_clustering"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "9e66dffa-7407-41b5-98b9-43f2753f171e",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "cluster"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "a16da6f8-964e-4d7f-93a7-66f941267945",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "Cell.class_reannotated",
+        "Cell.group",
+        "Lineage",
+        "cell_type_coarse",
+        "cell_type_fine"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "a2e7b6e9-79d5-446d-8fb1-19128c97a48f",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "Class",
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "a31264ed-a890-4409-9d93-cfb5e9cfcc71",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "_MajorType",
+        "_SubType"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "a4279399-5621-46bb-ac2c-aba78ae683aa",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "cell_states"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "a991b447-9473-4978-b2bd-190cf4a26825",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "_MajorType",
+        "_SubType"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "ac9c13da-7134-4d09-8086-d0933cbdba41",
+      "tier": "l4",
+      "jaccard": 0.6667,
+      "picks": [
+        "fine_annot",
+        "rough_annot"
+      ],
+      "missed": [
+        "scrub_doublets"
+      ],
+      "extra": []
+    },
+    {
+      "dsid": "ae18e694-6f45-4635-affa-63ac0e29323d",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "celltype",
+        "majorType"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "ae802158-1a7e-43e0-9c23-cdc688ce3481",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "Celltype"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "b1ff0e05-486e-4569-92c7-d9100c833a03",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "leiden",
+        "lineage",
+        "type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "b23a3e02-d6f9-43a3-bb1b-38af6860c092",
+      "tier": "l4",
+      "jaccard": 0.8,
+      "picks": [
+        "author_cell_type",
+        "broad_lineage",
+        "dev_state",
+        "precisest_label",
+        "subtype"
+      ],
+      "missed": [],
+      "extra": [
+        "dev_state"
+      ]
+    },
+    {
+      "dsid": "b557f8c1-3523-4bc5-834f-045ba67daccf",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type",
+        "author_cluster_label"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "b63887bb-da4a-4b6b-9da1-19a05227f7eb",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "cell_type_annot",
+        "clust_annot"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "b84def55-a776-4aa4-a9a6-7aab8b973086",
+      "tier": "l4",
+      "jaccard": 0.6667,
+      "picks": [
+        "cell_ontology_class",
+        "compartment",
+        "free_annotation"
+      ],
+      "missed": [],
+      "extra": [
+        "compartment"
+      ]
+    },
+    {
+      "dsid": "bdee03e4-14ee-4f3e-a225-3d12f032841f",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "Cell.class_reannotated",
+        "Cell.group",
+        "Lineage"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "be497f34-bf74-4cf0-8094-e6f8729b9fa4",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "_MajorType",
+        "_SubType"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "c2054d78-3e98-4313-a9e1-60c9a6100bee",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "predicted.celltype.l2"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "c3b19259-db0b-4c2b-92ae-4f2a0d2a2154",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "c725f2d5-dd6f-4233-80a7-e969cad76717",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "c76ed67f-ddd1-45b0-bdb2-fa57fac3460f",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "c83105a2-80df-418c-ba40-c66484ba28ff",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type",
+        "author_cluster_label"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "c834dd56-af8d-4f48-a420-6e2144ec7336",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "cell_type_original"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "cccbc47c-1b27-4657-874c-b62ce42091dc",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type",
+        "category"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "cf59a3de-b569-4b4c-aa4c-ff30c4f5fd90",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "d0ddf40e-dc4b-4134-8439-bfb8bf7a81f4",
+      "tier": "l4",
+      "jaccard": 0.75,
+      "picks": [
+        "ClusterClass",
+        "celltype",
+        "subclass.l1",
+        "subclass.l2"
+      ],
+      "missed": [],
+      "extra": [
+        "ClusterClass"
+      ]
+    },
+    {
+      "dsid": "d4a33fe7-b504-4549-b11b-0fed48234332",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "d7e86fbd-f606-48c1-af99-a12c10a615f2",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "BICCN_cluster_label",
+        "BICCN_subclass_label"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "d88ee9bc-db24-4057-af22-c42a790a3780",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "d901fc14-c0a0-432e-9531-8c1effc7cf86",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "Cell_type_annotation_level1",
+        "Cell_type_annotation_level2",
+        "Cell_type_annotation_level3"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "da16cf9b-3959-4aa7-8df4-570fc944f683",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "dbb111e5-d67f-48b1-8a95-0afd1280fab5",
+      "tier": "l4",
+      "jaccard": 0.6667,
+      "picks": [
+        "Class",
+        "Subclass",
+        "Supertype"
+      ],
+      "missed": [],
+      "extra": [
+        "Class"
+      ]
+    },
+    {
+      "dsid": "dc6e9e6a-3566-4839-baf9-6cf6616fd20e",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "deaa7dd9-bee9-4007-86fa-de384c539ea7",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "celltype.broad_clustering_annot",
+        "celltype.final"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "e1afef70-039b-4c06-b0c1-bfcd588f6d10",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "level2",
+        "original_celltype"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "e2226a21-247e-48bf-84e1-ea6c0a585cf3",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "e4369a29-b892-40db-9894-75a2a790f575",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "cluster_layers"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "e4ee90d9-a9b1-4b12-a2e9-9cbce715ee06",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "_MajorType",
+        "_SubType"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "e96396d7-032d-4b60-ad7b-7e815deb1b19",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "e969ceb9-197c-42d5-bf81-e19e5a6e32ac",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "celltype.broad_clustering_annot",
+        "celltype.final"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "f2978c16-5238-41dc-8a42-a63614be1b4d",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "f3027a1d-345f-436e-90ea-f73132a94934",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "Celltype"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "f44ed5dd-9f5b-4cf4-b6c3-5874ee8ab2f0",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "cell_type_annot",
+        "clust_annot"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "f5369070-f44c-46b2-b058-5762c9a561d8",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "f5b6d620-76df-45c5-9524-e5631be0e44a",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type",
+        "clusterClass",
+        "subclass.l1"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "f5f40d3b-ca47-4337-96dc-f037afe59fc1",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "CellType"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "f62628d2-3c79-4c17-a77c-a09897080360",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "_MajorType",
+        "_SubType"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "f89a618b-fe4b-404e-bd39-7c574529b1f5",
+      "tier": "l4",
+      "jaccard": 1.0,
+      "picks": [
+        "cell_label"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "fdd2ff73-9163-4648-90da-b218573c2bee",
+      "tier": "l4",
+      "jaccard": 0.75,
+      "picks": [
+        "class_label",
+        "cluster_label",
+        "neighborhood_label",
+        "subclass_label"
+      ],
+      "missed": [],
+      "extra": [
+        "neighborhood_label"
+      ]
+    }
+  ]
+}
