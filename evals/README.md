@@ -59,6 +59,13 @@ $0.20–0.50 per run, ~$2 for the suite. One run per case by default;
 Each is one of the datasets in the benchmark subset, so a failure here and a
 failure there point at the same file.
 
+## Plugin smoke cases
+
+The light set is also a `claude plugin eval` suite that ships with the plugin:
+[`plugins/author-annotation-columns/evals/smoke/`](../plugins/author-annotation-columns/evals/README.md).
+It is generated from the gold set by `smoke_cases.py`; regenerate it after a
+gold or subset change, and `test_smoke_cases.py` fails until you do.
+
 ## `benchmark.py` — is the picker correct
 
 ```sh

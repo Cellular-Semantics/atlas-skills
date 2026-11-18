@@ -13,6 +13,8 @@ build/
 # the picker needs no network.
 evals/.cache/
 evals/results/
+# `claude plugin eval` writes its reports beside each plugin's suite.
+plugins/*/evals/results/
 
 # onto-query: throwaway venv for local test runs
 .venv/
