@@ -190,7 +190,7 @@ the sheet as written. **Question for the curators:** drop `level1_global` from
 
 ### 4.2 A doublet flag curated as cell type. **Open; not changed on read.**
 
-`ac9c13da` (l4, `HCA CxG clean V6 - Immune`, rheumatoid arthritis) curates
+`ac9c13da` (l4, `Curated_data_KG_Mo_Group - KG`, rheumatoid arthritis) curates
 `rough_annot`, `fine_annot` **and `scrub_doublets`** as cell type.
 `scrub_doublets` is a boolean (`False`/`True`), the output of a doublet
 detector. The picker takes the first two and leaves it out (J = 0.67).
