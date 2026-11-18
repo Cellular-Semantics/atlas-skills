@@ -75,12 +75,14 @@ $20.80.
 
 This is close to the 0.940 on n73. On datasets the picker was not developed
 against, including the eye and breast sheets n73 has none of, it does as well. By sheet,
-Retina is lowest (0.859, 13 datasets), then Breast (0.875, 4). Three of the
-misses are gold questions rather than picker errors
-([review §4](curation-review-2026-11-17.md#4-found-after-the-upstream-fix)):
-a constant curated column (`5dc1e511`), a doublet flag curated as cell type
-(`ac9c13da`), and a curated `author_cell_type` holding only numbers, which rule 3
-rejects (`7e07419c`, the one miss). Scores take the sheets as written.
+Retina is lowest (0.859, 13 datasets), then Breast (0.875, 4). Three misses
+were checked against the gold
+([review §4](curation-review-2026-11-17.md#4-found-after-the-upstream-fix)). One
+is a sheet error: `scrub_doublets`, a doublet flag, is curated as cell type on
+`ac9c13da` (reported as CL_KG#120). The other two are real picker misses. Rule 4
+drops `level1_global` on `5dc1e511`, which is constant but curated. Rule 3 rejects
+the numbered `author_cell_type` on `7e07419c`, which is the one dataset with no
+correct pick. Scores take the sheets as written.
 
 The picks and scores are frozen in `packages/obs-column-eval/data/frozen/l4_*`,
 and a test re-scores them. Later l4 runs report their delta against this.

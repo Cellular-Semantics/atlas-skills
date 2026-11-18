@@ -171,7 +171,7 @@ value would settle it and the HLCA cases together.
 
 ## 4. Found after the upstream fix
 
-### 4.1 A curated column that is constant in obs. **Open; not changed on read.**
+### 4.1 A curated column that is constant in obs. **Decided 2026-11-18: the gold stands.**
 
 `5dc1e511` (l4, `Curated_Breast_Data_KG_V2`, breast immune cells, 25,382 cells)
 curates `level0`, `level1`, `level1_global` and `level2`. In obs, `level1_global`
@@ -188,15 +188,16 @@ picker following its rules scores at most 0.75 on this dataset. Scores below tak
 the sheet as written. **Question for the curators:** drop `level1_global` from
 `5dc1e511`? Because of this, the light subset uses `4484426f` as its breast case.
 
-### 4.2 A doublet flag curated as cell type. **Open; not changed on read.**
+### 4.2 A doublet flag curated as cell type. **Reported upstream: [CL_KG#120](https://github.com/Cellular-Semantics/CL_KG/issues/120).**
 
 `ac9c13da` (l4, `Curated_data_KG_Mo_Group - KG`, rheumatoid arthritis) curates
 `rough_annot`, `fine_annot` **and `scrub_doublets`** as cell type.
 `scrub_doublets` is a boolean (`False`/`True`), the output of a doublet
 detector. The picker takes the first two and leaves it out (J = 0.67).
-**Question:** should `scrub_doublets` be `Other`?
+**Decided:** it should be `Other`. This is a sheet error, reported as CL_KG#120 (line 476).
+Until the next snapshot picks up the fix, scores take the sheet as written.
 
-### 4.3 A curated `author_cell_type` that holds only numbers. **Open; not changed on read.**
+### 4.3 A curated `author_cell_type` that holds only numbers. **Decided 2026-11-18: the gold stands.**
 
 `7e07419c` (l4, Retina sheet) curates `author_cell_type`. Its 27 values are
 `'1.0'` … `'27.0'`, cluster numbers with no names. The picker's rule 3 rejects
@@ -206,3 +207,8 @@ cell type. But the labels behind the numbers are not in the file. **Question:**
 keep it as cell type? If so, rule 3 may need an exception for a column the
 authors *named* as their cell type. That would be a picker change, scored against
 n73 as well.
+
+**Decisions, 2026-11-18.** §4.1 and §4.3 are correct as curated. `level1_global` on
+`5dc1e511` and the numbered `author_cell_type` on `7e07419c` stay cell type, so the
+picker's misses there are counted as real misses: rule 4 (constant columns) and rule 3
+(number-only values) cost it those points. Only §4.2 is a sheet error.
