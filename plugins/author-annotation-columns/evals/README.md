@@ -52,9 +52,8 @@ eval sandbox the skill works as written. Fix tracked in
 - `smoke-breast-stroma-levels`: `level0` (`Stroma`/`Doublet`) is picked on some
   runs and not others. The l4 baseline left it out; the first smoke run took it.
 
-**First full run (2026-11-19, $3.64 for 10 runs):** six of eight cases scored
-1.0 and `smoke-constant-columns` scored 0.88. `smoke-constant-lineage` scored
-1.0 on its picks, but on one run the agent wrote `picks.json` into a subfolder
-(the prompt now rules that out), and on the re-run it could not install
-`h5ad-obs` in the sandbox and gave up (#29). Until #29 is fixed, expect the odd
-case to fail that way.
+**First full run (2026-11-19, $4.06 for 11 runs):** seven of eight cases
+scored 1.0 and `smoke-constant-columns` scored 0.88, the known miss above.
+Getting there took re-runs. One run wrote `picks.json` into a subfolder, which
+the prompt now rules out. Two runs could not install `h5ad-obs` in the sandbox
+and gave up (#29). Until #29 is fixed, expect the odd case to fail that way.
