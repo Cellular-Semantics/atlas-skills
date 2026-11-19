@@ -28,7 +28,14 @@ Needs the plugin installed **at user scope** — these cases test the
 ```sh
 claude plugin marketplace add Cellular-Semantics/atlas-skills --scope user
 claude plugin install author-annotation-columns@atlas-skills --scope user
+claude plugin install remote-h5ad-obs@atlas-skills --scope user
 ```
+
+`remote-h5ad-obs` is for `standardised-request-does-not-trigger`, which reads
+the portal's `cell_type` with that skill. A case names any plugin it needs
+beyond author-annotation-columns in its `checks.json` (`"requires"`), and the
+runner refuses to start until each is installed at user scope at the version in
+`OTHER_PLUGINS`.
 
 Each case runs in a fresh temporary directory, so nothing but the user-scope
 plugin is in scope: no project `CLAUDE.md`, no `.claude/skills`. **A project- or
@@ -42,7 +49,7 @@ cases assert is that the `uvx --from …@vX.Y.Z` command in SKILL.md actually
 resolves and runs.
 
 **These cost money and read real h5ads from the CELLxGENE CDN.** About
-$0.20–0.50 per run, ~$2 for the suite. One run per case by default;
+$0.25–0.65 per run, ~$5 for the suite (2026-11-19: $4.85 for 9 cases). One run per case by default;
 `--max-cost-usd` (default 8) aborts a suite that runs away. Not in CI.
 
 ### The cases
