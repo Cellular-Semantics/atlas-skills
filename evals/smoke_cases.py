@@ -13,9 +13,10 @@ eval` format. Each asks the plain question a user would ask, and grades the
 - each known trap column for that dataset is *not* picked,
 - the portal's own `cell_type` fields are never picked.
 
-The prompt says "work in the current directory": each run starts in an empty
-workspace, and the file graders read `picks.json` from there. Without it an
-agent may work under `$TMPDIR`, and every file grader misses a correct answer.
+The prompt says to work directly in the current directory, not a subdirectory:
+each run starts in an empty workspace, and the file graders read `picks.json`
+from its root. Without that, agents have worked under `$TMPDIR` or in a
+`ds_<id>/` subfolder, and every file grader missed a correct answer.
 
 A run's score is the fraction of graders passed, so it reads roughly as
 recall and precision together. The exact Jaccard, per tier, stays in
@@ -111,7 +112,8 @@ def render() -> dict[Path, str]:
             "---",
             "",
             f"Which obs columns in {entry['url']} hold the authors' own "
-            "cell-type annotations? Work in the current directory.",
+            "cell-type annotations? Work directly in the current directory, not in a "
+            "subdirectory.",
             "",
         ])
         g = case / "graders"
