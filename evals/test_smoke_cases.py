@@ -85,3 +85,59 @@ def test_requested_cell_type_is_not_mistaken_for_the_picks():
     """`"requested": ["cell_type"]` must not satisfy the picks patterns."""
     assert "exact-count" in _failed("smoke-constant-columns", ["Lineage"])
     assert _failed("smoke-constant-columns", []) == []
+
+
+# --- the toolchain graders (#29) -------------------------------------------------
+
+def _tool_grader(case: str, name: str) -> tuple[str, bool]:
+    """(input_match, never) for one tool_used grader of a case."""
+    head = (OUT / case / "graders" / f"{name}.md").read_text().split("---")[1]
+    pattern = re.search(r"^input_match: '(.*)'$", head, re.M).group(1)
+    return pattern, "max: 0" in head
+
+
+def _bash(command: str, description: str = "Read obs") -> str:
+    """A Bash call's input, JSON-encoded the way the eval runner matches it."""
+    return json.dumps({"command": command, "description": description}, separators=(",", ":"))
+
+
+PIN = ("h5ad-obs[parquet] @ https://github.com/Cellular-Semantics/atlas-skills/archive/"
+       "refs/tags/pkg-h5ad-obs--v0.3.2.tar.gz#subdirectory=packages/h5ad-obs")
+URL = "https://datasets.cellxgene.cziscience.com/x.h5ad"
+AS_WRITTEN = f'uvx --from "{PIN}" h5ad-obs {URL} --out obs.parquet --block-size 0.25'
+VIA_VARIABLE = f"P='{PIN}'; uvx --from \"$P\" h5ad-obs {URL} --out obs.parquet"
+GIT_PIN = AS_WRITTEN.replace(
+    "https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/"
+    "pkg-h5ad-obs--v0.3.2.tar.gz", "git+https://github.com/Cellular-Semantics/atlas-skills"
+    "@pkg-h5ad-obs--v0.3.2")
+CURL = f"curl -sSL -o data.h5ad {URL}"
+
+
+@pytest.mark.parametrize("case", sorted(name for name, _ in CASES.values()))
+@pytest.mark.parametrize("command,pinned", [
+    (AS_WRITTEN, True), (VIA_VARIABLE, True), (GIT_PIN, False),
+    ("uvx --from h5ad-obs h5ad-obs obs.parquet", False),
+])
+def test_pinned_grader(case, command, pinned):
+    pattern, never = _tool_grader(case, "h5ad-obs-pinned")
+    assert not never
+    assert bool(re.search(pattern, _bash(command))) is pinned
+
+
+@pytest.mark.parametrize("case", sorted(name for name, _ in CASES.values()))
+@pytest.mark.parametrize("command,description,download", [
+    (AS_WRITTEN, "Read obs", False),
+    (VIA_VARIABLE, "Read obs", False),
+    (CURL, "Download the h5ad", True),
+    (f'cd /tmp && wget -q "{URL}"', "", True),
+    (f'{AS_WRITTEN} || curl -O "{URL}"', "", True),
+    (f"curl -sI {URL}", "Check range support", True),
+    # mentioning curl outside the command is not a download
+    (AS_WRITTEN, "Read obs over range requests instead of curl", False),
+    # nor is a word that merely contains it
+    ("echo curly > note.txt", "", False),
+])
+def test_no_download_grader(case, command, description, download):
+    pattern, never = _tool_grader(case, "no-curl-or-wget")
+    assert never
+    assert bool(re.search(pattern, _bash(command, description))) is download
