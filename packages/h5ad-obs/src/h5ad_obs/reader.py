@@ -60,8 +60,11 @@ fsh.HTTPFile = _CountingHTTPFile
 async def _get_client(**kwargs):
     # aiohttp does not read the macOS keychain, so an explicit certifi context is
     # required or GCS/S3 fail with CERTIFICATE_VERIFY_FAILED.
+    # Nor does it read HTTP(S)_PROXY / NO_PROXY unless asked: without trust_env,
+    # a read behind a proxy (a corporate network, a sandbox) fails on DNS.
     import aiohttp
 
+    kwargs.setdefault("trust_env", True)
     return aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=CTX), **kwargs)
 
 

@@ -117,3 +117,12 @@ def test_stats_as_dict_shape():
     assert d == {"range_requests": 3, "bytes_fetched": 2_000_000, "mb_fetched": 2.0,
                  "seconds": 1.2, "file_bytes": 10}
     json.dumps(d)
+
+
+def test_reads_through_an_http_proxy_from_the_environment(proxied):
+    # Behind a proxy the target host does not resolve directly; aiohttp only
+    # goes through HTTP(S)_PROXY with trust_env=True (#29).
+    url, proxy = proxied
+    obs, _skipped, _stats = read_obs(url, columns=["cell_type"])
+    assert len(obs) == N_CELLS
+    assert any(m == "GET" and p.startswith("http://h5ad-obs.invalid/") for m, p in proxy.seen)
