@@ -11,7 +11,15 @@ eval` format. Each asks the plain question a user would ask, and grades the
 - every gold cell-type column is in `picks.cell_type` (one grader each),
 - `picks.cell_type` holds exactly as many columns as the gold (so extras fail),
 - each known trap column for that dataset is *not* picked,
-- the portal's own `cell_type` fields are never picked.
+- the portal's own `cell_type` fields are never picked,
+
+and two graders on the toolchain, from the session's Bash calls (#29):
+
+- `h5ad-obs` was installed from its pinned source archive,
+- nothing ran `curl` or `wget`. Agents reached for them -- to probe the host,
+  then to download the h5ad whole -- when the pinned install or the range read
+  failed, and still produced correct picks; without this grader a broken
+  toolchain scores 1.0.
 
 The prompt says to work directly in the current directory, not a subdirectory:
 each run starts in an empty workspace, and the file graders read `picks.json`
@@ -67,6 +75,18 @@ CASES = {
     "731ad926-5b60-45bf-85de-e32d037c1944": ("smoke-retina-fine-and-broad", {}),
 }
 
+#: A Bash call that names the h5ad-obs source-archive pin, at any version: the
+#: version itself is CI's to check (skill-pins-resolve), and a pin bump should not
+#: need the cases regenerated. A shell variable holding the pin still matches.
+PINNED = r"archive/refs/tags/pkg-h5ad-obs--v[0-9][^#\s\\]*\.tar\.gz#subdirectory=packages/h5ad-obs"
+
+#: `curl` or `wget` as a word inside a Bash call's `command` string, whether it
+#: downloads or only probes the host. Matched
+#: against the JSON-encoded input, so the string is walked as JSON (`\"` and
+#: other escapes inside it) and a `description` that mentions curl is not
+#: taken for a download.
+DOWNLOAD = r'"command"\s*:\s*"(?:[^"\\]|\\.)*?\b(?:curl|wget)\b'
+
 #: The portal's standardised fields: never an author column.
 PORTAL = ("cell_type", "cell_type_ontology_term_id")
 
@@ -90,6 +110,15 @@ def _grader(pattern: str, *, match: str | None = None, why: str) -> str:
     lines = ["---", "type: regex", f"target: {PICKS}", f"pattern: {json.dumps(pattern)}"]
     if match:
         lines.append(f"match: {match}")
+    return "\n".join([*lines, "---", "", why, ""])
+
+
+def _tool_grader(tool: str, pattern: str, *, never: bool = False, why: str) -> str:
+    # Single-quoted YAML: no escapes, so the regex is written exactly once.
+    assert "'" not in pattern
+    lines = ["---", "type: tool_used", f"tool: {tool}", f"input_match: '{pattern}'"]
+    if never:
+        lines += ["min: 0", "max: 0"]
     return "\n".join([*lines, "---", "", why, ""])
 
 
@@ -125,6 +154,14 @@ def render() -> dict[Path, str]:
             "input_match: '\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?author-annotation-columns\"'",
             "---", "",
             "The plugin's skill handled the request, not the agent on its own.", ""])
+        files[g / "h5ad-obs-pinned.md"] = _tool_grader(
+            "Bash", PINNED,
+            why="`h5ad-obs` ran from the skill's pinned source archive, which installs "
+                "without git.")
+        files[g / "no-curl-or-wget.md"] = _tool_grader(
+            "Bash", DOWNLOAD, never=True,
+            why="No `curl` or `wget`: the skill's own commands read obs over range "
+                "requests, and an agent only reaches for curl when they fail.")
         for col in gold:
             files[g / f"picks-{_slug(col)}.md"] = _grader(
                 _in_array(col), why=f"`{col}` is a curated author cell-type column (CL_KG).")
