@@ -10,9 +10,19 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+# Every package needs Python >= 3.11. Left to itself `uv venv` takes whatever
+# interpreter it finds first, which can be older, and the install then fails.
+# Set UV_PYTHON to test another version, e.g. UV_PYTHON=3.13 ./dev.sh.
+PY="${UV_PYTHON:-3.11}"
 for pkg in h5ad-obs obs-column-eval paper-access; do
-  uv venv -q --allow-existing "packages/$pkg/.venv"
-  uv pip install -q --python "packages/$pkg/.venv/bin/python" -e "packages/$pkg[test]"
+  venv="packages/$pkg/.venv"
+  # A venv left on an older interpreter is rebuilt rather than reused.
+  if [ -x "$venv/bin/python" ] &&
+     ! "$venv/bin/python" -c 'import sys; sys.exit(sys.version_info < (3, 11))'; then
+    rm -rf "$venv"
+  fi
+  uv venv -q --allow-existing --python "$PY" "$venv"
+  uv pip install -q --python "$venv/bin/python" -e "packages/$pkg[test]"
 done
 
 packages/h5ad-obs/.venv/bin/python -m pytest packages/h5ad-obs "$@"

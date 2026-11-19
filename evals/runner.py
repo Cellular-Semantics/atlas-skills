@@ -109,7 +109,7 @@ def invoke(prompt: str, spec: dict, transcript_path: pathlib.Path) -> Run:
 REQUIRED_PLUGIN = "author-annotation-columns"
 
 #: What the cases need to be present. Bump alongside that plugin's version.
-EXPECTED_PLUGIN_VERSION = "0.4.0"
+EXPECTED_PLUGIN_VERSION = "0.6.3"
 
 INSTALL_HINT = (
     "  claude plugin marketplace add Cellular-Semantics/atlas-skills --scope user\n"
