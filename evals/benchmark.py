@@ -63,26 +63,34 @@ PROVENANCE = PROFILES / "PROVENANCE.json"
 #: cached locally, so an interrupted run costs only what is outstanding.
 PICKS_CACHE = HERE / ".cache" / "picks"
 
-TAG = "v0.3.0"
-GIT = "git+https://github.com/Cellular-Semantics/atlas-skills"
+#: The published packages, pinned the way the skills pin them: GitHub source
+#: archives of each package's own release tag. One pin per package -- they
+#: release separately. scripts/versions.py collects these alongside the skills'
+#: pins, so CI installs them on every pull request and nightly; this line used to
+#: name a tag (v0.3.0) that was never pushed, and nothing noticed. Move them when
+#: a package releases.
+#: Each pin is one string literal on one line, so versions.py can find it.
+H5AD_OBS_PIN = "https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-h5ad-obs--v0.3.2.tar.gz#subdirectory=packages/h5ad-obs"
+OBS_COLUMN_EVAL_PIN = "https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-obs-column-eval--v0.5.0.tar.gz#subdirectory=packages/obs-column-eval"
 
 
-def _cli(env_var: str, package: str, entrypoint: str) -> list[str]:
+def _cli(env_var: str, pin: str, entrypoint: str) -> list[str]:
     """The published command, unless an env var points somewhere else.
 
-    The default is the pinned tag, so the benchmark measures what users get. The
-    override exists for developing against the working tree before a tag is cut:
+    The default is the pinned release, so the benchmark measures what users get.
+    The override exists for developing against the working tree before a tag is
+    cut:
 
         H5AD_OBS_CMD="packages/h5ad-obs/.venv/bin/h5ad-obs" python3 evals/benchmark.py
     """
     override = os.environ.get(env_var)
     if override:
         return shlex.split(override)
-    return ["uvx", "--from", f"{GIT}@{TAG}#subdirectory=packages/{package}", entrypoint]
+    return ["uvx", "--from", pin, entrypoint]
 
 
-H5AD_OBS = _cli("H5AD_OBS_CMD", "h5ad-obs", "h5ad-obs")
-EVAL_CLI = _cli("OBS_COLUMN_EVAL_CMD", "obs-column-eval", "obs-column-eval")
+H5AD_OBS = _cli("H5AD_OBS_CMD", H5AD_OBS_PIN, "h5ad-obs")
+EVAL_CLI = _cli("OBS_COLUMN_EVAL_CMD", OBS_COLUMN_EVAL_PIN, "obs-column-eval")
 
 PICK_PROMPT = (
     "Use the author-celltype-picker subagent on the obs column profile at {path}. "

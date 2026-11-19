@@ -4,7 +4,8 @@
     versions.py check-bumps --base origin/main   changed plugin/package => version bumped
     versions.py untagged                         releases whose tag does not exist yet
     versions.py current                          every release at its current version
-    versions.py pins [--tags N] [--at SHA]       every package pin users can be running
+    versions.py pins [--tags N] [--at SHA]       every package pin users can be running,
+                                                 and the repo tooling's (evals/)
     versions.py report [--check FILE]            the plugin -> package table (docs/pins.md)
     versions.py cli <dir> [--at REF]             the console script packages/<dir> installs
     versions.py ref <pin>                        the tag or commit a pin names
@@ -261,18 +262,33 @@ def untagged() -> int:
 
 # --- pins --------------------------------------------------------------------
 
-def pins_at(ref: str | None, plugin: Release) -> set[str]:
+#: Repo tooling outside any plugin that installs a pinned package itself (the
+#: benchmark's CLIs). Checked on the branch only: no plugin tag freezes it, so
+#: there are no released versions to keep working. Test files are skipped --
+#: they hold made-up pins on purpose.
+TOOLING = ("evals",)
+
+
+def pins_under(ref: str | None, path: str, *, skip_tests: bool = False) -> set[str]:
     if ref is None:
         # Tracked and new files, as they are on disk, but not ignored ones
         # (caches, venvs): what CI would see once this is committed.
         names = git("ls-files", "--cached", "--others", "--exclude-standard",
-                    "--", plugin.path).splitlines()
+                    "--", path).splitlines()
+        if skip_tests:
+            names = [n for n in names if not Path(n).name.startswith("test_")]
         files = [ROOT / n for n in names if (ROOT / n).is_file()]
         texts = [p.read_text(errors="replace") for p in files]
     else:
-        names = git("ls-tree", "-r", "--name-only", ref, "--", plugin.path).split()
+        names = git("ls-tree", "-r", "--name-only", ref, "--", path).split()
+        if skip_tests:
+            names = [n for n in names if not Path(n).name.startswith("test_")]
         texts = [show(ref, n) or "" for n in names]
     return {m for t in texts for m in PIN.findall(t)}
+
+
+def pins_at(ref: str | None, plugin: Release) -> set[str]:
+    return pins_under(ref, plugin.path)
 
 
 def collect_pins(n_tags: int) -> dict[str, set[str]]:
@@ -286,6 +302,9 @@ def collect_pins(n_tags: int) -> dict[str, set[str]]:
         for tag in tags_for(rel)[:n_tags]:
             for pin in pins_at(tag, rel):
                 seen.setdefault(pin, set()).add(tag)
+    for path in TOOLING:
+        for pin in pins_under(None, path, skip_tests=True):
+            seen.setdefault(pin, set()).add(f"{path}@HEAD")
     return seen
 
 
