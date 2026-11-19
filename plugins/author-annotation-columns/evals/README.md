@@ -42,7 +42,8 @@ through aiohttp, which ignores the sandbox's HTTPS proxy. The agent then
 downloads the whole h5ad with `curl` and profiles it itself. Picks are still
 graded correctly, so the smoke result is meaningful for the small datasets. The
 large ones (`smoke-breast-stroma-levels`, 416k cells) may time out. Outside the
-eval sandbox the skill works as written.
+eval sandbox the skill works as written. Fix tracked in
+[#29](https://github.com/Cellular-Semantics/atlas-skills/issues/29).
 
 **Known miss:** the l4 baseline run left `level0` out on
 `smoke-breast-stroma-levels`, so that case is expected to score below 1.
