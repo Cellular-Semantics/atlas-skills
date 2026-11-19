@@ -76,6 +76,41 @@ If the profile format changes, the fixtures must be regenerated and the benchmar
 re-scored — `benchmark.py` warns when the installed `h5ad-obs` no longer matches the
 version recorded in `fixtures/profiles/PROVENANCE.json`.
 
+## The picks.json check
+
+The hook that guards `picks.json` was measured separately from the picker. It
+checks names, not meaning: is each picked column really in obs, is it spelt and
+cased as obs has it, and is it not a portal field. The method:
+
+- **Inputs.** The 73 frozen picker answers, each checked against its own
+  dataset's profile.
+- **Errors.** Synthetic. Each class below is one way a report goes wrong,
+  applied to every clean answer it fits. So the rates describe the check
+  against these mutations. They do not say how often a real picker makes each
+  mistake.
+- **`wrong_but_real`.** This class is there to show the limit. It adds a real
+  column that the picker should not have taken. The check is not meant to catch
+  that; judging it is what the benchmark above measures.
+
+Unmutated: 72/73 frozen answers pass; 0 false rejects; 1 known picker error caught.
+
+| mutation | applied | caught | rate | meant to catch |
+|---|---|---|---|---|
+| `invented` | 72 | 72 | 100% | yes |
+| `recased` | 69 | 69 | 100% | yes |
+| `separator` | 51 | 51 | 100% | yes |
+| `borrowed` | 72 | 72 | 100% | yes |
+| `portal` | 72 | 72 | 100% | yes |
+| `portal_term_id` | 72 | 72 | 100% | yes |
+| `wrong_field_key` | 72 | 72 | 100% | yes |
+| `dropped_field_type` | 72 | 72 | 100% | yes |
+| `missing_reasoning` | 72 | 72 | 100% | yes |
+| `wrong_but_real` | 72 | 0 | 0% | no |
+Reproduce with `python3 evals/picks_catch_rate.py`. `evals/test_picks_catch_rate.py`
+pins these numbers in CI. The one known picker error is a frozen answer that
+picked `BICCN_ontology_term_id`, which the skill's rules forbid. The check
+rejects it unmutated.
+
 ## Limits
 
 - **CELLxGENE only.** The skill is portal-agnostic; this gold set is not. It is a good

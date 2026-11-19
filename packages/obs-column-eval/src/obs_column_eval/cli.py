@@ -13,6 +13,7 @@ parsing prose.
     obs-column-eval score picks.json          # metrics, per field type
     obs-column-eval score picks.json --baseline   # ... vs the frozen n=73
     obs-column-eval schema                    # the skill's picks.json contract
+    obs-column-eval check-picks picks.json    # ... and a report held to it
 """
 from __future__ import annotations
 
@@ -23,13 +24,14 @@ from pathlib import Path
 
 from . import __version__
 from .candidates import mine
+from .check import SCHEMA_PATH as PICKS_SCHEMA
+from .check import check_report
 from .curation import DATA, parse_curation
 from .gold import FIELD_TYPES, flatten, gold_set, notes
 from .manifest import full, subset, with_ground_truth
 from .score import score_by_field_type, score_picks
 
 FROZEN_PICKS = DATA / "frozen" / "n73_picks.json"
-PICKS_SCHEMA = Path(__file__).parent / "schemas" / "picks.schema.json"
 
 
 def _load_picks(path: Path) -> dict[str, object]:
@@ -120,10 +122,29 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("schema", help="The JSON Schema for the report the "
                                   "author-annotation-columns skill writes.")
 
+    p_chk = sub.add_parser(
+        "check-picks",
+        help="Check picks.json reports: the schema, and that every picked "
+             "column is in the obs they name. Exits 1 if any fails. Needs "
+             "the `check` extra.")
+    p_chk.add_argument("reports", type=Path, nargs="+")
+
     args = ap.parse_args(argv)
 
     if args.command == "schema":
         return _emit(json.loads(PICKS_SCHEMA.read_text()))
+
+    if args.command == "check-picks":
+        results = [check_report(p) for p in args.reports]
+        _emit(results if len(results) > 1 else results[0])
+        failed = [r for r in results if not r["ok"]]
+        for r in failed:
+            # stdout is for machines; this is what a person -- or a hook
+            # relaying it to the model -- reads.
+            print(f"{r['report']}: {len(r['problems'])} problem(s)", file=sys.stderr)
+            for problem in r["problems"]:
+                print(f"  - {problem}", file=sys.stderr)
+        return 1 if failed else 0
 
     if args.command == "datasets":
         return _emit(with_ground_truth(full() if args.all else subset()))
