@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import http.server
 import threading
+import urllib.parse
+import urllib.request
 
 import h5py
 import numpy as np
@@ -112,3 +114,57 @@ def no_range_url():
     threading.Thread(target=server.serve_forever, daemon=True).start()
     yield f"http://127.0.0.1:{server.server_port}/whole.h5ad"
     server.shutdown()
+
+
+class _ForwardingProxy(http.server.BaseHTTPRequestHandler):
+    """A plain-HTTP forward proxy that sends every request to one upstream.
+
+    A client that honours HTTP_PROXY sends the absolute URL here; one that does
+    not tries to resolve the URL's host itself, which the tests make impossible.
+    """
+
+    def log_message(self, *args):
+        pass
+
+    def _forward(self, method):
+        path = urllib.parse.urlsplit(self.path).path
+        self.server.seen.append((method, self.path))
+        req = urllib.request.Request(self.server.upstream + path, method=method)
+        if self.headers.get("Range"):
+            req.add_header("Range", self.headers["Range"])
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        with opener.open(req) as r:
+            body = r.read()
+            self.send_response(r.status)
+            for k in ("content-length", "content-range", "accept-ranges"):
+                if r.headers.get(k):
+                    self.send_header(k, r.headers[k])
+            self.end_headers()
+            if method == "GET":
+                self.wfile.write(body)
+
+    def do_GET(self):
+        self._forward("GET")
+
+    def do_HEAD(self):
+        self._forward("HEAD")
+
+
+@pytest.fixture
+def proxied(served, monkeypatch):
+    """(url, proxy) where url's host does not resolve and only the proxy reaches it."""
+    upstream = served[0].rsplit("/", 1)[0]
+    proxy = http.server.ThreadingHTTPServer(("127.0.0.1", 0), _ForwardingProxy)
+    proxy.upstream = upstream
+    proxy.seen = []
+    threading.Thread(target=proxy.serve_forever, daemon=True).start()
+    proxy_url = f"http://127.0.0.1:{proxy.server_port}"
+    for var in ("NO_PROXY", "no_proxy", "ALL_PROXY", "all_proxy"):
+        monkeypatch.delenv(var, raising=False)
+    for var in ("HTTP_PROXY", "http_proxy"):
+        monkeypatch.setenv(var, proxy_url)
+    assert urllib.parse.urlsplit(upstream).hostname == "127.0.0.1"
+    # .invalid is reserved (RFC 2606): it never resolves, so a client that
+    # ignores the proxy fails here rather than quietly reaching the server.
+    yield "http://h5ad-obs.invalid/mini.h5ad", proxy
+    proxy.shutdown()
