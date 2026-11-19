@@ -97,9 +97,12 @@ one dataset. `obs-column-eval candidates evals/fixtures/profiles` narrows what
 to curate next; [`docs/sample-fields.md`](../docs/sample-fields.md) says what
 would have to happen to turn it into a number.
 
-Two stages, both cached under `evals/.cache/`. Profiling is deterministic and
-needs no agent, so a rerun costs no bandwidth; picks are cached too, so a spend
-ceiling or a Ctrl-C costs only the datasets still outstanding.
+Two stages. Profiles are committed and deterministic, so a rerun costs no
+bandwidth. Picks are cached under `evals/.cache/picks/`, so a spend ceiling or a
+Ctrl-C costs only the datasets still outstanding. A cached pick is reused only
+if the same picker made it: the same plugin version and the same
+`author-celltype-picker` definition. Anything else is picked again, and
+`--force-picks` ignores the cache entirely.
 
 ### The run log
 
@@ -126,18 +129,21 @@ than as a claim.
 Unlike `runner.py`, the accuracy arm can run against the working tree. The
 picker sub-agent is declared `tools: Read` — it reads a profile file and returns
 JSON, and never shells out — so it never touches the pinned `uvx` command.
-`benchmark.py` produces the profiles itself, and takes env overrides for the
-CLIs. And it inherits the cwd rather than isolating to a temp directory, so a
+And it inherits the cwd rather than isolating to a temp directory, so a
 **local-scope** install is visible to it:
 
 ```sh
 claude plugin marketplace add "$PWD" --scope local
 claude plugin install author-annotation-columns@atlas-skills --scope local
-
-H5AD_OBS_CMD="packages/h5ad-obs/.venv/bin/h5ad-obs" \
-OBS_COLUMN_EVAL_CMD="packages/obs-column-eval/.venv/bin/obs-column-eval" \
-  python3 evals/benchmark.py --all --note "why this run"
+python3 evals/benchmark.py --all --note "why this run"
 ```
+
+Its two CLIs, `h5ad-obs` and `obs-column-eval`, run from the working tree
+(`uv run --with-editable packages/<pkg>`), not from a released pin. The run log
+records the gold snapshot and `--freeze` writes baselines from the working tree,
+so the scorer must be the working tree too; a pin that fell behind would score
+against older gold while the log named the newer. `H5AD_OBS_CMD` and
+`OBS_COLUMN_EVAL_CMD` still override them, e.g. with a venv `dev.sh` built.
 
 Local scope writes to `.claude/settings.local.json`, which is gitignored, and
 does not disturb whatever is installed at user scope. Remove it afterwards with

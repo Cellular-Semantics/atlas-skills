@@ -63,34 +63,32 @@ PROVENANCE = PROFILES / "PROVENANCE.json"
 #: cached locally, so an interrupted run costs only what is outstanding.
 PICKS_CACHE = HERE / ".cache" / "picks"
 
-#: The published packages, pinned the way the skills pin them: GitHub source
-#: archives of each package's own release tag. One pin per package -- they
-#: release separately. scripts/versions.py collects these alongside the skills'
-#: pins, so CI installs them on every pull request and nightly; this line used to
-#: name a tag (v0.3.0) that was never pushed, and nothing noticed. Move them when
-#: a package releases.
-#: Each pin is one string literal on one line, so versions.py can find it.
-H5AD_OBS_PIN = "https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-h5ad-obs--v0.3.2.tar.gz#subdirectory=packages/h5ad-obs"
-OBS_COLUMN_EVAL_PIN = "https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-obs-column-eval--v0.5.0.tar.gz#subdirectory=packages/obs-column-eval"
+def _cli(env_var: str, package: str, entrypoint: str) -> list[str]:
+    """The package's CLI from the working tree, unless an env var says otherwise.
 
+    The working tree, not a released pin, because the benchmark already reads
+    obs-column-eval's gold snapshot and frozen baselines from the working tree:
+    it records the snapshot in the run log and `--freeze` writes beside it. A
+    scorer from a pin that had fallen behind would score against older gold
+    while the log named the newer one, and nothing would notice. What users get
+    is the picker, which comes from the installed plugin; these are tools.
 
-def _cli(env_var: str, pin: str, entrypoint: str) -> list[str]:
-    """The published command, unless an env var points somewhere else.
+    Editable, so a source edit is picked up: `uvx --from ./packages/<pkg>`
+    reuses its cached build until pyproject.toml changes. 3.11 is the oldest
+    Python every package supports, as in dev.sh.
 
-    The default is the pinned release, so the benchmark measures what users get.
-    The override exists for developing against the working tree before a tag is
-    cut:
-
-        H5AD_OBS_CMD="packages/h5ad-obs/.venv/bin/h5ad-obs" python3 evals/benchmark.py
+        OBS_COLUMN_EVAL_CMD="packages/obs-column-eval/.venv/bin/obs-column-eval" \\
+          python3 evals/benchmark.py        # e.g. a venv dev.sh already built
     """
     override = os.environ.get(env_var)
     if override:
         return shlex.split(override)
-    return ["uvx", "--from", pin, entrypoint]
+    return ["uv", "run", "--no-project", "--quiet", "--python", "3.11",
+            "--with-editable", str(HERE.parent / "packages" / package), "--", entrypoint]
 
 
-H5AD_OBS = _cli("H5AD_OBS_CMD", H5AD_OBS_PIN, "h5ad-obs")
-EVAL_CLI = _cli("OBS_COLUMN_EVAL_CMD", OBS_COLUMN_EVAL_PIN, "obs-column-eval")
+H5AD_OBS = _cli("H5AD_OBS_CMD", "h5ad-obs", "h5ad-obs")
+EVAL_CLI = _cli("OBS_COLUMN_EVAL_CMD", "obs-column-eval", "obs-column-eval")
 
 PICK_PROMPT = (
     "Use the author-celltype-picker subagent on the obs column profile at {path}. "
@@ -293,20 +291,45 @@ def write_provenance(profiles: dict, unreadable: list[str]) -> None:
     }, indent=2) + "\n")
 
 
-def pick(dsid: str, path: pathlib.Path, timeout: int, *, force: bool = False,
+def picker_key(provenance: dict) -> dict:
+    """What a cached pick must have been made by to stand in for a fresh one:
+    the plugin version and the picker agent's definition. Scope and source are
+    left out -- the same version installed another way picks the same."""
+    m = re.match(r"author-annotation-columns (\S+)", provenance.get("plugin", ""))
+    return {"plugin_version": m.group(1) if m else None,
+            "agent_sha256": provenance.get("agent_sha256")}
+
+
+def cached_pick(dsid: str, key: dict) -> dict | None:
+    """The cached pick for a dataset, if the picker that made it is this one.
+
+    A cache keyed by dataset alone served picks from an older plugin as if the
+    current one had made them. An entry written before the key was recorded is
+    treated as stale too.
+    """
+    cached = PICKS_CACHE / f"{dsid}.json"
+    if not cached.exists():
+        return None
+    row = json.loads(cached.read_text())
+    if row.get("picker") != key:
+        return None
+    row["cached"] = True
+    row["cost_usd"] = 0.0  # already paid for; do not count it twice
+    return row
+
+
+def pick(dsid: str, path: pathlib.Path, timeout: int, *, key: dict, force: bool = False,
          max_turns: int = DEFAULT_MAX_TURNS) -> dict:
     """One headless run of the picker sub-agent, cached on disk.
 
     A full run costs real money and takes an hour. Caching each pick means a
     spend ceiling, a rate limit or a Ctrl-C costs only the datasets still
-    outstanding, not the whole run again.
+    outstanding, not the whole run again. A cached pick is reused only if the
+    same picker made it (`key`).
     """
     PICKS_CACHE.mkdir(parents=True, exist_ok=True)
     cached = PICKS_CACHE / f"{dsid}.json"
-    if cached.exists() and not force:
-        row = json.loads(cached.read_text())
-        row["cached"] = True
-        row["cost_usd"] = 0.0  # already paid for; do not count it twice
+    if not force and (row := cached_pick(dsid, key)) is not None:
         return row
     cmd = ["claude", "-p", "--output-format", "json", "--max-turns", str(max_turns),
            "--allowedTools", "Task", "Read"]
@@ -338,6 +361,7 @@ def pick(dsid: str, path: pathlib.Path, timeout: int, *, force: bool = False,
         return row
     row["picks"] = list(payload.get("picks", []))
     row["reasoning"] = payload.get("reasoning", "")
+    row["picker"] = key
     cached.write_text(json.dumps(row, indent=2))  # only successes are cached
     return row
 
@@ -465,10 +489,14 @@ def main() -> int:
                            or HERE / "results" / f"benchmark-{time.strftime('%Y%m%d-%H%M%S')}")
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"\n== picking ({args.jobs} at a time) ==")
+    # Before picking, not after: it keys the picks cache.
+    picker = _picker_provenance()
+    key = picker_key(picker)
+    print(f"\n== picking ({args.jobs} at a time; picker {key['plugin_version']}, "
+          f"agent {key['agent_sha256']}) ==")
     rows, spent = [], 0.0
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as pool:
-        futures = {pool.submit(pick, d, p, args.timeout, force=args.force_picks,
+        futures = {pool.submit(pick, d, p, args.timeout, key=key, force=args.force_picks,
                                max_turns=args.max_turns): d
                    for d, p in profiles.items()}
         for future in concurrent.futures.as_completed(futures):
@@ -542,7 +570,6 @@ def main() -> int:
         if row["agent_extras"]:
             print(f"      extra : {', '.join(row['agent_extras'])}")
 
-    picker = _picker_provenance()
     picker["models_used"] = sorted({m for r in rows for m in r.get("models", [])})
     if any("picks" in r and not r.get("models") for r in rows):
         picker["models_note"] = "some picks came from a cache written before models were recorded"

@@ -381,19 +381,58 @@ def test_picking_the_standardised_field_still_fails():
                                "BICCN_class_label and BICCN_cluster_label.")
 
 
-# --- the benchmark's own pins ------------------------------------------------
+# --- the benchmark's CLIs and picks cache ------------------------------------
 
-def test_benchmark_pins_are_seen_by_the_pin_check():
-    """CI installs every pin `scripts/versions.py pins` finds. The benchmark's
-    default once named a tag that was never pushed, built with an f-string the
-    check could not see; each pin must stay one literal the check collects."""
-    import subprocess
-    import sys
-
-    root = pathlib.Path(__file__).resolve().parent.parent
-    out = subprocess.run([sys.executable, str(root / "scripts" / "versions.py"), "pins",
-                          "--tags", "0"], capture_output=True, text=True, cwd=root).stdout
+def test_benchmark_runs_its_clis_from_the_working_tree(monkeypatch):
+    """The scorer must match the gold and baselines the run records, which are
+    read from the working tree. Editable, so a source edit is not served from a
+    stale build."""
     import benchmark
-    where = {row.split("\t")[0]: row.split("\t")[1].split() for row in out.splitlines()}
-    for pin in (benchmark.H5AD_OBS_PIN, benchmark.OBS_COLUMN_EVAL_PIN):
-        assert "evals@HEAD" in where.get(pin, []), pin
+
+    monkeypatch.delenv("OBS_COLUMN_EVAL_CMD", raising=False)
+    cmd = benchmark._cli("OBS_COLUMN_EVAL_CMD", "obs-column-eval", "obs-column-eval")
+    assert "--with-editable" in cmd
+    path = pathlib.Path(cmd[cmd.index("--with-editable") + 1])
+    assert path == pathlib.Path(__file__).resolve().parent.parent / "packages" / "obs-column-eval"
+    assert (path / "pyproject.toml").exists()
+    assert cmd[-2:] == ["--", "obs-column-eval"]
+    assert not any("github.com" in part for part in cmd)
+
+
+def test_benchmark_cli_override_still_wins(monkeypatch):
+    import benchmark
+
+    monkeypatch.setenv("OBS_COLUMN_EVAL_CMD", "some/venv/bin/obs-column-eval --x")
+    assert benchmark._cli("OBS_COLUMN_EVAL_CMD", "obs-column-eval", "obs-column-eval") == \
+        ["some/venv/bin/obs-column-eval", "--x"]
+
+
+def test_picker_key_is_version_and_agent_not_scope():
+    import benchmark
+
+    local = benchmark.picker_key({"plugin": "author-annotation-columns 0.6.3 (local scope, "
+                                            "atlas-skills)", "agent_sha256": "abc"})
+    user = benchmark.picker_key({"plugin": "author-annotation-columns 0.6.3 (user scope, "
+                                           "atlas-skills)", "agent_sha256": "abc"})
+    assert local == user == {"plugin_version": "0.6.3", "agent_sha256": "abc"}
+
+
+@pytest.mark.parametrize("stored,reused", [
+    ({"plugin_version": "0.6.3", "agent_sha256": "abc"}, True),
+    ({"plugin_version": "0.6.0", "agent_sha256": "abc"}, False),   # older plugin
+    ({"plugin_version": "0.6.3", "agent_sha256": "old"}, False),   # agent edited
+    (None, False),                                                 # written before keys
+])
+def test_a_cached_pick_is_reused_only_from_the_same_picker(tmp_path, monkeypatch,
+                                                           stored, reused):
+    import benchmark
+
+    monkeypatch.setattr(benchmark, "PICKS_CACHE", tmp_path)
+    row = {"dsid": "d1", "picks": ["level1"], "cost_usd": 0.2}
+    if stored is not None:
+        row["picker"] = stored
+    (tmp_path / "d1.json").write_text(json.dumps(row))
+    got = benchmark.cached_pick("d1", {"plugin_version": "0.6.3", "agent_sha256": "abc"})
+    assert (got is not None) is reused
+    if reused:
+        assert got["cached"] and got["cost_usd"] == 0.0
