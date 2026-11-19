@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "obs-column-eval"
-version = "0.2.0"
+version = "0.3.0"
 description = "Gold set and metrics for scoring author cell-type obs column picks against CL_KG curation."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -20,7 +20,9 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-test = ["pytest>=8"]
+# jsonschema is for the tests only: they hold the frozen picks and the agents'
+# documented shapes to the schema. Nothing at runtime validates, yet.
+test = ["pytest>=8", "jsonschema~=4.26.0"]
 
 [project.urls]
 Homepage = "https://github.com/Cellular-Semantics/atlas-skills"

@@ -28,6 +28,12 @@ have one. See [`docs/sample-fields.md`](../../docs/sample-fields.md).
   eval runs by default.
 - **The frozen baseline** (`data/frozen/`) — the n=73 picks and scores behind the
   published Jaccard 0.81, so a new run can be compared like for like.
+- **The report contract** (`schemas/picks.schema.json`) — the shape of the
+  `picks.json` the `author-annotation-columns` skill writes for each dataset,
+  and of what each picker sub-agent returns. The tests hold the frozen picks
+  and the hand-curated entries to it. One frozen answer fails, and should: it
+  picked `BICCN_ontology_term_id`, and no `*_ontology_term_id` column is ever a
+  pick.
 
 ## Use
 
@@ -40,6 +46,7 @@ obs-column-eval notes                         # why the awkward calls went that 
 obs-column-eval curation                      # the raw CL_KG sheets
 obs-column-eval score picks.json --baseline
 obs-column-eval candidates <profiles-dir>     # what to hand-curate next
+obs-column-eval schema                        # the picks.json contract
 ```
 
 `picks.json` takes three shapes. `{dataset_id: [column, ...]}` and

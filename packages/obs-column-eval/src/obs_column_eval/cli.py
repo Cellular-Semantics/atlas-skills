@@ -12,6 +12,7 @@ parsing prose.
     obs-column-eval curation                  # the raw CL_KG sheets
     obs-column-eval score picks.json          # metrics, per field type
     obs-column-eval score picks.json --baseline   # ... vs the frozen n=73
+    obs-column-eval schema                    # the skill's picks.json contract
 """
 from __future__ import annotations
 
@@ -28,6 +29,7 @@ from .manifest import full, subset, with_ground_truth
 from .score import score_by_field_type, score_picks
 
 FROZEN_PICKS = DATA / "frozen" / "n73_picks.json"
+PICKS_SCHEMA = Path(__file__).parent / "schemas" / "picks.schema.json"
 
 
 def _load_picks(path: Path) -> dict[str, object]:
@@ -115,7 +117,13 @@ def main(argv: list[str] | None = None) -> int:
                       help="Also score the frozen n=73 picks on the same datasets, so "
                            "the comparison is like for like.")
 
+    sub.add_parser("schema", help="The JSON Schema for the report the "
+                                  "author-annotation-columns skill writes.")
+
     args = ap.parse_args(argv)
+
+    if args.command == "schema":
+        return _emit(json.loads(PICKS_SCHEMA.read_text()))
 
     if args.command == "datasets":
         return _emit(with_ground_truth(full() if args.all else subset()))
