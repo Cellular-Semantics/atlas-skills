@@ -468,3 +468,29 @@ def test_cli_with_several_scripts_none_named_after_directory_fails(repo: Path) -
           '[project.scripts]\na = "tool.cli:main"\nb = "tool.cli:main"\n')
     out = run(repo, "cli", "tool")
     assert out.returncode != 0 and "['a', 'b']" in out.stderr
+
+
+# --- repo tooling outside the plugins (evals/) -----------------------------------
+
+def test_tooling_pin_is_collected_on_the_branch(repo: Path) -> None:
+    # The benchmark installs its CLIs itself; a pin there that does not resolve
+    # went unnoticed for weeks when only plugins/ was scanned.
+    write(repo, "evals/bench.py", f'PIN = "{PIN.format(v="0.1.0")}"\n')
+    rows = dict(line.split("\t")[:2] for line in run(repo, "pins", "--tags", "0").stdout.splitlines())
+    assert "evals@HEAD" in rows[PIN.format(v="0.1.0")].split()
+
+
+def test_tooling_test_files_are_skipped(repo: Path) -> None:
+    write(repo, "evals/test_bench.py", f'FAKE = "{PIN.format(v="9.9.9")}"\n')
+    assert "pkg-tool--v9.9.9" not in run(repo, "pins", "--tags", "0").stdout
+
+
+def test_unpinned_tooling_pin_fails(repo: Path) -> None:
+    write(repo, "evals/bench.py", f'PIN = "{UNPINNED}"\n')
+    out = run(repo, "pins", "--tags", "0")
+    assert out.returncode == 1 and "names no tag" in out.stderr
+
+
+def test_tooling_pins_stay_out_of_the_plugin_report(repo: Path) -> None:
+    write(repo, "evals/bench.py", f'PIN = "{PIN.format(v="0.9.9")}"\n')
+    assert "0.9.9" not in run(repo, "report").stdout

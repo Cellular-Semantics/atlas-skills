@@ -379,3 +379,21 @@ def test_picking_the_standardised_field_still_fails():
     assert not verdict(checks, bad)
     assert not verdict(checks, "I picked cell_type_ontology_term_id and "
                                "BICCN_class_label and BICCN_cluster_label.")
+
+
+# --- the benchmark's own pins ------------------------------------------------
+
+def test_benchmark_pins_are_seen_by_the_pin_check():
+    """CI installs every pin `scripts/versions.py pins` finds. The benchmark's
+    default once named a tag that was never pushed, built with an f-string the
+    check could not see; each pin must stay one literal the check collects."""
+    import subprocess
+    import sys
+
+    root = pathlib.Path(__file__).resolve().parent.parent
+    out = subprocess.run([sys.executable, str(root / "scripts" / "versions.py"), "pins",
+                          "--tags", "0"], capture_output=True, text=True, cwd=root).stdout
+    import benchmark
+    where = {row.split("\t")[0]: row.split("\t")[1].split() for row in out.splitlines()}
+    for pin in (benchmark.H5AD_OBS_PIN, benchmark.OBS_COLUMN_EVAL_PIN):
+        assert "evals@HEAD" in where.get(pin, []), pin
