@@ -16,7 +16,7 @@ plugin is in scope: no project CLAUDE.md, no `.claude/skills`.
     python3 evals/runner.py --dry-run             # print prompts, spend nothing
 
 These cases read real h5ads from the CELLxGENE CDN and cost real money
-(~$0.20-0.50 per run), so the default is one run per case and `--max-cost-usd`
+(~$0.25-0.65 per run, ~$5 for the suite), so the default is one run per case and `--max-cost-usd`
 aborts if a suite runs away.
 
 For picker *accuracy* against the curated gold set -- a different question, with
@@ -111,9 +111,20 @@ REQUIRED_PLUGIN = "author-annotation-columns"
 #: What the cases need to be present. Bump alongside that plugin's version.
 EXPECTED_PLUGIN_VERSION = "0.6.3"
 
-INSTALL_HINT = (
-    "  claude plugin marketplace add Cellular-Semantics/atlas-skills --scope user\n"
-    f"  claude plugin install {REQUIRED_PLUGIN}@atlas-skills --scope user")
+#: Other plugins a case can name in its checks.json `"requires"`, each at the
+#: version expected. Since the skills were split into per-skill plugins, a case
+#: that needs another skill -- standardised-request-does-not-trigger reads obs
+#: with remote-h5ad-obs -- has nothing to run without it, and fails for the wrong
+#: reason. Bump alongside those plugins' versions.
+OTHER_PLUGINS = {"remote-h5ad-obs": "0.3.4"}
+
+EXPECTED_VERSIONS = {REQUIRED_PLUGIN: EXPECTED_PLUGIN_VERSION, **OTHER_PLUGINS}
+
+
+def install_hint(plugin: str = REQUIRED_PLUGIN) -> str:
+    return ("  claude plugin marketplace add Cellular-Semantics/atlas-skills --scope user\n"
+            f"  claude plugin install {plugin}@atlas-skills --scope user")
+
 
 
 def installed_plugins() -> list[dict]:
@@ -133,7 +144,17 @@ def installed_plugins() -> list[dict]:
     return rows
 
 
-def check_plugin_installed() -> None:
+def required_plugins(cases: list[dict]) -> list[str]:
+    """Every plugin the selected cases need: this one, plus each case's `requires`."""
+    needed = {REQUIRED_PLUGIN} | {p for spec in cases for p in spec.get("requires", [])}
+    unknown = sorted(needed - set(EXPECTED_VERSIONS))
+    if unknown:
+        sys.exit(f"a case requires {', '.join(unknown)}, which runner.py does not know; "
+                 "add it to OTHER_PLUGINS with the version the cases expect")
+    return sorted(needed)
+
+
+def check_plugin_installed(plugin: str = REQUIRED_PLUGIN) -> None:
     """Insist on a *user-scope* install, at the version the cases expect.
 
     Scope matters here and the obvious check gets it wrong. Each case runs in a
@@ -142,22 +163,23 @@ def check_plugin_installed() -> None:
     the repo, and every case would silently run with no plugin and fail for the
     wrong reason. Matching on the plugin name alone waves that setup through.
     """
+    expected = EXPECTED_VERSIONS[plugin]
     rows = [r for r in installed_plugins()
-            if r["name"].startswith(f"{REQUIRED_PLUGIN}@")]
+            if r["name"].startswith(f"{plugin}@")]
     user = [r for r in rows if r.get("scope") == "user"]
     if not user:
         other = ", ".join(f'{r.get("scope")} scope' for r in rows)
-        sys.exit(f"{REQUIRED_PLUGIN} is not installed at user scope"
+        sys.exit(f"{plugin} is not installed at user scope"
                  + (f" (found at: {other} -- the cases run in a temp directory and "
                     "cannot see those)" if rows else "")
-                 + ". These cases test the published plugin:\n" + INSTALL_HINT)
+                 + ". These cases test the published plugin:\n" + install_hint(plugin))
     version = user[0].get("version", "?")
-    if version != EXPECTED_PLUGIN_VERSION:
-        sys.exit(f"{REQUIRED_PLUGIN} {version} is installed at user scope, but these "
-                 f"cases expect {EXPECTED_PLUGIN_VERSION}. A pushed tag plus a "
+    if version != expected:
+        sys.exit(f"{plugin} {version} is installed at user scope, but these "
+                 f"cases expect {expected}. A pushed tag plus a "
                  "marketplace update is needed before an edit shows up here:\n"
                  "  claude plugin marketplace update atlas-skills\n"
-                 f"  claude plugin install {REQUIRED_PLUGIN}@atlas-skills --scope user")
+                 f"  claude plugin install {plugin}@atlas-skills --scope user")
 
 
 def main() -> int:
@@ -184,7 +206,8 @@ def main() -> int:
             print(spec["prompt"], "\n")
         return 0
 
-    check_plugin_installed()
+    for plugin in required_plugins(cases):
+        check_plugin_installed(plugin)
     out_dir = pathlib.Path(args.output_dir or HERE / "results" / time.strftime("%Y%m%d-%H%M%S"))
     out_dir.mkdir(parents=True, exist_ok=True)
 

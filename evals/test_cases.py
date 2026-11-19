@@ -95,6 +95,13 @@ def test_constant_case_accepts_any_wording_of_the_finding():
         assert verdict(checks, phrasing), phrasing
 
 
+def test_constant_case_accepts_same_for_every_cell():
+    # Worded this way on 2026-11-19, with the finding exactly right, and failed.
+    checks = answer_checks("constant-columns")
+    assert verdict(checks, "| `Lineage` | 1, the same for every cell | `Hematopoietic_Mega` |\n"
+                           "The coarse labels never change across the 7,274 cells.")
+
+
 def test_constant_case_fails_when_a_constant_column_is_the_answer():
     checks = answer_checks("constant-columns")
     assert not verdict(checks, "The author cell-type column is `Cell.class`, which is "
@@ -128,7 +135,70 @@ def test_tool_choice_case_fails_on_a_picker_dispatch():
     assert not all(r.passed for r in grade(Run(answer=answer, tool_calls=calls), checks))
 
 
+def _count_checks() -> list[dict]:
+    return [c for c in load("standardised-request-does-not-trigger")
+            if c["kind"] == "answer_matches"]
+
+
+@pytest.mark.parametrize("answer", [
+    "GABAergic neuron 812, glutamatergic neuron 799, ... (1,679 cells).",
+    "| cell_type | ontology id | cells |\n|---|---|---|\n"
+    "| GABAergic neuron | CL:0000617 | 812 |\n| glutamatergic neuron | CL:0000679 | 799 |",
+    "- **GABAergic neuron**: 812 cells\n- **glutamatergic neuron**: 1,061 cells",
+])
+def test_tool_choice_case_accepts_counts_however_laid_out(answer):
+    assert verdict(_count_checks(), answer), answer
+
+
+@pytest.mark.parametrize("answer", [
+    # The 2026-11-19 refusal: no counts, but numbers elsewhere, which the old
+    # any-number-in-range check took for counts.
+    "I couldn't get the cell-type counts: every way of reaching the dataset needed "
+    "permission (5 attempts). Run `pip install anndata` with Python 3.11 and count "
+    "obs['cell_type'].",
+    # The labels with their CURIEs but no counts.
+    "The types are GABAergic neuron (CL:0000617) and glutamatergic neuron (CL:0000679).",
+])
+def test_tool_choice_case_fails_an_answer_without_counts(answer):
+    assert not verdict(_count_checks(), answer), answer
+
+
 # --- the runner's plugin guard ----------------------------------------------
+
+def test_cases_need_only_this_plugin_unless_they_say_so():
+    import runner
+
+    assert runner.required_plugins([{"name": "x"}]) == [runner.REQUIRED_PLUGIN]
+
+
+def test_the_standardised_request_case_needs_remote_h5ad_obs():
+    # It reads obs with the remote-h5ad-obs skill; without that plugin the agent
+    # has no route to the column and the case fails for the wrong reason.
+    import runner
+
+    spec = json.loads((CASES / "standardised-request-does-not-trigger" / "checks.json")
+                      .read_text())
+    assert "remote-h5ad-obs" in runner.required_plugins([spec])
+
+
+def test_an_unknown_required_plugin_fails_before_spending(monkeypatch):
+    import runner
+
+    with pytest.raises(SystemExit) as exc:
+        runner.required_plugins([{"requires": ["no-such-plugin"]}])
+    assert "no-such-plugin" in str(exc.value)
+
+
+def test_guard_checks_each_required_plugin_at_its_own_version(monkeypatch):
+    import runner
+
+    monkeypatch.setattr(runner, "installed_plugins", lambda: [
+        {"name": "remote-h5ad-obs@atlas-skills", "version": "0.0.1", "scope": "user"}])
+    with pytest.raises(SystemExit) as exc:
+        runner.check_plugin_installed("remote-h5ad-obs")
+    assert runner.OTHER_PLUGINS["remote-h5ad-obs"] in str(exc.value)
+    assert "remote-h5ad-obs@atlas-skills" in str(exc.value)
+
 
 def test_plugin_list_is_parsed_into_name_version_scope(monkeypatch):
     """Scope is the part that matters and the obvious check drops it: the cases
