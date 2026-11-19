@@ -5,6 +5,7 @@ every published number moves with it, so its shape is pinned here.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -12,6 +13,8 @@ import sys
 import pytest
 from obs_column_eval import full, parse_curation, score_picks, subset, with_ground_truth
 from obs_column_eval.cli import FROZEN_PICKS, main
+from obs_column_eval.curation import CURATION_DIR
+from obs_column_eval.manifest import TIERS
 
 FROZEN_SCORES = FROZEN_PICKS.parent / "n73_scores.json"
 
@@ -42,17 +45,62 @@ def test_celltype_filter_drops_the_other_author_categories():
         sum(len(v["columns"]) for v in unfiltered.values())
 
 
+def test_snapshot_matches_its_recorded_source():
+    """The sheets are a copy of CL_KG at one commit. A hand edit here would move
+    the gold set with no trace; fixes belong in `_CORRECTIONS` instead."""
+    source = json.loads((CURATION_DIR / "SOURCE.json").read_text())
+    assert len(source["commit"]) == 40
+    on_disk = {p.name for p in CURATION_DIR.glob("*.csv")}
+    assert on_disk == set(source["files"])
+    for name, entry in source["files"].items():
+        digest = hashlib.sha256((CURATION_DIR / name).read_bytes()).hexdigest()
+        assert digest == entry["sha256"], f"{name} differs from the recorded snapshot"
+
+
+def test_plugin_generated_curation_is_not_ground_truth():
+    """Issue #116's sheet was written with this plugin's own picks. Scoring the
+    plugin against it would be circular."""
+    source = json.loads((CURATION_DIR / "SOURCE.json").read_text())
+    assert "Curated_nlm-ckn_Datasets_Issue116.csv" in source["excluded"]
+    assert not any("Issue116" in p.name for p in CURATION_DIR.iterdir())
+
+
 def test_manifest_is_the_whole_test_set():
     manifest = full()
-    assert len(manifest) == 74
+    assert {e["tier"] for e in manifest.values()} == set(TIERS)
+    assert len(full("n73")) == 74
+    assert len(full("n73")) + len(full("l4")) == len(manifest)
     for dsid, entry in manifest.items():
         assert entry["url"].endswith(f"{dsid}.h5ad"), dsid
         assert entry["url"].startswith("https://datasets.cellxgene.cziscience.com/")
+        assert not entry.get("pending_choice"), f"{dsid}: version choice never settled"
 
 
-def test_one_manifest_entry_is_known_unreadable():
+def test_l4_holds_each_cellxgene_dataset_once():
+    """Two versions of one dataset are near-duplicates; scoring both would weight
+    it twice. l4 keeps one and lists the rest as aliases -- and adds nothing for
+    a dataset n73 already covers. (n73 itself is frozen and does hold four
+    datasets twice; see docs/curation-review-2026-11-17.md.)"""
+    n73_cxg = {c for e in full("n73").values() for c in e["cxg_dataset_ids"]}
+    seen: set[str] = set()
+    for dsid, entry in full("l4").items():
+        ids = set(entry["cxg_dataset_ids"])
+        assert ids, f"{dsid} has no CELLxGENE dataset id"
+        assert not ids & n73_cxg, f"{dsid} duplicates an n73 dataset"
+        assert not ids & seen, f"{dsid} duplicates another l4 entry"
+        seen |= ids
+        for alias in entry.get("aliases", []):
+            assert alias not in full(), f"{dsid}: alias {alias} is also scored"
+
+
+def test_unknown_tier_is_refused():
+    with pytest.raises(ValueError):
+        full("n74")
+
+
+def test_one_n73_entry_is_known_unreadable():
     """Kept rather than dropped: removing it would quietly overstate coverage."""
-    unreadable = [d for d, e in full().items() if not e["n_cells"]]
+    unreadable = [d for d, e in full("n73").items() if not e["n_cells"]]
     assert len(unreadable) == 1
 
 
@@ -73,12 +121,27 @@ def test_subset_covers_the_traps_the_rules_exist_for():
     # a range of obs sizes, so cost behaviour is exercised too
     sizes = [e["n_cells"] for e in truth.values()]
     assert min(sizes) < 5_000 and max(sizes) > 100_000
+    # both tiers, so the cheap run notices a picker that only suits n73
+    assert {full()[d]["tier"] for d in truth} == {"n73", "l4"}
+
+
+def test_cli_score_splits_cell_type_by_tier(capsys):
+    """Re-scoring the frozen n73 picks through the CLI gives back, in its n73
+    tier, exactly the stored figure: the split must not change a number."""
+    main(["score", str(FROZEN_PICKS)])
+    by_tier = json.loads(capsys.readouterr().out)["by_field_type"]["cell_type"]["by_tier"]
+    stored = json.loads(FROZEN_SCORES.read_text())["overall"]
+    assert set(by_tier["tiers"]) == {"n73"}
+    assert by_tier["tiers"]["n73"]["jaccard"]["mean"] == pytest.approx(stored["jaccard"]["mean"])
+    # n73 holds four datasets twice; the combined figure counts each once
+    assert by_tier["all"]["n_entries"] - by_tier["all"]["n"] == 4
 
 
 def test_ground_truth_join_covers_every_dataset():
     truth = with_ground_truth()
     assert set(truth) == set(full())
-    assert sum(1 for e in truth.values() if not e["curated"]) == 3
+    n73 = with_ground_truth(full("n73"))
+    assert sum(1 for e in n73.values() if not e["curated"]) == 3
 
 
 def test_frozen_baseline_rescores_to_its_stored_value():
@@ -93,6 +156,34 @@ def test_frozen_baseline_rescores_to_its_stored_value():
     for metric in ("jaccard", "precision", "recall"):
         assert rescored["overall"][metric]["mean"] == \
             pytest.approx(frozen["overall"][metric]["mean"], abs=1e-9), metric
+
+
+def test_l4_baseline_rescores_to_its_stored_value():
+    """The l4 baseline, like n73's, must survive a round trip through the
+    metrics and the shipped gold. A gold change that moves it fails here, and
+    then wants either a revert or a re-frozen baseline with a note why."""
+    frozen_dir = FROZEN_PICKS.parent
+    stored = json.loads((frozen_dir / "l4_scores.json").read_text())
+    picks = {d: v["picks"] for d, v in
+             json.loads((frozen_dir / "l4_picks.json").read_text()).items()}
+    assert set(picks) <= set(full("l4"))
+    # every readable l4 dataset, so later full runs compare like for like
+    assert len(picks) == len(full("l4")) - 1  # 3006a39e is HTTP 403
+    rescored = score_picks(picks, parse_curation())["overall"]
+    assert rescored["hit_rate"]["k"] == stored["overall"]["hit_rate"]["k"]
+    for metric in ("jaccard", "precision", "recall"):
+        assert rescored[metric]["mean"] == \
+            pytest.approx(stored["overall"][metric]["mean"], abs=1e-9), metric
+    prov = stored["_provenance"]
+    assert {"picker", "date", "gold_snapshot"} <= set(prov)
+
+
+def test_cli_baseline_covers_every_frozen_tier(capsys):
+    main(["score", str(FROZEN_PICKS.parent / "l4_picks.json"), "--baseline"])
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["baseline"]["l4"]["n_shared_datasets"] == 112
+    assert "0.6.0" in payload["baseline"]["l4"]["source"]
+    assert payload["baseline"]["n73"]["n_shared_datasets"] == 0
 
 
 def test_the_baselines_divergence_from_the_published_figure_is_accounted_for():
@@ -133,6 +224,11 @@ def test_cli_datasets_defaults_to_the_subset(capsys):
 
 def test_cli_datasets_all(capsys):
     assert main(["datasets", "--all"]) == 0
+    assert len(json.loads(capsys.readouterr().out)) == len(full())
+
+
+def test_cli_datasets_by_tier(capsys):
+    assert main(["datasets", "--tier", "n73"]) == 0
     assert len(json.loads(capsys.readouterr().out)) == 74
 
 
@@ -154,7 +250,8 @@ def test_cli_score_baseline_is_like_for_like(capsys):
     main(["score", str(picks), "--baseline"])
     payload = json.loads(capsys.readouterr().out)
     scored = payload["by_field_type"]["cell_type"]
-    assert payload["baseline"]["n_shared_datasets"] == scored["overall"]["n"]
+    assert set(payload["baseline"]) <= {"n73", "l4"}
+    assert payload["baseline"]["n73"]["n_shared_datasets"] == scored["overall"]["n"]
 
 
 def test_cli_version():
@@ -195,15 +292,19 @@ def test_additions_do_not_leak_into_the_unfiltered_view():
 
 
 def test_predicted_label_columns_are_still_out():
-    """scanvi_label and transf_ann_level_* are model output, not author
-    assertion. Section 3.2 of the review is open; until it is settled they must
-    not drift into the gold set."""
+    """The gold set follows the curators dataset by dataset on predicted labels,
+    and adds none of its own. CL_KG#118 curated `predicted.celltype.l2` *in* on
+    c2054d78 (l4); the HLCA sheets leave scanvi_label and transf_ann_level_*
+    out on these two n73 datasets. Neither may change through `_ADDITIONS`:
+    that would move a frozen baseline on a judgment call that is the
+    curators' to make."""
     curation = parse_curation()
     for dsid in ("b13072bd-9cb6-42ca-9f4f-01252baef273",
                  "b351804c-293e-4aeb-9c4c-043db67f4540"):
         cols = curation[dsid]["columns"]
         assert "scanvi_label" not in cols
         assert not [c for c in cols if c.startswith("transf_ann_level_")]
+    assert curation["c2054d78-3e98-4313-a9e1-60c9a6100bee"]["columns"] == ["predicted.celltype.l2"]
 
 
 # --- field types and the generalised gold set --------------------------------

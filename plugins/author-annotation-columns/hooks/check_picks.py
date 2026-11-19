@@ -38,7 +38,7 @@ import sys
 from pathlib import Path
 
 # One literal, not two concatenated: the release tooling finds pins by pattern.
-PACKAGE = "obs-column-eval[check] @ git+https://github.com/Cellular-Semantics/atlas-skills@pkg-obs-column-eval--v0.4.0#subdirectory=packages/obs-column-eval"
+PACKAGE = "obs-column-eval[check] @ git+https://github.com/Cellular-Semantics/atlas-skills@pkg-obs-column-eval--v0.5.0#subdirectory=packages/obs-column-eval"
 
 REPORT_KEYS = {"schema_version", "source", "requested", "picks", "reasoning"}
 

@@ -40,5 +40,19 @@
     "n_cells": 161764,
     "n_obs_columns": 35,
     "why": "A clean three-level hierarchy (`celltype.l1/l2/l3`) with no traps. If this one fails, something has broken in the plumbing rather than in the judgment."
+  },
+  "4484426f-f83b-4bab-b06d-eb2e177aa031": {
+    "url": "https://datasets.cellxgene.cziscience.com/4484426f-f83b-4bab-b06d-eb2e177aa031.h5ad",
+    "group": "Curated_Breast_Data_KG_V2",
+    "n_cells": 416825,
+    "n_obs_columns": 48,
+    "why": "Breast stroma (l4): a four-level hierarchy, `level0`, `level1`, `level1_global`, `level2`, where the `_global` copy of level1 is a separate curated column and `level0_global` beside it is constant and not curated. Pins rule 6 (every granularity) and rule 4 (constant columns) on the same naming scheme, in a tissue n73 has none of."
+  },
+  "731ad926-5b60-45bf-85de-e32d037c1944": {
+    "url": "https://datasets.cellxgene.cziscience.com/731ad926-5b60-45bf-85de-e32d037c1944.h5ad",
+    "group": "Curated_Retina_ Data_KG_V1",
+    "n_cells": 43857,
+    "n_obs_columns": 35,
+    "why": "Retina (l4): a fine `author_cell_type` (40 labels, cluster-style names like `AC_B_12`, `ChBC_01`) beside a broad `cell_type_group` (`rod`, `cone`, `amacrine`). Both are curated. The eye case: a fine label whose values look like cluster ids must not be rejected as one, and the broad group must not be dropped."
   }
 }

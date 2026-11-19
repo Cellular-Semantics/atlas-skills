@@ -1,0 +1,790 @@
+{
+  "01a9a94d-b038-4b67-9658-de77e072f1a9": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds author-assigned cell-type names (e.g. 'CB_PCE', 'Ciliary_Fibro'), while cell_type and cell_type_ontology_term_id are portal-standardised and the other columns are sample metadata or constant."
+  },
+  "03af5481-a0b6-426c-86b4-9127ada17b53": {
+    "picks": [
+      "author_cell_type",
+      "author_cluster_label"
+    ],
+    "reasoning": "author_cell_type (Macro, Tumor) and author_cluster_label (e.g. '5:Macro', '1:Tumor') are author-assigned cell-type labels at two granularities, while cell_type and cell_type_ontology_term_id are portal-standardised and the rest are constant, QC or sample metadata."
+  },
+  "0649d7b7-b8ef-44d9-9abf-705e664fd522": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds per-cell author-assigned cluster names (e.g. 'K_Epi-Wing', 'Schlemm_Endo', 'Ciliary_Muscle'), while cell_type and cell_type_ontology_term_id are portal-standardised and the rest are sample, donor or constant metadata."
+  },
+  "06a7ffec-2697-4d6f-96f6-d00a34bedb3d": {
+    "picks": [
+      "BICCN_cluster_label",
+      "BICCN_subclass_label",
+      "BICCN_class_label"
+    ],
+    "reasoning": "The BICCN cluster, subclass and class columns hold author cell-type names at three granularities. I left out the portal-standardised cell_type fields, the ILX ontology ID column, and the slice, sample, donor, spatial and QC columns."
+  },
+  "070d3916-633e-43af-bcc6-30358a327161": {
+    "picks": [
+      "BICCN_cluster_label",
+      "BICCN_subclass_label",
+      "RNA family"
+    ],
+    "reasoning": "BICCN_cluster_label (72 named clusters), BICCN_subclass_label (13 subclasses) and RNA family (ET/IT/Pvalb/Sst class-level groups) are author cell-type labels at three granularities; I left out the portal fields (cell_type and the ontology ids), the Cre and genotype columns, the composite top-3 strings, the exc/inh 'cell class' column which I wasn't sure about, and the numeric and constant columns."
+  },
+  "080f9be4-0f94-48cb-a82f-db53df1542ff": {
+    "picks": [
+      "author_cluster_name"
+    ],
+    "reasoning": "author_cluster_name holds author-assigned named cell-type clusters (e.g. 'CD8A+ NK-like', 'TAM HLAhi'), while author_cluster is a numeric cluster index, author_type is a Tumor/Normal sample-level label, and cell_type is the portal-standardised field."
+  },
+  "0b8711c0-5484-4f71-9050-cb5b5421c4c9": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds per-cell author labels (MG_OFF, MG_ON, etc., 12 categories), while cell_type and cell_type_ontology_term_id are portal-standardised and constant, and all other columns are sample, donor, assay or ID metadata."
+  },
+  "0bb62fec-0cf1-46e1-9d10-de65a6d4f814": {
+    "picks": [
+      "supercluster_term"
+    ],
+    "reasoning": "supercluster_term holds named author cell-class labels (e.g. 'Upper rhombic lip', 'CGE interneuron'), while cluster_id and subcluster_id are number-only indices, the ROI/dissection columns are anatomical, and cell_type is the portal's own field."
+  },
+  "1523a519-375a-4cea-9456-d493e1a6d46b": {
+    "picks": [
+      "author_cell_type",
+      "broad_celltype",
+      "compartment"
+    ],
+    "reasoning": "author_cell_type (33 cats) and broad_celltype (27 cats) hold author-assigned cell-type names at fine and broad granularity, and compartment varies per cell as a lineage-level label (PT, non_PT, myeloid, lymphoid); the portal fields cell_type and cell_type_ontology_term_id are rejected, as is cell_state, which is mostly 'na'."
+  },
+  "15a8533e-ffa5-4dcf-8fb4-c8b7d5151f84": {
+    "picks": [
+      "Lineage",
+      "Cell.group",
+      "Cell.class_reannotated"
+    ],
+    "reasoning": "Lineage (7 levels), Cell.group (13) and Cell.class_reannotated (18) are author-assigned cell-type labels at broad, mid and fine granularity, while cell_type and cell_type_ontology_term_id are portal-standardised and the remaining columns are sample metadata, QC or constant."
+  },
+  "171ed79a-b829-4efb-98bf-14951e8a4c90": {
+    "picks": [
+      "cell_type_original"
+    ],
+    "reasoning": "cell_type_original holds the authors' own per-cell labels (Fibroblast, Cardiomyocyte, Myeloid), while final_cluster is number-only cluster ids and major_labl (CTRL/FZ/BZ/RZ), patient_group, the portal fields and the QC columns are not cell-type labels."
+  },
+  "1d6fb189-21a5-4e9b-9082-b6fe225374a9": {
+    "picks": [
+      "subcluster",
+      "cluster",
+      "BICCN_subclass_label"
+    ],
+    "reasoning": "These three hold author cell-type labels at fine (subcluster), cluster and project-convention subclass granularity, while cell_type, cell_type_ontology_term_id, the constant columns, region, donor and QC counts are rejected, and BICCN_ontology_term_id is left out because it mixes names with ILX ids."
+  },
+  "1dbc9400-aeb1-44b4-ba4a-a738c368570f": {
+    "picks": [
+      "BICCN_cluster_label",
+      "BICCN_subclass_label",
+      "RNA family"
+    ],
+    "reasoning": "BICCN_cluster_label (fine clusters), BICCN_subclass_label (subclasses) and RNA family (broad class such as ET, IT, Pvalb) are author-assigned cell-type labels at three granularities. I rejected the portal fields (cell_type and the ontology term ids), the Cre and genotype columns, the composite 'top-3' strings, and the numeric and QC columns."
+  },
+  "1ff3a755-f3ae-41d2-95eb-b7dab87e7a09": {
+    "picks": [
+      "Lineage",
+      "Cell.group",
+      "Cell.class_reannotated"
+    ],
+    "reasoning": "Lineage, Cell.group and Cell.class_reannotated are author-assigned cell-type labels at broad, mid and fine granularity. The portal fields (cell_type, cell_type_ontology_term_id), the constant columns, and the sample, disease and QC columns were left out."
+  },
+  "2330673b-b5dc-4690-bbbe-8f409362df31": {
+    "picks": [
+      "clust_annot",
+      "cell_type_annot"
+    ],
+    "reasoning": "clust_annot (43 named clusters such as 'Astro-1', 'ExN-L5-3') and cell_type_annot (13 broad classes such as 'Astro', 'ExN', 'MSN') are author-provided cell-type labels at two granularities; cell_type and cell_type_ontology_term_id are portal-standardised, and the rest is spatial coordinates, sample metadata or constant."
+  },
+  "234f6d22-65df-4d90-9b4d-b631c7099013": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type has two levels (e.g. 'nonda', presumably dopaminergic vs non-dopaminergic neurons) and is the only author-assigned per-cell cell-type label; cell_type and the ontology term id are portal-standardised and constant, and everything else is donor, sample or portal metadata."
+  },
+  "2808a16d-64c5-451b-91a5-c1a2d9f270d5": {
+    "picks": [
+      "ct_subcluster"
+    ],
+    "reasoning": "ct_subcluster holds author-assigned named sub-cluster labels (e.g. 'V1-excitatory-1', 'INS-oligodendrocyte-2'), while cell_type and cell_type_ontology_term_id are portal-standardised and every other column is sample metadata, a constant, or an ID."
+  },
+  "29bc336a-b0f8-49d1-8cd8-d2cd878680f8": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds author-assigned neuron subtype names (e.g. Ex_LAMP5_BAIAP3, Inh_PRLR_RP11-384J4.2); the portal cell_type and cell_type_ontology_term_id columns are constant and standardised, and the remaining columns are donor, sample, or portal metadata."
+  },
+  "2b284c0b-8a93-4138-a466-9c2bbe9db733": {
+    "picks": [
+      "level0_global",
+      "level1_global",
+      "level0",
+      "level1",
+      "level2"
+    ],
+    "reasoning": "level0/level1/level2 (and the _global variants) are the authors' hierarchical cell-type annotations (Stroma/Epithelial, then names like 'Luminal hormone sensing', then codes like 'LHS1'), while cell_type and the ontology term ids are portal-standardised and the rest is sample metadata, QC or constant."
+  },
+  "2d6a777f-8b44-4164-b141-fd9c1776346a": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds per-cell author-assigned endothelial subtype names (e.g. Endo_NOTCH3_PLK2) while cell_type and the ontology term columns are constant portal fields and the rest are donor, sample or QC metadata."
+  },
+  "2e910e62-7eaf-4c06-80cb-8918e3eea16e": {
+    "picks": [
+      "author_cell_type",
+      "majorclass",
+      "AC_subclass",
+      "AC_cluster",
+      "BC_subclass",
+      "RGC_cluster"
+    ],
+    "reasoning": "These columns hold author cell-type labels at several granularities: the full author label, major class, AC and BC subclasses, and AC and RGC named clusters. I left out the portal fields (cell_type and its ontology ID), sample and QC columns, and the two *_celltype_number columns, which are mostly bare numbers."
+  },
+  "2ed5317e-5cdd-40c9-9570-6601c386a705": {
+    "picks": [
+      "cluster_layers"
+    ],
+    "reasoning": "cluster_layers holds author-assigned cell-type names (e.g. 'Astrocytes', 'L2-L3 Intratelencephalic', 'VIP Interneurons') at finer granularity than the portal-standardised cell_type, which is rejected along with the rest of the sample, QC and ontology columns."
+  },
+  "303e954f-33d7-473e-86f9-f96a18192bd2": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds author-assigned cluster names (e.g. 'P-Hepato', 'C-Hepato2', 'lrNK'), while cell_type and cell_type_ontology_term_id are portal-standardised, clusters_res_0.5 is a numeric-only cluster index, and the rest is sample, donor or assay metadata."
+  },
+  "31310843-6614-49b3-b2e2-3e85d9be1e66": {
+    "picks": [
+      "subclass_transfer"
+    ],
+    "reasoning": "subclass_transfer holds word-based author subclass labels (e.g. 'Oligo NN', 'Sst Gaba'), while cluster_id_transfer is number-only, cell_type and cell_type_ontology_term_id are portal-standardised, and the region, section and QC columns are not cell-type labels."
+  },
+  "35476cf7-35f1-4daf-8507-734403d09c27": {
+    "picks": [
+      "Main_cluster_name",
+      "Organ_cell_lineage",
+      "sub_cluster_name"
+    ],
+    "reasoning": "These three are the authors' hierarchical cell-type labels: the main cluster name, the organ-prefixed cell lineage, and the sub-cluster name. I left out the Matched_BCA/MCA names and BCA_cluster_info because they are reference-atlas matches rather than the authors' own labels. I also left out the portal cell_type fields, the numeric sub_cluster_id, and the batch, donor, QC and constant columns."
+  },
+  "39f2c06e-4a70-4936-a645-7d6a61fc0c00": {
+    "picks": [
+      "BICCN_subclass_label"
+    ],
+    "reasoning": "BICCN_subclass_label holds per-cell author subclass names (ASC, OPC, OGC, MGL), while BICCN_class_label is constant and cell_type, cell_type_ontology_term_id and BICCN_ontology_term_id are portal or ID fields, and the rest is sample, region or QC metadata."
+  },
+  "3ba8c0d4-89c2-4c84-9d66-bb8e1a816286": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds per-cell author labels such as 'cone-on-BC', 'RGC' and 'Muller', and it has 14 categories against 12 in the portal's cell_type. The other columns are portal-standardised fields, sample metadata, or constant."
+  },
+  "3c75e9e9-b09a-4805-bcdd-4ecde45b98f8": {
+    "picks": [
+      "Class",
+      "Subclass",
+      "Supertype"
+    ],
+    "reasoning": "Class, Subclass and Supertype are author-assigned hierarchical cell-type labels (e.g. 'Neuronal: Glutamatergic', 'L2/3 IT', 'L2/3 IT_6'), while cell_type and its ontology ID are portal-standardised and the remaining columns are donor, sample, pathology or QC metadata."
+  },
+  "3d04a6eb-2cd8-4546-9f79-61f739fe503e": {
+    "picks": [
+      "BICCN_cluster_label",
+      "BICCN_subclass_label"
+    ],
+    "reasoning": "BICCN_cluster_label (named clusters such as 'Pvalb Gpr149') and BICCN_subclass_label (such as 'Pvalb neuron') are author cell-type labels at two granularities. I left out the portal fields (cell_type and the *_ontology_term_id columns), the Cre and genotype columns, the top-3 columns that mix labels with percentages, and the unclear 'RNA family' column."
+  },
+  "4484426f-f83b-4bab-b06d-eb2e177aa031": {
+    "picks": [
+      "level1_global",
+      "level1",
+      "level2"
+    ],
+    "reasoning": "level1_global, level1 and level2 are per-cell author cell-type labels at broad and fine granularity (Fibroblast, Perivascular, LE1, FB1). level0_global is constant, level0 is only Stroma versus Doublet, and cell_type and cell_type_ontology_term_id are portal-standardised, so I left those out."
+  },
+  "45b78a7b-6def-40f2-b27f-8eab7848602f": {
+    "picks": [
+      "Cell.Types"
+    ],
+    "reasoning": "Cell.Types holds author-assigned neuronal subtype names such as 'Ex04_RORB-GABRG1 (L4-L5)', while cell_type is a constant portal field and the other columns are sample metadata, QC or portal-standardised fields."
+  },
+  "45f65bd0-f115-42e0-9af9-e409e58485f0": {
+    "picks": [
+      "author_cell_type",
+      "Annotation_Level1",
+      "Annotation_Level2",
+      "Annotation_Level3",
+      "Annotation_Level4"
+    ],
+    "reasoning": "author_cell_type and the Annotation_Level1-4 columns hold author-assigned cell-type labels at several granularities, from broad lineage to fine subtype. I rejected the portal-standardised cell_type and its ontology term id column, and also the sample, donor and QC columns."
+  },
+  "4973ec05-e355-40fc-9f72-56423c12aae9": {
+    "picks": [
+      "Cell_Type"
+    ],
+    "reasoning": "Cell_Type holds the authors' abbreviated cell-type codes (T, B, PLA, MAS, MYE) that the portal's cell_type column expands, while Tumor_Type and Sample_Classification are sample or disease metadata and the rest are portal-standard, donor, or constant fields."
+  },
+  "4a04c010-6fc1-440a-8b87-f12fefd5543a": {
+    "picks": [
+      "_SubType",
+      "_MajorType"
+    ],
+    "reasoning": "_SubType and _MajorType hold author-assigned neuron type names (e.g. Pvalb, MSN-D1, SubCtx-Cplx) at two granularities, while _CellClass and _tech are constant and cell_type is the portal's standardised field."
+  },
+  "4df5ea20-265e-4cec-b09a-e590193576c2": {
+    "picks": [
+      "CrossArea_subclass",
+      "CrossArea_cluster",
+      "WithinArea_subclass",
+      "WithinArea_cluster"
+    ],
+    "reasoning": "The subclass and cluster columns (CrossArea_ and WithinArea_ variants) hold author-assigned names such as 'Astro', 'Oligo_4' and 'OPC_1'; the constant 'Class' column and the portal-standardised cell_type fields are rejected."
+  },
+  "4e6932db-5a78-40e4-b961-f87f66ba139a": {
+    "picks": [
+      "scType_celltype"
+    ],
+    "reasoning": "scType_celltype holds author-run scType cell-type names that vary per cell (e.g. 'Naive CD4+ T cells', 'Classical Monocytes'), while cell_type and cell_type_ontology_term_id are portal-standardised and the other columns are sample, QC or genotype metadata."
+  },
+  "4e7af47a-f83f-4749-825c-0c6976ae07b7": {
+    "picks": [],
+    "reasoning": "The only cell-type-like columns are the portal-standardised cell_type and cell_type_ontology_term_id; the rest are constant metadata, donor, batch, barcodes or numeric values, so there is no author-provided annotation."
+  },
+  "504b7a5b-689b-4a0f-b7e0-02fe50a62dd5": {
+    "picks": [
+      "ct1",
+      "ct2",
+      "ct3",
+      "cell_group"
+    ],
+    "reasoning": "ct1/ct2/ct3 are hierarchical author cell-type annotations (broad to fine, e.g. T4, T4_Mem) and cell_group is a coarse lineage grouping (TNK, B, MonoDC), while cell_type and its ontology ID are portal-standardised, and the leiden, cluster and pool columns are numeric-only indices or sample metadata."
+  },
+  "518edb4f-1e86-4af3-99e4-0a599a94e9fe": {
+    "picks": [
+      "annotation_V2"
+    ],
+    "reasoning": "annotation_V2 holds 41 author-assigned cell-type names (e.g. 'CD4 T cell', 'S1 fibroblasts', 'cDC2'), finer than the portal's standardised cell_type; the other columns are portal fields, sample metadata, QC, or constant."
+  },
+  "532867bf-f240-4c4e-b94d-e0ed7f480b51": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds author-assigned retinal cell-class labels (Rod, HC, BC, NN), while cell_type and cell_type_ontology_term_id are portal-standardised and the group column is donor/region sample metadata."
+  },
+  "541de42d-9188-45f0-ba93-15b57eddd665": {
+    "picks": [
+      "cell_class",
+      "cell_subcluster"
+    ],
+    "reasoning": "cell_class (e.g. 'glutamatergic neurons') and cell_subcluster (e.g. 'astrocytes 5') hold author cell-type names at two granularities, while cell_cluster is number-only, and cell_type and the ontology term id are portal-standardised."
+  },
+  "56b8657c-ee0d-48e8-b9cb-8d69fe71f1bd": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type has 2 categories (e.g. 'nonda', presumably dopaminergic vs non-dopaminergic neurons) and is the only author-assigned cell label, while the portal cell_type is constant 'unknown' and every other column is donor, sample or portal metadata."
+  },
+  "58ff1310-6627-4140-a7a4-0af2c59c02b3": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds author-assigned cluster names (e.g. 'CB_PCE', 'Uveal_Melanocyte') at finer granularity than the portal-standardised cell_type, which along with its ontology term ID is rejected, and all other columns are sample metadata, constants or IDs."
+  },
+  "59a999ca-31b3-4f0e-a4e6-70c240435e01": {
+    "picks": [
+      "clust_annot",
+      "cell_type_annot"
+    ],
+    "reasoning": "clust_annot holds fine author cluster names (e.g. 'ExN-L2/3-1', 'Olig-1') and cell_type_annot holds the broad author classes (e.g. 'ExN', 'MSN', 'Olig'), while cell_type and the ontology term ids are portal-standardised and the rest is sample metadata, QC or constant."
+  },
+  "5a26b6b4-c656-42db-85a1-d2e531205317": {
+    "picks": [
+      "Annotation"
+    ],
+    "reasoning": "Annotation holds author-assigned cell-type names (e.g. 'NK CD56(bright)', 'CD4 na\u00efve T', 'Prolif T') at finer granularity than the portal's cell_type, which is rejected along with cell_type_ontology_term_id."
+  },
+  "5b918503-ab77-42f9-aaab-8d4b6102dbde": {
+    "picks": [
+      "Lineage",
+      "Cell.group",
+      "Cell.class",
+      "sub_cluster"
+    ],
+    "reasoning": "Lineage, Cell.group, Cell.class and sub_cluster are a per-cell author hierarchy (lineage, then broad group, then fine class, then named sub-cluster). I left out the portal-standardised cell_type and cell_type_ontology_term_id, and the sample, donor, disease and QC columns."
+  },
+  "5dc1e511-4c76-45ab-a148-87f94b83d9d5": {
+    "picks": [
+      "level0",
+      "level1",
+      "level2"
+    ],
+    "reasoning": "level0, level1 and level2 are the authors' hierarchical annotation, running from lineage through to fine types such as CD8_Trm and B_naive. level0_global and level1_global are constant. cell_type and cell_type_ontology_term_id are portal-standardised fields."
+  },
+  "5f36898f-78e7-4ba0-950e-a02beca606d4": {
+    "picks": [
+      "Class",
+      "CrossArea_subclass",
+      "CrossArea_cluster",
+      "WithinArea_subclass",
+      "WithinArea_cluster"
+    ],
+    "reasoning": "Class, subclass and cluster columns hold author-assigned cell-type labels at several granularities (e.g. 'inhibitory', 'L2/3 IT', 'Lamp5_4'), while cell_type and the ontology term ids are portal-standardised, and Source, Layer, donor and the constant columns are sample metadata."
+  },
+  "6ad5ca98-d97d-4901-a765-e39b70ac2c02": {
+    "picks": [
+      "CellType"
+    ],
+    "reasoning": "CellType holds per-cell author labels (Rods, BPs, ACs, Macroglia) that differ from the portal-standardised cell_type, while all other columns are portal fields, sample metadata, constants or identifiers."
+  },
+  "6c779b98-f437-4cbf-9b81-a3e6be637419": {
+    "picks": [
+      "Annotation"
+    ],
+    "reasoning": "Annotation holds author-assigned cell-type names (e.g. 'CD4 T cell 1', 'Monocyte 3'), while cluster and rank are number-only indices and cell_type and cell_type_ontology_term_id are portal-standardised fields."
+  },
+  "7021fffe-340b-4ce6-b03a-55e8d99f7bbe": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds author-assigned free-text labels (14 categories, finer than the 9-category portal cell_type, e.g. 'retinal rod cell type A/B'); all other columns are portal-standardised, sample metadata, QC, or constant."
+  },
+  "731ad926-5b60-45bf-85de-e32d037c1944": {
+    "picks": [
+      "author_cell_type",
+      "cell_type_group"
+    ],
+    "reasoning": "author_cell_type holds author fine-grained labels (RPE, HC_02, AC_B_12, L/M cone) and cell_type_group holds author broad classes (rod, horizontal, macroglia); infomap_cluster is number-only, and cell_type and cell_type_ontology_term_id are portal-standardised."
+  },
+  "744afc03-e10b-4908-9baa-096995a01cf2": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds per-cell author-assigned astrocyte subtype cluster names (e.g. Astro_GBP2_SPOCD1) while cell_type and cell_type_ontology_term_id are constant portal fields and the remaining columns are sample metadata."
+  },
+  "781d308e-69cc-4129-8c2f-b370091a8cab": {
+    "picks": [
+      "_SubType",
+      "_MajorType"
+    ],
+    "reasoning": "_SubType and _MajorType hold author-assigned cell-type names (ODC, OPC, ASC) that vary per cell; _CellClass is constant, and cell_type, cell_type_ontology_term_id and the sample, donor, tissue and QC columns are portal-standardised or metadata."
+  },
+  "7ac1b9e2-91f8-4a62-93a8-54638f2e618e": {
+    "picks": [
+      "BICCN_class_label",
+      "BICCN_subclass_label",
+      "cluster"
+    ],
+    "reasoning": "These are the author-assigned class, subclass and cluster labels (Glutamatergic/GABAergic, L6 IT/Sst, named clusters like 'L6 IT VISp Col23a1 Adamts2'); I rejected the portal fields, the driver and reporter genotype columns, the numeric QC columns, and BICCN_ontology_term_id, whose values are ILX ids mixed with raw labels."
+  },
+  "7ac6b92a-cbb7-472b-9380-27b5c4714702": {
+    "picks": [
+      "author_cell_type",
+      "annot_level0",
+      "annot_level1",
+      "annot_level3"
+    ],
+    "reasoning": "author_cell_type and the annot_level0/1/3 columns hold per-cell author cell-type labels at several granularities, while cell_type and cell_type_ontology_term_id are portal-standardised and the remaining columns are sample metadata, QC or constant."
+  },
+  "7afb64af-cd3b-44ed-bd2a-3d7bd8a98e13": {
+    "picks": [
+      "author_cell_type1",
+      "author_cell_type2",
+      "author_cell_type_stroma",
+      "author_cell_type_broad"
+    ],
+    "reasoning": "The four author_cell_type* columns hold per-cell author labels at fine, intermediate, stroma-specific and broad granularity, while cell_type and cell_type_ontology_term_id are portal-standardised and the rest are QC, sample metadata or constant."
+  },
+  "7d8af09a-2f96-49f9-a473-f561a332f25d": {
+    "picks": [
+      "subclass.l2",
+      "subclass.l1",
+      "class"
+    ],
+    "reasoning": "subclass.l2, subclass.l1 and class are per-cell author cell-type labels at three granularities (fine, mid, broad), while cell_type and cell_type_ontology_term_id are portal-standardised and the rest is sample, QC or constant metadata."
+  },
+  "7e07419c-2b0b-4f4c-a653-f1a0e2636313": {
+    "picks": [],
+    "reasoning": "The only author-provided candidate, author_cell_type, holds number-only values ('26.0', '1.0', '2.0') that are cluster indices (rule 3), and cell_type and cell_type_ontology_term_id are portal-standardised, so nothing qualifies."
+  },
+  "82e26751-5d13-44c4-b436-6166d7ac1864": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds per-cell author labels (IMB, DB1, DB3b, FMB, etc.), while cell_type and cell_type_ontology_term_id are portal-standardised and everything else is sample, assay or technical metadata."
+  },
+  "8b1e1941-cd79-48ba-81d1-43732803b9a5": {
+    "picks": [
+      "Class",
+      "CrossArea_subclass",
+      "CrossArea_cluster",
+      "WithinArea_subclass",
+      "WithinArea_cluster"
+    ],
+    "reasoning": "Class, subclass and cluster columns hold author-assigned cell-type labels at several granularities (the CrossArea and WithinArea variants are separate annotations), while cell_type and the ontology term ids are portal fields, Source/Layer are sample metadata, and the rest are constant, QC or donor fields."
+  },
+  "9343817c-5c74-4548-a7d5-01990df5af7a": {
+    "picks": [
+      "supercluster_term"
+    ],
+    "reasoning": "supercluster_term holds named cell-class labels (e.g. 'Oligodendrocyte') that vary per cell; cluster_id and subcluster_id are number-only, the ROI and dissection columns are anatomical regions, and cell_type is the portal's standardised field."
+  },
+  "969408c1-7fdf-4abe-bf6a-9d662e620c16": {
+    "picks": [
+      "_SubType",
+      "_MajorType"
+    ],
+    "reasoning": "_SubType and _MajorType hold author-assigned cell-type names (Pvalb, MSN-D1, SubCtx-Cplx) at two granularities; _CellClass is constant, and cell_type and its ontology ID are portal-standardised."
+  },
+  "9a305865-e7b0-4e8a-bbbf-0b63287e85fd": {
+    "picks": [
+      "author_cell_type",
+      "initial_clustering"
+    ],
+    "reasoning": "author_cell_type holds fine author labels (CD8.TE, CD4.CM, B_naive) and initial_clustering holds coarser author cluster names (CD8, pDC, CD14, Mono_prolif), while cell_type and the ontology ID columns are portal-standardised and the rest is sample, clinical or QC metadata."
+  },
+  "9e66dffa-7407-41b5-98b9-43f2753f171e": {
+    "picks": [
+      "cluster"
+    ],
+    "reasoning": "The `cluster` column holds named author cell-type clusters (Inhibitory_4, Excitatory_1, Oligodendrocytes, Astrocytes), while `cell_type` and `cell_type_ontology_term_id` are portal-standardised and the other columns are sample metadata, QC or constant."
+  },
+  "a16da6f8-964e-4d7f-93a7-66f941267945": {
+    "picks": [
+      "cell_type_coarse",
+      "cell_type_fine",
+      "Lineage",
+      "Cell.group",
+      "Cell.class_reannotated"
+    ],
+    "reasoning": "These are per-cell author labels at several granularities (lineage, coarse, group, fine, reannotated class); ClusterID is number-only, and cell_type and its ontology ID column are portal-standardised, so I left them out."
+  },
+  "a2e7b6e9-79d5-446d-8fb1-19128c97a48f": {
+    "picks": [
+      "Class",
+      "CrossArea_subclass",
+      "CrossArea_cluster",
+      "WithinArea_subclass",
+      "WithinArea_cluster"
+    ],
+    "reasoning": "Class, subclass and cluster columns hold author-assigned cell-type labels at several granularities (inhibitory/excitatory/non-neuronal, Lamp5, L6 CT, Lamp5_2), while cell_type and the ontology term ids are portal-standardised and the rest is sample metadata, QC or constant."
+  },
+  "a31264ed-a890-4409-9d93-cfb5e9cfcc71": {
+    "picks": [
+      "_SubType",
+      "_MajorType"
+    ],
+    "reasoning": "_SubType and _MajorType are per-cell author labels (ASC, MGC, OPC, ODC, EC) at two granularities, while _CellClass is constant and cell_type and cell_type_ontology_term_id are portal-standardised fields."
+  },
+  "a4279399-5621-46bb-ac2c-aba78ae683aa": {
+    "picks": [
+      "cell_states"
+    ],
+    "reasoning": "cell_states holds author-assigned named cell-state labels (e.g. 'vCM1.0', 'MP_LYVE1hi/MHCII_lo', 'CD8T_trans') at finer granularity, while cell_type and cell_type_ontology_term_id are portal-standardised and the rest is sample, QC or constant metadata."
+  },
+  "a991b447-9473-4978-b2bd-190cf4a26825": {
+    "picks": [
+      "_SubType",
+      "_MajorType"
+    ],
+    "reasoning": "_SubType and _MajorType hold per-cell author cell-type labels (ODC, OPC, ASC and so on) at two granularities, while _CellClass is constant and the cell_type and ontology columns are portal-standardised."
+  },
+  "ac9c13da-7134-4d09-8086-d0933cbdba41": {
+    "picks": [
+      "rough_annot",
+      "fine_annot"
+    ],
+    "reasoning": "rough_annot (5 broad classes such as Monocytes and CD4Tcells) and fine_annot (18 finer labels such as 'CD4 T central memory') are the authors' hierarchical cell-type annotations; leiden_r3.0 is a numeric cluster index, and cell_type is the portal's standardised field."
+  },
+  "ae18e694-6f45-4635-affa-63ac0e29323d": {
+    "picks": [
+      "celltype",
+      "majorType"
+    ],
+    "reasoning": "celltype holds author cluster names (e.g. 'T_CD8_c03-GZMK') and majorType holds the broad author-assigned lineage classes (Mono, CD8, CD4, B); cell_type and the ontology term ids are portal-standardised, and the remaining columns are sample, clinical or QC metadata."
+  },
+  "ae802158-1a7e-43e0-9c23-cdc688ce3481": {
+    "picks": [
+      "Celltype"
+    ],
+    "reasoning": "Celltype holds author-assigned, marker-encoded cell-type names (e.g. 'Goblet cells MUC2 TFF1-', 'Enterocytes CA1 CA2 CA4-') at finer granularity than the portal-standardised cell_type, which is rejected along with the ontology term ids and the sample, donor and QC columns."
+  },
+  "b1ff0e05-486e-4569-92c7-d9100c833a03": {
+    "picks": [
+      "leiden",
+      "lineage",
+      "type"
+    ],
+    "reasoning": "leiden holds named clusters (e.g. SI_earlyAE, C_TA), lineage holds finer author cell-state names (e.g. SI_AE2, C_goblet), and type holds broad classes (absorptive, ISC, TA, goblet). I rejected cell_type and cell_type_ontology_term_id as portal fields, and hash_cluster and batch as numeric indices."
+  },
+  "b23a3e02-d6f9-43a3-bb1b-38af6860c092": {
+    "picks": [
+      "broad_lineage",
+      "author_cell_type",
+      "dev_state",
+      "subtype",
+      "precisest_label"
+    ],
+    "reasoning": "These hold author-assigned cell-type names at several granularities, from lineage through cell type and state to the finest subtype. I left out orig_cluster and orig_sub_cluster because they are numeric cluster indices, and the portal-standardised cell_type fields are excluded by rule."
+  },
+  "b557f8c1-3523-4bc5-834f-045ba67daccf": {
+    "picks": [
+      "author_cell_type",
+      "author_cluster_label"
+    ],
+    "reasoning": "author_cell_type holds author cell-type abbreviations (PC, AVR, CNT, Macro) and author_cluster_label holds named clusters (e.g. '9:PC'), while cell_type and the ontology term id are portal-standardised and the rest are sample metadata, QC or constant."
+  },
+  "b63887bb-da4a-4b6b-9da1-19a05227f7eb": {
+    "picks": [
+      "clust_annot",
+      "cell_type_annot"
+    ],
+    "reasoning": "clust_annot (43 fine clusters such as 'Astro-1' and 'MSN-D2') and cell_type_annot (13 broad classes such as 'Astro' and 'MSN') are author-assigned labels at two granularities, while cell_type and the *_ontology_term_id columns are portal-standardised, and the rest is spatial, sample or constant metadata."
+  },
+  "b84def55-a776-4aa4-a9a6-7aab8b973086": {
+    "picks": [
+      "cell_ontology_class",
+      "free_annotation",
+      "compartment"
+    ],
+    "reasoning": "cell_ontology_class (author-assigned Cell Ontology class names), free_annotation (author free-text labels) and compartment (per-cell lineage level) are author annotations, while cell_type and cell_type_ontology_term_id are portal-standardised and the rest is sample metadata, QC or constant."
+  },
+  "bdee03e4-14ee-4f3e-a225-3d12f032841f": {
+    "picks": [
+      "Lineage",
+      "Cell.group",
+      "Cell.class_reannotated"
+    ],
+    "reasoning": "Lineage (broad), Cell.group (mid) and Cell.class_reannotated (fine) are author-assigned per-cell hierarchical labels with word values; cell_type and ontology ids are portal-standardised and the rest are sample, QC or constant metadata."
+  },
+  "be497f34-bf74-4cf0-8094-e6f8729b9fa4": {
+    "picks": [
+      "_SubType",
+      "_MajorType"
+    ],
+    "reasoning": "_SubType and _MajorType are per-cell author labels (e.g. 'L6-IT', 'L2/3-IT', 'CA3'). _CellClass is constant, and cell_type and cell_type_ontology_term_id are portal-standardised fields."
+  },
+  "c2054d78-3e98-4313-a9e1-60c9a6100bee": {
+    "picks": [
+      "predicted.celltype.l2"
+    ],
+    "reasoning": "predicted.celltype.l2 holds per-cell author-provided cell-type names (e.g. 'CD4 TCM', 'NK', 'Treg'), while cell_type and cell_type_ontology_term_id are portal-standardised fields and the remaining columns are QC, sample metadata, or constant."
+  },
+  "c3b19259-db0b-4c2b-92ae-4f2a0d2a2154": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds author-provided cell-type names (Muller, Astrocytes) that vary per cell, while cell_type and cell_type_ontology_term_id are portal-standardised fields and everything else is sample, donor, suspension or assay metadata."
+  },
+  "c725f2d5-dd6f-4233-80a7-e969cad76717": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds author-assigned cluster names (Iris_PPE, Iris_Fibro, Uveal_Melanocyte), while cell_type and cell_type_ontology_term_id are portal-standardised and the rest is sample metadata or constant."
+  },
+  "c76ed67f-ddd1-45b0-bdb2-fa57fac3460f": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds author-assigned named clusters (Gaba1, Gly3, etc.) with 25 levels, while cell_type and cell_type_ontology_term_id are portal-standardised and everything else is sample, donor, assay or other metadata."
+  },
+  "c83105a2-80df-418c-ba40-c66484ba28ff": {
+    "picks": [
+      "author_cell_type",
+      "author_cluster_label"
+    ],
+    "reasoning": "author_cell_type holds named author labels (Tumor, Macro, Endo_PLVAP) and author_cluster_label is the same labels with a cluster-number prefix, while cell_type and the ontology term ids are portal-standardised and the rest is sample metadata, QC or constant."
+  },
+  "c834dd56-af8d-4f48-a420-6e2144ec7336": {
+    "picks": [
+      "cell_type_original"
+    ],
+    "reasoning": "cell_type_original holds the authors' own 8 cell-type labels (e.g. Cardiomyocyte, Pericyte), while cell_type and cell_type_ontology_term_id are portal-standardised and the rest are sample, donor, region, QC or constant columns."
+  },
+  "cccbc47c-1b27-4657-874c-b62ce42091dc": {
+    "picks": [
+      "author_cell_type",
+      "category"
+    ],
+    "reasoning": "author_cell_type holds fine-grained author-assigned cell-type names, and category holds broad per-cell lineage labels (Epithelial, Mesenchymal, T cells, Myeloid), while cell_type and the ontology term ids are portal-standardised and the rest is sample metadata, QC or constant."
+  },
+  "cf59a3de-b569-4b4c-aa4c-ff30c4f5fd90": {
+    "picks": [
+      "CrossArea_subclass",
+      "CrossArea_cluster",
+      "WithinArea_subclass",
+      "WithinArea_cluster"
+    ],
+    "reasoning": "The subclass and cluster columns, both cross-area and within-area, hold author-assigned names such as 'Lamp5' and 'Vip_11' at two levels of granularity, while Class is constant, cell_type and the ontology term id are portal fields, and the rest are sample metadata or QC."
+  },
+  "d0ddf40e-dc4b-4134-8439-bfb8bf7a81f4": {
+    "picks": [
+      "subclass.l2",
+      "subclass.l1",
+      "ClusterClass",
+      "celltype"
+    ],
+    "reasoning": "These are author-assigned kidney cell labels at fine (subclass.l2, celltype), broad (subclass.l1) and class (ClusterClass) granularity. I rejected ClusterNumber as number-only, cell_type and cell_type_ontology_term_id as portal-standardised, and the rest as sample, disease, donor or QC metadata."
+  },
+  "d4a33fe7-b504-4549-b11b-0fed48234332": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds author-assigned lens cell labels (Equatorial, AnteriorEpi, EarlyFiber), while cell_type and cell_type_ontology_term_id are portal-standardised and the remaining columns are sample metadata, constants or IDs."
+  },
+  "d7e86fbd-f606-48c1-af99-a12c10a615f2": {
+    "picks": [
+      "BICCN_cluster_label",
+      "BICCN_subclass_label"
+    ],
+    "reasoning": "Both columns hold author-assigned transcriptomic type names, at cluster level (e.g. 'Vip Sncg') and subclass level (e.g. 'Lamp5 neuron'); I left out the portal fields, the Cre and genotype columns, the top-3 confidence strings, the ontology IDs, the constant columns, and the borderline 'RNA family' column."
+  },
+  "d88ee9bc-db24-4057-af22-c42a790a3780": {
+    "picks": [],
+    "reasoning": "The only cell-type-like columns are the portal-standardised cell_type and cell_type_ontology_term_id; all other columns are donor/sample metadata, constant fields or per-cell IDs, so there are no author-provided labels."
+  },
+  "d901fc14-c0a0-432e-9531-8c1effc7cf86": {
+    "picks": [
+      "Cell_type_annotation_level1",
+      "Cell_type_annotation_level2",
+      "Cell_type_annotation_level3"
+    ],
+    "reasoning": "The three Cell_type_annotation_level columns are the authors' hierarchical cell-type labels (broad, mid, fine), while cell_type and cell_type_ontology_term_id are portal-standardised and the other columns are sample metadata, QC or constant."
+  },
+  "da16cf9b-3959-4aa7-8df4-570fc944f683": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type is the only author-provided label that varies per cell (horizontal cell subtypes H1 and H2); the other columns are portal-standardised, constant, sample metadata or IDs."
+  },
+  "dbb111e5-d67f-48b1-8a95-0afd1280fab5": {
+    "picks": [
+      "Class",
+      "Subclass",
+      "Supertype"
+    ],
+    "reasoning": "Class, Subclass and Supertype are author-provided hierarchical cell-type labels (e.g. 'Neuronal: GABAergic', 'Pvalb', 'Pvalb_1'), while cell_type and its ontology ID are portal-standardised and the rest is donor, sample, pathology or QC metadata."
+  },
+  "dc6e9e6a-3566-4839-baf9-6cf6616fd20e": {
+    "picks": [
+      "CrossArea_subclass",
+      "CrossArea_cluster",
+      "WithinArea_subclass",
+      "WithinArea_cluster"
+    ],
+    "reasoning": "The subclass and cluster columns from the cross-area and within-area analyses hold author-assigned interneuron labels (Pvalb, Sst, Chandelier_1, Sst_10) at two granularities. I rejected the constant Class column, the portal-standardised cell_type and ontology term columns, and the sample, region, donor and QC columns."
+  },
+  "deaa7dd9-bee9-4007-86fa-de384c539ea7": {
+    "picks": [
+      "celltype.final",
+      "celltype.broad_clustering_annot"
+    ],
+    "reasoning": "celltype.final and celltype.broad_clustering_annot hold author cell-type labels (T.MAIT, NK, T.gdT). I left out cell_type and cell_type_ontology_term_id as portal-standardised fields, and the rest are clonotype, sample, QC or constant columns."
+  },
+  "e1afef70-039b-4c06-b0c1-bfcd588f6d10": {
+    "picks": [
+      "level2",
+      "original_celltype"
+    ],
+    "reasoning": "level2 (HBCA-style fine labels such as VEV, FB2, LASP1) and original_celltype (151 per-study author labels) hold author cell-type names; I left out the map_celltype_map2* label-transfer columns as uncertain, and cell_type and cell_type_ontology_term_id as portal-standardised."
+  },
+  "e2226a21-247e-48bf-84e1-ea6c0a585cf3": {
+    "picks": [],
+    "reasoning": "The only cell-type-like columns are the portal-standardised cell_type and cell_type_ontology_term_id, and the remaining columns are constant, sample or donor metadata, or per-cell identifiers, so there are no author-provided labels."
+  },
+  "e4369a29-b892-40db-9894-75a2a790f575": {
+    "picks": [
+      "cluster_layers"
+    ],
+    "reasoning": "cluster_layers holds author-assigned cell-type names (e.g. 'Oligodendrocytes', 'L6 Intratelencephalic - Type 1') at finer granularity than the portal's 6-category cell_type, which is rejected along with its ontology-term-id column."
+  },
+  "e4ee90d9-a9b1-4b12-a2e9-9cbce715ee06": {
+    "picks": [
+      "_SubType",
+      "_MajorType"
+    ],
+    "reasoning": "_SubType and _MajorType hold per-cell author neuron-type labels (e.g. MSN-D1, Vip, Sst), while _CellClass is constant and cell_type and the ontology term id are portal-standardised."
+  },
+  "e96396d7-032d-4b60-ad7b-7e815deb1b19": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds author-assigned cell-type names (e.g. 'B cell IgA Plasma', 'Th17', 'Treg') and varies per cell. cell_type and cell_type_ontology_term_id are portal-standardised, and the rest are BCR/TCR, QC, sample or constant fields."
+  },
+  "e969ceb9-197c-42d5-bf81-e19e5a6e32ac": {
+    "picks": [
+      "celltype.final",
+      "celltype.broad_clustering_annot"
+    ],
+    "reasoning": "celltype.final holds author monocyte subtype names (MO.Classical, MO.NKG7, MO.Non-classical) and celltype.broad_clustering_annot is the broad level of the same hierarchy, with 2 categories; the portal fields cell_type and cell_type_ontology_term_id, the BCR/TCR columns and the sample metadata are rejected."
+  },
+  "f2978c16-5238-41dc-8a42-a63614be1b4d": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds per-cell author labels (Rods, mlCones, etc.), while cell_type and cell_type_ontology_term_id are portal-standardised and all other columns are sample, donor, assay or other metadata."
+  },
+  "f3027a1d-345f-436e-90ea-f73132a94934": {
+    "picks": [
+      "Celltype"
+    ],
+    "reasoning": "Celltype holds author-assigned fine-grained cluster names (e.g. 'Fibroblasts ADAMDEC1', 'Endothelial cells CD36'), while cell_type and cell_type_ontology_term_id are portal-standardised fields and the other columns are sample, donor, assay or QC metadata."
+  },
+  "f44ed5dd-9f5b-4cf4-b6c3-5874ee8ab2f0": {
+    "picks": [
+      "clust_annot",
+      "cell_type_annot"
+    ],
+    "reasoning": "clust_annot holds fine-grained author cluster names (Astro-1, ExN-L5-3) and cell_type_annot holds the author's broad classes (Astro, ExN, MSN). I rejected cell_type and the ontology term id columns as portal-standardised, and fov and slice as numeric ids."
+  },
+  "f5369070-f44c-46b2-b058-5762c9a561d8": {
+    "picks": [
+      "author_cell_type"
+    ],
+    "reasoning": "author_cell_type holds named author clusters such as OPC_CACNG4 (5 categories, varying per cell), while cell_type and cell_type_ontology_term_id are portal-standardised and constant, and the remaining columns are donor, sample, FACS sorting or portal metadata."
+  },
+  "f5b6d620-76df-45c5-9524-e5631be0e44a": {
+    "picks": [
+      "author_cell_type",
+      "subclass.l1",
+      "clusterClass"
+    ],
+    "reasoning": "author_cell_type holds fine author labels (IMCD, aPT, ncMON), subclass.l1 is a broader author subclass (PC, TAL, PT), and clusterClass is a per-cell lineage compartment (epithelial cells, immune cells); clusterNumber is a numeric cluster index and cell_type is portal-standardised, so both are rejected."
+  },
+  "f5f40d3b-ca47-4337-96dc-f037afe59fc1": {
+    "picks": [
+      "CellType"
+    ],
+    "reasoning": "CellType holds author-assigned cell-type names (e.g. 'Schwann2', 'T/NK-cell') that are finer than the portal's cell_type; final_cluster_labels is a numeric cluster index, and the other columns are portal-standardised, sample metadata or constant."
+  },
+  "f62628d2-3c79-4c17-a77c-a09897080360": {
+    "picks": [
+      "_SubType",
+      "_MajorType"
+    ],
+    "reasoning": "_SubType and _MajorType hold author-assigned excitatory neuron type names (e.g. 'L6-IT-Car3', 'Amy-Exc'), while _CellClass is constant and cell_type and cell_type_ontology_term_id are portal-standardised fields."
+  },
+  "f89a618b-fe4b-404e-bd39-7c574529b1f5": {
+    "picks": [
+      "cell_label"
+    ],
+    "reasoning": "cell_label holds author-assigned pancreatic cell-type names (alpha, beta_major, acinar_minor_mhcclassII); seurat_clusters and RNA_snn_res.1.2 are numeric cluster ids, and cell_type is the portal-standardised field."
+  },
+  "fdd2ff73-9163-4648-90da-b218573c2bee": {
+    "picks": [
+      "cluster_label",
+      "subclass_label",
+      "neighborhood_label",
+      "class_label"
+    ],
+    "reasoning": "These four columns form the authors' cell-type hierarchy (cluster, subclass, neighborhood, class) with word-based labels, while cluster_order is a numeric index, region_label is anatomical, full_genotype_label is the transgenic line, and cell_type is portal-standardised."
+  }
+}

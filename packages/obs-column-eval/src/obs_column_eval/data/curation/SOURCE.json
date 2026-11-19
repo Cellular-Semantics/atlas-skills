@@ -1,0 +1,93 @@
+{
+  "repo": "https://github.com/Cellular-Semantics/CL_KG",
+  "path": "anndata2rdf/src/curated_data",
+  "commit": "c2891eef8e0c9a1c92cb4aeac187e65f935a8f78",
+  "captured": "2026-11-18",
+  "how": "packages/obs-column-eval/scripts/snapshot_clkg.py",
+  "excluded": {
+    "Curated_nlm-ckn_Datasets_Issue116.csv": "Generated with the author-annotation-columns plugin (0.4.3), not by hand. Scoring the plugin against its own output would be circular.",
+    "README.md": "Not a curation sheet."
+  },
+  "files": {
+    "Curated_Breast_Data_KG_V2.csv": {
+      "upstream": "Curated_Breast_Data_KG_V2.xlsx",
+      "upstream_sha256": "f138b5e439b108b2c9a3ef7429e780349999aa32f2a669b23fb9133af0357510",
+      "converted_from_xlsx": "Sheet1",
+      "sha256": "fef9ee772772c21cbe5c83158fcadc54158eda129664535c73c69db49352f752"
+    },
+    "Curated_Cornea_Limbus_Sclera_KG_V1.csv": {
+      "upstream": "Curated_Cornea_Limbus_Sclera_KG_V1.xlsx",
+      "upstream_sha256": "a2ab9554577dbbbdce747f7a696d58ca56daf0d766c7c0293f9f6e37dfd9e9df",
+      "converted_from_xlsx": "KG",
+      "sha256": "4bd4f25c6bd82bb3d381fb1fd1daccfc4b7c5bc208689afea35b2eaa93bea540"
+    },
+    "Curated_Iris_Lens_Data_KG_V1.csv": {
+      "upstream": "Curated_Iris_Lens_Data_KG_V1.xlsx",
+      "upstream_sha256": "4ddf197e2ccf11387563f53877bf30623b7ed8cd89590ea0bc562b015ad1736c",
+      "converted_from_xlsx": "KG ",
+      "sha256": "d98cd3ca976677e891820da3b3992234b151271eb61d5c6697debfa26d918f9c"
+    },
+    "Curated_Lung_Data_KG_V1 - Sheet1.csv": {
+      "upstream": "Curated_Lung_Data_KG_V1 - Sheet1.csv",
+      "upstream_sha256": "0bced8c56f7b128bce0858b05cb8e2b3e215aa723c2b1ba578f4f8c877609a68",
+      "sha256": "0bced8c56f7b128bce0858b05cb8e2b3e215aa723c2b1ba578f4f8c877609a68"
+    },
+    "Curated_RPE Choroid_Data_KG_V1.csv": {
+      "upstream": "Curated_RPE Choroid_Data_KG_V1.xlsx",
+      "upstream_sha256": "042c594cfe75a7fcf846b0d505a9f2b1ee0682731afeedeef98c2fc10665187a",
+      "converted_from_xlsx": "KG",
+      "sha256": "74fe877c0d46652f446e10de29fcfe4112547d2d7818823511d7157dd814bbd1"
+    },
+    "Curated_Retina_ Data_KG_V1.csv": {
+      "upstream": "Curated_Retina_ Data_KG_V1.xlsx",
+      "upstream_sha256": "515ce1278aee56cca315e2fc45047548421ae3fa71baa34d5ca0ab0bbe535986",
+      "converted_from_xlsx": "KG",
+      "sha256": "2c8719a2f40e19cf584b1535706eb177b8c0b104293474a84d122ecfd03ac5bb"
+    },
+    "Curated_Skin_Data_KG_Muzz_Group_V1 - KG.csv": {
+      "upstream": "Curated_Skin_Data_KG_Muzz_Group_V1 - KG.csv",
+      "upstream_sha256": "accd5b9d1e269e191f5188d445c51fab5981fe6ecbc333ad194edfc26b07d77b",
+      "sha256": "accd5b9d1e269e191f5188d445c51fab5981fe6ecbc333ad194edfc26b07d77b"
+    },
+    "Curated_data_KG_Mo_Group - KG.csv": {
+      "upstream": "Curated_data_KG_Mo_Group - KG.csv",
+      "upstream_sha256": "59a6b15809a56967fbe397a736fd1b389e424bd125be7510d640951316958234",
+      "sha256": "59a6b15809a56967fbe397a736fd1b389e424bd125be7510d640951316958234"
+    },
+    "CxG author category field names - Brain_CxG_Author_Category_Filtered.csv": {
+      "upstream": "CxG author category field names - Brain_CxG_Author_Category_Filtered.csv",
+      "upstream_sha256": "f14436c4b2d41f050d759738e4c8df94006af1149cca0d6979e5a8e4dbd9dd6c",
+      "sha256": "f14436c4b2d41f050d759738e4c8df94006af1149cca0d6979e5a8e4dbd9dd6c"
+    },
+    "GutAtlas.Org Author Category JB V1 - Colon Immune.csv": {
+      "upstream": "GutAtlas.Org Author Category JB V1 - Colon Immune.csv",
+      "upstream_sha256": "63bf4318fbd45d2d85205cb425fa66be1e4985175c855cac1bcb3ae313e18718",
+      "sha256": "63bf4318fbd45d2d85205cb425fa66be1e4985175c855cac1bcb3ae313e18718"
+    },
+    "GutAtlas.Org Author Category JB V1 - Fetal and Pediatric Cell Atlas .csv": {
+      "upstream": "GutAtlas.Org Author Category JB V1 - Fetal and Pediatric Cell Atlas .csv",
+      "upstream_sha256": "c5139ebfa8bd31cc64899d370ebfb261b95a641341508247230541235dd7e957",
+      "sha256": "c5139ebfa8bd31cc64899d370ebfb261b95a641341508247230541235dd7e957"
+    },
+    "GutAtlas.Org Author Category JB V1 - Teichmann and Burclaff.csv": {
+      "upstream": "GutAtlas.Org Author Category JB V1 - Teichmann and Burclaff.csv",
+      "upstream_sha256": "d97c66390dbcd6ce8a51c5196240935f90b5d75177faf4b53220bde62c58ff4b",
+      "sha256": "d97c66390dbcd6ce8a51c5196240935f90b5d75177faf4b53220bde62c58ff4b"
+    },
+    "HCA CxG clean V6 - Gut.csv": {
+      "upstream": "HCA CxG clean V6 - Gut.csv",
+      "upstream_sha256": "7cddae97ea3ba29f14e38b212117efca395b3d257c447e44941f8ab7e2c15dae",
+      "sha256": "7cddae97ea3ba29f14e38b212117efca395b3d257c447e44941f8ab7e2c15dae"
+    },
+    "HCA CxG clean V6 - Immune.csv": {
+      "upstream": "HCA CxG clean V6 - Immune.csv",
+      "upstream_sha256": "4884e1d900aa2f600653678438655edb335ec9d8d15989a45ea9c86355751b48",
+      "sha256": "4884e1d900aa2f600653678438655edb335ec9d8d15989a45ea9c86355751b48"
+    },
+    "HCA CxG clean V6 - Kidney.csv": {
+      "upstream": "HCA CxG clean V6 - Kidney.csv",
+      "upstream_sha256": "f34838984c346c2e371a2c9e7dc40069b012da3ce51039bf3c0b33af06dd976a",
+      "sha256": "f34838984c346c2e371a2c9e7dc40069b012da3ce51039bf3c0b33af06dd976a"
+    }
+  }
+}

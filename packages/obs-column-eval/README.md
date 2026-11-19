@@ -7,27 +7,44 @@ give it picks from any source and it tells you how they compare to hand
 curation.
 
 The evidence behind the five is very uneven, and the package is built so that
-shows rather than hides: `cell_type` has 165 curated datasets, the other four
+shows rather than hides: `cell_type` has 187 scored datasets, the other four
 have one. See [`docs/sample-fields.md`](../../docs/sample-fields.md).
 
 ## What ships here
 
-- **The curation snapshot** (`data/curation/`) — ten CL_KG sheets covering 165
-  CELLxGENE datasets, frozen. **`cell_type` only.** The sheets record one
-  distinction, cell-type field or not, so tissue, age, batch and QC all share a
-  single undifferentiated `other` bucket. That makes them a source of
+- **The curation snapshot** (`data/curation/`) — fifteen CL_KG sheets covering
+  187 CELLxGENE datasets, copied at a pinned CL_KG commit by
+  `scripts/snapshot_clkg.py` and recorded, with a hash per file, in
+  `data/curation/SOURCE.json`. Five were xlsx upstream and are converted to CSV.
+  `Curated_nlm-ckn_Datasets_Issue116.csv` is left out on purpose: it was written
+  from this plugin's own picks, so scoring against it would be circular. Fixes
+  are applied on read (`curation._CORRECTIONS`, `_ADDITIONS`), never by editing
+  the copies; see `docs/curation-review-2026-09-29.md` and
+  `docs/curation-review-2026-11-17.md`. **`cell_type` only.** The sheets record
+  one distinction, cell-type field or not, so tissue, age, batch and QC all
+  share a single undifferentiated `other` bucket. That makes them a source of
   candidates and of negatives, never of tissue, stage or disease ground truth.
 - **The hand-curated entries** (`data/sample_fields/`) — one JSON file per
   dataset, naming the columns for each field type it was curated for, plus
   `notes` arguing the calls that were not obvious. Currently one entry.
-- **The test set** (`data/manifest.json`) — the 74 CELLxGENE datasets the n=73
-  benchmark ran on, with their CDN URLs and obs shapes. One is unreadable and is
-  kept as such rather than dropped.
-- **The default subset** (`data/subset.json`) — six datasets, each with a written
-  reason for being there. Running all 74 is slow and not free; this is what the
-  eval runs by default.
-- **The frozen baseline** (`data/frozen/`) — the n=73 picks and scores behind the
-  published Jaccard 0.81, so a new run can be compared like for like.
+- **The test set** (`data/manifest.json`) — 187 CELLxGENE datasets with their
+  CDN URLs and obs shapes, in two tiers:
+  - `n73`: the 74 the published n=73 benchmark ran on. Frozen, so those numbers
+    and the predecessor comparison stay like for like.
+  - `l4`: 113 more, added with the 2026-11 snapshot. One h5ad version per
+    CELLxGENE dataset, with any other version the sheets name kept as an
+    `alias`.
+
+  Two are unreadable (HTTP 403) and are kept as such rather than dropped.
+  `scripts/extend_manifest.py` rebuilds the manifest from the snapshot.
+- **The default subset** (`data/subset.json`) — eight datasets, each with a
+  written reason for being there: six from n73 and two from l4 (breast, retina),
+  so the cheap run covers both tiers. Running all 187 is slow and not free; this
+  is what the eval runs by default.
+- **The frozen baselines** (`data/frozen/`) — one per tier, so a new run is
+  compared like for like. `n73_*` is the predecessor picker behind the
+  published Jaccard 0.81. `l4_*` is the first picker scored on l4, written by
+  `evals/benchmark.py --tier l4 --freeze`.
 - **The report contract** (`schemas/picks.schema.json`) — the shape of the
   `picks.json` the `author-annotation-columns` skill writes for each dataset,
   and of what each picker sub-agent returns. The tests hold the frozen picks
@@ -41,13 +58,14 @@ have one. See [`docs/sample-fields.md`](../../docs/sample-fields.md).
 ## Use
 
 ```sh
-obs-column-eval datasets                      # the six default datasets + ground truth
-obs-column-eval datasets --all                # all 74
+obs-column-eval datasets                      # the eight default datasets + ground truth
+obs-column-eval datasets --all                # all 187
+obs-column-eval datasets --tier l4            # one tier: n73 or l4
 obs-column-eval gold                          # ground truth, keyed by field type
 obs-column-eval gold --field-type tissue      # one field type
 obs-column-eval notes                         # why the awkward calls went that way
 obs-column-eval curation                      # the raw CL_KG sheets
-obs-column-eval score picks.json --baseline
+obs-column-eval score picks.json --baseline   # per tier, vs each tier's frozen picks
 obs-column-eval candidates <profiles-dir>     # what to hand-curate next
 obs-column-eval schema                        # the picks.json contract
 obs-column-eval check-picks picks.json        # ... a report held to it (needs [check])

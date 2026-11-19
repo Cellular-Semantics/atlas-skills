@@ -21,8 +21,9 @@ field types.
 
 Exact agreement with curation on **63 of 73**. The full per-dataset breakdown — what was
 picked, what was curated, what was missed — is in
-[`benchmark-results.json`](benchmark-results.json), which also records the plugin
-version, commit and a hash of the agent definition that produced the picks.
+the run log, [`evals/runs/2026-09-29-n73-a505990.json`](../evals/runs/2026-09-29-n73-a505990.json),
+which also records the plugin version, commit and a hash of the agent definition
+that produced the picks. Every run since is in [`evals/runs/`](../evals/runs/README.md).
 
 **Precision is still a lower bound.** The figures above already include the gold-set
 corrections accepted in review on 2026-09-29 — four column names that matched nothing in
@@ -53,18 +54,52 @@ Wilson intervals. A random-pick null over the actual obs schema sizes is compute
 alongside, because "found at least one" is unimpressive when a dataset has four
 cell-type columns out of forty.
 
+**The test set has grown, and the result above has not caught up.** The 2026-11
+curation snapshot (15 CL_KG sheets, pinned commit; see
+[`curation-review-2026-11-17.md`](curation-review-2026-11-17.md)) adds an `l4` tier of
+113 datasets, 112 of them readable, including eye and breast atlases that n73 has
+none of. That brings the test set to 187. The figures above are the frozen `n73` tier
+alone.
+
+### l4: the first run, frozen as l4's baseline
+
+The current picker (author-annotation-columns 0.6.0, commit `df56d43`, agent
+`e9cb8d7bc523`), on every readable l4 dataset, 2026-11-18, gold at CL_KG `c2891ee`.
+$20.80.
+
+| | l4 (n=112) | 95% CI |
+|---|---|---|
+| Jaccard | **0.943** | 0.91–0.97 |
+| Precision | 0.954 | 0.92–0.98 |
+| Recall | 0.980 | 0.96–1.00 |
+| Hit rate | 111/112 | |
+
+This is close to the 0.940 on n73. On datasets the picker was not developed
+against, including the eye and breast sheets n73 has none of, it does as well. By sheet,
+Retina is lowest (0.859, 13 datasets), then Breast (0.875, 4). Three misses
+were checked against the gold
+([review §4](curation-review-2026-11-17.md#4-found-after-the-upstream-fix)). One
+is a sheet error: `scrub_doublets`, a doublet flag, is curated as cell type on
+`ac9c13da` (reported as CL_KG#120). The other two are real picker misses. Rule 4
+drops `level1_global` on `5dc1e511`, which is constant but curated. Rule 3 rejects
+the numbered `author_cell_type` on `7e07419c`, which is the one dataset with no
+correct pick. Scores take the sheets as written.
+
+The picks and scores are frozen in `packages/obs-column-eval/data/frozen/l4_*`,
+and a test re-scores them. Later l4 runs report their delta against this.
+
 The gold set, the metrics and the frozen baseline all ship in
 [`packages/obs-column-eval`](../packages/obs-column-eval), so the numbers are
 reproducible rather than quoted.
 
 ## Reproducing it
 
-The obs profiles are **committed** under `evals/fixtures/profiles/` — 571 KB for the
+The obs profiles are **committed** under `evals/fixtures/profiles/` — about 1.4 MB for the
 whole test set. Re-scoring therefore needs no network and no re-reading of ~1.5 GB, and
 the scored inputs cannot shift under a CELLxGENE re-ingest.
 
 ```sh
-python3 evals/benchmark.py --all --record docs/benchmark-results.json
+python3 evals/benchmark.py --all --note "why this run"     # logged to evals/runs/
 ```
 
 Picks are cached too, so this re-scores instantly until you clear
@@ -118,11 +153,14 @@ rejects it unmutated.
 - **The curation is hand work, and is the thing being compared against.** Section 2 of
   the curation review lists columns it appears to be missing; until those are settled,
   reported precision understates the picker.
-- **One dataset cannot be read.** `b1b7e4e0` returns HTTP 403 from the CDN — withdrawn
-  or access-restricted, not malformed. It stays in the manifest rather than being
-  dropped, so coverage is not quietly overstated.
-- **Three of the 74 have no curated cell-type column.** For those the correct answer is
-  to pick nothing, which is a real case, but it means "curated columns" and "columns
+- **Two datasets cannot be read.** `b1b7e4e0` (n73) and `3006a39e` (l4) return HTTP
+  403 from the CDN — withdrawn or access-restricted, not malformed. They stay in the
+  manifest rather than being dropped, so coverage is not quietly overstated.
+- **n73 holds four datasets twice**, under two h5ad versions each. It is frozen as
+  measured; `l4` keeps one version per dataset. See section 2.2 of the 2026-11 review.
+- **Three of the 74 have no curated cell-type column**, and three readable l4
+  datasets have none either, each checked in section 3 of the 2026-11 review. For
+  those the correct answer is to pick nothing, which is a real case, but it means "curated columns" and "columns
   that exist" are not the same set.
 - **One picker rule was fitted on a single observation.** Rejecting transgenic driver
   lines (`cre`, with values `Calb2`, `Rorb`, `Gad2`) came from one Patch-seq dataset

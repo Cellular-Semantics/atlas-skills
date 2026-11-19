@@ -1,12 +1,13 @@
 {
   "what": "Text obs column profiles for the benchmark test set, captured once and committed so re-scoring the picker needs no network. Regenerate with `python3 evals/benchmark.py --all --profiles-only --force-profiles`.",
-  "captured": "2026-09-29",
+  "captured": "2026-11-18",
   "captured_by": "h5ad-obs 0.3.0",
-  "commit": "a34af69",
-  "n_datasets": 73,
-  "total_bytes": 591714,
+  "commit": "e49dde3",
+  "n_datasets": 185,
+  "total_bytes": 1449369,
   "note": "The profile FORMAT is coupled to the h5ad-obs version above. If that changes what the picker sees -- new fields, different sampling, changed constant detection -- these must be regenerated and the benchmark re-scored. benchmark.py warns when the installed version differs.",
   "missing": {
+    "3006a39e-5be2-477a-b18f-13d8cd6a0194": "HTTP 403 Forbidden from the CELLxGENE CDN at capture (2026-11-17); the asset is withdrawn or access-restricted, not malformed.",
     "b1b7e4e0-d31d-47f5-ad35-1181fe2647d7": "HTTP 403 Forbidden from the CELLxGENE CDN; the asset is withdrawn or access-restricted, not malformed."
   },
   "profiles": {
@@ -15,511 +16,1480 @@
       "n_columns": 32,
       "n_scanned": 2000,
       "bytes": 6160,
-      "sha256": "01c02a813ef1dc2d"
+      "sha256": "01c02a813ef1dc2d",
+      "captured": "2026-09-29"
+    },
+    "01a9a94d-b038-4b67-9658-de77e072f1a9": {
+      "n_rows": 34132,
+      "n_columns": 28,
+      "n_scanned": 2000,
+      "bytes": 6884,
+      "sha256": "0d85a0253823cfdb",
+      "captured": "2026-11-17"
     },
     "01afd5b8-21be-4869-a686-1fe94ff6f4d8": {
       "n_rows": 110752,
       "n_columns": 33,
       "n_scanned": 2000,
       "bytes": 6669,
-      "sha256": "19fa70080075b620"
+      "sha256": "19fa70080075b620",
+      "captured": "2026-09-29"
     },
     "01bc7039-961f-4c24-b407-d535a2a7ba2c": {
       "n_rows": 39176,
       "n_columns": 37,
       "n_scanned": 2000,
       "bytes": 8927,
-      "sha256": "533e41c29dc5adaf"
+      "sha256": "533e41c29dc5adaf",
+      "captured": "2026-09-29"
+    },
+    "03af5481-a0b6-426c-86b4-9127ada17b53": {
+      "n_rows": 2576,
+      "n_columns": 27,
+      "n_scanned": 2000,
+      "bytes": 6173,
+      "sha256": "0cc51362426c88a7",
+      "captured": "2026-11-17"
+    },
+    "0649d7b7-b8ef-44d9-9abf-705e664fd522": {
+      "n_rows": 52309,
+      "n_columns": 27,
+      "n_scanned": 2000,
+      "bytes": 6694,
+      "sha256": "c5ac8f930be1e27b",
+      "captured": "2026-11-17"
+    },
+    "06a7ffec-2697-4d6f-96f6-d00a34bedb3d": {
+      "n_rows": 276556,
+      "n_columns": 34,
+      "n_scanned": 2000,
+      "bytes": 7277,
+      "sha256": "b29b16a8c1b5b9f3",
+      "captured": "2026-11-17"
+    },
+    "070d3916-633e-43af-bcc6-30358a327161": {
+      "n_rows": 628,
+      "n_columns": 146,
+      "n_scanned": 628,
+      "bytes": 29417,
+      "sha256": "5fcbff6e28e4df61",
+      "captured": "2026-11-17"
+    },
+    "080f9be4-0f94-48cb-a82f-db53df1542ff": {
+      "n_rows": 167283,
+      "n_columns": 30,
+      "n_scanned": 2000,
+      "bytes": 6866,
+      "sha256": "80254d7b21e3ecaf",
+      "captured": "2026-11-17"
     },
     "0b3d19b3-df06-4265-9803-82f598e59dba": {
       "n_rows": 114605,
       "n_columns": 33,
       "n_scanned": 2000,
       "bytes": 6889,
-      "sha256": "463703e93a0cf0cf"
+      "sha256": "463703e93a0cf0cf",
+      "captured": "2026-09-29"
+    },
+    "0b8711c0-5484-4f71-9050-cb5b5421c4c9": {
+      "n_rows": 11404,
+      "n_columns": 31,
+      "n_scanned": 2000,
+      "bytes": 7091,
+      "sha256": "76c7e28f9a441970",
+      "captured": "2026-11-17"
+    },
+    "0bb62fec-0cf1-46e1-9d10-de65a6d4f814": {
+      "n_rows": 2480956,
+      "n_columns": 36,
+      "n_scanned": 2000,
+      "bytes": 8239,
+      "sha256": "6cf29d813a024e28",
+      "captured": "2026-11-17"
     },
     "10bb8aaa-ebc6-4026-94ae-a33ac16b5366": {
       "n_rows": 103982,
       "n_columns": 59,
       "n_scanned": 2000,
       "bytes": 11761,
-      "sha256": "ddcea080b1f12b81"
+      "sha256": "ddcea080b1f12b81",
+      "captured": "2026-09-29"
+    },
+    "1523a519-375a-4cea-9456-d493e1a6d46b": {
+      "n_rows": 40268,
+      "n_columns": 34,
+      "n_scanned": 2000,
+      "bytes": 8197,
+      "sha256": "53d33f040c90b482",
+      "captured": "2026-11-17"
+    },
+    "15a8533e-ffa5-4dcf-8fb4-c8b7d5151f84": {
+      "n_rows": 14783,
+      "n_columns": 37,
+      "n_scanned": 2000,
+      "bytes": 8163,
+      "sha256": "4061e127cdaca5a1",
+      "captured": "2026-11-17"
+    },
+    "171ed79a-b829-4efb-98bf-14951e8a4c90": {
+      "n_rows": 191795,
+      "n_columns": 32,
+      "n_scanned": 2000,
+      "bytes": 6689,
+      "sha256": "21870acbb8a22303",
+      "captured": "2026-11-17"
     },
     "18fb432a-be41-4677-9396-e1680a0852bf": {
       "n_rows": 115282,
       "n_columns": 34,
       "n_scanned": 2000,
       "bytes": 6795,
-      "sha256": "db90796239cda44a"
+      "sha256": "db90796239cda44a",
+      "captured": "2026-09-29"
     },
     "1af9835f-469e-452f-a91d-f42af3f91042": {
       "n_rows": 10739,
       "n_columns": 36,
       "n_scanned": 2000,
       "bytes": 7211,
-      "sha256": "bc7719dbb517f6e6"
+      "sha256": "bc7719dbb517f6e6",
+      "captured": "2026-09-29"
     },
     "1c6e54ca-ef0c-4acc-9891-d3b7d2cd7a0e": {
       "n_rows": 163779,
       "n_columns": 30,
       "n_scanned": 2000,
       "bytes": 6577,
-      "sha256": "e414090e9cfda223"
+      "sha256": "e414090e9cfda223",
+      "captured": "2026-09-29"
     },
     "1cbe52c1-0567-4188-9c18-9d7271c56055": {
       "n_rows": 172847,
       "n_columns": 41,
       "n_scanned": 2000,
       "bytes": 8059,
-      "sha256": "a64d7222352b2b5d"
+      "sha256": "a64d7222352b2b5d",
+      "captured": "2026-09-29"
+    },
+    "1d6fb189-21a5-4e9b-9082-b6fe225374a9": {
+      "n_rows": 611034,
+      "n_columns": 37,
+      "n_scanned": 2000,
+      "bytes": 7641,
+      "sha256": "1f05909b623f87aa",
+      "captured": "2026-11-17"
+    },
+    "1dbc9400-aeb1-44b4-ba4a-a738c368570f": {
+      "n_rows": 1320,
+      "n_columns": 83,
+      "n_scanned": 1320,
+      "bytes": 16998,
+      "sha256": "ebb1dc229d8d0225",
+      "captured": "2026-11-17"
+    },
+    "1ff3a755-f3ae-41d2-95eb-b7dab87e7a09": {
+      "n_rows": 49139,
+      "n_columns": 33,
+      "n_scanned": 2000,
+      "bytes": 7141,
+      "sha256": "5ad24ccb4afbd3f1",
+      "captured": "2026-11-17"
+    },
+    "2330673b-b5dc-4690-bbbe-8f409362df31": {
+      "n_rows": 378918,
+      "n_columns": 32,
+      "n_scanned": 2000,
+      "bytes": 6822,
+      "sha256": "501b215e5183194a",
+      "captured": "2026-11-17"
+    },
+    "234f6d22-65df-4d90-9b4d-b631c7099013": {
+      "n_rows": 80576,
+      "n_columns": 26,
+      "n_scanned": 2000,
+      "bytes": 5711,
+      "sha256": "b27b25da0e60b9c0",
+      "captured": "2026-11-17"
     },
     "24c44ebe-c9c8-403b-9b55-6c8e4b46c69e": {
       "n_rows": 55348,
       "n_columns": 36,
       "n_scanned": 2000,
       "bytes": 7620,
-      "sha256": "c06f7dc6a3cd5c32"
+      "sha256": "c06f7dc6a3cd5c32",
+      "captured": "2026-09-29"
     },
     "250192f0-94d8-4e26-91cb-afe7e360605e": {
       "n_rows": 384925,
       "n_columns": 37,
       "n_scanned": 2000,
       "bytes": 8188,
-      "sha256": "3532dd7bac0a96b5"
+      "sha256": "3532dd7bac0a96b5",
+      "captured": "2026-09-29"
+    },
+    "2808a16d-64c5-451b-91a5-c1a2d9f270d5": {
+      "n_rows": 432555,
+      "n_columns": 23,
+      "n_scanned": 2000,
+      "bytes": 5102,
+      "sha256": "7c422a6ce572065d",
+      "captured": "2026-11-17"
+    },
+    "29bc336a-b0f8-49d1-8cd8-d2cd878680f8": {
+      "n_rows": 91479,
+      "n_columns": 26,
+      "n_scanned": 2000,
+      "bytes": 5820,
+      "sha256": "a805ec0bfb6a4bfc",
+      "captured": "2026-11-17"
+    },
+    "2b284c0b-8a93-4138-a466-9c2bbe9db733": {
+      "n_rows": 803283,
+      "n_columns": 48,
+      "n_scanned": 2000,
+      "bytes": 10573,
+      "sha256": "ea965b6b0e1aa149",
+      "captured": "2026-11-17"
+    },
+    "2d6a777f-8b44-4164-b141-fd9c1776346a": {
+      "n_rows": 14903,
+      "n_columns": 26,
+      "n_scanned": 2000,
+      "bytes": 5891,
+      "sha256": "7306beacf7d8089b",
+      "captured": "2026-11-17"
     },
     "2e3f5af1-af1f-4828-aa82-5453a2fab7ea": {
       "n_rows": 57723,
       "n_columns": 27,
       "n_scanned": 2000,
       "bytes": 5995,
-      "sha256": "d4f0b5c46c8ac22c"
+      "sha256": "d4f0b5c46c8ac22c",
+      "captured": "2026-09-29"
+    },
+    "2e910e62-7eaf-4c06-80cb-8918e3eea16e": {
+      "n_rows": 3177310,
+      "n_columns": 56,
+      "n_scanned": 2000,
+      "bytes": 13094,
+      "sha256": "baa64ca34655065b",
+      "captured": "2026-11-17"
+    },
+    "2ed5317e-5cdd-40c9-9570-6601c386a705": {
+      "n_rows": 160658,
+      "n_columns": 43,
+      "n_scanned": 2000,
+      "bytes": 8246,
+      "sha256": "a7382545cb35c2a0",
+      "captured": "2026-11-17"
     },
     "2f3fbea2-9d47-4d16-878d-863bee64ef49": {
       "n_rows": 1077879,
       "n_columns": 25,
       "n_scanned": 2000,
       "bytes": 5407,
-      "sha256": "dc44de4a6e927ae1"
+      "sha256": "dc44de4a6e927ae1",
+      "captured": "2026-09-29"
+    },
+    "303e954f-33d7-473e-86f9-f96a18192bd2": {
+      "n_rows": 105780,
+      "n_columns": 39,
+      "n_scanned": 2000,
+      "bytes": 9955,
+      "sha256": "b1138af2c782801d",
+      "captured": "2026-11-17"
+    },
+    "31310843-6614-49b3-b2e2-3e85d9be1e66": {
+      "n_rows": 4167869,
+      "n_columns": 29,
+      "n_scanned": 2000,
+      "bytes": 5971,
+      "sha256": "2a9fcdb586202151",
+      "captured": "2026-11-17"
     },
     "325567b8-e698-48ab-9969-ab0b1a2bbb2f": {
       "n_rows": 241077,
       "n_columns": 33,
       "n_scanned": 2000,
       "bytes": 6838,
-      "sha256": "38c0a09370d41b52"
+      "sha256": "38c0a09370d41b52",
+      "captured": "2026-09-29"
     },
     "3310476e-ee9d-4179-9446-df5d073f38d8": {
       "n_rows": 356213,
       "n_columns": 35,
       "n_scanned": 2000,
       "bytes": 6552,
-      "sha256": "675d754e1e4bc416"
+      "sha256": "675d754e1e4bc416",
+      "captured": "2026-09-29"
+    },
+    "35476cf7-35f1-4daf-8507-734403d09c27": {
+      "n_rows": 1001288,
+      "n_columns": 40,
+      "n_scanned": 2000,
+      "bytes": 8582,
+      "sha256": "b8ee1f98605e226d",
+      "captured": "2026-11-17"
     },
     "36141ff7-ec4f-44cc-8bf3-ed9d9675d89a": {
       "n_rows": 129905,
       "n_columns": 32,
       "n_scanned": 2000,
       "bytes": 6016,
-      "sha256": "bdfec95348224024"
+      "sha256": "bdfec95348224024",
+      "captured": "2026-09-29"
     },
     "37a13a09-e9aa-4d2a-900c-0862e13cfac3": {
       "n_rows": 62849,
       "n_columns": 35,
       "n_scanned": 2000,
       "bytes": 7049,
-      "sha256": "c7dbf99c646a92f6"
+      "sha256": "c7dbf99c646a92f6",
+      "captured": "2026-09-29"
+    },
+    "39f2c06e-4a70-4936-a645-7d6a61fc0c00": {
+      "n_rows": 259558,
+      "n_columns": 33,
+      "n_scanned": 2000,
+      "bytes": 6419,
+      "sha256": "6d02c018de90f9f6",
+      "captured": "2026-11-17"
+    },
+    "3ba8c0d4-89c2-4c84-9d66-bb8e1a816286": {
+      "n_rows": 34323,
+      "n_columns": 23,
+      "n_scanned": 2000,
+      "bytes": 4943,
+      "sha256": "a28101be5f418c7d",
+      "captured": "2026-11-17"
+    },
+    "3c75e9e9-b09a-4805-bcdd-4ecde45b98f8": {
+      "n_rows": 1395601,
+      "n_columns": 42,
+      "n_scanned": 2000,
+      "bytes": 9702,
+      "sha256": "1fb7207ff73e7345",
+      "captured": "2026-11-17"
+    },
+    "3d04a6eb-2cd8-4546-9f79-61f739fe503e": {
+      "n_rows": 12644,
+      "n_columns": 53,
+      "n_scanned": 2000,
+      "bytes": 8942,
+      "sha256": "9ecc090fa829e4e6",
+      "captured": "2026-11-17"
     },
     "43b216d8-b988-4ade-8263-55c45f1944db": {
       "n_rows": 30022,
       "n_columns": 30,
       "n_scanned": 2000,
       "bytes": 6602,
-      "sha256": "bd58856456eaff65"
+      "sha256": "bd58856456eaff65",
+      "captured": "2026-09-29"
     },
     "443f7fb8-2a27-47c3-98f6-6a603c7a294e": {
       "n_rows": 347970,
       "n_columns": 38,
       "n_scanned": 2000,
       "bytes": 7452,
-      "sha256": "69e06d2bf759dd79"
+      "sha256": "69e06d2bf759dd79",
+      "captured": "2026-09-29"
+    },
+    "4484426f-f83b-4bab-b06d-eb2e177aa031": {
+      "n_rows": 416825,
+      "n_columns": 48,
+      "n_scanned": 2000,
+      "bytes": 10068,
+      "sha256": "92d2a87fce489df9",
+      "captured": "2026-11-17"
+    },
+    "45b78a7b-6def-40f2-b27f-8eab7848602f": {
+      "n_rows": 96129,
+      "n_columns": 36,
+      "n_scanned": 2000,
+      "bytes": 6654,
+      "sha256": "ca17ec103f84cbef",
+      "captured": "2026-11-17"
+    },
+    "45f65bd0-f115-42e0-9af9-e409e58485f0": {
+      "n_rows": 1265624,
+      "n_columns": 51,
+      "n_scanned": 2000,
+      "bytes": 11198,
+      "sha256": "7ddde0dd78a5a0e5",
+      "captured": "2026-11-17"
     },
     "460d368c-9147-4716-8674-76bf0795ba85": {
       "n_rows": 94243,
       "n_columns": 53,
       "n_scanned": 2000,
       "bytes": 8989,
-      "sha256": "8099c8fe38bc7dff"
+      "sha256": "8099c8fe38bc7dff",
+      "captured": "2026-09-29"
     },
     "47de6fa9-411b-429a-a04f-318930848a3c": {
       "n_rows": 19985,
       "n_columns": 34,
       "n_scanned": 2000,
       "bytes": 8942,
-      "sha256": "576c94f031b68aab"
+      "sha256": "576c94f031b68aab",
+      "captured": "2026-09-29"
+    },
+    "4973ec05-e355-40fc-9f72-56423c12aae9": {
+      "n_rows": 10696,
+      "n_columns": 26,
+      "n_scanned": 2000,
+      "bytes": 5548,
+      "sha256": "735d322cbfd3fcd7",
+      "captured": "2026-11-17"
+    },
+    "4a04c010-6fc1-440a-8b87-f12fefd5543a": {
+      "n_rows": 175387,
+      "n_columns": 30,
+      "n_scanned": 2000,
+      "bytes": 6584,
+      "sha256": "2e682e4659e9b435",
+      "captured": "2026-11-17"
     },
     "4d3469a7-339f-40b3-92a3-22f7043545f8": {
       "n_rows": 15243,
       "n_columns": 32,
       "n_scanned": 2000,
       "bytes": 7145,
-      "sha256": "0788000cdad89cd4"
+      "sha256": "0788000cdad89cd4",
+      "captured": "2026-09-29"
+    },
+    "4df5ea20-265e-4cec-b09a-e590193576c2": {
+      "n_rows": 108940,
+      "n_columns": 34,
+      "n_scanned": 2000,
+      "bytes": 7025,
+      "sha256": "682316b117e7ab4e",
+      "captured": "2026-11-17"
     },
     "4e2221b4-c204-4c28-bc6a-dcdb73c0d856": {
       "n_rows": 139054,
       "n_columns": 33,
       "n_scanned": 2000,
       "bytes": 6801,
-      "sha256": "5118bbbe71b5e46e"
+      "sha256": "5118bbbe71b5e46e",
+      "captured": "2026-09-29"
+    },
+    "4e6932db-5a78-40e4-b961-f87f66ba139a": {
+      "n_rows": 66985,
+      "n_columns": 42,
+      "n_scanned": 2000,
+      "bytes": 8277,
+      "sha256": "c2e7a085aa1d9e93",
+      "captured": "2026-11-17"
+    },
+    "4e7af47a-f83f-4749-825c-0c6976ae07b7": {
+      "n_rows": 1100250,
+      "n_columns": 25,
+      "n_scanned": 2000,
+      "bytes": 5518,
+      "sha256": "d471ca6b2d611081",
+      "captured": "2026-11-17"
+    },
+    "504b7a5b-689b-4a0f-b7e0-02fe50a62dd5": {
+      "n_rows": 600929,
+      "n_columns": 70,
+      "n_scanned": 2000,
+      "bytes": 12320,
+      "sha256": "c9ae9190ecd120b1",
+      "captured": "2026-11-17"
     },
     "50bbe1a2-5f27-47f5-a809-046459a4ae5e": {
       "n_rows": 158978,
       "n_columns": 32,
       "n_scanned": 2000,
       "bytes": 5972,
-      "sha256": "5c96efba371d5bbe"
+      "sha256": "5c96efba371d5bbe",
+      "captured": "2026-09-29"
+    },
+    "518edb4f-1e86-4af3-99e4-0a599a94e9fe": {
+      "n_rows": 22502,
+      "n_columns": 31,
+      "n_scanned": 2000,
+      "bytes": 6426,
+      "sha256": "9433196a78fd4c49",
+      "captured": "2026-11-17"
     },
     "526c1ebb-7d87-405d-8b64-5427105ba923": {
       "n_rows": 246964,
       "n_columns": 32,
       "n_scanned": 2000,
       "bytes": 6348,
-      "sha256": "0b9fa4b149e6c4be"
+      "sha256": "0b9fa4b149e6c4be",
+      "captured": "2026-09-29"
+    },
+    "532867bf-f240-4c4e-b94d-e0ed7f480b51": {
+      "n_rows": 244474,
+      "n_columns": 31,
+      "n_scanned": 2000,
+      "bytes": 7157,
+      "sha256": "7f1d3cd9709da16a",
+      "captured": "2026-11-17"
+    },
+    "541de42d-9188-45f0-ba93-15b57eddd665": {
+      "n_rows": 2583967,
+      "n_columns": 37,
+      "n_scanned": 2000,
+      "bytes": 7540,
+      "sha256": "7bf87a692643beb6",
+      "captured": "2026-11-17"
     },
     "5668bd32-5e84-4708-b976-af6a902ed9a4": {
       "n_rows": 109995,
       "n_columns": 35,
       "n_scanned": 2000,
       "bytes": 7306,
-      "sha256": "aecc615d9479ca11"
+      "sha256": "aecc615d9479ca11",
+      "captured": "2026-09-29"
+    },
+    "56b8657c-ee0d-48e8-b9cb-8d69fe71f1bd": {
+      "n_rows": 104097,
+      "n_columns": 26,
+      "n_scanned": 2000,
+      "bytes": 5680,
+      "sha256": "0625644492dacab4",
+      "captured": "2026-11-17"
+    },
+    "58ff1310-6627-4140-a7a4-0af2c59c02b3": {
+      "n_rows": 42901,
+      "n_columns": 28,
+      "n_scanned": 2000,
+      "bytes": 6783,
+      "sha256": "85978dcd82eb9551",
+      "captured": "2026-11-17"
+    },
+    "59a999ca-31b3-4f0e-a4e6-70c240435e01": {
+      "n_rows": 79667,
+      "n_columns": 29,
+      "n_scanned": 2000,
+      "bytes": 5382,
+      "sha256": "edb9edc3d81c582b",
+      "captured": "2026-11-17"
+    },
+    "5a26b6b4-c656-42db-85a1-d2e531205317": {
+      "n_rows": 97499,
+      "n_columns": 28,
+      "n_scanned": 2000,
+      "bytes": 5544,
+      "sha256": "ecb45687f1f6d8a2",
+      "captured": "2026-11-17"
     },
     "5b8941a9-fef8-4348-876c-c333a87c0c3f": {
       "n_rows": 4062980,
       "n_columns": 40,
       "n_scanned": 2000,
       "bytes": 8391,
-      "sha256": "133d12a563168546"
+      "sha256": "133d12a563168546",
+      "captured": "2026-09-29"
+    },
+    "5b918503-ab77-42f9-aaab-8d4b6102dbde": {
+      "n_rows": 20000,
+      "n_columns": 36,
+      "n_scanned": 2000,
+      "bytes": 7468,
+      "sha256": "e4e14dbe267cd403",
+      "captured": "2026-11-17"
     },
     "5d338c19-dae4-49e9-88e4-86c76c78a340": {
       "n_rows": 116313,
       "n_columns": 33,
       "n_scanned": 2000,
       "bytes": 6515,
-      "sha256": "86f4911ff28060fc"
+      "sha256": "86f4911ff28060fc",
+      "captured": "2026-09-29"
+    },
+    "5dc1e511-4c76-45ab-a148-87f94b83d9d5": {
+      "n_rows": 25382,
+      "n_columns": 48,
+      "n_scanned": 2000,
+      "bytes": 9992,
+      "sha256": "2e072ec39147a5b6",
+      "captured": "2026-11-17"
+    },
+    "5f36898f-78e7-4ba0-950e-a02beca606d4": {
+      "n_rows": 148374,
+      "n_columns": 33,
+      "n_scanned": 2000,
+      "bytes": 6844,
+      "sha256": "600c5278d0709126",
+      "captured": "2026-11-17"
     },
     "5f4efede-b295-4be4-aded-eb8b9a946382": {
       "n_rows": 59572,
       "n_columns": 47,
       "n_scanned": 2000,
       "bytes": 9805,
-      "sha256": "a1d5a1ce2768ef83"
+      "sha256": "a1d5a1ce2768ef83",
+      "captured": "2026-09-29"
     },
     "60b76da3-5490-4b61-a73f-38dc7b586465": {
       "n_rows": 20727,
       "n_columns": 62,
       "n_scanned": 2000,
       "bytes": 10243,
-      "sha256": "ec87e0617548a1d1"
+      "sha256": "ec87e0617548a1d1",
+      "captured": "2026-09-29"
     },
     "662c884d-add3-494d-b325-c13bc9f0b6ae": {
       "n_rows": 33041,
       "n_columns": 26,
       "n_scanned": 2000,
       "bytes": 5882,
-      "sha256": "ab678c5d10100d68"
+      "sha256": "ab678c5d10100d68",
+      "captured": "2026-09-29"
+    },
+    "6ad5ca98-d97d-4901-a765-e39b70ac2c02": {
+      "n_rows": 20091,
+      "n_columns": 23,
+      "n_scanned": 2000,
+      "bytes": 4791,
+      "sha256": "7deb89bb761c7d37",
+      "captured": "2026-11-17"
+    },
+    "6c779b98-f437-4cbf-9b81-a3e6be637419": {
+      "n_rows": 59506,
+      "n_columns": 44,
+      "n_scanned": 2000,
+      "bytes": 7357,
+      "sha256": "6abc2bddaca01c47",
+      "captured": "2026-11-17"
+    },
+    "7021fffe-340b-4ce6-b03a-55e8d99f7bbe": {
+      "n_rows": 19694,
+      "n_columns": 26,
+      "n_scanned": 2000,
+      "bytes": 5483,
+      "sha256": "2afef32f3b80abab",
+      "captured": "2026-11-17"
+    },
+    "731ad926-5b60-45bf-85de-e32d037c1944": {
+      "n_rows": 43857,
+      "n_columns": 35,
+      "n_scanned": 2000,
+      "bytes": 7432,
+      "sha256": "520c49d0f6432eef",
+      "captured": "2026-11-17"
+    },
+    "744afc03-e10b-4908-9baa-096995a01cf2": {
+      "n_rows": 33506,
+      "n_columns": 26,
+      "n_scanned": 2000,
+      "bytes": 5849,
+      "sha256": "e9c654a5760ab5d6",
+      "captured": "2026-11-17"
     },
     "77a91ab6-4fcc-428d-b719-a3f1238df262": {
       "n_rows": 49417,
       "n_columns": 38,
       "n_scanned": 2000,
       "bytes": 8096,
-      "sha256": "f312b0dce5cd7686"
+      "sha256": "f312b0dce5cd7686",
+      "captured": "2026-09-29"
+    },
+    "781d308e-69cc-4129-8c2f-b370091a8cab": {
+      "n_rows": 34722,
+      "n_columns": 30,
+      "n_scanned": 2000,
+      "bytes": 6176,
+      "sha256": "f65baafe04996a8f",
+      "captured": "2026-11-17"
     },
     "79772e00-00d5-497e-b8ff-f83af5ce59c1": {
       "n_rows": 45528,
       "n_columns": 49,
       "n_scanned": 2000,
       "bytes": 12587,
-      "sha256": "d4d85e48db84abc9"
+      "sha256": "d4d85e48db84abc9",
+      "captured": "2026-09-29"
+    },
+    "7ac1b9e2-91f8-4a62-93a8-54638f2e618e": {
+      "n_rows": 22375,
+      "n_columns": 67,
+      "n_scanned": 2000,
+      "bytes": 13372,
+      "sha256": "36cd4511b06ef15b",
+      "captured": "2026-11-17"
+    },
+    "7ac6b92a-cbb7-472b-9380-27b5c4714702": {
+      "n_rows": 37121,
+      "n_columns": 45,
+      "n_scanned": 2000,
+      "bytes": 10663,
+      "sha256": "ff06ea39113df3ad",
+      "captured": "2026-11-17"
+    },
+    "7afb64af-cd3b-44ed-bd2a-3d7bd8a98e13": {
+      "n_rows": 32458,
+      "n_columns": 36,
+      "n_scanned": 2000,
+      "bytes": 7376,
+      "sha256": "ef4e35bbe13e2960",
+      "captured": "2026-11-17"
+    },
+    "7d8af09a-2f96-49f9-a473-f561a332f25d": {
+      "n_rows": 304989,
+      "n_columns": 39,
+      "n_scanned": 2000,
+      "bytes": 7943,
+      "sha256": "c4c08061f79498b5",
+      "captured": "2026-11-17"
+    },
+    "7e07419c-2b0b-4f4c-a653-f1a0e2636313": {
+      "n_rows": 100055,
+      "n_columns": 27,
+      "n_scanned": 2000,
+      "bytes": 6307,
+      "sha256": "ec5f465a9c0f2b03",
+      "captured": "2026-11-17"
+    },
+    "82e26751-5d13-44c4-b436-6166d7ac1864": {
+      "n_rows": 25908,
+      "n_columns": 31,
+      "n_scanned": 2000,
+      "bytes": 6997,
+      "sha256": "c4ee3c2e97440158",
+      "captured": "2026-11-17"
     },
     "839cae6e-36e9-4aad-a0fd-99ffe8897c56": {
       "n_rows": 92969,
       "n_columns": 34,
       "n_scanned": 2000,
       "bytes": 7286,
-      "sha256": "4bc68a2fde3540e5"
+      "sha256": "4bc68a2fde3540e5",
+      "captured": "2026-09-29"
     },
     "83bde98b-fc88-4147-a217-1f1ffa508dd2": {
       "n_rows": 406187,
       "n_columns": 31,
       "n_scanned": 2000,
       "bytes": 6270,
-      "sha256": "593628bc92616c9a"
+      "sha256": "593628bc92616c9a",
+      "captured": "2026-09-29"
     },
     "83c08c97-52c4-4045-b9ad-4eeeb4a3d606": {
       "n_rows": 22048,
       "n_columns": 26,
       "n_scanned": 2000,
       "bytes": 5886,
-      "sha256": "cf1ca71306193693"
+      "sha256": "cf1ca71306193693",
+      "captured": "2026-09-29"
+    },
+    "8b1e1941-cd79-48ba-81d1-43732803b9a5": {
+      "n_rows": 153159,
+      "n_columns": 33,
+      "n_scanned": 2000,
+      "bytes": 6873,
+      "sha256": "6e175e426c6f4047",
+      "captured": "2026-11-17"
     },
     "8f2e4a29-e397-4f33-bc9a-3181e06b64b0": {
       "n_rows": 1263676,
       "n_columns": 33,
       "n_scanned": 2000,
       "bytes": 8761,
-      "sha256": "ec3b2d7b2847aa8e"
+      "sha256": "ec3b2d7b2847aa8e",
+      "captured": "2026-09-29"
     },
     "926a6acd-6555-4d55-9ba5-6927c9884e96": {
       "n_rows": 422220,
       "n_columns": 34,
       "n_scanned": 2000,
       "bytes": 6895,
-      "sha256": "f809cc67bb965dba"
+      "sha256": "f809cc67bb965dba",
+      "captured": "2026-09-29"
+    },
+    "9343817c-5c74-4548-a7d5-01990df5af7a": {
+      "n_rows": 888263,
+      "n_columns": 36,
+      "n_scanned": 2000,
+      "bytes": 8388,
+      "sha256": "1b5f3307115bfc05",
+      "captured": "2026-11-17"
     },
     "95e49c50-3411-45f1-8c78-eb4732af7563": {
       "n_rows": 239696,
       "n_columns": 35,
       "n_scanned": 2000,
       "bytes": 7525,
-      "sha256": "933f73b4ff4cdf6c"
+      "sha256": "933f73b4ff4cdf6c",
+      "captured": "2026-09-29"
+    },
+    "969408c1-7fdf-4abe-bf6a-9d662e620c16": {
+      "n_rows": 175387,
+      "n_columns": 30,
+      "n_scanned": 2000,
+      "bytes": 6584,
+      "sha256": "4d784e0e636f6f0f",
+      "captured": "2026-11-17"
+    },
+    "9a305865-e7b0-4e8a-bbbf-0b63287e85fd": {
+      "n_rows": 647366,
+      "n_columns": 42,
+      "n_scanned": 2000,
+      "bytes": 8085,
+      "sha256": "61c4844729083964",
+      "captured": "2026-11-17"
     },
     "9ad2790f-25e5-44d7-8828-ff5aadeba589": {
       "n_rows": 130908,
       "n_columns": 29,
       "n_scanned": 2000,
       "bytes": 5856,
-      "sha256": "2c43cdb5c3a6e707"
+      "sha256": "2c43cdb5c3a6e707",
+      "captured": "2026-09-29"
     },
     "9bb8be38-d63f-4c8c-bf31-5ba078713315": {
       "n_rows": 161764,
       "n_columns": 34,
       "n_scanned": 2000,
       "bytes": 5951,
-      "sha256": "eb6e22bce3293073"
+      "sha256": "eb6e22bce3293073",
+      "captured": "2026-09-29"
+    },
+    "9e66dffa-7407-41b5-98b9-43f2753f171e": {
+      "n_rows": 120807,
+      "n_columns": 42,
+      "n_scanned": 2000,
+      "bytes": 7906,
+      "sha256": "2c1f9032205c45a7",
+      "captured": "2026-11-17"
     },
     "9fd987e8-bf5f-42a1-ba2e-20d0b7b36228": {
       "n_rows": 44721,
       "n_columns": 39,
       "n_scanned": 2000,
       "bytes": 7352,
-      "sha256": "46df32bcf08013af"
+      "sha256": "46df32bcf08013af",
+      "captured": "2026-09-29"
+    },
+    "a16da6f8-964e-4d7f-93a7-66f941267945": {
+      "n_rows": 41305,
+      "n_columns": 39,
+      "n_scanned": 2000,
+      "bytes": 7671,
+      "sha256": "19a251d2c763aabf",
+      "captured": "2026-11-17"
+    },
+    "a2e7b6e9-79d5-446d-8fb1-19128c97a48f": {
+      "n_rows": 113339,
+      "n_columns": 33,
+      "n_scanned": 2000,
+      "bytes": 6878,
+      "sha256": "958457891979f77b",
+      "captured": "2026-11-17"
+    },
+    "a31264ed-a890-4409-9d93-cfb5e9cfcc71": {
+      "n_rows": 83674,
+      "n_columns": 30,
+      "n_scanned": 2000,
+      "bytes": 6135,
+      "sha256": "ea5ba406d7f093d6",
+      "captured": "2026-11-17"
+    },
+    "a4279399-5621-46bb-ac2c-aba78ae683aa": {
+      "n_rows": 881081,
+      "n_columns": 33,
+      "n_scanned": 2000,
+      "bytes": 6890,
+      "sha256": "df3605103d9c40ba",
+      "captured": "2026-11-17"
+    },
+    "a991b447-9473-4978-b2bd-190cf4a26825": {
+      "n_rows": 34722,
+      "n_columns": 30,
+      "n_scanned": 2000,
+      "bytes": 6176,
+      "sha256": "61232d7a8a37e60f",
+      "captured": "2026-11-17"
     },
     "aa4849b3-7178-4c8c-b079-a49ed03ab09d": {
       "n_rows": 75695,
       "n_columns": 29,
       "n_scanned": 2000,
       "bytes": 5835,
-      "sha256": "c166f2207eb1f488"
+      "sha256": "c166f2207eb1f488",
+      "captured": "2026-09-29"
     },
     "ab149f9b-8fda-414a-a312-69279695f342": {
       "n_rows": 90957,
       "n_columns": 39,
       "n_scanned": 2000,
       "bytes": 8693,
-      "sha256": "313ba729853cfbcb"
+      "sha256": "313ba729853cfbcb",
+      "captured": "2026-09-29"
     },
     "ac818189-5c6b-48d2-8bf1-f7511de7b5a9": {
       "n_rows": 836148,
       "n_columns": 44,
       "n_scanned": 2000,
       "bytes": 8878,
-      "sha256": "47e473593b573351"
+      "sha256": "47e473593b573351",
+      "captured": "2026-09-29"
+    },
+    "ac9c13da-7134-4d09-8086-d0933cbdba41": {
+      "n_rows": 108717,
+      "n_columns": 73,
+      "n_scanned": 2000,
+      "bytes": 12659,
+      "sha256": "02dd52f955c8266f",
+      "captured": "2026-11-17"
+    },
+    "ae18e694-6f45-4635-affa-63ac0e29323d": {
+      "n_rows": 1462702,
+      "n_columns": 38,
+      "n_scanned": 2000,
+      "bytes": 7843,
+      "sha256": "be892f665e33b86b",
+      "captured": "2026-11-17"
+    },
+    "ae802158-1a7e-43e0-9c23-cdc688ce3481": {
+      "n_rows": 97788,
+      "n_columns": 29,
+      "n_scanned": 2000,
+      "bytes": 5866,
+      "sha256": "0361b2bcbccc3d3a",
+      "captured": "2026-11-18"
     },
     "b09dac61-836f-418a-ad0a-064d2bc5343d": {
       "n_rows": 89637,
       "n_columns": 41,
       "n_scanned": 2000,
       "bytes": 10164,
-      "sha256": "d692a325b2392a5c"
+      "sha256": "d692a325b2392a5c",
+      "captured": "2026-09-29"
     },
     "b13072bd-9cb6-42ca-9f4f-01252baef273": {
       "n_rows": 2282447,
       "n_columns": 70,
       "n_scanned": 2000,
       "bytes": 15246,
-      "sha256": "410a7e4ff785d6a4"
+      "sha256": "410a7e4ff785d6a4",
+      "captured": "2026-09-29"
     },
     "b1784014-d30f-4e3a-88d6-65110285d5e4": {
       "n_rows": 152509,
       "n_columns": 29,
       "n_scanned": 2000,
       "bytes": 5838,
-      "sha256": "a1dd2495aa05e2ef"
+      "sha256": "a1dd2495aa05e2ef",
+      "captured": "2026-09-29"
+    },
+    "b1ff0e05-486e-4569-92c7-d9100c833a03": {
+      "n_rows": 12590,
+      "n_columns": 43,
+      "n_scanned": 2000,
+      "bytes": 8402,
+      "sha256": "70347093cbc626e2",
+      "captured": "2026-11-17"
+    },
+    "b23a3e02-d6f9-43a3-bb1b-38af6860c092": {
+      "n_rows": 180956,
+      "n_columns": 33,
+      "n_scanned": 2000,
+      "bytes": 6703,
+      "sha256": "c2746118843f92e3",
+      "captured": "2026-11-17"
     },
     "b33ff5a3-527e-41c3-83ce-012a8ad2d2c1": {
       "n_rows": 638941,
       "n_columns": 34,
       "n_scanned": 2000,
       "bytes": 7354,
-      "sha256": "4d527201563d9fd7"
+      "sha256": "4d527201563d9fd7",
+      "captured": "2026-09-29"
     },
     "b351804c-293e-4aeb-9c4c-043db67f4540": {
       "n_rows": 584944,
       "n_columns": 69,
       "n_scanned": 2000,
       "bytes": 15419,
-      "sha256": "b8d44469e5f89054"
+      "sha256": "b8d44469e5f89054",
+      "captured": "2026-09-29"
+    },
+    "b557f8c1-3523-4bc5-834f-045ba67daccf": {
+      "n_rows": 6044,
+      "n_columns": 27,
+      "n_scanned": 2000,
+      "bytes": 5929,
+      "sha256": "43a352825e03d335",
+      "captured": "2026-11-17"
+    },
+    "b63887bb-da4a-4b6b-9da1-19a05227f7eb": {
+      "n_rows": 345934,
+      "n_columns": 33,
+      "n_scanned": 2000,
+      "bytes": 7109,
+      "sha256": "801c8d9d9b8975cb",
+      "captured": "2026-11-17"
+    },
+    "b84def55-a776-4aa4-a9a6-7aab8b973086": {
+      "n_rows": 483152,
+      "n_columns": 29,
+      "n_scanned": 2000,
+      "bytes": 5975,
+      "sha256": "f5b2c93fc30530aa",
+      "captured": "2026-11-17"
     },
     "bc335baf-8218-4db0-bdbf-efc3750f99a9": {
       "n_rows": 68036,
       "n_columns": 31,
       "n_scanned": 2000,
       "bytes": 6694,
-      "sha256": "5ca2cae8ae269d9c"
+      "sha256": "5ca2cae8ae269d9c",
+      "captured": "2026-09-29"
     },
     "bc474348-6dbd-483a-acb7-f295d1521fa2": {
       "n_rows": 636,
       "n_columns": 117,
       "n_scanned": 636,
       "bytes": 23020,
-      "sha256": "ea376955035e252f"
+      "sha256": "ea376955035e252f",
+      "captured": "2026-09-29"
     },
     "bde8eef6-8bee-4bc1-8071-93335974bbf7": {
       "n_rows": 201072,
       "n_columns": 29,
       "n_scanned": 2000,
       "bytes": 5957,
-      "sha256": "6d75a38efdd57193"
+      "sha256": "6d75a38efdd57193",
+      "captured": "2026-09-29"
+    },
+    "bdee03e4-14ee-4f3e-a225-3d12f032841f": {
+      "n_rows": 43512,
+      "n_columns": 33,
+      "n_scanned": 2000,
+      "bytes": 7186,
+      "sha256": "0ab73eb5f3b4b41d",
+      "captured": "2026-11-17"
+    },
+    "be497f34-bf74-4cf0-8094-e6f8729b9fa4": {
+      "n_rows": 163779,
+      "n_columns": 30,
+      "n_scanned": 2000,
+      "bytes": 6577,
+      "sha256": "1e367e380def55b1",
+      "captured": "2026-11-17"
     },
     "bea5aacc-7625-4d7c-a3bd-88f9f9cdcec2": {
       "n_rows": 15457,
       "n_columns": 40,
       "n_scanned": 2000,
       "bytes": 8288,
-      "sha256": "e98a432e16013540"
+      "sha256": "e98a432e16013540",
+      "captured": "2026-09-29"
     },
     "bffd503d-e488-44de-8512-0f3c01482adf": {
       "n_rows": 154136,
       "n_columns": 29,
       "n_scanned": 2000,
       "bytes": 5791,
-      "sha256": "d12438bae959b000"
+      "sha256": "d12438bae959b000",
+      "captured": "2026-09-29"
+    },
+    "c2054d78-3e98-4313-a9e1-60c9a6100bee": {
+      "n_rows": 1248980,
+      "n_columns": 30,
+      "n_scanned": 2000,
+      "bytes": 6298,
+      "sha256": "c5bde5e2aaefe913",
+      "captured": "2026-11-17"
+    },
+    "c3b19259-db0b-4c2b-92ae-4f2a0d2a2154": {
+      "n_rows": 22125,
+      "n_columns": 31,
+      "n_scanned": 2000,
+      "bytes": 7144,
+      "sha256": "7aad079b09b962d9",
+      "captured": "2026-11-17"
     },
     "c588e5ee-0741-486e-9283-a8f0157a1406": {
       "n_rows": 59572,
       "n_columns": 47,
       "n_scanned": 2000,
       "bytes": 9865,
-      "sha256": "c4ddcd08113583de"
+      "sha256": "c4ddcd08113583de",
+      "captured": "2026-09-29"
     },
     "c662a5b4-2589-4829-965d-87f01f7b7c5f": {
       "n_rows": 135462,
       "n_columns": 33,
       "n_scanned": 2000,
       "bytes": 6741,
-      "sha256": "97190d1e02b3ea26"
+      "sha256": "97190d1e02b3ea26",
+      "captured": "2026-09-29"
+    },
+    "c725f2d5-dd6f-4233-80a7-e969cad76717": {
+      "n_rows": 57422,
+      "n_columns": 27,
+      "n_scanned": 2000,
+      "bytes": 7140,
+      "sha256": "620ddfba8bcab708",
+      "captured": "2026-11-17"
+    },
+    "c76ed67f-ddd1-45b0-bdb2-fa57fac3460f": {
+      "n_rows": 13607,
+      "n_columns": 31,
+      "n_scanned": 2000,
+      "bytes": 7165,
+      "sha256": "decfa899a7b409a2",
+      "captured": "2026-11-17"
+    },
+    "c83105a2-80df-418c-ba40-c66484ba28ff": {
+      "n_rows": 20509,
+      "n_columns": 27,
+      "n_scanned": 2000,
+      "bytes": 6079,
+      "sha256": "31873e586f826ef1",
+      "captured": "2026-11-17"
+    },
+    "c834dd56-af8d-4f48-a420-6e2144ec7336": {
+      "n_rows": 46086,
+      "n_columns": 28,
+      "n_scanned": 2000,
+      "bytes": 5918,
+      "sha256": "3bd8a2f1ec532554",
+      "captured": "2026-11-17"
+    },
+    "cccbc47c-1b27-4657-874c-b62ce42091dc": {
+      "n_rows": 428469,
+      "n_columns": 37,
+      "n_scanned": 2000,
+      "bytes": 8120,
+      "sha256": "cb4d14130e2965ca",
+      "captured": "2026-11-17"
     },
     "cece7dd6-cad7-450d-8b1c-841d49552cea": {
       "n_rows": 1263676,
       "n_columns": 33,
       "n_scanned": 2000,
       "bytes": 8761,
-      "sha256": "aa45f5d77e841894"
+      "sha256": "aa45f5d77e841894",
+      "captured": "2026-09-29"
+    },
+    "cf59a3de-b569-4b4c-aa4c-ff30c4f5fd90": {
+      "n_rows": 129495,
+      "n_columns": 34,
+      "n_scanned": 2000,
+      "bytes": 7094,
+      "sha256": "b7c5e8d96f83f3df",
+      "captured": "2026-11-17"
+    },
+    "d0ddf40e-dc4b-4134-8439-bfb8bf7a81f4": {
+      "n_rows": 107344,
+      "n_columns": 39,
+      "n_scanned": 2000,
+      "bytes": 7862,
+      "sha256": "3ac1027bb7642153",
+      "captured": "2026-11-17"
     },
     "d25fc11f-5790-4a62-af67-e6e58816194e": {
       "n_rows": 610719,
       "n_columns": 34,
       "n_scanned": 2000,
       "bytes": 6716,
-      "sha256": "5c7e7272d1d5b9b5"
+      "sha256": "5c7e7272d1d5b9b5",
+      "captured": "2026-09-29"
     },
     "d410890b-4646-4976-abde-1dec006cd76a": {
       "n_rows": 98068,
       "n_columns": 66,
       "n_scanned": 2000,
       "bytes": 10802,
-      "sha256": "e27391f59658ba31"
+      "sha256": "e27391f59658ba31",
+      "captured": "2026-09-29"
     },
     "d46da49f-9463-4d94-8157-44d449962f9d": {
       "n_rows": 66719,
       "n_columns": 42,
       "n_scanned": 2000,
       "bytes": 7651,
-      "sha256": "bb2b74f9e3e3db6f"
+      "sha256": "bb2b74f9e3e3db6f",
+      "captured": "2026-09-29"
+    },
+    "d4a33fe7-b504-4549-b11b-0fed48234332": {
+      "n_rows": 13900,
+      "n_columns": 27,
+      "n_scanned": 2000,
+      "bytes": 7345,
+      "sha256": "78a0283174d94ae1",
+      "captured": "2026-11-17"
     },
     "d7d2718a-8a6a-4697-bded-6a4f00fa8d8c": {
       "n_rows": 65088,
       "n_columns": 26,
       "n_scanned": 2000,
       "bytes": 5539,
-      "sha256": "60892ab101439beb"
+      "sha256": "60892ab101439beb",
+      "captured": "2026-09-29"
+    },
+    "d7e86fbd-f606-48c1-af99-a12c10a615f2": {
+      "n_rows": 15755,
+      "n_columns": 53,
+      "n_scanned": 2000,
+      "bytes": 9061,
+      "sha256": "27e52d1f72d0ba46",
+      "captured": "2026-11-17"
+    },
+    "d88ee9bc-db24-4057-af22-c42a790a3780": {
+      "n_rows": 89849,
+      "n_columns": 21,
+      "n_scanned": 2000,
+      "bytes": 5071,
+      "sha256": "3830c110867dd1f3",
+      "captured": "2026-11-17"
+    },
+    "d901fc14-c0a0-432e-9531-8c1effc7cf86": {
+      "n_rows": 236977,
+      "n_columns": 46,
+      "n_scanned": 2000,
+      "bytes": 8926,
+      "sha256": "f8260bafeff13b3e",
+      "captured": "2026-11-17"
     },
     "d911082e-b5e2-40e6-8f08-fb53c7894622": {
       "n_rows": 422220,
       "n_columns": 34,
       "n_scanned": 2000,
       "bytes": 6895,
-      "sha256": "a7e18a03b05a8a0f"
+      "sha256": "a7e18a03b05a8a0f",
+      "captured": "2026-09-29"
+    },
+    "da16cf9b-3959-4aa7-8df4-570fc944f683": {
+      "n_rows": 2868,
+      "n_columns": 31,
+      "n_scanned": 2000,
+      "bytes": 7135,
+      "sha256": "cdcdb6fd1edd8c70",
+      "captured": "2026-11-17"
     },
     "dabd979f-cc50-4526-81f3-8bc6c673ca36": {
       "n_rows": 27034,
       "n_columns": 38,
       "n_scanned": 2000,
       "bytes": 10841,
-      "sha256": "8cfbf78c8054b01b"
+      "sha256": "8cfbf78c8054b01b",
+      "captured": "2026-09-29"
     },
     "db34a663-a726-4404-9b50-bad19c607d0b": {
       "n_rows": 27197,
       "n_columns": 34,
       "n_scanned": 2000,
       "bytes": 8335,
-      "sha256": "061f1456ec478d10"
+      "sha256": "061f1456ec478d10",
+      "captured": "2026-09-29"
+    },
+    "dbb111e5-d67f-48b1-8a95-0afd1280fab5": {
+      "n_rows": 1378211,
+      "n_columns": 43,
+      "n_scanned": 2000,
+      "bytes": 9706,
+      "sha256": "b9e5a1443443328f",
+      "captured": "2026-11-17"
+    },
+    "dc6e9e6a-3566-4839-baf9-6cf6616fd20e": {
+      "n_rows": 185477,
+      "n_columns": 34,
+      "n_scanned": 2000,
+      "bytes": 7155,
+      "sha256": "644b2a180d08386f",
+      "captured": "2026-11-17"
+    },
+    "deaa7dd9-bee9-4007-86fa-de384c539ea7": {
+      "n_rows": 33415,
+      "n_columns": 66,
+      "n_scanned": 2000,
+      "bytes": 9976,
+      "sha256": "11c8df57fe010230",
+      "captured": "2026-11-17"
+    },
+    "e1afef70-039b-4c06-b0c1-bfcd588f6d10": {
+      "n_rows": 2122065,
+      "n_columns": 40,
+      "n_scanned": 2000,
+      "bytes": 8437,
+      "sha256": "156289ca3acd991e",
+      "captured": "2026-11-17"
+    },
+    "e2226a21-247e-48bf-84e1-ea6c0a585cf3": {
+      "n_rows": 671620,
+      "n_columns": 22,
+      "n_scanned": 2000,
+      "bytes": 4936,
+      "sha256": "82ce6841ba550feb",
+      "captured": "2026-11-17"
+    },
+    "e4369a29-b892-40db-9894-75a2a790f575": {
+      "n_rows": 113106,
+      "n_columns": 43,
+      "n_scanned": 2000,
+      "bytes": 7973,
+      "sha256": "ff84fe9d5aa1de73",
+      "captured": "2026-11-17"
     },
     "e48806af-87d1-45ae-843a-c7ee06eac672": {
       "n_rows": 1679,
       "n_columns": 37,
       "n_scanned": 1679,
       "bytes": 6780,
-      "sha256": "087e99aa6aba52dc"
+      "sha256": "087e99aa6aba52dc",
+      "captured": "2026-09-29"
+    },
+    "e4ee90d9-a9b1-4b12-a2e9-9cbce715ee06": {
+      "n_rows": 30022,
+      "n_columns": 30,
+      "n_scanned": 2000,
+      "bytes": 6614,
+      "sha256": "926a75179612f859",
+      "captured": "2026-11-17"
     },
     "e72d0170-3399-4aa0-8c56-da7b4f0ced6b": {
       "n_rows": 836148,
       "n_columns": 58,
       "n_scanned": 2000,
       "bytes": 10904,
-      "sha256": "4de5bdded682fee9"
+      "sha256": "4de5bdded682fee9",
+      "captured": "2026-09-29"
+    },
+    "e96396d7-032d-4b60-ad7b-7e815deb1b19": {
+      "n_rows": 41650,
+      "n_columns": 38,
+      "n_scanned": 2000,
+      "bytes": 7306,
+      "sha256": "8ee0bf3b60ee67a0",
+      "captured": "2026-11-17"
+    },
+    "e969ceb9-197c-42d5-bf81-e19e5a6e32ac": {
+      "n_rows": 41130,
+      "n_columns": 66,
+      "n_scanned": 2000,
+      "bytes": 9914,
+      "sha256": "f0395633746f5b5b",
+      "captured": "2026-11-17"
     },
     "ec22af38-8cea-45ee-9911-c54f16d8cfcd": {
       "n_rows": 195632,
       "n_columns": 66,
       "n_scanned": 2000,
       "bytes": 10310,
-      "sha256": "83082b62bf95dacb"
+      "sha256": "83082b62bf95dacb",
+      "captured": "2026-09-29"
     },
     "f202ae56-b9b6-48bd-87cd-fda4561d9dc9": {
       "n_rows": 304652,
       "n_columns": 61,
       "n_scanned": 2000,
       "bytes": 12174,
-      "sha256": "bdb74c68824cd639"
+      "sha256": "bdb74c68824cd639",
+      "captured": "2026-09-29"
+    },
+    "f2978c16-5238-41dc-8a42-a63614be1b4d": {
+      "n_rows": 9070,
+      "n_columns": 31,
+      "n_scanned": 2000,
+      "bytes": 6984,
+      "sha256": "4e9cb4c64a38a9ea",
+      "captured": "2026-11-17"
+    },
+    "f3027a1d-345f-436e-90ea-f73132a94934": {
+      "n_rows": 39433,
+      "n_columns": 29,
+      "n_scanned": 2000,
+      "bytes": 5804,
+      "sha256": "4faaa2508ffd7d34",
+      "captured": "2026-11-17"
+    },
+    "f44ed5dd-9f5b-4cf4-b6c3-5874ee8ab2f0": {
+      "n_rows": 378918,
+      "n_columns": 32,
+      "n_scanned": 2000,
+      "bytes": 6832,
+      "sha256": "2f8f8802278f7b62",
+      "captured": "2026-11-17"
+    },
+    "f5369070-f44c-46b2-b058-5762c9a561d8": {
+      "n_rows": 13691,
+      "n_columns": 26,
+      "n_scanned": 2000,
+      "bytes": 6007,
+      "sha256": "046200d25ad3b76a",
+      "captured": "2026-11-17"
+    },
+    "f5b6d620-76df-45c5-9524-e5631be0e44a": {
+      "n_rows": 225177,
+      "n_columns": 42,
+      "n_scanned": 2000,
+      "bytes": 8331,
+      "sha256": "f57d9e71d5e7a93b",
+      "captured": "2026-11-17"
+    },
+    "f5f40d3b-ca47-4337-96dc-f037afe59fc1": {
+      "n_rows": 4335,
+      "n_columns": 25,
+      "n_scanned": 2000,
+      "bytes": 5391,
+      "sha256": "f6fbadae83fb8b4c",
+      "captured": "2026-11-17"
+    },
+    "f62628d2-3c79-4c17-a77c-a09897080360": {
+      "n_rows": 30027,
+      "n_columns": 30,
+      "n_scanned": 2000,
+      "bytes": 6606,
+      "sha256": "16a9f7a2130c5b49",
+      "captured": "2026-11-17"
     },
     "f697d6db-798b-41b4-95fc-15c739367a4d": {
       "n_rows": 178815,
       "n_columns": 26,
       "n_scanned": 2000,
       "bytes": 5934,
-      "sha256": "254505d7f7b9664c"
+      "sha256": "254505d7f7b9664c",
+      "captured": "2026-09-29"
+    },
+    "f89a618b-fe4b-404e-bd39-7c574529b1f5": {
+      "n_rows": 69645,
+      "n_columns": 28,
+      "n_scanned": 2000,
+      "bytes": 5559,
+      "sha256": "63f79503003ee2df",
+      "captured": "2026-11-17"
     },
     "fb995261-472e-4ebc-99b0-d1136e1fad8a": {
       "n_rows": 7274,
       "n_columns": 36,
       "n_scanned": 2000,
       "bytes": 7477,
-      "sha256": "201c8a1a5ad8015d"
+      "sha256": "201c8a1a5ad8015d",
+      "captured": "2026-09-29"
     },
     "fd9097cf-6b8c-434f-b797-e7d4c38a0911": {
       "n_rows": 68458,
       "n_columns": 41,
       "n_scanned": 2000,
       "bytes": 10981,
-      "sha256": "fc59b5e487dfe0c9"
+      "sha256": "fc59b5e487dfe0c9",
+      "captured": "2026-09-29"
+    },
+    "fdd2ff73-9163-4648-90da-b218573c2bee": {
+      "n_rows": 1169213,
+      "n_columns": 30,
+      "n_scanned": 2000,
+      "bytes": 6934,
+      "sha256": "354b15b6e3b1db0d",
+      "captured": "2026-11-17"
     },
     "ffb3295a-710f-4759-9291-634af3707848": {
       "n_rows": 125117,
       "n_columns": 32,
       "n_scanned": 2000,
       "bytes": 6260,
-      "sha256": "fae6f2cd1eb9db56"
+      "sha256": "fae6f2cd1eb9db56",
+      "captured": "2026-09-29"
     }
   }
 }

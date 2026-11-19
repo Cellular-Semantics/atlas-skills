@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "obs-column-eval"
-version = "0.4.0"
+version = "0.5.0"
 description = "Gold set and metrics for scoring author cell-type obs column picks against CL_KG curation."
 readme = "README.md"
 requires-python = ">=3.11"

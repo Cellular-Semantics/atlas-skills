@@ -1,0 +1,971 @@
+{
+  "schema": 1,
+  "run": {
+    "date": "2026-09-29",
+    "scope": "n73",
+    "command": "python3 evals/benchmark.py --all --record docs/benchmark-results.json",
+    "note": "Published n=73 result, Jaccard 0.940 (backfilled from the retired docs/benchmark-results.json)",
+    "n_requested": 74,
+    "n_scored": 73,
+    "unreadable": [
+      "b1b7e4e0-d31d-47f5-ad35-1181fe2647d7"
+    ],
+    "no_picks_returned": [],
+    "cost_usd": null,
+    "picker": {
+      "plugin": "atlas-tools 0.1.0 (user scope)",
+      "commit": "a505990",
+      "agent_sha256": "2535ddc75e48",
+      "declared_model": "not recorded",
+      "models_used": [],
+      "models_note": "not recorded before 2026-11-18"
+    },
+    "gold_snapshot": "2026-09 snapshot with the 2026-09-29 review applied (predates SOURCE.json)",
+    "profiles": "h5ad-obs 0.3.0",
+    "backfilled_from": "docs/benchmark-results.json"
+  },
+  "tiers": {
+    "n73": {
+      "overall": {
+        "n": 73,
+        "jaccard": {
+          "mean": 0.9395967086666438,
+          "sd": 0.18182927111499647,
+          "ci95": [
+            0.8952403840651858,
+            0.9774092766161979
+          ]
+        },
+        "precision": {
+          "mean": 0.9577093418477701,
+          "sd": 0.15152710787951196,
+          "ci95": [
+            0.9199196621691215,
+            0.9879973907371168
+          ]
+        },
+        "recall": {
+          "mean": 0.9636225266362253,
+          "sd": 0.15907892755468883,
+          "ci95": [
+            0.9225266362252664,
+            0.9931506849315068
+          ]
+        },
+        "hit_rate": {
+          "k": 72,
+          "n": 73,
+          "p": 0.9863013698630136,
+          "ci95": [
+            0.9264008673087267,
+            0.9975778109072393
+          ]
+        }
+      },
+      "baseline": {
+        "source": "frozen n=73 picks (predecessor picker)",
+        "n": 73,
+        "jaccard": 0.8288987308453784,
+        "delta_jaccard": 0.11069797782126545
+      }
+    }
+  },
+  "all": null,
+  "by_group": {},
+  "per_dataset": [
+    {
+      "dsid": "0054013c-290b-437e-b98e-642aa77d6ebc",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "free_annotation"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "01afd5b8-21be-4869-a686-1fe94ff6f4d8",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Class",
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "01bc7039-961f-4c24-b407-d535a2a7ba2c",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "0b3d19b3-df06-4265-9803-82f598e59dba",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Class",
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "10bb8aaa-ebc6-4026-94ae-a33ac16b5366",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "BICCN_class_label",
+        "BICCN_cluster_label",
+        "BICCN_subclass_label",
+        "L1CellClass"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "18fb432a-be41-4677-9396-e1680a0852bf",
+      "tier": "n73",
+      "jaccard": 0.8,
+      "picks": [
+        "author_cell_type",
+        "broad_lineage",
+        "dev_state",
+        "precisest_label",
+        "subtype"
+      ],
+      "missed": [],
+      "extra": [
+        "dev_state"
+      ]
+    },
+    {
+      "dsid": "1af9835f-469e-452f-a91d-f42af3f91042",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "BICCN_cluster_label",
+        "BICCN_subclass_label",
+        "label_for_heatmap"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "1c6e54ca-ef0c-4acc-9891-d3b7d2cd7a0e",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "_MajorType",
+        "_SubType"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "1cbe52c1-0567-4188-9c18-9d7271c56055",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "class",
+        "subclass.l1",
+        "subclass.l2"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "24c44ebe-c9c8-403b-9b55-6c8e4b46c69e",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "sub_cluster"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "250192f0-94d8-4e26-91cb-afe7e360605e",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Author_CellType",
+        "Author_Class_Curated",
+        "C185_named",
+        "C25_named",
+        "C286_named",
+        "C465_named",
+        "C66_named",
+        "C7_named"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "2e3f5af1-af1f-4828-aa82-5453a2fab7ea",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Cell_Type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "2f3fbea2-9d47-4d16-878d-863bee64ef49",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "325567b8-e698-48ab-9969-ab0b1a2bbb2f",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Class",
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "3310476e-ee9d-4179-9446-df5d073f38d8",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "free_annotation"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "36141ff7-ec4f-44cc-8bf3-ed9d9675d89a",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "37a13a09-e9aa-4d2a-900c-0862e13cfac3",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "cell_name",
+        "cell_name_detailed",
+        "cell_type_group"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "43b216d8-b988-4ade-8263-55c45f1944db",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "_MajorType",
+        "_SubType"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "443f7fb8-2a27-47c3-98f6-6a603c7a294e",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "celltype_level1",
+        "celltype_level2",
+        "celltype_level3",
+        "celltype_level3_fullname",
+        "lineage_level1",
+        "lineage_level2",
+        "putative_CL_label"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "460d368c-9147-4716-8674-76bf0795ba85",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "BICCN_cluster_label",
+        "BICCN_subclass_label"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "47de6fa9-411b-429a-a04f-318930848a3c",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "4d3469a7-339f-40b3-92a3-22f7043545f8",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "4e2221b4-c204-4c28-bc6a-dcdb73c0d856",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Class",
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "50bbe1a2-5f27-47f5-a809-046459a4ae5e",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "celltype_annotation"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "526c1ebb-7d87-405d-8b64-5427105ba923",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "5668bd32-5e84-4708-b976-af6a902ed9a4",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Cell.class",
+        "Cell.group"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "5b8941a9-fef8-4348-876c-c333a87c0c3f",
+      "tier": "n73",
+      "jaccard": 0.4,
+      "picks": [
+        "Main_cluster_name",
+        "sub_cluster_name"
+      ],
+      "missed": [
+        "Matched_BCA_cell_name",
+        "Matched_MCA_cell_name",
+        "Organ_cell_lineage"
+      ],
+      "extra": []
+    },
+    {
+      "dsid": "5d338c19-dae4-49e9-88e4-86c76c78a340",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "cell_type_fine",
+        "cell_type_intermediate",
+        "cell_type_main"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "5f4efede-b295-4be4-aded-eb8b9a946382",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Celltype"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "60b76da3-5490-4b61-a73f-38dc7b586465",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "celltype.final"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "662c884d-add3-494d-b325-c13bc9f0b6ae",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "77a91ab6-4fcc-428d-b719-a3f1238df262",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "cell_type_alias",
+        "cell_type_alt_alias",
+        "class",
+        "cluster",
+        "subclass"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "79772e00-00d5-497e-b8ff-f83af5ce59c1",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type",
+        "broad_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "839cae6e-36e9-4aad-a0fd-99ffe8897c56",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "83bde98b-fc88-4147-a217-1f1ffa508dd2",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "BICCN_class_label",
+        "BICCN_cluster_label",
+        "BICCN_subclass_label",
+        "temp_class_label"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "83c08c97-52c4-4045-b9ad-4eeeb4a3d606",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "8f2e4a29-e397-4f33-bc9a-3181e06b64b0",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type",
+        "ct_cov"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "926a6acd-6555-4d55-9ba5-6927c9884e96",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "annotation_broad",
+        "annotation_detailed",
+        "annotation_detailed_fullNames"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "95e49c50-3411-45f1-8c78-eb4732af7563",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Cell.class",
+        "Cell.group",
+        "Lineage"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "9ad2790f-25e5-44d7-8828-ff5aadeba589",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "9bb8be38-d63f-4c8c-bf31-5ba078713315",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "celltype.l1",
+        "celltype.l2",
+        "celltype.l3"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "9fd987e8-bf5f-42a1-ba2e-20d0b7b36228",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "cell.type.coarse",
+        "cell.type.fine",
+        "singler"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "aa4849b3-7178-4c8c-b079-a49ed03ab09d",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Celltype"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "ab149f9b-8fda-414a-a312-69279695f342",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Cell.class_reannotated",
+        "Cell.group",
+        "Lineage",
+        "cluster_labels_res.0.4"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "ac818189-5c6b-48d2-8bf1-f7511de7b5a9",
+      "tier": "n73",
+      "jaccard": 0.4444,
+      "picks": [
+        "cell_type_original",
+        "cluster",
+        "major_subset",
+        "minor_subset"
+      ],
+      "missed": [
+        "GEX_region",
+        "cell_type_source",
+        "cluster_source",
+        "major_subset_source",
+        "minor_subset_source"
+      ],
+      "extra": []
+    },
+    {
+      "dsid": "b09dac61-836f-418a-ad0a-064d2bc5343d",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "b13072bd-9cb6-42ca-9f4f-01252baef273",
+      "tier": "n73",
+      "jaccard": 0.6842,
+      "picks": [
+        "ann_coarse_for_GWAS_and_modeling",
+        "ann_finest_level",
+        "ann_level_1",
+        "ann_level_2",
+        "ann_level_3",
+        "ann_level_4",
+        "ann_level_5",
+        "original_ann_level_1",
+        "original_ann_level_2",
+        "original_ann_level_3",
+        "original_ann_level_4",
+        "original_ann_level_5",
+        "original_ann_nonharmonized",
+        "scanvi_label",
+        "transf_ann_level_1_label",
+        "transf_ann_level_2_label",
+        "transf_ann_level_3_label",
+        "transf_ann_level_4_label",
+        "transf_ann_level_5_label"
+      ],
+      "missed": [],
+      "extra": [
+        "scanvi_label",
+        "transf_ann_level_1_label",
+        "transf_ann_level_2_label",
+        "transf_ann_level_3_label",
+        "transf_ann_level_4_label",
+        "transf_ann_level_5_label"
+      ]
+    },
+    {
+      "dsid": "b1784014-d30f-4e3a-88d6-65110285d5e4",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Celltype"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "b33ff5a3-527e-41c3-83ce-012a8ad2d2c1",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "b351804c-293e-4aeb-9c4c-043db67f4540",
+      "tier": "n73",
+      "jaccard": 0.9286,
+      "picks": [
+        "ann_coarse_for_GWAS_and_modeling",
+        "ann_finest_level",
+        "ann_level_1",
+        "ann_level_2",
+        "ann_level_3",
+        "ann_level_4",
+        "ann_level_5",
+        "original_ann_level_1",
+        "original_ann_level_2",
+        "original_ann_level_3",
+        "original_ann_level_4",
+        "original_ann_level_5",
+        "original_ann_nonharmonized",
+        "scanvi_label"
+      ],
+      "missed": [],
+      "extra": [
+        "scanvi_label"
+      ]
+    },
+    {
+      "dsid": "bc335baf-8218-4db0-bdbf-efc3750f99a9",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Re-annotation"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "bc474348-6dbd-483a-acb7-f295d1521fa2",
+      "tier": "n73",
+      "jaccard": 0.6667,
+      "picks": [
+        "BICCN_cluster_label",
+        "BICCN_subclass_label",
+        "RNA family"
+      ],
+      "missed": [],
+      "extra": [
+        "RNA family"
+      ]
+    },
+    {
+      "dsid": "bde8eef6-8bee-4bc1-8071-93335974bbf7",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Celltype"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "bea5aacc-7625-4d7c-a3bd-88f9f9cdcec2",
+      "tier": "n73",
+      "jaccard": 0.5,
+      "picks": [
+        "Celltype",
+        "Cluster"
+      ],
+      "missed": [],
+      "extra": [
+        "Cluster"
+      ]
+    },
+    {
+      "dsid": "bffd503d-e488-44de-8512-0f3c01482adf",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Celltype"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "c588e5ee-0741-486e-9283-a8f0157a1406",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Celltype"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "c662a5b4-2589-4829-965d-87f01f7b7c5f",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Class",
+        "CrossArea_cluster",
+        "CrossArea_subclass",
+        "WithinArea_cluster",
+        "WithinArea_subclass"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "cece7dd6-cad7-450d-8b1c-841d49552cea",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type",
+        "ct_cov"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "d25fc11f-5790-4a62-af67-e6e58816194e",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "class",
+        "subclass",
+        "subtype"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "d410890b-4646-4976-abde-1dec006cd76a",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "celltype.broad_clustering_annot",
+        "celltype.final"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "d46da49f-9463-4d94-8157-44d449962f9d",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "cluster"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "d7d2718a-8a6a-4697-bded-6a4f00fa8d8c",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "Cell_Type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "d911082e-b5e2-40e6-8f08-fb53c7894622",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "annotation_broad",
+        "annotation_detailed",
+        "annotation_detailed_fullNames"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "dabd979f-cc50-4526-81f3-8bc6c673ca36",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "db34a663-a726-4404-9b50-bad19c607d0b",
+      "tier": "n73",
+      "jaccard": 0.3333,
+      "picks": [
+        "author_cell_type",
+        "compartment"
+      ],
+      "missed": [
+        "cell_state"
+      ],
+      "extra": [
+        "compartment"
+      ]
+    },
+    {
+      "dsid": "e48806af-87d1-45ae-843a-c7ee06eac672",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "BICCN_class_label",
+        "BICCN_cluster_label"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "e72d0170-3399-4aa0-8c56-da7b4f0ced6b",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "cell_type_original",
+        "cluster",
+        "major_subset",
+        "minor_subset"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "ec22af38-8cea-45ee-9911-c54f16d8cfcd",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "celltype.broad_clustering_annot",
+        "celltype.final"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "f202ae56-b9b6-48bd-87cd-fda4561d9dc9",
+      "tier": "n73",
+      "jaccard": 0.8333,
+      "picks": [
+        "class",
+        "structure",
+        "subclass.full",
+        "subclass.l1",
+        "subclass.l2",
+        "subclass.l3"
+      ],
+      "missed": [],
+      "extra": [
+        "structure"
+      ]
+    },
+    {
+      "dsid": "f697d6db-798b-41b4-95fc-15c739367a4d",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "fb995261-472e-4ebc-99b0-d1136e1fad8a",
+      "tier": "n73",
+      "jaccard": 0.0,
+      "picks": [
+        "sub_cluster"
+      ],
+      "missed": [],
+      "extra": [
+        "sub_cluster"
+      ]
+    },
+    {
+      "dsid": "fd9097cf-6b8c-434f-b797-e7d4c38a0911",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    },
+    {
+      "dsid": "ffb3295a-710f-4759-9291-634af3707848",
+      "tier": "n73",
+      "jaccard": 1.0,
+      "picks": [
+        "author_cell_type"
+      ],
+      "missed": [],
+      "extra": []
+    }
+  ]
+}

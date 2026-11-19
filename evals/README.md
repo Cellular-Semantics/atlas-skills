@@ -56,21 +56,34 @@ $0.20–0.50 per run, ~$2 for the suite. One run per case by default;
 | `label-beside-cluster-index` | rejecting `seurat_clusters` does not cost `author_cell_type` |
 | `standardised-request-does-not-trigger` | a request for the portal's `cell_type` must not spend a picker |
 
-Each is one of the six datasets in the benchmark subset, so a failure here and a
+Each is one of the datasets in the benchmark subset, so a failure here and a
 failure there point at the same file.
+
+## Plugin smoke cases
+
+The light set is also a `claude plugin eval` suite that ships with the plugin:
+[`plugins/author-annotation-columns/evals/smoke/`](../plugins/author-annotation-columns/evals/README.md).
+It is generated from the gold set by `smoke_cases.py`; regenerate it after a
+gold or subset change, and `test_smoke_cases.py` fails until you do.
 
 ## `benchmark.py` — is the picker correct
 
 ```sh
-python3 evals/benchmark.py                 # the six default datasets
-python3 evals/benchmark.py --all           # all 74; slow, not free
+python3 evals/benchmark.py                 # the eight default datasets
+python3 evals/benchmark.py --all           # all 187 (n73 + l4); slow, not free
+python3 evals/benchmark.py --tier l4       # one tier (~$24 for l4)
+python3 evals/benchmark.py --tier l4 --freeze  # ... and make it l4's baseline
 python3 evals/benchmark.py --profiles-only # refresh the profile cache, no agent
 ```
 
 **Cell type only.** Scored against the CL_KG gold set in
-`packages/obs-column-eval`, and reported next to the frozen n=73 picker on the
-same datasets, so a change is visible as a delta rather than an absolute. See
-[`docs/benchmark.md`](../docs/benchmark.md).
+`packages/obs-column-eval`. **The report is per tier**: n73 and l4 each get
+their own metrics and their own delta against that tier's frozen baseline, on
+the same datasets, so a change is visible as a delta rather than an absolute.
+A run covering both tiers adds an `all` figure that counts each CELLxGENE
+dataset once (n73 holds four twice; their scores are averaged), the n73 - l4
+gap (how much the picker leans on the datasets it was developed against), and
+l4 by curation sheet. See [`docs/benchmark.md`](../docs/benchmark.md).
 
 There is no equivalent arm for tissue, stage and disease yet — the gold set is
 one dataset. `obs-column-eval candidates evals/fixtures/profiles` narrows what
@@ -81,11 +94,25 @@ Two stages, both cached under `evals/.cache/`. Profiling is deterministic and
 needs no agent, so a rerun costs no bandwidth; picks are cached too, so a spend
 ceiling or a Ctrl-C costs only the datasets still outstanding.
 
-`--record docs/benchmark-results.json` writes the committed summary. Timestamped
-run directories under `results/` are gitignored; the recorded file is the one
-that goes in a PR, so a change to the picker shows up as a diff in review rather
-than as a claim. It carries the plugin version, the commit, and a hash of the
-agent definition that produced the picks.
+### The run log
+
+Every `--all` or `--tier` run is logged: one committed JSON file per run in
+[`runs/`](runs/), with a generated index, [`runs/README.md`](runs/README.md).
+`--log` logs a smaller run too, `--no-log` skips one, and `--note "..."` says
+why the run was made. A run file records:
+- the command;
+- the plugin version, commit and agent hash, and the **exact models used**
+  (the agent declares an alias, `model: sonnet`, which moves over time);
+- the gold snapshot and profile reader;
+- per-tier metrics with the delta against each tier's frozen baseline;
+- per-dataset picks, misses and extras;
+- the cost.
+
+The full transcripts stay in the gitignored `results/` directory. A run file is
+never edited after it is written, apart from its `note`; after a hand edit,
+regenerate the index with `python3 evals/run_log.py`. A run file goes in the PR
+that it measures, so a change to the picker shows up as a diff in review rather
+than as a claim.
 
 ### This arm needs no tag
 
@@ -102,7 +129,7 @@ claude plugin install author-annotation-columns@atlas-skills --scope local
 
 H5AD_OBS_CMD="packages/h5ad-obs/.venv/bin/h5ad-obs" \
 OBS_COLUMN_EVAL_CMD="packages/obs-column-eval/.venv/bin/obs-column-eval" \
-  python3 evals/benchmark.py --all --record docs/benchmark-results.json
+  python3 evals/benchmark.py --all --note "why this run"
 ```
 
 Local scope writes to `.claude/settings.local.json`, which is gitignored, and

@@ -2,7 +2,8 @@
 
 **Raised from:** the `author-annotation-columns` benchmark, full run 2026-09-29, n=73
 CELLxGENE datasets.
-**Evidence:** `docs/benchmark-results.json`, obs column profiles in
+**Evidence:** the run recorded in `docs/benchmark-results.json` (now
+`evals/runs/2026-09-29-n73-a505990.json`), obs column profiles in
 `evals/fixtures/profiles/`.
 **Ask:** decisions on the remaining items in "Policy questions". Sections 1 and 2 were
 reviewed on 2026-09-29 and are settled — see the status on each.

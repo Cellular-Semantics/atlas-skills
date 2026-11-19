@@ -37,11 +37,13 @@ _NULLISH = {"n/a", "na", "none", "-", ""}
 #: case-sensitive, so scoring against the sheet as written marks a picker wrong
 #: for choosing the column that is actually there.
 #:
-#: Found by cross-checking all 186 curated names against the committed obs
-#: profiles; these were the only mismatches, and `evals/test_cases.py` fails if
-#: another appears. Case is NOT folded during scoring -- an agent inventing a
-#: name with the wrong case would fail at pull time, and that is a real error
-#: worth catching.
+#: Found by cross-checking every curated name against the committed obs
+#: profiles -- 186 names on the n73 set in 2026-09, then the whole test set
+#: after the 2026-11 snapshot. These are the only mismatches left: the
+#: others found then were fixed upstream (CL_KG#118), and
+#: `evals/test_cases.py` fails if another appears. Case is NOT folded during
+#: scoring -- an agent inventing a name with the wrong case would fail at pull
+#: time, and that is a real error worth catching.
 _CORRECTIONS: dict[str, dict[str, str]] = {
     "ac818189-5c6b-48d2-8bf1-f7511de7b5a9": {
         "Cell_type_original": "cell_type_original",

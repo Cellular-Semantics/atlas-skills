@@ -6,7 +6,8 @@ Five field types: ``cell_type``, ``tissue``, ``development_stage``,
 Two things live here, and nothing else:
 
 - the **gold set** -- a frozen snapshot of the CL_KG curation sheets (cell type
-  only), the 74-dataset CELLxGENE test set they cover, the frozen n=73 picks
+  only), the CELLxGENE test set they cover in two tiers (``n73``, frozen, and
+  ``l4``), the frozen n=73 picks
   that produced the published numbers, and the hand-curated per-dataset entries
   in ``data/sample_fields/`` that carry tissue, stage and disease;
 - the **metrics** -- Jaccard, precision, recall, hit rate, and a random-pick
@@ -25,7 +26,9 @@ from .score import (
     hypergeom_p_hit,
     jaccard,
     score_by_field_type,
+    score_by_tier,
     score_picks,
+    summarise,
     wilson,
 )
 
@@ -37,4 +40,4 @@ except _metadata.PackageNotFoundError:  # a source tree, not an install
 __all__ = ["CURATION_DIR", "FIELD_TYPES", "__version__", "bootstrap_ci", "flatten",
            "full", "gold_set", "hypergeom_p_hit", "jaccard", "notes",
            "parse_curation", "sample_field_gold", "score_by_field_type",
-           "score_picks", "subset", "wilson", "with_ground_truth"]
+           "score_by_tier", "score_picks", "subset", "summarise", "wilson", "with_ground_truth"]
