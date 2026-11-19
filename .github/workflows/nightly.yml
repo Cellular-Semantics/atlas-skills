@@ -1,7 +1,7 @@
 name: nightly
 
 # A tag never changes, but what installs from it does: the packages' dependencies
-# are unpinned, and `uvx --from git+...` re-resolves them on a cold cache (it
+# are unpinned, and `uvx --from <pin>` re-resolves them on a cold cache (it
 # does not read a uv.lock). So a release that passed when it was cut
 # can stop working months later with no commit to trigger a check. This job is
 # that check, for every release still in the supported window.
@@ -33,10 +33,10 @@ jobs:
         run: |
           set -uo pipefail
           status=0
-          ref_of() { local r=${1%%#*}; echo "${r##*@}"; }
           while IFS=$'\t' read -r pin where _; do
             # Read at the pin's tag: an old release can pin a package since moved out.
-            cli=$(python3 scripts/versions.py cli "${pin##*subdirectory=packages/}" --at "$(ref_of "$pin")")
+            # `ref` reads both pin forms: archive pins, and git+ pins at older tags.
+            cli=$(python3 scripts/versions.py cli "${pin##*subdirectory=packages/}" --at "$(python3 scripts/versions.py ref "$pin")")
             echo "::group::$cli  (used by $where)"
             if uvx --from "$pin" "$cli" --version; then
               echo "resolves"
@@ -64,7 +64,9 @@ jobs:
           set -uo pipefail
           status=0
           refs=$(python3 scripts/versions.py pins --tags "$WINDOW" | cut -f1 \
-                 | sed -E 's/.*@([^#]+)#subdirectory=(packages\/[a-z0-9-]+)$/\1 \2/' | sort -u)
+                 | while read -r pin; do
+                     echo "$(python3 scripts/versions.py ref "$pin") ${pin##*subdirectory=}"
+                   done | sort -u)
           while read -r ref path; do
             echo "::group::$ref"
             wt="$RUNNER_TEMP/wt-$ref"

@@ -47,7 +47,7 @@ project so it runs the release.
 A pin must resolve for someone with a cold cache. Check it the way CI does:
 
 ```
-uvx --no-cache --from "git+https://github.com/Cellular-Semantics/atlas-skills@<tag>#subdirectory=packages/<dir>" "$(python3 scripts/versions.py cli <dir>)" --version
+uvx --no-cache --from "https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/<tag>.tar.gz#subdirectory=packages/<dir>" "$(python3 scripts/versions.py cli <dir>)" --version
 ```
 
 `scripts/versions.py cli` prints the package's console script, preferring the

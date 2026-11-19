@@ -77,7 +77,7 @@ jobs:
             [ "$kind" = package ] || continue
             # Cold-cache install of the commit the tag will name, before the tag
             # exists: a pushed tag is public, and a broken one costs a version.
-            uvx --from "git+https://github.com/${{ github.repository }}@$SHA#subdirectory=$path" \
+            uvx --from "https://github.com/${{ github.repository }}/archive/$SHA.tar.gz#subdirectory=$path" \
               "$(python3 scripts/versions.py cli "$name")" --version
             git tag -a "$tag" -m "$name $version" "$SHA"
             git push origin "$tag"
@@ -87,9 +87,8 @@ jobs:
       - name: Check plugin pins resolve before tagging plugins
         run: |
           set -euo pipefail
-          ref_of() { local r=${1%%#*}; echo "${r##*@}"; }
           python3 scripts/versions.py pins --tags 0 | cut -f1 | while read -r pin; do
-            uvx --from "$pin" "$(python3 scripts/versions.py cli "${pin##*subdirectory=packages/}" --at "$(ref_of "$pin")")" --version
+            uvx --from "$pin" "$(python3 scripts/versions.py cli "${pin##*subdirectory=packages/}" --at "$(python3 scripts/versions.py ref "$pin")")" --version
           done
 
       - name: Tag plugins
@@ -133,7 +132,9 @@ jobs:
                 echo
                 echo "Package pins in this release:"
                 echo
-                git grep -hoE 'pkg-[a-z0-9-]+--v[0-9][^#"]*' "$tag" -- "$path" | sort -u | sed 's/^/- /' || echo "- none"
+                # An archive pin ends the tag with .tar.gz; a git pin with #.
+                git grep -hoE 'pkg-[a-z0-9-]+--v[0-9][^#"]*' "$tag" -- "$path" \
+                  | sed 's/\.tar\.gz$//' | sort -u | sed 's/^/- /' || echo "- none"
                 echo
               fi
               echo "Changes under \`$path\` since ${prev:-the start}:"

@@ -81,7 +81,9 @@ jobs:
       - run: python3 scripts/versions.py check-bumps --base "origin/${{ github.base_ref }}"
 
   install-from-git:
-    # The published contract: what a user gets from a SKILL.md command.
+    # The published contract: what a user gets from a SKILL.md command -- a
+    # source archive from GitHub, which installs without git. (The job keeps
+    # its old name so required-check settings still find it.)
     #
     # Runs on pull requests as well as main, deliberately. Gating it to main
     # meant a packaging fault — a file never committed, a missing
@@ -102,13 +104,13 @@ jobs:
           set -euo pipefail
           for d in packages/*/; do
             pkg=$(basename "$d")
-            uvx --from "git+https://github.com/${{ github.repository }}@${{ steps.rev.outputs.sha }}#subdirectory=packages/$pkg" \
+            uvx --from "https://github.com/${{ github.repository }}/archive/${{ steps.rev.outputs.sha }}.tar.gz#subdirectory=packages/$pkg" \
               "$(python3 scripts/versions.py cli "$pkg")" --version
           done
 
   skill-pins-resolve:
-    # Every `uvx --from git+...@<tag>` line a skill or hook on this branch tells a
-    # user to run, run as written. A pin to a tag that does not exist yet fails
+    # Every `uvx --from .../archive/refs/tags/<tag>.tar.gz` pin a skill or hook on
+    # this branch tells a user to run, run as written. A pin to a tag that does not exist yet fails
     # for everyone except the author, whose uv cache already holds the package.
     #
     # One exception: a pin to the package tag that the release workflow will cut

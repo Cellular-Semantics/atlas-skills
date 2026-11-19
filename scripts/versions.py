@@ -7,6 +7,7 @@
     versions.py pins [--tags N] [--at SHA]       every package pin users can be running
     versions.py report [--check FILE]            the plugin -> package table (docs/pins.md)
     versions.py cli <dir> [--at REF]             the console script packages/<dir> installs
+    versions.py ref <pin>                        the tag or commit a pin names
 
 Standard library only, and it shells out to git rather than importing anything:
 CI runs it before any package is installed.
@@ -17,7 +18,8 @@ workflow, never by hand from a branch:
     <plugin>--v<version>        what `claude plugin tag` writes, and what a
                                 bundle's version range and a ref-pinned
                                 marketplace resolve against
-    pkg-<dir>--v<version>       what a skill's `uvx --from ...@<tag>` pins
+    pkg-<dir>--v<version>       what a skill's `uvx --from` pin names, as
+                                .../archive/refs/tags/<tag>.tar.gz
 
 A plugin tag freezes its SKILL.md, and the SKILL.md holds the package pin, so
 "which package does plugin version X run" is answered by reading the skill at
@@ -37,22 +39,56 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# A git URL, a ref, and the package subdirectory, plus an optional
-# `name[extras] @ ` in front so that CI installs exactly what the skill does --
-# a pin whose extra went missing would otherwise pass here and fail for users.
+# A pin is a GitHub source archive of a tag, and the package subdirectory:
+#
+#     https://github.com/<owner>/<repo>/archive/refs/tags/<tag>.tar.gz#subdirectory=packages/<dir>
+#
+# An archive is a plain HTTPS download, so `uv` needs no `git` to install it --
+# and a Mac without the Xcode command-line tools, Windows without git, or a
+# sandbox where git cannot run, can all use the skill (#29). Older plugin tags
+# froze the `git+https://github.com/<owner>/<repo>@<tag>#subdirectory=...` form,
+# and the nightly check still installs those, so both forms are read here.
+#
+# Either may carry a `name[extras] @ ` in front, so that CI installs exactly
+# what the skill does -- a pin whose extra went missing would otherwise pass
+# here and fail for users. Any spelling PEP 508 allows -- `h5ad_obs[a, b]@...`
+# as well as `h5ad-obs[a,b] @ ...` -- so that no form drops the extra here.
 # The CLI's name comes from the package's [project.scripts]: see `cli`.
-# Any spelling PEP 508 allows -- `h5ad_obs[a, b]@git+...` as well as
-# `h5ad-obs[a,b] @ git+...` -- so that no form drops the extra here.
 PIN = re.compile(r"(?:[A-Za-z0-9][A-Za-z0-9._-]*[ \t]*\[[A-Za-z0-9._, \t-]*\][ \t]*@[ \t]*)?"
-                 r"git\+https://github\.com/[^\"'\s]+#subdirectory=packages/[a-z0-9-]+")
-# The ref is the "@..." straight after the repo path, so the "@" of a
-# `name[extras]@` prefix -- spaced or not -- is never taken for it. None for a
-# pin with no ref at all, which installs whatever the default branch holds today.
-PIN_PARTS = re.compile(r"github\.com/[^#@\s]+@(?P<ref>[^#@\s]+)"
-                       r"#subdirectory=packages/(?P<pkg>[a-z0-9-]+)$")
+                 r"(?:git\+https://github\.com/[^\"'\s#]+"
+                 r"|https://github\.com/[^/\"'\s#]+/[^/\"'\s#]+/archive/[^\"'\s#]+\.tar\.gz)"
+                 r"#subdirectory=packages/[a-z0-9-]+")
+# `refpath` is the part of the URL that names the ref, so it can be swapped for
+# a commit (see install_spec); `ref` is the tag or commit itself. In the git
+# form the ref is the "@..." straight after the repo path, so the "@" of a
+# `name[extras]@` prefix -- spaced or not -- is never taken for it. `ref` is
+# None for a git pin with no ref at all, and for an archive of a branch
+# (refs/heads/...): both install whatever that branch holds today.
+PIN_PARTS = re.compile(
+    r"(?:github\.com/[^/#@\s]+/[^/#@\s]+/archive/"
+    r"(?P<arefpath>(?:refs/heads/[^#\s]+?)|(?:refs/tags/)?(?P<aref>[^#\s/]+?))\.tar\.gz"
+    r"|git\+https://github\.com/[^#@\s]+(?:@(?P<grefpath>(?P<gref>[^#@\s]+)))?)"
+    r"#subdirectory=packages/(?P<pkg>[a-z0-9-]+)$")
+
+
+@dataclass(frozen=True)
+class PinParts:
+    ref: str | None       # the tag or commit; None for a branch or no ref at all
+    pkg: str              # the package directory under packages/
+    span: tuple[int, int] | None  # where the ref sits in the pin, to swap it
+
+
+def pin_parts(pin: str) -> PinParts | None:
+    """The ref and package a pin names, or None for a string that is not a pin."""
+    m = PIN_PARTS.search(pin)
+    if m is None:
+        return None
+    if m["arefpath"] is not None:
+        return PinParts(m["aref"], m["pkg"], m.span("arefpath") if m["aref"] else None)
+    return PinParts(m["gref"], m["pkg"], m.span("grefpath") if m["gref"] else None)
 
 # Changes under these never alter what a user runs, so they need no bump.
-# uv.lock included: `uvx --from git+...` resolves fresh and never reads it.
+# uv.lock included: `uvx --from <pin>` resolves fresh and never reads it.
 PACKAGE_EXEMPT = ("tests/", "README.md", "LICENSE", "uv.lock")
 
 
@@ -266,9 +302,12 @@ def install_spec(pin: str, at: str | None, to_cut: set[str]) -> str:
     A pin to any other missing tag -- a typo, a version nobody bumped to --
     is left alone, and fails as it should.
     """
-    m = PIN_PARTS.search(pin)
-    if at and m and m["ref"] in to_cut:
-        return pin.replace(f"@{m['ref']}#", f"@{at}#")
+    parts = pin_parts(pin)
+    if at and parts and parts.ref in to_cut and parts.span:
+        # In an archive pin this drops `refs/tags/` too: a commit's archive is
+        # .../archive/<sha>.tar.gz.
+        start, end = parts.span
+        return pin[:start] + at + pin[end:]
     return pin
 
 
@@ -279,7 +318,8 @@ def pins(n_tags: int, at: str | None) -> int:
     for pin, where in sorted(collect_pins(n_tags).items()):
         print(f"{pin}\t{' '.join(sorted(where))}\t{install_spec(pin, at, to_cut)}")
         # Only on HEAD: a released tag cannot be fixed, and must not block releases.
-        if PIN_PARTS.search(pin) is None and any(w.endswith("@HEAD") for w in where):
+        parts = pin_parts(pin)
+        if (parts is None or parts.ref is None) and any(w.endswith("@HEAD") for w in where):
             unpinned.append(pin)
     for pin in unpinned:
         print(f"FAIL  {pin} names no tag, so users get whatever the default branch "
@@ -313,12 +353,12 @@ def report_text(n_tags: int) -> str:
             if not found:
                 lines.append(f"| `{rel.name}` | {label} | — | — |")
             for pin in found:
-                m = PIN_PARTS.search(pin)
-                if m is None:
-                    pkg = pin.rsplit("subdirectory=packages/", 1)[1]
+                parts = pin_parts(pin)
+                pkg = pin.rsplit("subdirectory=packages/", 1)[1]
+                if parts is None or parts.ref is None:
                     lines.append(f"| `{rel.name}` | {label} | `{pkg}` | **no tag** |")
                 else:
-                    lines.append(f"| `{rel.name}` | {label} | `{m['pkg']}` | `{m['ref']}` |")
+                    lines.append(f"| `{rel.name}` | {label} | `{pkg}` | `{parts.ref}` |")
     return "\n".join(lines) + "\n"
 
 
@@ -365,6 +405,16 @@ def cli(pkg_dir: str, at: str | None) -> int:
     return 0
 
 
+def ref(pin: str) -> int:
+    """The tag or commit a pin names, for the workflows' shell loops: an archive
+    pin has no `@<ref>` for them to cut out with parameter expansion."""
+    parts = pin_parts(pin)
+    if parts is None or parts.ref is None:
+        sys.exit(f"names no tag: {pin}")
+    print(parts.ref)
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -385,6 +435,8 @@ def main() -> int:
     c = sub.add_parser("cli")
     c.add_argument("dir", help="package directory under packages/")
     c.add_argument("--at", metavar="REF", help="read the package as it is at REF")
+    f = sub.add_parser("ref")
+    f.add_argument("pin")
     a = ap.parse_args()
 
     if a.cmd == "check-bumps":
@@ -397,6 +449,8 @@ def main() -> int:
         return pins(a.tags, a.at)
     if a.cmd == "cli":
         return cli(a.dir, a.at)
+    if a.cmd == "ref":
+        return ref(a.pin)
     return report(a.tags, a.check)
 
 

@@ -16,8 +16,16 @@ from pathlib import Path
 import pytest
 
 SCRIPT = Path(__file__).resolve().parent.parent / "scripts" / "versions.py"
-PIN = ("git+https://github.com/example/repo@pkg-tool--v{v}"
+PIN = ("https://github.com/example/repo/archive/refs/tags/pkg-tool--v{v}.tar.gz"
        "#subdirectory=packages/tool")
+# The form older plugin tags froze, before #29. Nightly still installs those.
+GIT_PIN = ("git+https://github.com/example/repo@pkg-tool--v{v}"
+           "#subdirectory=packages/tool")
+
+
+def at_commit(pin: str, sha: str = "abc123") -> str:
+    """`pin` with its tag swapped for a commit, as install_spec does."""
+    return pin.replace("/archive/refs/tags/pkg-tool--v0.1.0.tar.gz#", f"/archive/{sha}.tar.gz#")
 
 
 def sh(repo: Path, *args: str) -> str:
@@ -256,8 +264,7 @@ def test_pin_to_tag_this_commit_will_cut_installs_from_commit(repo: Path) -> Non
     # The first release of a package: the skill pins pkg-tool--v0.1.0, which the
     # release workflow cuts only after this check passes. Insisting on the tag
     # would deadlock; the commit holds the same files.
-    assert spec_for(repo, "--at", "abc123") == PIN.format(v="0.1.0").replace(
-        "@pkg-tool--v0.1.0#", "@abc123#")
+    assert spec_for(repo, "--at", "abc123") == at_commit(PIN.format(v="0.1.0"))
 
 
 def test_pin_to_existing_tag_installs_from_tag(repo: Path) -> None:
@@ -276,7 +283,7 @@ def test_pin_without_at_is_unchanged(repo: Path) -> None:
 
 
 def test_pin_with_extras_keeps_them(repo: Path) -> None:
-    # CI must install `tool[fast] @ git+...`, not the bare URL, or a broken extra
+    # CI must install `tool[fast] @ https://...`, not the bare URL, or a broken extra
     # passes CI and fails for every user.
     write(repo, "plugins/thing/skills/thing/SKILL.md",
           f'uvx --from "tool[fast] @ {PIN.format(v="0.1.0")}" tool\n')
@@ -288,8 +295,7 @@ def test_pin_with_extras_keeps_them(repo: Path) -> None:
 def test_extras_pin_to_tag_this_commit_will_cut(repo: Path) -> None:
     write(repo, "plugins/thing/skills/thing/SKILL.md",
           f'uvx --from "tool[fast] @ {PIN.format(v="0.1.0")}" tool\n')
-    assert spec_for(repo, "--at", "abc123") == f"tool[fast] @ {PIN.format(v='0.1.0')}".replace(
-        "@pkg-tool--v0.1.0#", "@abc123#")
+    assert spec_for(repo, "--at", "abc123") == at_commit(f"tool[fast] @ {PIN.format(v='0.1.0')}")
 
 
 @pytest.mark.parametrize("prefix", [
@@ -307,15 +313,64 @@ def test_pin_with_other_extras_spellings_keeps_them(repo: Path, prefix: str) -> 
 
 
 UNPINNED = "git+https://github.com/example/repo#subdirectory=packages/tool"
+# An archive of a branch is as unpinned as a git URL with no ref.
+UNPINNED_ARCHIVE = ("https://github.com/example/repo/archive/refs/heads/main.tar.gz"
+                    "#subdirectory=packages/tool")
 
 
+@pytest.mark.parametrize("unpinned", [UNPINNED, UNPINNED_ARCHIVE])
 @pytest.mark.parametrize("prefix", ["", "tool[fast] @ ", "tool[fast]@"])
-def test_pin_without_a_ref_fails(repo: Path, prefix: str) -> None:
+def test_pin_without_a_ref_fails(repo: Path, prefix: str, unpinned: str) -> None:
     # Without spaces, the prefix's "@" must not be read as the ref.
-    write(repo, "plugins/thing/skills/thing/SKILL.md", f'uvx --from "{prefix}{UNPINNED}" tool\n')
+    write(repo, "plugins/thing/skills/thing/SKILL.md", f'uvx --from "{prefix}{unpinned}" tool\n')
     out = run(repo, "pins", "--tags", "0")
     assert out.returncode == 1 and "names no tag" in out.stderr
-    assert f"{prefix}{UNPINNED}" in out.stdout
+    assert f"{prefix}{unpinned}" in out.stdout
+
+
+# --- the git+ form, still frozen in older plugin tags --------------------------
+
+def test_git_pin_at_an_old_tag_is_listed_beside_archive_pin(repo: Path) -> None:
+    write(repo, "plugins/thing/skills/thing/SKILL.md",
+          f'uvx --from "tool[fast] @ {GIT_PIN.format(v="0.1.0")}" tool\n')
+    commit(repo, "git pin")
+    sh(repo, "git", "tag", "thing--v1.0.0")
+    set_pin(repo, "0.1.0")
+    rows = dict(line.split("\t")[:2] for line in run(repo, "pins", "--tags", "1").stdout.splitlines())
+    assert rows[f"tool[fast] @ {GIT_PIN.format(v='0.1.0')}"] == "thing--v1.0.0"
+    assert rows[PIN.format(v="0.1.0")] == "thing@HEAD"
+
+
+def test_git_pin_to_tag_this_commit_will_cut_installs_from_commit(repo: Path) -> None:
+    write(repo, "plugins/thing/skills/thing/SKILL.md",
+          f'uvx --from "{GIT_PIN.format(v="0.1.0")}" tool\n')
+    assert spec_for(repo, "--at", "abc123") == GIT_PIN.format(v="0.1.0").replace(
+        "@pkg-tool--v0.1.0#", "@abc123#")
+
+
+def test_report_reads_git_pin(repo: Path) -> None:
+    write(repo, "plugins/thing/skills/thing/SKILL.md",
+          f'uvx --from "tool[fast]@{GIT_PIN.format(v="0.1.0")}" tool\n')
+    assert "| `tool` | `pkg-tool--v0.1.0` |" in run(repo, "report").stdout
+
+
+# --- ref -------------------------------------------------------------------------
+
+@pytest.mark.parametrize("pin,want", [
+    (PIN.format(v="0.1.0"), "pkg-tool--v0.1.0"),
+    (f"tool[fast] @ {PIN.format(v='0.1.0')}", "pkg-tool--v0.1.0"),
+    (GIT_PIN.format(v="0.1.0"), "pkg-tool--v0.1.0"),
+    (f"tool[fast]@{GIT_PIN.format(v='0.1.0')}", "pkg-tool--v0.1.0"),
+    ("https://github.com/example/repo/archive/abc123.tar.gz#subdirectory=packages/tool", "abc123"),
+])
+def test_ref_names_the_tag_or_commit(repo: Path, pin: str, want: str) -> None:
+    out = run(repo, "ref", pin)
+    assert out.returncode == 0 and out.stdout == f"{want}\n"
+
+
+@pytest.mark.parametrize("pin", [UNPINNED, UNPINNED_ARCHIVE, "not a pin"])
+def test_ref_of_an_unpinned_pin_fails(repo: Path, pin: str) -> None:
+    assert run(repo, "ref", pin).returncode != 0
 
 
 def test_pin_without_a_ref_at_an_old_tag_only_is_listed(repo: Path) -> None:
