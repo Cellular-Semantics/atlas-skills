@@ -14,8 +14,8 @@ pick that only judgement can catch. The check is not meant to catch it, and the
 expected rate is 0. That kind of error is what the evals measure, and the two
 should not be confused.
 
-    python3 evals/picks_catch_rate.py            # the table, as markdown
-    python3 evals/picks_catch_rate.py --json     # ... as JSON
+    python3 evals/author-annotation-columns/picks_catch_rate.py            # the table, as markdown
+    python3 evals/author-annotation-columns/picks_catch_rate.py --json     # ... as JSON
 
 Deterministic, offline, free. Needs ``obs-column-eval[check]`` installed.
 """

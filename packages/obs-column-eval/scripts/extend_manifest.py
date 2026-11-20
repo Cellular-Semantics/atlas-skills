@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Bring ``data/manifest.json`` in line with the curation snapshot.
 
-    python3 packages/obs-column-eval/scripts/extend_manifest.py [--profiles evals/fixtures/profiles]
+    python3 packages/obs-column-eval/scripts/extend_manifest.py [--profiles evals/author-annotation-columns/fixtures/profiles]
 
 Dev-only, and idempotent: every run recomputes the manifest from the curation
 sheets plus whatever profiles exist, so the usual loop is
 
     1. scripts/snapshot_clkg.py <sha>        # new sheets
     2. scripts/extend_manifest.py            # new versions -> tier "l4"
-    3. evals/benchmark.py --all --profiles-only
+    3. evals/author-annotation-columns/benchmark.py --all --profiles-only
     4. scripts/extend_manifest.py            # choose between duplicate versions
 
 The rules it applies:
@@ -82,7 +82,7 @@ def main() -> int:
     ap.add_argument("--rechoose", action="store_true",
                     help="Re-decide duplicate-version groups instead of keeping an "
                          "earlier choice. Needs every member's profile on disk.")
-    ap.add_argument("--profiles", type=Path, default=ROOT / "evals" / "fixtures" / "profiles")
+    ap.add_argument("--profiles", type=Path, default=ROOT / "evals" / "author-annotation-columns" / "fixtures" / "profiles")
     args = ap.parse_args()
 
     versions, unkeyed = _sheets()

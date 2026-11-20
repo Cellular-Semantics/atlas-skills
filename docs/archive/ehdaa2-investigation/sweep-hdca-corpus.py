@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Sweep every in-range HDCA (stage, tissue) pair through the EHDAA2 brackets.
 
-    uv run evals/ontology-mapping/sweep-hdca-corpus.py [corpus.csv]
+    uv run evals/onto-mapping/sweep-hdca-corpus.py [corpus.csv]
 
 Offline apart from the cached authority, so the whole corpus costs nothing to
 re-run. It decides nothing -- it produces the refutations, grouped by how the

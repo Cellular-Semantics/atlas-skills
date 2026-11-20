@@ -67,5 +67,5 @@ def test_committed_run_files_are_complete():
 
 def test_the_index_is_up_to_date():
     """A run file added or edited by hand must come with a regenerated index:
-    `python3 evals/run_log.py`."""
+    `python3 evals/author-annotation-columns/run_log.py`."""
     assert (RUNS / "README.md").read_text() == render_index(RUNS)

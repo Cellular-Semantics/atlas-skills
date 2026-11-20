@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Check every EHDAA2 and Uberon claim in the developmental reference against source.
 
-    python evals/ontology-mapping/verify-ehdaa2-claims.py
-    python evals/ontology-mapping/verify-ehdaa2-claims.py --offline
+    python evals/onto-mapping/verify-ehdaa2-claims.py
+    python evals/onto-mapping/verify-ehdaa2-claims.py --offline
 
 Two authorities, because the reference depends on both and they disagree:
 

@@ -112,7 +112,7 @@ of the cell-type rule and the main reason these are two agents rather than one.
 
 ## The candidate pool
 
-`obs-column-eval candidates evals/fixtures/profiles` mines the committed
+`obs-column-eval candidates evals/author-annotation-columns/fixtures/profiles` mines the committed
 profiles by column name. Over 73 datasets and 672 distinct column names:
 
 | field type | candidate names |

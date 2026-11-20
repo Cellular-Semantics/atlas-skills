@@ -1,19 +1,17 @@
 # Ontology-mapping evals
 
-These came in with the `onto-mapping` plugin and **use a different harness from
-`evals/cases/`**. The native one in this repo is a directory per case with
-`prompt.md` + `checks.json`, scored by `evals/runner.py` and `evals/graders.py`.
-These are a single JSON file of cases scored by `check.py` beside them.
+These came in with the `onto-mapping` plugin and use their own harness: a
+single JSON file of cases, scored by `check.py` beside them. They are not in
+`claude plugin eval` format, and they do not share author-annotation-columns'
+`runner.py`.
 
-Converting them to the native format is outstanding work. Until then they run
-on their own:
+Converting the cases that can be graded without code to
+`plugins/onto-mapping/evals/` is outstanding work (see `docs/evals.md`). Until
+then they run on their own:
 
 ```
-python evals/ontology-mapping/check.py <run-file.json>
+python evals/onto-mapping/check.py <run-file.json>
 ```
-
-`runner.py` globs `evals/cases/*`, so nothing here is picked up by the native
-suite and nothing here interferes with it.
 
 ## What a report has to say
 
@@ -57,8 +55,8 @@ failure mode and used to be invisible.
   HsapDv release, or whenever `oq release -o hsapdv` reports a move.
 
 ```
-python evals/ontology-mapping/verify-hsapdv-claims.py            # live Ubergraph
-python evals/ontology-mapping/verify-hsapdv-claims.py --offline  # cached
+python evals/onto-mapping/verify-hsapdv-claims.py            # live Ubergraph
+python evals/onto-mapping/verify-hsapdv-claims.py --offline  # cached
 ```
 
 Needs an interpreter with CA certificates; Homebrew's python3 fails TLS here.

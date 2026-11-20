@@ -2,7 +2,7 @@
 
 `claude plugin eval` cases for this plugin. They ship with the plugin, so anyone
 who has it can run them. The accuracy benchmark (Jaccard per tier, against the
-full CL_KG gold set) is repo-only, in `evals/benchmark.py`; see
+full CL_KG gold set) is repo-only, in `evals/author-annotation-columns/benchmark.py`; see
 [`docs/evals.md`](https://github.com/Cellular-Semantics/atlas-skills/blob/main/docs/evals.md).
 
 ## `smoke/`: does it pick the right columns?
@@ -22,7 +22,7 @@ The last two check the toolchain, not the picks. When the pinned install or the
 remote read failed, agents fell back to `curl` and still picked correctly, so
 without them a broken toolchain scored 1.0 (#29).
 
-The cases are **generated** from the gold set by `evals/smoke_cases.py` in the
+The cases are **generated** from the gold set by `evals/author-annotation-columns/smoke_cases.py` in the
 repo. Do not edit them by hand; regenerate them.
 
 ```sh

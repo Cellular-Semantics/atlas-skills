@@ -40,11 +40,11 @@ CURIE = r"HsapDv:\d{7}"
 TARGETS = [
     "plugins/onto-mapping/skills/map-to-ontology/references/hsapdv.md",
     "plugins/onto-mapping/skills/map-to-ontology/SKILL.md",
-    "evals/ontology-mapping/cases-hsapdv.md",
+    "evals/onto-mapping/cases-hsapdv.md",
 ]
 # JSON is scanned for CURIEs only: its `record` values are raw corpus strings,
 # which are deliberately not ontology labels.
-CURIE_ONLY = ["evals/ontology-mapping/cases-hsapdv.json"]
+CURIE_ONLY = ["evals/onto-mapping/cases-hsapdv.json"]
 
 # Label shapes this ontology actually uses. A phrase matching one of these is a
 # claim that such a term exists.

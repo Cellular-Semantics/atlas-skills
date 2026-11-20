@@ -44,7 +44,7 @@ have one. See [`docs/sample-fields.md`](../../docs/sample-fields.md).
 - **The frozen baselines** (`data/frozen/`) — one per tier, so a new run is
   compared like for like. `n73_*` is the predecessor picker behind the
   published Jaccard 0.81. `l4_*` is the first picker scored on l4, written by
-  `evals/benchmark.py --tier l4 --freeze`.
+  `evals/author-annotation-columns/benchmark.py --tier l4 --freeze`.
 - **The report contract** (`schemas/picks.schema.json`) — the shape of the
   `picks.json` the `author-annotation-columns` skill writes for each dataset,
   and of what each picker sub-agent returns. The tests hold the frozen picks

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Score an eval run against cases-core.json.
 
-    python evals/ontology-mapping/check.py <run-file.json>
+    python evals/onto-mapping/check.py <run-file.json>
 
 A run file is a JSON list of the skill's reports, one per case:
 

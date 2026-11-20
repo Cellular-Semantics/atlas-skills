@@ -29,13 +29,13 @@ first.
 not a query, not a function. A result that is true of a mechanical stand-in is
 not a result about the skill.
 
-**Use the harness that already exists.** `evals/runner.py` runs cases against
+**Use the harness that already exists.** `evals/author-annotation-columns/runner.py` runs cases against
 the *installed plugin* in a fresh temporary directory, with no project
 `CLAUDE.md` and no `.claude/skills` in scope. Case layout, from
-`evals/cases/read-obs-once/`:
+`evals/author-annotation-columns/cases/read-obs-once/`:
 
 ```
-evals/cases/<name>/
+evals/author-annotation-columns/cases/<name>/
   prompt.md        the user turn, verbatim
   checks.json      {"tags": [...], "checks": [{"kind": ..., "pattern": ..., "why": ...}]}
   graders/         criteria for LLM grading where a pattern will not do
@@ -46,8 +46,8 @@ evals/cases/<name>/
 makes a failing case diagnosable.
 
 ```
-python3 evals/runner.py --dry-run          # prints prompts, spends nothing
-python3 evals/runner.py --case 'rung0-*'
+python3 evals/author-annotation-columns/runner.py --dry-run          # prints prompts, spends nothing
+python3 evals/author-annotation-columns/runner.py --case 'rung0-*'
 ```
 
 Cases cost real money (~$0.20–0.50 each). `--max-cost-usd` aborts a runaway
@@ -178,7 +178,7 @@ exit".
   evidence. Start here before proposing tool changes; three of the five are
   about making generic graph navigation parameterisable rather than adding
   commands, which is the preferred direction.
-- `evals/` — the harness, and `evals/ontology-mapping/` for the existing
+- `evals/` — the harness, and `evals/onto-mapping/` for the existing
   ontology cases (`cases-core.json` covers general ladder behaviour: whether the
   skill triggers, how far up the ladder it goes, whether it names a rival).
 - `docs/archive/ehdaa2-investigation/` — record, not guidance. Its

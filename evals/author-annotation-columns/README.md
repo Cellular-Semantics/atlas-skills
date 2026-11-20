@@ -1,0 +1,234 @@
+# author-annotation-columns: repo-side evals
+
+The second test layer the repo rules ask for. `packages/*/tests/` check
+deterministic logic; these check **skill behaviour** — does the right skill fire
+from an intent-shaped prompt, does the agent reach for the right flag, does it
+read the result correctly and avoid the documented traps.
+
+Two arms, answering two different questions.
+
+Cases are tagged by field type as well as by skill: `--tag tissue`,
+`--tag development_stage`, `--tag disease` select the cases added for the
+sample-field picker, `--tag picker` selects every picking case.
+
+## `runner.py` — does the skill behave
+
+```sh
+python3 evals/author-annotation-columns/runner.py                        # every case, one run each
+python3 evals/author-annotation-columns/runner.py --case 'read-obs-*'    # a subset
+python3 evals/author-annotation-columns/runner.py --tag picker           # by tag
+python3 evals/author-annotation-columns/runner.py --dry-run              # print the prompts, spend nothing
+python3 evals/author-annotation-columns/runner.py --runs 3               # three runs per case, for flakiness
+```
+
+Needs the plugin installed **at user scope** — these cases test the
+**published** plugin, so a SKILL.md edit needs a tag and a push plus
+`claude plugin marketplace update atlas-skills` before it shows up here.
+
+```sh
+claude plugin marketplace add Cellular-Semantics/atlas-skills --scope user
+claude plugin install author-annotation-columns@atlas-skills --scope user
+claude plugin install remote-h5ad-obs@atlas-skills --scope user
+```
+
+`remote-h5ad-obs` is for `standardised-request-does-not-trigger`, which reads
+the portal's `cell_type` with that skill. A case names any plugin it needs
+beyond author-annotation-columns in its `checks.json` (`"requires"`), and the
+runner refuses to start until each is installed at user scope at the version in
+`OTHER_PLUGINS`.
+
+Each case runs in a fresh temporary directory, so nothing but the user-scope
+plugin is in scope: no project `CLAUDE.md`, no `.claude/skills`. **A project- or
+local-scope install is therefore invisible here** — it lives in the repo and the
+temp directory does not — so `runner.py` checks the scope and the version, not
+just that something called `author-annotation-columns` exists. Matching on the name alone
+waves through a setup whose cases would all fail for the wrong reason.
+
+Testing the published pin is the point, not an inconvenience: half of what these
+cases assert is that the `uvx --from …@vX.Y.Z` command in SKILL.md actually
+resolves and runs.
+
+**These cost money and read real h5ads from the CELLxGENE CDN.** About
+$0.25–0.65 per run, ~$5 for the suite (2026-11-19: $4.85 for 9 cases). One run per case by default;
+`--max-cost-usd` (default 8) aborts a suite that runs away. Not in CI.
+
+### The cases
+
+| case | pins |
+|---|---|
+| `read-obs-once` | obs is pulled once and profiled locally, not fetched twice |
+| `numeric-clusters-rejected` | `leiden` / `louvain` are cluster indices, not labels |
+| `constant-columns` | a dataset where every candidate is constant has no author column |
+| `annotation-hierarchy` | all three levels of `celltype.l1/l2/l3`, not just the finest |
+| `label-beside-cluster-index` | rejecting `seurat_clusters` does not cost `author_cell_type` |
+| `standardised-request-does-not-trigger` | a request for the portal's `cell_type` must not spend a picker |
+
+Each is one of the datasets in the benchmark subset, so a failure here and a
+failure there point at the same file.
+
+## Plugin smoke cases
+
+The light set is also a `claude plugin eval` suite that ships with the plugin:
+[`plugins/author-annotation-columns/evals/smoke/`](../plugins/author-annotation-columns/evals/README.md).
+It is generated from the gold set by `smoke_cases.py`; regenerate it after a
+gold or subset change, and `test_smoke_cases.py` fails until you do.
+
+## `benchmark.py` — is the picker correct
+
+```sh
+python3 evals/author-annotation-columns/benchmark.py                 # the eight default datasets
+python3 evals/author-annotation-columns/benchmark.py --all           # all 187 (n73 + l4); slow, not free
+python3 evals/author-annotation-columns/benchmark.py --tier l4       # one tier (~$24 for l4)
+python3 evals/author-annotation-columns/benchmark.py --tier l4 --freeze  # ... and make it l4's baseline
+python3 evals/author-annotation-columns/benchmark.py --profiles-only # refresh the profile cache, no agent
+```
+
+**Cell type only.** Scored against the CL_KG gold set in
+`packages/obs-column-eval`. **The report is per tier**: n73 and l4 each get
+their own metrics and their own delta against that tier's frozen baseline, on
+the same datasets, so a change is visible as a delta rather than an absolute.
+A run covering both tiers adds an `all` figure that counts each CELLxGENE
+dataset once (n73 holds four twice; their scores are averaged), the n73 - l4
+gap (how much the picker leans on the datasets it was developed against), and
+l4 by curation sheet. See [`docs/benchmark.md`](../docs/benchmark.md).
+
+There is no equivalent arm for tissue, stage and disease yet — the gold set is
+one dataset. `obs-column-eval candidates evals/author-annotation-columns/fixtures/profiles` narrows what
+to curate next; [`docs/sample-fields.md`](../docs/sample-fields.md) says what
+would have to happen to turn it into a number.
+
+Two stages. Profiles are committed and deterministic, so a rerun costs no
+bandwidth. Picks are cached under `evals/author-annotation-columns/.cache/picks/`, so a spend ceiling or a
+Ctrl-C costs only the datasets still outstanding. A cached pick is reused only
+if the same picker made it: the same plugin version and the same
+`author-celltype-picker` definition. Anything else is picked again, and
+`--force-picks` ignores the cache entirely.
+
+### The run log
+
+Every `--all` or `--tier` run is logged: one committed JSON file per run in
+[`runs/`](runs/), with a generated index, [`runs/README.md`](runs/README.md).
+`--log` logs a smaller run too, `--no-log` skips one, and `--note "..."` says
+why the run was made. A run file records:
+- the command;
+- the plugin version, commit and agent hash, and the **exact models used**
+  (the agent declares an alias, `model: sonnet`, which moves over time);
+- the gold snapshot and profile reader;
+- per-tier metrics with the delta against each tier's frozen baseline;
+- per-dataset picks, misses and extras;
+- the cost.
+
+The full transcripts stay in the gitignored `results/` directory. A run file is
+never edited after it is written, apart from its `note`; after a hand edit,
+regenerate the index with `python3 evals/author-annotation-columns/run_log.py`. A run file goes in the PR
+that it measures, so a change to the picker shows up as a diff in review rather
+than as a claim.
+
+### This arm needs no tag
+
+Unlike `runner.py`, the accuracy arm can run against the working tree. The
+picker sub-agent is declared `tools: Read` — it reads a profile file and returns
+JSON, and never shells out — so it never touches the pinned `uvx` command.
+And it inherits the cwd rather than isolating to a temp directory, so a
+**local-scope** install is visible to it:
+
+```sh
+claude plugin marketplace add "$PWD" --scope local
+claude plugin install author-annotation-columns@atlas-skills --scope local
+python3 evals/author-annotation-columns/benchmark.py --all --note "why this run"
+```
+
+Its two CLIs, `h5ad-obs` and `obs-column-eval`, run from the working tree
+(`uv run --with-editable packages/<pkg>`), not from a released pin. The run log
+records the gold snapshot and `--freeze` writes baselines from the working tree,
+so the scorer must be the working tree too; a pin that fell behind would score
+against older gold while the log named the newer. `H5AD_OBS_CMD` and
+`OBS_COLUMN_EVAL_CMD` still override them, e.g. with a venv `dev.sh` built.
+
+Local scope writes to `.claude/settings.local.json`, which is gitignored, and
+does not disturb whatever is installed at user scope. Remove it afterwards with
+`claude plugin uninstall author-annotation-columns@atlas-skills --scope local`.
+
+So the accuracy number can be measured, reviewed and landed *before* a release
+is tagged; only the behaviour cases have to wait for one.
+
+## Layout
+
+```
+cases/<name>/prompt.md              what the agent is asked
+cases/<name>/checks.json            deterministic checks + tags + limits
+cases/<name>/graders/criteria.md    what a good answer looks like, in prose
+graders.py                          pure grading logic
+runner.py                           subprocess driver for the behaviour arm
+benchmark.py                        profile -> pick -> score, for the accuracy arm
+test_graders.py, test_cases.py      unit tests for the graders (free, offline)
+```
+
+`prompt.md` + `graders/criteria.md` is the layout `claude plugin eval` expects,
+so the cases migrate to it unchanged when it leaves early access — only
+`runner.py` and `checks.json` are throwaway. `plugin eval` additionally brings a
+no-plugin **ablation arm**, which these lack and which matters: without it, a
+case a bare model could answer from latent knowledge scores the same as one the
+skill actually earned.
+
+`graders.py` is shared with
+[cap_skills](https://github.com/Cellular-Semantics/cap_skills); keep the two in
+step so cases stay portable.
+
+## Check kinds
+
+| kind | matches against |
+|---|---|
+| `command_matches` / `command_not_matches` | every tool call's name and JSON input |
+| `answer_matches` / `answer_not_matches` | the final answer |
+| `answer_any_of` | word-bounded list, with `min_hits` |
+| `numeric_present` | any number in the answer falling in `[min, max]` |
+| `numeric_in_range` | a number captured by an anchored `pattern` |
+
+Every check carries a `why` saying what behaviour it pins, printed on failure.
+Anything not expressible deterministically belongs in `criteria.md` for an LLM
+grader to judge.
+
+## Writing a rejection check without punishing a better answer
+
+Most cases here pin a column the picker must **not** choose. The naive check —
+`answer_not_matches: "leiden"` — fails the best possible answer, the one that
+says "I rejected `leiden` because its values are integers". So the negative
+checks match the column name only near picking language, and `test_cases.py`
+asserts both directions for every one of them: the answer that should pass does,
+and the answer that should fail does.
+
+Run those free, before spending anything:
+
+```sh
+python3 -m pytest evals -q
+```
+
+This is not hypothetical. On the suite's first real run, `read-obs-once` failed — not
+because the skill was wrong but because the skill was *right*: it listed
+`cell_type_ontology_term_id` among the columns it had rejected and why, which SKILL.md
+explicitly asks it to do, and a bare `answer_not_matches` on the column name marked that
+wrong. It was the one rejection check with no both-directions test. Every one has one
+now.
+
+## First run
+
+Run for the first time on **2026-09-29**, against atlas-tools 0.2.0 (the bundle these skills shipped in before they were split into per-skill plugins): **5 of 6 cases
+clean, $2.02**. The sixth failed on a bad check of mine, not on the skill — see the
+section above. Re-running the whole suite costs about $2 and takes ten minutes.
+
+## Brittleness
+
+The cases assert the **content of live third-party datasets**. A CELLxGENE
+re-ingest or a revised annotation can move them. Expectations were measured on
+**2026-09-28** and each `criteria.md` records what was there then; when one
+fails, check whether the dataset changed before assuming the skill did.
+
+The CDN URL is keyed on `dataset_id` and is stable across revisions, but the
+obs columns behind it are not.
+
+## Infrastructure versus regression
+
+A run stopped by a spend or rate limit is reported separately and not counted as
+a failure — `graders.INFRA_MARKERS` lists what that looks like. Scoring those as
+failures buries a real regression under noise. Rerun them.
