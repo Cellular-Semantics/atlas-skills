@@ -37,6 +37,8 @@ from .supplements import (
     SupplementFile,
     SupplementRetrieval,
     Supplements,
+    _inside,
+    file_problems,
     find_pointers,
     looks_like_manifest,
     media_type,
@@ -322,6 +324,8 @@ def fetch_supplements(
         return deadline is not None and time.monotonic() > deadline
 
     try:
+        if retry:
+            _reset_stale_present(found, supplements_dir(store_root, record).parent)
         wanted = [f for f in found.files if _should_attempt(f, retry)]
         if not wanted:
             found.attempts.append(
@@ -424,6 +428,34 @@ def _apply_media_policy(found: Supplements, skip_media: set[str]) -> None:
                 route=entry.retrieval.route,
                 note=f"{kind} is not wanted at any size; --include-media overrides",
             )
+
+
+def _reset_stale_present(found: Supplements, paper_dir: Path) -> None:
+    """Put a ``present`` file whose stored copy no longer matches back to ``listed``.
+
+    Without this, ``--retry`` skips it forever: the record says it is here, and
+    the check keeps saying it is not. Description and label are kept; what
+    described the bytes is cleared, and any partial file is removed.
+    """
+    for entry in found.files:
+        if entry.status != "present":
+            continue
+        reasons = file_problems(entry.to_dict(), paper_dir)
+        if not reasons:
+            continue
+        stale = _inside(paper_dir, entry.path)
+        if stale is not None and stale.is_file():
+            stale.unlink()
+        entry.status = "listed"
+        entry.path = None
+        entry.sha256 = None
+        entry.size_bytes = None
+        entry.members = []  # described the old bytes; unpack rebuilds them
+        entry.retrieval = SupplementRetrieval(
+            route="none",
+            note="recorded present but the stored file no longer matched "
+                 f"({'; '.join(reasons)}); re-fetching",
+        )
 
 
 def _should_attempt(entry: SupplementFile, retry: bool) -> bool:

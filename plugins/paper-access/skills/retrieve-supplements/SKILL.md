@@ -60,6 +60,14 @@ comes with a `path`, and `false` never does.
 What it does **not** guarantee: that a file's contents match its caption, or
 that a `listed` file exists at the source.
 
+`paper-access supplements check --store S (--id X | --input F | --all)` verifies
+the schema, the rules above and the disk: each `present` path stays inside the
+paper directory, exists, and matches `size_bytes` and `sha256`; each extracted
+member exists. A hook runs it after every `supplements fetch`, `unpack` and
+`adopt`. When it fires, re-run the fetch with `--retry` or report the file as
+missing; `--retry` re-fetches a file whose stored copy no longer matches. Never
+edit `availability.json`.
+
 ## Requirements
 
 Papers first. `retrieve-supplements` reads the article XML that
@@ -70,7 +78,7 @@ record for is a paper to fetch, not a paper with no supplements.
 ## The mechanical half
 
 ```bash
-alias paper-access='uvx --from "https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-paper-access--v0.3.2.tar.gz#subdirectory=packages/paper-access" paper-access'
+alias paper-access='uvx --from "https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-paper-access--v0.3.3.tar.gz#subdirectory=packages/paper-access" paper-access'
 
 # What files does this paper have? Free: reads the XML already on disk.
 paper-access supplements list --store <store> --id <id>

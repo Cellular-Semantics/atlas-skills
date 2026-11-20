@@ -19,6 +19,8 @@ from typing import Any
 
 from . import __version__, refs, supp_flow, waterfall
 from . import record as record_module
+from . import store as store_module
+from . import supplements as supplements_module
 from .errors import PaperAccessError
 from .store import read as read_record
 from .store import read_all, write_or_note
@@ -393,6 +395,43 @@ def cmd_supp_show(args: argparse.Namespace) -> int:
     return 2 if problems else 0
 
 
+def cmd_supp_check(args: argparse.Namespace) -> int:
+    """Schema, rules and disk, for each paper asked about."""
+    def work(identifier: str) -> dict[str, Any]:
+        record = _needs_record(args, identifier)
+        payload = record.to_dict()
+        if not payload.get("supplements"):
+            return {"problems": []}
+        problems = record_module.check(payload)
+        kind, value = record.primary_id
+        problems += supplements_module.check_on_disk(
+            payload, store_module.paper_dir(args.store, kind, value)
+        )
+        return {"problems": problems}
+
+    targets = _supp_targets(args)
+    results: dict[str, Any] = {}
+    for identifier in targets:
+        try:
+            results[identifier] = work(identifier)
+        except PaperAccessError as exc:
+            results[identifier] = {"error": str(exc)}
+    errored = [i for i, r in results.items() if r.get("error")]
+    failing = [i for i, r in results.items() if r.get("problems")]
+    _emit({
+        "papers": results,
+        "summary": {
+            "checked": len(targets),
+            "errored": errored,
+            "with_problems": failing,
+            "problems": sum(len(r.get("problems") or []) for r in results.values()),
+        },
+    })
+    if errored:
+        return 1
+    return 2 if failing else 0
+
+
 def cmd_supp_report(args: argparse.Namespace) -> int:
     rows = []
     for record in read_all(args.store):
@@ -596,6 +635,12 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--store", required=True)
     s.add_argument("--id", required=True)
     s.set_defaults(func=cmd_supp_show)
+
+    s = supp.add_parser(
+        "check", help="Check manifests against the schema, the rules and the disk"
+    )
+    with_store_id(s)
+    s.set_defaults(func=cmd_supp_check)
 
     s = supp.add_parser("report", help="Supplement coverage across the store")
     s.add_argument("--store", required=True)
