@@ -285,15 +285,39 @@ def test_a_zero_byte_supplement_is_present_not_missing():
     assert cross_check_supplements(Supplements(files=[entry]).to_dict()) == []
 
 
-@pytest.mark.parametrize("field_name", ["size_bytes", "bytes_transferred"])
-def test_every_numeric_field_tolerates_zero(field_name):
+def test_size_bytes_tolerates_zero():
     """The guard that matters more than the fix: the next numeric field will be
     written the same way."""
     entry = present()
-    setattr(entry, field_name, 0)
+    entry.size_bytes = 0
     payload = Supplements(files=[entry]).to_dict()
-    assert field_name in payload["files"][0]
+    assert "size_bytes" in payload["files"][0]
     assert cross_check_supplements(payload) == []
+
+
+def test_bytes_transferred_tolerates_zero_on_a_deferred_file():
+    entry = SupplementFile(
+        file_id="t.xlsx", status="deferred", bytes_transferred=0,
+        retrieval=SupplementRetrieval(route="europepmc_bundle", note="over the limit"),
+    )
+    payload = Supplements(
+        files=[entry], gaps=[{"what": "t", "reason": "r", "action": "a", "file_id": "t.xlsx"}]
+    ).to_dict()
+    assert payload["files"][0]["bytes_transferred"] == 0
+    assert cross_check_supplements(payload) == []
+
+
+def test_a_gap_on_a_present_file_is_flagged():
+    gap = {"what": "t", "reason": "r", "action": "a", "file_id": "table1.xlsx"}
+    payload = Supplements(files=[present()], gaps=[gap]).to_dict()
+    assert any("a gap still asks for it" in p for p in cross_check_supplements(payload))
+
+
+def test_bytes_transferred_on_a_present_file_is_flagged():
+    entry = present()
+    entry.bytes_transferred = 0
+    payload = Supplements(files=[entry]).to_dict()
+    assert any("bytes_transferred" in p for p in cross_check_supplements(payload))
 
 
 def test_a_missing_size_is_still_caught():

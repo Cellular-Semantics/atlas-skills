@@ -321,3 +321,12 @@ def test_a_record_from_the_future_is_still_refused(tmp_path):
 def test_migrate_on_an_already_current_store_changes_nothing(capsys, populated):
     code, result = run(capsys, "migrate", "--store", str(populated))
     assert code == 0 and result["migrated"] == []
+
+
+def test_large_bytes_help_shows_the_real_default(capsys):
+    from paper_access import supp_flow
+
+    with pytest.raises(SystemExit):
+        main(["supplements", "fetch", "--help"])
+    out = " ".join(capsys.readouterr().out.split())
+    assert f"default {supp_flow.DEFAULT_LARGE_BYTES // (1024 * 1024)} MB" in out
