@@ -15,6 +15,7 @@ neither shows up anywhere else.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -25,6 +26,7 @@ HOOKS = Path(__file__).resolve().parent.parent / "plugins" / "paper-access" / "h
 
 DENY = HOOKS / "deny_record_write.py"
 CHECK_REFS = HOOKS / "check_refs.py"
+CHECK_SUPP = HOOKS / "check_supplements.py"
 
 
 def run(script: Path, payload, env: dict[str, str] | None = None):
@@ -153,6 +155,7 @@ def test_the_hooks_manifest_wires_both_scripts_to_the_right_events():
 
     post = json.dumps(events["PostToolUse"])
     assert "check_refs.py" in post
+    assert "check_supplements.py" in post
     assert "deny_record_write.py" not in post
 
 
@@ -283,3 +286,182 @@ def test_the_picks_manifest_runs_after_the_write():
     assert "${CLAUDE_PLUGIN_ROOT}" in hook["command"]
     assert CHECK_PICKS.is_file()
 
+
+
+# -- paper-access: the supplement manifest check -----------------------
+
+PAPER_ACCESS_BIN = (HOOKS.parent.parent.parent / "packages" / "paper-access"
+                    / ".venv" / "bin" / "paper-access")
+needs_paper_access = pytest.mark.skipif(
+    not PAPER_ACCESS_BIN.exists(), reason="paper-access is not installed here (run ./dev.sh)")
+
+DOI = "10.1038/x1"
+BODY = b"gene,logfc\nA,1.5\n"
+
+
+def supp_store(tmp_path: Path, doi: str = DOI, **tweak) -> Path:
+    """A one-paper store whose availability.json is written directly."""
+    import hashlib
+
+    pdir = tmp_path / "store" / doi.replace("/", "_")
+    (pdir / "supplements" / "files").mkdir(parents=True)
+    (pdir / "supplements" / "files" / "t1.csv").write_bytes(BODY)
+    entry = {
+        "file_id": "t1.csv", "status": "present", "media_type": "csv",
+        "path": "supplements/files/t1.csv", "size_bytes": len(BODY),
+        "sha256": hashlib.sha256(BODY).hexdigest(),
+        "retrieval": {"route": "europepmc_bundle"},
+    }
+    entry.update(tweak)
+    (pdir / "availability.json").write_text(json.dumps({
+        "schema_version": 1, "input": doi, "ids": {"doi": {"value": doi, "from": "input"}},
+        "route": "europepmc",
+        "local_source": {"kind": "jats", "path": "source/paper.jats.xml",
+                         "sha256": "a" * 64, "bytes": 42},
+        "metadata": {"source_api": "europepmc", "retrieved_at": "2026-01-01T00:00:00+00:00",
+                     "title": "An atlas"},
+        "attempts": [{"route": "europepmc", "outcome": "ok"}],
+        "fetched_at": "2026-01-01T00:00:00+00:00",
+        "supplements": {"files": [entry]},
+    }))
+    return tmp_path / "store"
+
+
+def bash_of(command: str, **extra) -> dict:
+    return {"tool_name": "Bash", "tool_input": {"command": command}, **extra}
+
+
+def run_supp(payload, **env: str):
+    return run(CHECK_SUPP, payload, env={"PAPER_ACCESS_BIN": str(PAPER_ACCESS_BIN), **env})
+
+
+def test_a_command_that_is_not_a_supplements_command_is_ignored(tmp_path):
+    store = supp_store(tmp_path)
+    for command in (
+        f"ls {store}",
+        f"paper-access fetch --store {store} --id {DOI}",
+        f"paper-access supplements show --store {store} --id {DOI}",
+        f"paper-access supplements list --store {store} --all",
+        f"paper-access supplements check --store {store} --all",
+    ):
+        result = run_supp(bash_of(command), PAPER_ACCESS_BIN="/nonexistent")
+        assert result.returncode == 0 and result.stderr == "", command
+
+
+@needs_paper_access
+def test_a_clean_store_passes(tmp_path):
+    store = supp_store(tmp_path)
+    result = run_supp(bash_of(f"paper-access supplements fetch --store {store} --id {DOI}"))
+    assert result.returncode == 0, result.stderr
+    assert result.stderr == ""
+
+
+@needs_paper_access
+def test_a_deleted_file_is_flagged_and_the_message_says_what_to_do(tmp_path):
+    store = supp_store(tmp_path)
+    (store / "10.1038_x1" / "supplements" / "files" / "t1.csv").unlink()
+    result = run_supp(bash_of(f"paper-access supplements unpack --store {store} --id {DOI}"))
+    assert result.returncode == 2
+    assert DOI in result.stderr and "t1.csv" in result.stderr and "not on disk" in result.stderr
+    assert "--retry" in result.stderr
+    assert "Never edit availability.json" in result.stderr
+
+
+@needs_paper_access
+def test_a_wrong_digest_is_flagged(tmp_path):
+    store = supp_store(tmp_path, sha256="b" * 64)
+    result = run_supp(bash_of(f"paper-access supplements adopt --store {store} --id {DOI} "
+                              "--incoming /somewhere"))
+    assert result.returncode == 2
+    assert "sha256" in result.stderr
+
+
+@needs_paper_access
+def test_a_path_escaping_the_store_is_flagged(tmp_path):
+    (tmp_path / "store").mkdir()
+    (tmp_path / "outside.csv").write_bytes(BODY)
+    store = supp_store(tmp_path, path="../../outside.csv")
+    result = run_supp(bash_of(f"paper-access supplements fetch --store {store} --id {DOI}"))
+    assert result.returncode == 2
+    assert "not inside the paper directory" in result.stderr
+
+
+@needs_paper_access
+def test_all_is_handled_and_every_failing_paper_is_named(tmp_path):
+    store = supp_store(tmp_path, sha256="b" * 64)
+    result = run_supp(bash_of(f"paper-access supplements fetch --store {store} --all --retry"))
+    assert result.returncode == 2
+    assert DOI in result.stderr
+
+
+@needs_paper_access
+def test_an_alias_a_uvx_prefix_and_a_chain_are_all_recognised(tmp_path):
+    store = supp_store(tmp_path, sha256="b" * 64)
+    for command in (
+        f"uvx --from 'https://x/y.tar.gz#subdirectory=packages/paper-access' paper-access "
+        f"supplements fetch --store={store} --id={DOI}",
+        f"cd /tmp && paper-access supplements fetch --id {DOI} --store '{store}' | tail",
+    ):
+        assert run_supp(bash_of(command)).returncode == 2, command
+
+
+@needs_paper_access
+def test_a_relative_store_resolves_against_the_hook_cwd(tmp_path):
+    supp_store(tmp_path, sha256="b" * 64)
+    result = run_supp(bash_of(f"paper-access supplements fetch --store store --id {DOI}",
+                              cwd=str(tmp_path)))
+    assert result.returncode == 2
+
+
+def test_a_command_with_no_store_or_selection_is_left_alone():
+    for command in ("paper-access supplements fetch --id x",
+                    "paper-access supplements fetch --store /s",
+                    "paper-access supplements fetch --store 'unterminated"):
+        result = run_supp(bash_of(command), PAPER_ACCESS_BIN="/nonexistent")
+        assert result.returncode == 0 and result.stderr == "", command
+
+
+@pytest.mark.parametrize(
+    "payload",
+    ["", "not json at all", "[]", "{}", '{"tool_input": {}}', '{"tool_input": null}',
+     '{"tool_input": {"command": 7}}', '{"tool_input": "x"}'],
+)
+def test_malformed_input_does_not_block_a_supplements_command(payload):
+    assert run_supp(payload).returncode == 0
+
+
+def test_a_supplements_checker_that_cannot_run_says_so(tmp_path):
+    store = supp_store(tmp_path)
+    result = run_supp(bash_of(f"paper-access supplements fetch --store {store} --id {DOI}"),
+                      PAPER_ACCESS_BIN="/nonexistent/paper-access")
+    assert result.returncode == 0
+    assert "unchecked" in result.stderr
+
+
+def test_the_supplements_hook_runs_after_bash():
+    manifest = json.loads((HOOKS / "hooks.json").read_text())
+    (entry,) = [e for e in manifest["hooks"]["PostToolUse"]
+                if "check_supplements.py" in json.dumps(e)]
+    assert entry["matcher"] == "Bash"
+    (hook,) = entry["hooks"]
+    assert hook["command"].endswith('/hooks/check_supplements.py"')
+    assert hook["timeout"] >= 120
+    assert "supplement" in manifest["description"]
+    assert CHECK_SUPP.is_file()
+
+
+def test_a_paper_that_was_never_fetched_is_unchecked_not_flagged(tmp_path):
+    """The command already said 'fetch the paper first'; the hook must not add
+    a misleading 'retry' on top."""
+    bin_ = Path(__file__).resolve().parents[1] / "packages/paper-access/.venv/bin/paper-access"
+    if not bin_.exists():
+        pytest.skip("paper-access venv not built; run ./dev.sh")
+    script = Path(__file__).resolve().parents[1] / "plugins/paper-access/hooks/check_supplements.py"
+    payload = {"tool_input": {"command":
+               f"paper-access supplements fetch --store {tmp_path} --id PMC1"}}
+    proc = subprocess.run(
+        [sys.executable, str(script)], input=json.dumps(payload), capture_output=True,
+        text=True, env={**os.environ, "PAPER_ACCESS_BIN": str(bin_)},
+    )
+    assert proc.returncode == 0
+    assert "unchecked" in proc.stderr

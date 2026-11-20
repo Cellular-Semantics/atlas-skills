@@ -35,6 +35,8 @@ packages/obs-column-eval/.venv/bin/python -m pytest evals "$@"
 # backwards either wrecks a session or silently disables itself, and nothing
 # else would catch either. Alongside them, the release tooling, against
 # throwaway git repos.
+# The supplement manifest check's catch rate, against mutated manifests.
+packages/paper-access/.venv/bin/python -m pytest evals/paper-access "$@"
 packages/paper-access/.venv/bin/python -m pytest tests "$@"
 python3 scripts/versions.py report --check docs/pins.md
 if command -v claude >/dev/null; then

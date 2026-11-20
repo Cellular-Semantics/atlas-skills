@@ -1,5 +1,5 @@
 {
-  "description": "Keeps identifiers and publication metadata honest. Denies any direct write to a paper availability record, because every value in one has to carry the provenance of the API that returned it. Checks the identifiers in a document against the store when PAPER_ACCESS_STORE is set.",
+  "description": "Keeps identifiers, publication metadata and supplement manifests honest. Denies any direct write to a paper availability record, because every value in one has to carry the provenance of the API that returned it. Checks the identifiers in a document against the store when PAPER_ACCESS_STORE is set. After a supplements fetch, unpack or adopt, checks the manifest against its schema and against the files on disk.",
   "hooks": {
     "PreToolUse": [
       {
@@ -20,6 +20,16 @@
           {
             "type": "command",
             "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/check_refs.py\"",
+            "timeout": 130
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/check_supplements.py\"",
             "timeout": 130
           }
         ]

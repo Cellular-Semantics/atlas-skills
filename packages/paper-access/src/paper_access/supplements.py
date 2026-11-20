@@ -27,6 +27,7 @@ have succeeded. Neither may be read as "unavailable".
 
 from __future__ import annotations
 
+import hashlib
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -439,6 +440,83 @@ def cross_check_supplements(payload: dict[str, Any]) -> list[str]:
         if gap.get("file_id") in present_ids:
             problems.append(f"{gap['file_id']}: present but a gap still asks for it")
 
+    return problems
+
+
+def _inside(paper_dir: Path, relative: Any) -> Path | None:
+    """The file a stored path names, if it resolves inside the paper directory.
+
+    Resolved, so ``..``, an absolute path and a symlink that leads out are all
+    the same refusal. ``None`` means it escapes.
+    """
+    if not isinstance(relative, str) or not relative:
+        return None
+    root = paper_dir.resolve()
+    target = (root / relative).resolve()
+    try:
+        target.relative_to(root)
+    except ValueError:
+        return None
+    return target
+
+
+def _sha256_of(path: Path) -> str:
+    """Streamed, because a supplement can be hundreds of megabytes."""
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def file_problems(entry: dict[str, Any], paper_dir: str | Path) -> list[str]:
+    """Why a ``present`` entry's stored file does not match, or ``[]``.
+
+    The per-file rules, shared by the check and by ``fetch --retry``, which
+    resets an entry that fails them.
+    """
+    if entry.get("status") != "present" or entry.get("path") is None:
+        return []
+    target = _inside(Path(paper_dir), entry["path"])
+    if target is None:
+        return [f"path {entry['path']!r} is not inside the paper directory"]
+    if not target.is_file():
+        return [f"{entry['path']} is not on disk"]
+    out: list[str] = []
+    size = target.stat().st_size
+    declared = entry.get("size_bytes")
+    if declared is not None and size != declared:
+        out.append(f"size_bytes is {declared} but {entry['path']} is {size} bytes")
+    if entry.get("sha256") and _sha256_of(target) != entry["sha256"]:
+        out.append(f"sha256 does not match {entry['path']}")
+    return out
+
+
+def check_on_disk(payload: dict[str, Any], paper_dir: str | Path) -> list[str]:
+    """What the manifest says is stored, against what is stored.
+
+    ``payload`` is a whole availability record, or a bare supplements block. A
+    paper with no supplements has nothing to check.
+    """
+    block = payload.get("supplements", payload) if isinstance(payload, dict) else None
+    if not block:
+        return []
+    root = Path(paper_dir)
+    problems: list[str] = []
+    for entry in block.get("files") or []:
+        file_id = entry.get("file_id", "?")
+        problems += [f"{file_id}: {reason}" for reason in file_problems(entry, root)]
+        for member in entry.get("members") or []:
+            if not member.get("extracted") or not member.get("path"):
+                continue
+            label = f"{file_id}/{member.get('member_path')}"
+            found = _inside(root, member["path"])
+            if found is None:
+                problems.append(
+                    f"{label}: path {member['path']!r} is not inside the paper directory"
+                )
+            elif not found.is_file():
+                problems.append(f"{label}: extracted member {member['path']} is not on disk")
     return problems
 
 

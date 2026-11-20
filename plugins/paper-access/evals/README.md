@@ -47,9 +47,9 @@ claude plugin eval paper-access --tag smoke --ablation none \
 - **Cost:** about $0.20 per case, $0.61 for the three. Each case runs once
   (`runs: 1`). `-j 3` runs them side by side in under 90 s.
 
-**The pins:** the graders and the skills pin `pkg-paper-access--v0.3.2`, which
-exists only after #43 merges and releases. Until then the pinned-archive
-graders fail and the pinned install cannot succeed.
+**The pins:** the skills pin a `pkg-paper-access--v…` tag, which the release
+workflow cuts only after a version bump merges to main. On a branch that bumps
+the package, the pinned install fails until then, so run the suite from main.
 
 **First run (2026-11-20, plugin 0.3.5, paper-access 0.3.2, Claude Code
 2.1.329, $0.61):** all three cases scored 1.0, every grader passing. Each run

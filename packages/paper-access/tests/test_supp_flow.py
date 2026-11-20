@@ -1171,3 +1171,84 @@ def test_a_file_the_bundle_did_not_contain_says_so(tmp_path, monkeypatch):
     listed = found.by_id("41586_2023_6812_MOESM1_ESM.xlsx")
     assert listed.status == "missing"
     assert "does not contain a file of this name" in listed.retrieval.note
+
+
+# -- retry heals a stored copy that no longer matches --------------------
+
+NAME = "41586_2023_6812_MOESM1_ESM.xlsx"
+
+
+def _fetched(paper, monkeypatch):
+    from paper_access.supplements import check_on_disk
+
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+    body = make_zip({NAME: xlsx_bytes()})
+    handler = bundle_only(get=httpx.Response(200, content=body))
+    with client_for(handler) as http:
+        supp_flow.fetch_supplements(record, root, client=http)
+    entry = record.supplements.by_id(NAME)
+    assert entry.status == "present"
+    pdir = supp_flow.supplements_dir(root, record).parent
+    assert check_on_disk(record.to_dict(), pdir) == []
+    return record, root, pdir, handler, entry
+
+
+def _retry(record, root, handler):
+    with client_for(handler) as http:
+        supp_flow.fetch_supplements(record, root, client=http, retry=True)
+
+
+def test_retry_refetches_a_present_file_that_was_deleted(paper, monkeypatch):
+    from paper_access.supplements import check_on_disk
+
+    record, root, pdir, handler, entry = _fetched(paper, monkeypatch)
+    (pdir / entry.path).unlink()
+    _retry(record, root, handler)
+    again = record.supplements.by_id(NAME)
+    assert again.status == "present"
+    assert again.description == "Differential expression for every cluster."
+    assert check_on_disk(record.to_dict(), pdir) == []
+    assert record_module.check(record.to_dict()) == []
+
+
+def test_retry_refetches_a_corrupted_file_and_drops_the_partial(paper, monkeypatch):
+    from paper_access.supplements import check_on_disk
+
+    record, root, pdir, handler, entry = _fetched(paper, monkeypatch)
+    (pdir / entry.path).write_bytes(b"half")
+    _retry(record, root, handler)
+    assert record.supplements.by_id(NAME).status == "present"
+    assert check_on_disk(record.to_dict(), pdir) == []
+
+
+def test_retry_leaves_an_intact_present_file_alone(paper, monkeypatch):
+    record, root, _pdir, handler, entry = _fetched(paper, monkeypatch)
+    before = entry.to_dict()
+    _retry(record, root, handler)
+    assert record.supplements.by_id(NAME).to_dict() == before
+
+
+def test_without_retry_a_stale_present_file_is_left_alone_and_still_flagged(
+    paper, monkeypatch
+):
+    from paper_access.supplements import check_on_disk
+
+    record, root, pdir, handler, entry = _fetched(paper, monkeypatch)
+    (pdir / entry.path).unlink()
+    with client_for(handler) as http:
+        supp_flow.fetch_supplements(record, root, client=http)
+    assert record.supplements.by_id(NAME).status == "present"
+    assert check_on_disk(record.to_dict(), pdir)
+
+
+def test_the_reset_records_why(paper, monkeypatch):
+    record, _root, pdir, _handler, entry = _fetched(paper, monkeypatch)
+    (pdir / entry.path).unlink()
+    supp_flow._reset_stale_present(record.supplements, pdir)
+    reset = record.supplements.by_id(NAME)
+    assert reset.status == "listed"
+    assert reset.path is None and reset.sha256 is None and reset.size_bytes is None
+    assert "no longer matched" in reset.retrieval.note
+    assert "is not on disk" in reset.retrieval.note
