@@ -21,9 +21,9 @@ field types.
 
 Exact agreement with curation on **63 of 73**. The full per-dataset breakdown — what was
 picked, what was curated, what was missed — is in
-the run log, [`evals/runs/2026-09-29-n73-a505990.json`](../evals/runs/2026-09-29-n73-a505990.json),
+the run log, [`evals/author-annotation-columns/runs/2026-09-29-n73-a505990.json`](../evals/author-annotation-columns/runs/2026-09-29-n73-a505990.json),
 which also records the plugin version, commit and a hash of the agent definition
-that produced the picks. Every run since is in [`evals/runs/`](../evals/runs/README.md).
+that produced the picks. Every run since is in [`evals/author-annotation-columns/runs/`](../evals/author-annotation-columns/runs/README.md).
 
 **Precision is still a lower bound.** The figures above already include the gold-set
 corrections accepted in review on 2026-09-29 — four column names that matched nothing in
@@ -94,16 +94,16 @@ reproducible rather than quoted.
 
 ## Reproducing it
 
-The obs profiles are **committed** under `evals/fixtures/profiles/` — about 1.4 MB for the
+The obs profiles are **committed** under `evals/author-annotation-columns/fixtures/profiles/` — about 1.4 MB for the
 whole test set. Re-scoring therefore needs no network and no re-reading of ~1.5 GB, and
 the scored inputs cannot shift under a CELLxGENE re-ingest.
 
 ```sh
-python3 evals/benchmark.py --all --note "why this run"     # logged to evals/runs/
+python3 evals/author-annotation-columns/benchmark.py --all --note "why this run"     # logged to evals/author-annotation-columns/runs/
 ```
 
 Picks are cached too, so this re-scores instantly until you clear
-`evals/.cache/picks/`. A fresh set of picks costs roughly $20 and an hour. See
+`evals/author-annotation-columns/.cache/picks/`. A fresh set of picks costs roughly $20 and an hour. See
 [`evals/README.md`](../evals/README.md), including how to run it before a release is
 tagged.
 
@@ -141,7 +141,7 @@ Unmutated: 72/73 frozen answers pass; 0 false rejects; 1 known picker error caug
 | `dropped_field_type` | 72 | 72 | 100% | yes |
 | `missing_reasoning` | 72 | 72 | 100% | yes |
 | `wrong_but_real` | 72 | 0 | 0% | no |
-Reproduce with `python3 evals/picks_catch_rate.py`. `evals/test_picks_catch_rate.py`
+Reproduce with `python3 evals/author-annotation-columns/picks_catch_rate.py`. `evals/author-annotation-columns/test_picks_catch_rate.py`
 pins these numbers in CI. The one known picker error is a frozen answer that
 picked `BICCN_ontology_term_id`, which the skill's rules forbid. The check
 rejects it unmutated.

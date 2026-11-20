@@ -5,12 +5,13 @@ from __future__ import annotations
 
 import json
 import re
+from pathlib import Path
 
 import pytest
 from obs_column_eval.manifest import subset, with_ground_truth
 from smoke_cases import CASES, OUT, PORTAL, render
 
-PROFILES = OUT.parents[3] / "evals" / "fixtures" / "profiles"
+PROFILES = Path(__file__).parent / "fixtures" / "profiles"
 
 
 def _regex_graders(case: str) -> list[tuple[str, str, bool]]:
@@ -38,7 +39,7 @@ def _failed(case: str, cols: list[str]) -> list[str]:
 
 
 def test_smoke_cases_are_up_to_date():
-    """Regenerate with `python3 evals/smoke_cases.py` after a gold or subset change."""
+    """Regenerate with `python3 evals/author-annotation-columns/smoke_cases.py` after a gold or subset change."""
     stale = [p for p, text in render().items() if not p.exists() or p.read_text() != text]
     assert not stale, f"out of date: {[str(p) for p in stale]}"
 

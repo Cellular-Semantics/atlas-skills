@@ -6,7 +6,7 @@
 #   ./dev.sh -q -k obs    any other pytest arguments pass straight through
 #
 # The eval *cases* are not run here -- they drive a real agent and cost money.
-# See evals/README.md.
+# See evals/README.md, the index of every plugin's evals.
 set -euo pipefail
 cd "$(dirname "$0")"
 

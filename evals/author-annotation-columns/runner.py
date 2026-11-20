@@ -10,10 +10,10 @@ unchanged; only this file and `checks.json` are throwaway.
 Each case runs in a fresh temporary directory so nothing but the user-scope
 plugin is in scope: no project CLAUDE.md, no `.claude/skills`.
 
-    python3 evals/runner.py                       # every case, one run each
-    python3 evals/runner.py --case 'tuft-*'        # a subset
-    python3 evals/runner.py --runs 3 --tag degs
-    python3 evals/runner.py --dry-run             # print prompts, spend nothing
+    python3 evals/author-annotation-columns/runner.py                       # every case, one run each
+    python3 evals/author-annotation-columns/runner.py --case 'tuft-*'        # a subset
+    python3 evals/author-annotation-columns/runner.py --runs 3 --tag degs
+    python3 evals/author-annotation-columns/runner.py --dry-run             # print prompts, spend nothing
 
 These cases read real h5ads from the CELLxGENE CDN and cost real money
 (~$0.25-0.65 per run, ~$5 for the suite), so the default is one run per case and `--max-cost-usd`
@@ -109,7 +109,7 @@ def invoke(prompt: str, spec: dict, transcript_path: pathlib.Path) -> Run:
 REQUIRED_PLUGIN = "author-annotation-columns"
 
 #: What the cases need to be present. Bump alongside that plugin's version.
-EXPECTED_PLUGIN_VERSION = "0.6.3"
+EXPECTED_PLUGIN_VERSION = "0.6.4"
 
 #: Other plugins a case can name in its checks.json `"requires"`, each at the
 #: version expected. Since the skills were split into per-skill plugins, a case
@@ -191,7 +191,7 @@ def main() -> int:
                     help="Abort once the suite has spent this much (default 8)")
     ap.add_argument("--threshold", type=float, default=1.0,
                     help="Exit 1 if any case scores below this (default 1.0)")
-    ap.add_argument("--output-dir", help="Where to write results (default evals/results/<ts>)")
+    ap.add_argument("--output-dir", help="Where to write results (default evals/author-annotation-columns/results/<ts>)")
     ap.add_argument("--dry-run", action="store_true", help="Print the prompts and exit")
     args = ap.parse_args()
 

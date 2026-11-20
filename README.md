@@ -22,7 +22,7 @@ plugins/remote-h5ad-obs/           one skill
 plugins/author-annotation-columns/ one skill + the two picker sub-agents
 plugins/paper-access/              one skill + the identifier-provenance hooks
 plugins/atlas-tools/               a bundle of the two h5ad plugins; no skills of its own
-evals/                             skill-behaviour cases + the picker benchmarks
+evals/<plugin>/                    repo-only evals per plugin: behaviour cases, benchmarks
 docs/                              what the benchmarks measured
 .claude-plugin/                    marketplace manifest
 ```

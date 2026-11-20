@@ -85,8 +85,8 @@ a worked set, the sampling has to be redone.
 ## Reproducing or extending
 
 ```
-python3 evals/ontology-mapping/run-batch.py \
-    --slice evals/ontology-mapping/slice-20.txt \
+python3 evals/onto-mapping/run-batch.py \
+    --slice evals/onto-mapping/slice-20.txt \
     --batch-size 5 --model sonnet --out <results>.json
 ```
 
@@ -101,5 +101,5 @@ once by the laptop sleeping, which surfaces as
 stall.
 
 This runner is **not** a scorer, and these records have no expected answers.
-`evals/ontology-mapping/check.py` is the scorer and needs a gold set — which
+`evals/onto-mapping/check.py` is the scorer and needs a gold set — which
 is what filling in `corrected_curie` here would start to build.

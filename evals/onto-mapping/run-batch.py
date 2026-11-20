@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """Run real tissue descriptions through the installed map-to-ontology skill.
 
-    python3 evals/ontology-mapping/run-batch.py --slice evals/ontology-mapping/slice-20.txt
-    python3 evals/ontology-mapping/run-batch.py --units U002,U089 --dry-run
+    python3 evals/onto-mapping/run-batch.py --slice evals/onto-mapping/slice-20.txt
+    python3 evals/onto-mapping/run-batch.py --units U002,U089 --dry-run
 
 This is not a scorer. The descriptions it runs have no expected answers, so
 nothing here decides whether a mapping is right -- it produces mappings and the
 reasoning behind them for a person to review. `check.py` is the scorer, and it
 needs a gold set that this run is meant to help create.
 
-Isolation comes from `evals/runner.py`: a fresh temporary directory per unit, so
+Isolation comes from `evals/author-annotation-columns/runner.py`: a fresh temporary directory per unit, so
 no project CLAUDE.md and no .claude/skills are in scope and the only thing
 answering is the installed plugin. Check which build that is before trusting a
 run -- `claude plugin list` -- because a plugin installed from a marketplace copy

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Generate the plugin's `smoke` eval cases from the benchmark's light set.
 
-    python3 evals/smoke_cases.py           # (re)write plugins/.../evals/smoke/
-    python3 evals/smoke_cases.py --check   # exit 1 if they are out of date
+    python3 evals/author-annotation-columns/smoke_cases.py           # (re)write plugins/.../evals/smoke/
+    python3 evals/author-annotation-columns/smoke_cases.py --check   # exit 1 if they are out of date
 
 One case per dataset in obs-column-eval's `subset.json`, in `claude plugin
 eval` format. Each asks the plain question a user would ask, and grades the
@@ -40,7 +40,7 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "packages" / "obs-column-eval" / "src"))
 
 from obs_column_eval.manifest import subset, with_ground_truth  # noqa: E402

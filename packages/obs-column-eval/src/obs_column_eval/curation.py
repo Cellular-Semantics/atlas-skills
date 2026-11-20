@@ -41,7 +41,7 @@ _NULLISH = {"n/a", "na", "none", "-", ""}
 #: profiles -- 186 names on the n73 set in 2026-09, then the whole test set
 #: after the 2026-11 snapshot. These are the only mismatches left: the
 #: others found then were fixed upstream (CL_KG#118), and
-#: `evals/test_cases.py` fails if another appears. Case is NOT folded during
+#: `evals/author-annotation-columns/test_cases.py` fails if another appears. Case is NOT folded during
 #: scoring -- an agent inventing a name with the wrong case would fail at pull
 #: time, and that is a real error worth catching.
 _CORRECTIONS: dict[str, dict[str, str]] = {
@@ -62,7 +62,7 @@ _CORRECTIONS: dict[str, dict[str, str]] = {
 #: buried in a diff of ten spreadsheets.
 #:
 #: Every name here is checked against the committed obs profiles by
-#: `evals/test_cases.py`, so an addition that names a nonexistent column fails
+#: `evals/author-annotation-columns/test_cases.py`, so an addition that names a nonexistent column fails
 #: the build rather than silently capping that dataset's score.
 #:
 #: NOT added, and still open: `scanvi_label` and `transf_ann_level_*` on the two

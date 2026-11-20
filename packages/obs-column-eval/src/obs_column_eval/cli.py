@@ -9,7 +9,7 @@ parsing prose.
     obs-column-eval gold                      # ground truth, by field type
     obs-column-eval gold --field-type tissue  # ... one field type
     obs-column-eval notes                     # why the awkward calls went that way
-    obs-column-eval candidates evals/fixtures/profiles   # what to hand-curate next
+    obs-column-eval candidates evals/author-annotation-columns/fixtures/profiles   # what to hand-curate next
     obs-column-eval curation                  # the raw CL_KG sheets
     obs-column-eval score picks.json          # metrics, per field type
     obs-column-eval score picks.json --baseline   # ... vs each tier's frozen baseline

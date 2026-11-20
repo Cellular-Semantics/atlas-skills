@@ -6,12 +6,12 @@ A different question from `runner.py`. That one asks whether the skill behaves
 the picker is *correct*, on datasets where curators have written down the
 answer.
 
-    python3 evals/benchmark.py                  # the six default datasets
-    python3 evals/benchmark.py --all            # all 187 (n73 + l4); slow, not free
-    python3 evals/benchmark.py --tier l4        # one tier
-    python3 evals/benchmark.py --tier l4 --freeze   # ... and make it l4's frozen baseline
-    python3 evals/benchmark.py --dataset e48806af-87d1-45ae-843a-c7ee06eac672
-    python3 evals/benchmark.py --profiles-only  # refresh the profile cache, no agent
+    python3 evals/author-annotation-columns/benchmark.py                  # the six default datasets
+    python3 evals/author-annotation-columns/benchmark.py --all            # all 187 (n73 + l4); slow, not free
+    python3 evals/author-annotation-columns/benchmark.py --tier l4        # one tier
+    python3 evals/author-annotation-columns/benchmark.py --tier l4 --freeze   # ... and make it l4's frozen baseline
+    python3 evals/author-annotation-columns/benchmark.py --dataset e48806af-87d1-45ae-843a-c7ee06eac672
+    python3 evals/author-annotation-columns/benchmark.py --profiles-only  # refresh the profile cache, no agent
 
 Two stages, deliberately split:
 
@@ -43,9 +43,10 @@ from run_log import build_record, write_run
 from graders import classify_error
 
 HERE = pathlib.Path(__file__).parent
+ROOT = HERE.parents[1]  # the repo
 #: Where --freeze writes a tier's baseline: the working tree's obs-column-eval,
 #: so the new baseline ships with the package's next release.
-EVAL_SRC = HERE.parent / "packages" / "obs-column-eval" / "src"
+EVAL_SRC = ROOT / "packages" / "obs-column-eval" / "src"
 
 #: Profiles are COMMITTED, not cached. They are the deterministic output of a
 #: pinned CLI, ~1.4 MB for the whole test set, and re-fetching them means several GB
@@ -78,13 +79,13 @@ def _cli(env_var: str, package: str, entrypoint: str) -> list[str]:
     Python every package supports, as in dev.sh.
 
         OBS_COLUMN_EVAL_CMD="packages/obs-column-eval/.venv/bin/obs-column-eval" \\
-          python3 evals/benchmark.py        # e.g. a venv dev.sh already built
+          python3 evals/author-annotation-columns/benchmark.py        # e.g. a venv dev.sh already built
     """
     override = os.environ.get(env_var)
     if override:
         return shlex.split(override)
     return ["uv", "run", "--no-project", "--quiet", "--python", "3.11",
-            "--with-editable", str(HERE.parent / "packages" / package), "--", entrypoint]
+            "--with-editable", str(ROOT / "packages" / package), "--", entrypoint]
 
 
 H5AD_OBS = _cli("H5AD_OBS_CMD", "h5ad-obs", "h5ad-obs")
@@ -122,7 +123,7 @@ def check_profile_provenance() -> None:
     if installed and recorded and installed != recorded:
         print(f"  ! profiles were captured by {recorded}, but {installed} is installed.")
         print("    If the profile format changed, regenerate before trusting a score:")
-        print("      python3 evals/benchmark.py --all --profiles-only --force-profiles")
+        print("      python3 evals/author-annotation-columns/benchmark.py --all --profiles-only --force-profiles")
 
 
 def _extract_picks(text: str) -> dict | None:
@@ -177,10 +178,10 @@ def _picker_provenance() -> dict:
         out["commit"] = sha
         # Uncommitted changes to what is measured make the commit a lie.
         dirty = _run(["git", "status", "--porcelain", "--", "plugins/author-annotation-columns",
-                      "packages/obs-column-eval"], cwd=HERE.parent).stdout.strip()
+                      "packages/obs-column-eval"], cwd=ROOT).stdout.strip()
         if dirty:
             out["uncommitted_changes"] = True
-    agent = HERE.parent / "plugins/author-annotation-columns/agents/author-celltype-picker.md"
+    agent = ROOT / "plugins/author-annotation-columns/agents/author-celltype-picker.md"
     if agent.exists():
         import hashlib
         out["agent_sha256"] = hashlib.sha256(agent.read_bytes()).hexdigest()[:12]
@@ -272,7 +273,7 @@ def write_provenance(profiles: dict, unreadable: list[str]) -> None:
     PROVENANCE.write_text(json.dumps({
         "what": old.get("what", "Text obs column profiles for the benchmark test "
                         "set, captured once and committed so re-scoring the picker "
-                        "needs no network. Regenerate with `python3 evals/benchmark.py "
+                        "needs no network. Regenerate with `python3 evals/author-annotation-columns/benchmark.py "
                         "--all --profiles-only --force-profiles`."),
         "captured": today,
         "captured_by": captured_by,
@@ -435,7 +436,7 @@ def main() -> int:
                     help="Refresh profiles and stop. No agent, no spend.")
     ap.add_argument("--output-dir")
     ap.add_argument("--log", action="store_true",
-                    help="Write this run to the run log (evals/runs/). Automatic for "
+                    help="Write this run to the run log (evals/author-annotation-columns/runs/). Automatic for "
                          "--all and --tier; use it to log a subset or --dataset run.")
     ap.add_argument("--no-log", action="store_true",
                     help="Do not log a run that would be logged by default.")
@@ -577,7 +578,7 @@ def main() -> int:
     run_info = {
         "date": time.strftime("%Y-%m-%d"),
         "scope": scope,
-        "command": shlex.join(["python3", "evals/benchmark.py", *sys.argv[1:]]),
+        "command": shlex.join(["python3", "evals/author-annotation-columns/benchmark.py", *sys.argv[1:]]),
         "note": args.note,
         "n_requested": len(chosen),
         "n_scored": overall["n"],
@@ -589,7 +590,7 @@ def main() -> int:
         "gold_snapshot": json.loads((EVAL_SRC / "obs_column_eval" / "data" / "curation"
                                      / "SOURCE.json").read_text())["commit"],
         "profiles": json.loads(PROVENANCE.read_text()).get("captured_by"),
-        "results_dir": str(out_dir.relative_to(HERE.parent)) if out_dir.is_relative_to(HERE.parent)
+        "results_dir": str(out_dir.relative_to(ROOT)) if out_dir.is_relative_to(ROOT)
                        else str(out_dir),
     }
     if args.freeze:

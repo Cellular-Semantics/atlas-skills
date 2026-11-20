@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Measure what verify-ehdaa2-claims.py actually catches, by breaking the reference.
 
-    uv run evals/ontology-mapping/mutate-ehdaa2-claims.py
+    uv run evals/onto-mapping/mutate-ehdaa2-claims.py
 
 Each mutation is one error class a reader could not see for themselves: a window
 off by a stage, a swapped digit, a CURIE wearing another term's label. The

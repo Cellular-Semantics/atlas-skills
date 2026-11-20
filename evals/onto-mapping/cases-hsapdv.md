@@ -1,6 +1,6 @@
 # Proposed gold-standard eval set: HsapDv developmental stages
 
-**Status: proposed, not blessed.** Review and amend, then I will merge into the native `evals/cases/` harness.
+**Status: proposed, not blessed.** Review and amend, then I will merge into the native `evals/author-annotation-columns/cases/` harness.
 
 33 cases. Every input string is taken verbatim from the HDCA `071_ontology_mapping` worktable, except `bare-number-with-units`, which reproduces a failure observed in real use. `n` = samples in that corpus carrying the string.
 

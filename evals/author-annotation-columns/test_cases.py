@@ -261,7 +261,7 @@ def test_every_manifest_dataset_has_a_committed_profile():
 
     import benchmark
 
-    sys.path.insert(0, str(pathlib.Path(__file__).parent.parent
+    sys.path.insert(0, str(pathlib.Path(__file__).parents[2]
                            / "packages/obs-column-eval/src"))
     from obs_column_eval import full
 
@@ -337,7 +337,7 @@ def test_every_curated_column_exists_in_the_dataset():
     appears, in the curation or after a profile regeneration."""
     import sys
 
-    sys.path.insert(0, str(pathlib.Path(__file__).parent.parent
+    sys.path.insert(0, str(pathlib.Path(__file__).parents[2]
                            / "packages/obs-column-eval/src"))
     import benchmark
     from obs_column_eval import full, parse_curation
@@ -393,7 +393,7 @@ def test_benchmark_runs_its_clis_from_the_working_tree(monkeypatch):
     cmd = benchmark._cli("OBS_COLUMN_EVAL_CMD", "obs-column-eval", "obs-column-eval")
     assert "--with-editable" in cmd
     path = pathlib.Path(cmd[cmd.index("--with-editable") + 1])
-    assert path == pathlib.Path(__file__).resolve().parent.parent / "packages" / "obs-column-eval"
+    assert path == pathlib.Path(__file__).resolve().parents[2] / "packages" / "obs-column-eval"
     assert (path / "pyproject.toml").exists()
     assert cmd[-2:] == ["--", "obs-column-eval"]
     assert not any("github.com" in part for part in cmd)
