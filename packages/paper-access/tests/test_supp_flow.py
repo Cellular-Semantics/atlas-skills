@@ -15,10 +15,11 @@ import zipfile
 import httpx
 import pytest
 
+from paper_access import record as record_module
 from paper_access import store, supp_flow, supp_sources
 from paper_access.ids import Identifier
 from paper_access.record import Attempt, Availability, LocalSource, Metadata
-from paper_access.supplements import SupplementFile, Supplements
+from paper_access.supplements import SupplementFile, SupplementRetrieval, Supplements
 
 DOI = "10.1038/s41586-023-06812-z"
 PMCID = "PMC10719114"
@@ -287,6 +288,30 @@ def test_an_undeclared_size_that_turns_out_huge_is_abandoned(paper, monkeypatch)
     assert "deferred" in {f.status for f in found.files}
 
 
+def test_an_abandoned_bundle_records_bytes_transferred_on_each_deferred_file(
+    paper, monkeypatch
+):
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+
+    def endless(request):
+        return httpx.Response(200, content=iter([b"x" * 4096] * 64))
+
+    with client_for(bundle_only(on_get=endless)) as http:
+        record.supplements = supp_flow.fetch_supplements(
+            record, root, client=http, large_bytes=1024
+        )
+    deferred = [f for f in record.supplements.files if f.status == "deferred"]
+    assert deferred
+    for entry in deferred:
+        assert entry.bytes_transferred > 1024
+        assert f"having read {entry.bytes_transferred} bytes" in entry.retrieval.note
+        assert entry.size_bytes is None
+        assert "having read" in entry.retrieval.note
+    assert record_module.check(record.to_dict()) == []
+
+
 def test_yes_large_proceeds(paper, monkeypatch):
     record, root = paper
     monkeypatch.delenv("ASTA_API_KEY", raising=False)
@@ -535,7 +560,7 @@ def test_unpack_records_the_member_table_and_extracts_what_it_can(paper, monkeyp
     directory = supp_flow.supplements_dir(root, record) / "files"
     directory.mkdir(parents=True, exist_ok=True)
     (directory / "bundle.zip").write_bytes(inner)
-    supp_flow._accept(entry, directory / "bundle.zip", directory, "manual")
+    supp_flow._accept(Supplements(), entry, directory / "bundle.zip", directory, "manual")
 
     found = supp_flow.unpack(record, root)
     members = {m.member_path: m for m in found.by_id("bundle.zip").members}
@@ -565,6 +590,71 @@ def test_adopt_matches_by_name_and_reports_what_it_could_not_place(paper, monkey
     assert [u["file_id"] for u in unmatched] == ["something-else.xlsx"]
 
 
+def _assert_settled(record, name):
+    entry = record.supplements.by_id(name)
+    assert entry.status == "present"
+    assert entry.bytes_transferred is None
+    assert not [g for g in record.supplements.gaps if g.get("file_id") == name]
+    assert record_module.check(record.to_dict()) == []
+
+
+def test_a_deferred_file_fetched_later_leaves_no_gap_or_bytes(paper, monkeypatch):
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+    name = "41586_2023_6812_MOESM1_ESM.xlsx"
+    with client_for(_undeclared_publisher()) as http:
+        supp_flow.fetch_supplements(
+            record, root, client=http, use_bundle=False, large_bytes=10
+        )
+    assert record.supplements.by_id(name).status == "deferred"
+    with client_for(_undeclared_publisher()) as http:
+        supp_flow.fetch_supplements(
+            record, root, client=http, use_bundle=False, large_bytes=10,
+            allow_large=True, retry=True,
+        )
+    _assert_settled(record, name)
+
+
+def test_a_bundle_deferral_then_a_bundle_fetch_leaves_no_gap(paper, monkeypatch):
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+    name = "41586_2023_6812_MOESM1_ESM.xlsx"
+    body = make_zip({name: xlsx_bytes()})
+
+    def endless(request):
+        return httpx.Response(200, content=iter([b"x" * 4096] * 64))
+
+    with client_for(bundle_only(on_get=endless)) as http:
+        supp_flow.fetch_supplements(record, root, client=http, large_bytes=1024)
+    assert record.supplements.by_id(name).status == "deferred"
+    assert record.supplements.gaps
+    with client_for(bundle_only(get=httpx.Response(200, content=body))) as http:
+        supp_flow.fetch_supplements(
+            record, root, client=http, allow_large=True, retry=True
+        )
+    _assert_settled(record, name)
+
+
+def test_adopting_a_missing_file_drops_its_gap(paper, monkeypatch):
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+    name = "41586_2023_6812_MOESM1_ESM.xlsx"
+    entry = record.supplements.by_id(name)
+    entry.status = "missing"
+    entry.retrieval.note = "no route produced it"
+    record.supplements.gaps.append(
+        {"what": name, "reason": "x", "action": "adopt", "file_id": name}
+    )
+    incoming = root / "incoming"
+    incoming.mkdir()
+    (incoming / name).write_bytes(xlsx_bytes())
+    supp_flow.adopt(record, root, incoming)
+    _assert_settled(record, name)
+
+
 # -- the record stays valid ----------------------------------------------
 
 
@@ -591,6 +681,45 @@ def test_the_record_still_validates_after_every_stage(paper, monkeypatch):
     reread = store.read(root, DOI)
     assert reread.supplements is not None
     assert reread.supplements.by_id("41586_2023_6812_MOESM1_ESM.xlsx").status == "present"
+
+
+def test_a_fetched_manifest_with_present_and_skipped_files_passes_the_record_check(
+    paper, monkeypatch
+):
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+    body = make_zip({"41586_2023_6812_MOESM1_ESM.xlsx": xlsx_bytes()})
+
+    handler = bundle_only(
+        head=httpx.Response(200, headers={"content-length": str(len(body))}),
+        get=httpx.Response(200, content=body))
+
+    with client_for(handler) as http:
+        record.supplements = supp_flow.fetch_supplements(record, root, client=http)
+
+    statuses = {f.status for f in record.supplements.files}
+    assert {"present", "skipped"} <= statuses
+    assert record_module.check(record.to_dict()) == []
+
+
+def test_a_manifest_with_a_deferred_file_passes_the_record_check(paper, monkeypatch):
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+    body = make_zip({"41586_2023_6812_MOESM1_ESM.xlsx": xlsx_bytes()})
+
+    handler = bundle_only(
+        head=httpx.Response(200, headers={"content-length": str(len(body))}),
+        get=httpx.Response(200, content=body))
+
+    with client_for(handler) as http:
+        record.supplements = supp_flow.fetch_supplements(
+            record, root, client=http, max_bytes=1, allow_large=True
+        )
+
+    assert "deferred" in {f.status for f in record.supplements.files}
+    assert record_module.check(record.to_dict()) == []
 
 
 def test_a_404_is_unavailable_and_a_5xx_is_failed():
@@ -706,6 +835,211 @@ def test_a_paper_budget_stops_the_remaining_routes(paper, monkeypatch):
             record, root, client=http, paper_timeout=-1.0
         )
     assert any(a.outcome == "timeout" for a in found.attempts)
+
+
+def _declaring(size, gets):
+    def handler(request):
+        if request.method == "HEAD":
+            return httpx.Response(200, headers={"content-length": str(size)})
+        gets.append(str(request.url))
+        return httpx.Response(200, content=xlsx_bytes())
+    return handler
+
+
+def test_a_declared_size_over_large_bytes_is_deferred_before_transfer(paper, monkeypatch):
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+    gets: list[str] = []
+    with client_for(_declaring(5_000_000, gets)) as http:
+        record.supplements = supp_flow.fetch_supplements(
+            record, root, client=http, use_bundle=False, large_bytes=1_000_000
+        )
+    entry = record.supplements.by_id("41586_2023_6812_MOESM1_ESM.xlsx")
+    assert entry.status == "deferred"
+    assert entry.size_bytes == 5_000_000
+    assert entry.bytes_transferred is None
+    assert "--large-bytes" in entry.retrieval.note
+    assert not gets
+    assert any(g.get("file_id") == entry.file_id and "--yes-large" in g["action"]
+               for g in record.supplements.gaps)
+    assert record_module.check(record.to_dict()) == []
+
+
+def test_allow_large_fetches_the_declared_large_file(paper, monkeypatch):
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+    gets: list[str] = []
+    with client_for(_declaring(5_000_000, gets)) as http:
+        found = supp_flow.fetch_supplements(
+            record, root, client=http, use_bundle=False,
+            large_bytes=1_000_000, allow_large=True,
+        )
+    assert found.by_id("41586_2023_6812_MOESM1_ESM.xlsx").status == "present"
+    assert gets
+
+
+def test_max_bytes_still_refuses_with_allow_large(paper, monkeypatch):
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+    gets: list[str] = []
+    with client_for(_declaring(5_000_000, gets)) as http:
+        found = supp_flow.fetch_supplements(
+            record, root, client=http, use_bundle=False,
+            large_bytes=1_000_000, max_bytes=2_000_000, allow_large=True,
+        )
+    assert found.by_id("41586_2023_6812_MOESM1_ESM.xlsx").status == "deferred"
+    assert not gets
+
+
+def _biorxiv_paper(paper, monkeypatch, declared, body):
+    """One listed bioRxiv file, with the preprint server faked at the helpers."""
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    name = "media-1.xlsx"
+    found = Supplements(files=[SupplementFile(
+        file_id=name, filename=name, status="listed", media_type="xlsx",
+        retrieval=SupplementRetrieval(
+            route="biorxiv", url="https://www.biorxiv.org/content/x/media-1.xlsx"),
+    )])
+    reads: list[int] = []
+    monkeypatch.setattr(supp_sources, "biorxiv_declared_size", lambda url, **k: declared)
+
+    def fetch(url, dest, cap, **kw):
+        reads.append(cap)
+        if len(body) > cap:
+            return False, f"exceeds the {cap}-byte limit; abandoned", cap + 1
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(body)
+        return True, "ok", None
+
+    monkeypatch.setattr(supp_sources, "biorxiv_fetch_one", fetch)
+    record.supplements = found
+    return record, root, name, reads
+
+
+def _run_biorxiv(record, root, **kw):
+    with client_for(lambda r: httpx.Response(404)) as http:
+        record.supplements = supp_flow.fetch_supplements(
+            record, root, client=http, use_bundle=False, **kw
+        )
+    return record.supplements
+
+
+def test_biorxiv_declared_size_over_large_bytes_is_deferred_unread(paper, monkeypatch):
+    record, root, name, reads = _biorxiv_paper(paper, monkeypatch, 5_000_000, xlsx_bytes())
+    found = _run_biorxiv(record, root, large_bytes=1_000_000)
+    entry = found.by_id(name)
+    assert entry.status == "deferred"
+    assert entry.size_bytes == 5_000_000
+    assert entry.bytes_transferred is None
+    assert not reads
+    assert any(g["file_id"] == name and "--yes-large" in g["action"] for g in found.gaps)
+    assert record_module.check(record.to_dict()) == []
+
+
+def test_biorxiv_allow_large_fetches_it(paper, monkeypatch):
+    record, root, name, reads = _biorxiv_paper(paper, monkeypatch, 5_000_000, xlsx_bytes())
+    found = _run_biorxiv(record, root, large_bytes=1_000_000, allow_large=True)
+    assert found.by_id(name).status == "present"
+    assert reads
+
+
+def test_biorxiv_declared_size_over_max_bytes_is_deferred_even_with_allow_large(
+    paper, monkeypatch
+):
+    record, root, name, reads = _biorxiv_paper(paper, monkeypatch, 5_000_000, xlsx_bytes())
+    found = _run_biorxiv(
+        record, root, large_bytes=1_000_000, max_bytes=2_000_000, allow_large=True
+    )
+    assert found.by_id(name).status == "deferred"
+    assert not reads
+
+
+def test_biorxiv_undeclared_oversize_is_abandoned_and_missing(paper, monkeypatch):
+    record, root, name, reads = _biorxiv_paper(paper, monkeypatch, None, b"x" * 5000)
+    found = _run_biorxiv(record, root, max_bytes=1000)
+    entry = found.by_id(name)
+    assert entry.status == "missing"
+    assert "abandoned" in entry.retrieval.note
+    assert entry.size_bytes is None
+    assert reads == [1000]
+    assert record_module.check(record.to_dict()) == []
+
+
+def _assert_undeclared_deferral(found, record, root, name, large_bytes):
+    entry = found.by_id(name)
+    assert entry.status == "deferred"
+    assert entry.bytes_transferred is not None and entry.bytes_transferred > large_bytes
+    assert entry.size_bytes is None
+    assert "declared no size" in entry.retrieval.note
+    assert not list(root.rglob(name))
+    assert any(g.get("file_id") == name and "--yes-large" in g["action"] for g in found.gaps)
+    assert record_module.check(record.to_dict()) == []
+
+
+def test_biorxiv_undeclared_over_large_bytes_is_deferred_with_bytes(paper, monkeypatch):
+    record, root, name, _ = _biorxiv_paper(paper, monkeypatch, None, xlsx_bytes())
+    found = _run_biorxiv(record, root, large_bytes=100)
+    _assert_undeclared_deferral(found, record, root, name, 100)
+
+
+def test_biorxiv_undeclared_is_fetched_with_allow_large_and_missing_over_max(
+    paper, monkeypatch
+):
+    record, root, name, _ = _biorxiv_paper(paper, monkeypatch, None, xlsx_bytes())
+    found = _run_biorxiv(record, root, large_bytes=100, allow_large=True)
+    assert found.by_id(name).status == "present"
+    record, root, name, _ = _biorxiv_paper(paper, monkeypatch, None, b"x" * 5000)
+    found = _run_biorxiv(record, root, large_bytes=100, max_bytes=1000, allow_large=True)
+    assert found.by_id(name).status == "missing"
+
+
+def _undeclared_publisher(gets=None):
+    def handler(request):
+        if request.method == "HEAD":
+            return httpx.Response(200)
+        return httpx.Response(200, content=iter([xlsx_bytes()]))
+    return handler
+
+
+def test_publisher_undeclared_over_large_bytes_is_deferred_with_bytes(paper, monkeypatch):
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+    with client_for(_undeclared_publisher()) as http:
+        record.supplements = supp_flow.fetch_supplements(
+            record, root, client=http, use_bundle=False, large_bytes=10
+        )
+    _assert_undeclared_deferral(
+        record.supplements, record, root, "41586_2023_6812_MOESM1_ESM.xlsx", 10
+    )
+
+
+def test_publisher_undeclared_is_fetched_with_allow_large_and_missing_over_max(
+    paper, monkeypatch
+):
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+    name = "41586_2023_6812_MOESM1_ESM.xlsx"
+    with client_for(_undeclared_publisher()) as http:
+        found = supp_flow.fetch_supplements(
+            record, root, client=http, use_bundle=False, large_bytes=10, allow_large=True
+        )
+    assert found.by_id(name).status == "present"
+    for stale in root.rglob(name):
+        stale.unlink()
+    found.by_id(name).status = "listed"
+    with client_for(_undeclared_publisher()) as http:
+        found = supp_flow.fetch_supplements(
+            record, root, client=http, use_bundle=False,
+            large_bytes=10, max_bytes=20, allow_large=True,
+        )
+    assert found.by_id(name).status != "present"
+    assert found.by_id(name).status != "deferred"
 
 
 # -- honest sizes --------------------------------------------------------

@@ -159,6 +159,75 @@ def biorxiv_get(url: str) -> tuple[bytes | None, str]:
     return response.content, "ok"
 
 
+def biorxiv_declared_size(url: str, timeout: float = 20.0) -> int | None:
+    """What the preprint server says a file's size is, without fetching it."""
+    try:
+        from curl_cffi import requests as impersonating
+
+        response = impersonating.head(
+            url, impersonate="chrome120", timeout=timeout, allow_redirects=True
+        )
+    except Exception:
+        return None
+    if response.status_code >= 400:
+        return None
+    raw = response.headers.get("content-length")
+    return int(raw) if raw and raw.isdigit() else None
+
+
+def biorxiv_fetch_one(
+    url: str,
+    dest: Path,
+    cap: int,
+    *,
+    timeout: float | None = None,
+    deadline: float | None = None,
+) -> tuple[bool, str, int | None]:
+    """Stream one preprint-server file to ``dest``, abandoning it past ``cap``.
+
+    The counterpart of :func:`fetch_one_file` for a host that needs
+    ``curl_cffi`` to get past Cloudflare. Returns ``(ok, note)``; the note
+    begins ``timeout:`` where time ran out.
+    """
+    try:
+        from curl_cffi import requests as impersonating
+    except ImportError:
+        return False, "getting past Cloudflare needs curl_cffi (the [text-access] extra)", None
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    started = time.monotonic()
+    budget = timeout if timeout is not None else float("inf")
+    written = 0
+    response = None
+    try:
+        response = impersonating.get(url, impersonate="chrome120", timeout=120, stream=True)
+        if response.status_code != 200:
+            return False, f"HTTP {response.status_code}", None
+        with dest.open("wb") as handle:
+            for chunk in response.iter_content(1 << 20):
+                if time.monotonic() - started > budget or (
+                    deadline is not None and time.monotonic() > deadline
+                ):
+                    handle.close()
+                    dest.unlink(missing_ok=True)
+                    return False, (
+                        f"timeout: gave up after {time.monotonic() - started:.0f}s "
+                        f"having read {written} bytes"
+                    ), None
+                written += len(chunk)
+                if written > cap:
+                    handle.close()
+                    dest.unlink(missing_ok=True)
+                    return False, f"exceeds the {cap}-byte limit; abandoned", written
+                handle.write(chunk)
+    except Exception as exc:
+        dest.unlink(missing_ok=True)
+        return False, f"{type(exc).__name__}: {exc}", None
+    finally:
+        if response is not None:
+            response.close()
+    return True, "ok", None
+
+
 def listing_from_biorxiv(doi: str, version: int = 1) -> tuple[list[SupplementFile], str]:
     """A preprint's supplements, from the page that lists them."""
     url = f"{BIORXIV_CONTENT}/{doi}v{version}.supplementary-material"
@@ -404,7 +473,7 @@ def fetch_one_file(
     *,
     timeout: float | None = None,
     deadline: float | None = None,
-) -> tuple[bool, str]:
+) -> tuple[bool, str, int | None]:
     """Download one file, bounded by a byte cap and by wall-clock time.
 
     The time bound is enforced here rather than left to httpx, whose `timeout`
@@ -413,9 +482,10 @@ def fetch_one_file(
     minutes having transferred nothing.
 
     Returns:
-        ``(ok, note)``. The note begins ``timeout:`` where time ran out, which
-        the caller records as a distinct outcome — a host that answers slowly is
-        a different problem from one that answers wrongly.
+        ``(ok, note, read)``. The note begins ``timeout:`` where time ran out,
+        which the caller records as a distinct outcome — a host that answers
+        slowly is a different problem from one that answers wrongly. ``read`` is
+        the bytes transferred where the cap abandoned the download, else None.
     """
     dest.parent.mkdir(parents=True, exist_ok=True)
     started = time.monotonic()
@@ -430,7 +500,7 @@ def fetch_one_file(
     try:
         with client.stream("GET", url, follow_redirects=True) as response:
             if response.status_code != 200:
-                return False, f"HTTP {response.status_code}"
+                return False, f"HTTP {response.status_code}", None
             with dest.open("wb") as handle:
                 for chunk in response.iter_bytes(1 << 20):
                     if out_of_time():
@@ -439,19 +509,19 @@ def fetch_one_file(
                         return False, (
                             f"timeout: gave up after {time.monotonic() - started:.0f}s "
                             f"having read {written} bytes"
-                        )
+                        ), None
                     written += len(chunk)
                     if written > cap:
                         handle.close()
                         dest.unlink(missing_ok=True)
-                        return False, f"exceeds the {cap}-byte limit; abandoned"
+                        return False, f"exceeds the {cap}-byte limit; abandoned", written
                     handle.write(chunk)
     except httpx.HTTPError as exc:
         dest.unlink(missing_ok=True)
         if out_of_time():
-            return False, f"timeout: {type(exc).__name__} after {budget:.0f}s"
-        return False, f"{type(exc).__name__}: {exc}"
-    return True, "ok"
+            return False, f"timeout: {type(exc).__name__} after {budget:.0f}s", None
+        return False, f"{type(exc).__name__}: {exc}", None
+    return True, "ok", None
 
 
 # ----------------------------------------------------------------------

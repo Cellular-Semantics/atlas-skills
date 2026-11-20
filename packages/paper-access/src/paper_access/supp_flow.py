@@ -346,6 +346,7 @@ def fetch_supplements(
         if doi is not None and wanted:
             _try_publisher_direct(
                 found, wanted, doi.value, directory, active, max_bytes,
+                large_bytes=large_bytes, allow_large=allow_large,
                 file_timeout=file_timeout, deadline=deadline,
             )
 
@@ -361,7 +362,11 @@ def fetch_supplements(
 
         wanted = [f for f in found.files if _should_attempt(f, retry)]
         if wanted and not out_of_time():
-            _try_biorxiv(found, wanted, directory, max_bytes)
+            _try_biorxiv(
+                found, wanted, directory, max_bytes,
+                large_bytes=large_bytes, allow_large=allow_large,
+                file_timeout=file_timeout, deadline=deadline,
+            )
 
         if out_of_time():
             found.attempts.append(
@@ -432,6 +437,50 @@ def _should_attempt(entry: SupplementFile, retry: bool) -> bool:
     return not (entry.status == "deferred" and not retry)
 
 
+def _stream_cap(large_bytes: int, max_bytes: int, allow_large: bool) -> int:
+    """Where a download of undeclared size is abandoned: the ask-first threshold
+    unless it has been waived, and never past the hard limit."""
+    return max_bytes if allow_large else min(large_bytes, max_bytes)
+
+
+def _defer_undeclared(
+    found: Supplements,
+    entry: SupplementFile,
+    route: str,
+    url: str,
+    read: int | None,
+    large_bytes: int,
+    max_bytes: int,
+    allow_large: bool,
+) -> bool:
+    """Defer a file abandoned for passing ``--large-bytes``, its size undeclared.
+
+    ``read`` is a lower bound on the size, so it is ``bytes_transferred`` and
+    never ``size_bytes``. Abandonment at ``max_bytes`` is not a deferral: no
+    flag would have fetched it.
+    """
+    if read is None or allow_large or large_bytes >= max_bytes:
+        return False
+    note = (
+        f"the host declared no size; the download passed the {large_bytes}-byte "
+        f"--large-bytes limit after reading {read} bytes and was abandoned"
+    )
+    entry.status = "deferred"
+    entry.bytes_transferred = read
+    entry.retrieval = SupplementRetrieval(
+        route=route, url=url, attempted_at=now(), note=note
+    )
+    found.gaps.append({
+        "what": entry.label or entry.file_id,
+        "reason": note,
+        "action": (
+            "re-run with --yes-large to fetch it, or --large-bytes to raise the threshold"
+        ),
+        "file_id": entry.file_id,
+    })
+    return True
+
+
 def _try_publisher_direct(
     found: Supplements,
     wanted: list[SupplementFile],
@@ -440,6 +489,8 @@ def _try_publisher_direct(
     client: httpx.Client,
     max_bytes: int,
     *,
+    large_bytes: int = DEFAULT_LARGE_BYTES,
+    allow_large: bool = False,
     file_timeout: float | None = None,
     deadline: float | None = None,
 ) -> None:
@@ -479,17 +530,40 @@ def _try_publisher_direct(
                     "file_id": entry.file_id,
                 })
                 continue
+            if declared > large_bytes and not allow_large:
+                entry.status = "deferred"
+                entry.retrieval = SupplementRetrieval(
+                    route="publisher_direct", url=url, attempted_at=now(),
+                    note=f"the host declares {declared} bytes, over the "
+                         f"{large_bytes}-byte --large-bytes limit; not downloaded "
+                         "without being asked for",
+                )
+                found.gaps.append({
+                    "what": entry.label or entry.file_id,
+                    "reason": entry.retrieval.note,
+                    "action": (
+                        "re-run with --yes-large to fetch it, or --large-bytes to "
+                        "raise the threshold"
+                    ),
+                    "file_id": entry.file_id,
+                })
+                continue
         target = directory / entry.file_id
-        ok, note = supp_sources.fetch_one_file(
-            client, url, target, max_bytes, timeout=file_timeout, deadline=deadline
+        ok, note, read = supp_sources.fetch_one_file(
+            client, url, target, _stream_cap(large_bytes, max_bytes, allow_large),
+            timeout=file_timeout, deadline=deadline,
         )
         if not ok:
+            if _defer_undeclared(
+                found, entry, "publisher_direct", url, read, large_bytes, max_bytes, allow_large
+            ):
+                continue
             entry.retrieval.attempted_at = now()
             entry.retrieval.note = note
             if note.startswith("timeout:"):
                 timed_out += 1
             continue
-        _accept(entry, target, directory, "publisher_direct", url)
+        _accept(found, entry, target, directory, "publisher_direct", url)
         # A file that failed its integrity check was discarded, so it did not
         # arrive however healthy the download looked.
         if entry.status == "present":
@@ -534,7 +608,9 @@ def _try_bundle(
     )
     try:
         if result.outcome == "deferred":
-            _defer_bundle(found, pmcid, result.size_bytes, result.note, skip_large)
+            _defer_bundle(
+                found, pmcid, result.size_bytes, result.note, skip_large, result.transferred
+            )
             return
         if result.archive is None:
             found.attempts.append(
@@ -562,8 +638,13 @@ def _defer_bundle(
     size: int | None,
     note: str,
     skip_large: bool,
+    transferred: int | None = None,
 ) -> None:
-    """Record a bundle nobody has agreed to download yet."""
+    """Record a bundle nobody has agreed to download yet.
+
+    ``transferred`` is what was read before the download was abandoned: a lower
+    bound, recorded as ``bytes_transferred`` and never as ``size_bytes``.
+    """
     why = f"{pmcid}: {note}"
     what = (
         f"the supplementary bundle for {pmcid} ({size / 1e6:.0f} MB)"
@@ -574,6 +655,7 @@ def _defer_bundle(
     for entry in found.files:
         if entry.status in ("listed", "missing"):
             entry.status = "deferred"
+            entry.bytes_transferred = transferred
             entry.retrieval.attempted_at = now()
             entry.retrieval.note = why
             found.gaps.append({
@@ -669,7 +751,7 @@ def _take_from_bundle(
         with archive.open(info) as source, target.open("wb") as handle:
             while chunk := source.read(1 << 20):
                 handle.write(chunk)
-        _accept(entry, target, directory, "europepmc_bundle")
+        _accept(found, entry, target, directory, "europepmc_bundle")
         if entry.status == "present":
             got += 1
             if looks_like_manifest(name, entry.size_bytes):
@@ -681,7 +763,15 @@ def _take_from_bundle(
 
 
 def _try_biorxiv(
-    found: Supplements, wanted: list[SupplementFile], directory: Path, max_bytes: int
+    found: Supplements,
+    wanted: list[SupplementFile],
+    directory: Path,
+    max_bytes: int,
+    *,
+    large_bytes: int = DEFAULT_LARGE_BYTES,
+    allow_large: bool = False,
+    file_timeout: float | None = None,
+    deadline: float | None = None,
 ) -> None:
     candidates = [e for e in wanted if e.retrieval.route == "biorxiv" and e.retrieval.url]
     if not candidates:
@@ -693,27 +783,64 @@ def _try_biorxiv(
         return
     got = 0
     for entry in candidates:
-        body, note = supp_sources.biorxiv_get(str(entry.retrieval.url))
-        if body is None:
+        url = str(entry.retrieval.url)
+        declared = supp_sources.biorxiv_declared_size(url)
+        if declared is not None:
+            entry.size_bytes = declared
+            if declared > max_bytes:
+                note = (
+                    f"the host declares {declared} bytes, over the "
+                    f"{max_bytes}-byte limit; not downloaded"
+                )
+                action = "raise the limit with --max-bundle-bytes if it is wanted"
+            elif declared > large_bytes and not allow_large:
+                note = (
+                    f"the host declares {declared} bytes, over the "
+                    f"{large_bytes}-byte --large-bytes limit; not downloaded "
+                    "without being asked for"
+                )
+                action = (
+                    "re-run with --yes-large to fetch it, or --large-bytes to "
+                    "raise the threshold"
+                )
+            else:
+                note = ""
+            if note:
+                entry.status = "deferred"
+                entry.retrieval = SupplementRetrieval(
+                    route="biorxiv", url=url, attempted_at=now(), note=note
+                )
+                found.gaps.append({
+                    "what": entry.label or entry.file_id,
+                    "reason": note,
+                    "action": action,
+                    "file_id": entry.file_id,
+                })
+                continue
+        target = directory / entry.file_id
+        ok, note, read = supp_sources.biorxiv_fetch_one(
+            url, target, _stream_cap(large_bytes, max_bytes, allow_large),
+            timeout=file_timeout, deadline=deadline,
+        )
+        if not ok:
+            if _defer_undeclared(
+                found, entry, "biorxiv", url, read, large_bytes, max_bytes, allow_large
+            ):
+                continue
+            entry.status = "missing"
             entry.retrieval.attempted_at = now()
             entry.retrieval.note = note
-            continue
-        if len(body) > max_bytes:
-            entry.status = "deferred"
-            entry.size_bytes = len(body)
-            entry.retrieval.note = f"{len(body)} bytes, over the {max_bytes}-byte limit"
             found.gaps.append({
                 "what": entry.label or entry.file_id,
-                "reason": entry.retrieval.note,
-                "action": "raise the limit with --max-bundle-bytes",
+                "reason": note,
+                "action": "fetch it from the preprint page and take it in with "
+                          "`paper-access supplements adopt`",
                 "file_id": entry.file_id,
             })
             continue
-        target = directory / entry.file_id
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(body)
-        _accept(entry, target, directory, "biorxiv", str(entry.retrieval.url))
-        got += 1
+        _accept(found, entry, target, directory, "biorxiv", url)
+        if entry.status == "present":
+            got += 1
     found.attempts.append(
         supp_sources.attempt(
             "biorxiv",
@@ -724,6 +851,7 @@ def _try_biorxiv(
 
 
 def _accept(
+    found: Supplements,
     entry: SupplementFile,
     target: Path,
     directory: Path,
@@ -744,6 +872,10 @@ def _accept(
         return
 
     entry.status = "present"
+    # Whatever deferred or failed it earlier no longer applies: the transfer
+    # that was abandoned is superseded, and nobody is being asked for the file.
+    entry.bytes_transferred = None
+    found.gaps[:] = [g for g in found.gaps if g.get("file_id") != entry.file_id]
     entry.size_bytes = size
     entry.media_type = kind
     entry.path = f"{SUPPLEMENTS_DIR}/files/{target.name}"
@@ -909,7 +1041,7 @@ def adopt(
                 )
             )
             unmatched.append({"file_id": path.name, "n_bytes": path.stat().st_size})
-        _accept(entry, target, directory, "manual")
+        _accept(found, entry, target, directory, "manual")
     found.attempts.append(
         supp_sources.attempt(
             "manual",

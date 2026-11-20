@@ -25,8 +25,40 @@ somebody's judgement about the contents, and it is often the best description
 that will ever exist. "Supplementary Tables 1–40" is a real caption, and nothing
 recoverable from the bytes would tell you that.
 
-Print the record schema with `paper-access schema` and read the `supplements`
-block; it documents its own fields.
+## The manifest
+
+What this skill produces is a **manifest**: the `supplements` block of the
+paper's `availability.json`, written only by the CLI. Its schema is the
+`Supplements` definition in `paper-access schema` (with `SupplementFile`,
+`SupplementRetrieval`, `ArchiveMember`, `SupplementAttempt` and
+`SupplementGap`). `paper-access supplements show` checks a paper's manifest
+against that schema and against the rules below, and exits 2 if any fails.
+
+**Every retrieved file is passthrough.** Files and archive members are stored
+as the source served them, under `supplements/files/` and
+`supplements/unpacked/`, and are never opened, parsed or rewritten. There are
+two narrow exceptions, and neither reads data:
+- a structural check of what arrived: a zip container's central directory, or a
+  PDF's first five bytes;
+- a small file named like an index or README (under 256 KB), which is read only
+  to copy the authors' labels.
+
+What the manifest guarantees, by `status`:
+
+| status | guaranteed | never set |
+|---|---|---|
+| `present` | `path` (relative to the paper directory), `size_bytes` of the stored bytes, a `retrieval.route` that produced it. `sha256` of the stored bytes, unless the file is over 256 MB, when `retrieval.note` says the digest was skipped | `bytes_transferred`; no gap refers to it |
+| `listed` | `file_id`; known only from a listing, not yet attempted | `path`, `sha256` |
+| `missing` | an attempt was made and failed; `retrieval.note` normally says why, though the check does not require it. Bytes that failed the structural check are discarded, never kept as `present` | `path`, `sha256` |
+| `deferred` | a note saying why, and a gap saying what would fetch it | `path`, `sha256`, and `size_bytes` where the size is unknown (the check does not enforce this). A partial transfer is `bytes_transferred`, a lower bound and never a size |
+| `skipped` | a note saying why it was not wanted (media, by default) | `path`, `sha256` |
+
+Across all statuses, a `description` always carries a `description_source`, and
+no `file_id` appears twice. For an archive member, `extracted: true` always
+comes with a `path`, and `false` never does.
+
+What it does **not** guarantee: that a file's contents match its caption, or
+that a `listed` file exists at the source.
 
 ## Requirements
 
@@ -38,7 +70,7 @@ record for is a paper to fetch, not a paper with no supplements.
 ## The mechanical half
 
 ```bash
-alias paper-access='uvx --from "https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-paper-access--v0.3.1.tar.gz#subdirectory=packages/paper-access" paper-access'
+alias paper-access='uvx --from "https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-paper-access--v0.3.2.tar.gz#subdirectory=packages/paper-access" paper-access'
 
 # What files does this paper have? Free: reads the XML already on disk.
 paper-access supplements list --store <store> --id <id>
@@ -47,7 +79,7 @@ paper-access supplements list --store <store> --id <id>
 paper-access supplements fetch --store <store> --id <id> [--retry]
 #   --yes-large          proceed with a download over the threshold
 #   --skip-large         record the deferral and exit 0, so a batch keeps going
-#   --large-bytes N      move the bundle threshold (default 250 MB)
+#   --large-bytes N      move the ask-first threshold (default 250 MB)
 #   --include-media      fetch figures and video too; off at any size
 #   --file-timeout N     wall-clock seconds per file (default 120)
 #   --paper-timeout N    wall-clock seconds per paper (default 600)
@@ -118,15 +150,18 @@ Figures and video are **skipped at any size**, because size is a poor proxy for
 whether a file is wanted: on one paper a 226 MB video was fetched while 46 small
 tables were refused, which is wrong on both counts. `--include-media` overrides.
 The byte limit that remains is a backstop at 200 MB per file, applied the same
-way on every route.
+way on every route, and it still applies with `--yes-large`.
 
 A skipped file is `skipped`, not `missing`, and gets no gap. The difference is
 whose decision it was, and nobody needs asking about a file we did not want.
 
 ### Whether a large download is worth it
 
-A bundle over the threshold is **deferred**, not fetched. Two things to know
-when you report one:
+A download over the `--large-bytes` threshold is **deferred**, not fetched: a
+file whose size the host declares is refused before anything moves, and a
+bundle or a single file with no declared size is abandoned once it passes the
+threshold. Two things to know when you
+report one:
 
 - **A bundle cannot be partly transferred.** A zip's member table is at the end
   of the file, so no member can be read without fetching the whole archive.

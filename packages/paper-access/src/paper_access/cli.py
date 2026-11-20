@@ -454,6 +454,10 @@ def _print_supp_report(rows: list[dict[str, Any]]) -> None:
 # ----------------------------------------------------------------------
 
 
+def _mb(n: int) -> int:
+    return n // (1024 * 1024)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="paper-access",
@@ -562,15 +566,15 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--include-media", action="store_true",
                    help="Fetch figures and video too; off by default at any size")
     s.add_argument("--file-timeout", type=float, default=supp_flow.DEFAULT_FILE_TIMEOUT,
-                   help="Wall-clock seconds for one file (default 120)")
+                   help=f"Wall-clock seconds for one file (default {supp_flow.DEFAULT_FILE_TIMEOUT:g})")
     s.add_argument("--paper-timeout", type=float, default=supp_flow.DEFAULT_PAPER_TIMEOUT,
-                   help="Wall-clock seconds for one paper (default 600)")
+                   help=f"Wall-clock seconds for one paper (default {supp_flow.DEFAULT_PAPER_TIMEOUT:g})")
     s.add_argument("--no-bundle", action="store_true",
                    help="Skip the Europe PMC bundle route")
     s.add_argument("--large-bytes", type=int, default=supp_flow.DEFAULT_LARGE_BYTES,
-                   help="Defer a download over this size (default 50 MB)")
+                   help=f"Defer a download over this size (default {_mb(supp_flow.DEFAULT_LARGE_BYTES)} MB)")
     s.add_argument("--max-bundle-bytes", type=int, default=supp_flow.DEFAULT_MAX_BYTES,
-                   help="Never exceed this, even with --yes-large")
+                   help=f"Never exceed this, even with --yes-large (default {_mb(supp_flow.DEFAULT_MAX_BYTES)} MB)")
     s.add_argument("--yes-large", action="store_true",
                    help="Proceed with a download over --large-bytes")
     s.add_argument("--skip-large", action="store_true",

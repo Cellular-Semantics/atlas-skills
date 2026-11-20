@@ -379,6 +379,11 @@ def cross_check_supplements(payload: dict[str, Any]) -> list[str]:
                 problems.append(f"{file_id}: status is 'present' but path is missing")
             if entry.get("size_bytes") is None:
                 problems.append(f"{file_id}: status is 'present' but size_bytes is missing")
+            if entry.get("bytes_transferred") is not None:
+                problems.append(
+                    f"{file_id}: present but still carries bytes_transferred from an "
+                    "abandoned attempt"
+                )
             if retrieval.get("route") in (None, "none", "jats_listing"):
                 problems.append(
                     f"{file_id}: status is 'present' but no route is recorded as having "
@@ -428,6 +433,11 @@ def cross_check_supplements(payload: dict[str, Any]) -> list[str]:
             problems.append(
                 f"{entry.get('file_id')}: deferred but no gap says what would fetch it"
             )
+
+    present_ids = {f.get("file_id") for f in files if f.get("status") == "present"}
+    for gap in payload.get("gaps") or []:
+        if gap.get("file_id") in present_ids:
+            problems.append(f"{gap['file_id']}: present but a gap still asks for it")
 
     return problems
 
