@@ -15,6 +15,7 @@ import zipfile
 import httpx
 import pytest
 
+from paper_access import record as record_module
 from paper_access import store, supp_flow, supp_sources
 from paper_access.ids import Identifier
 from paper_access.record import Attempt, Availability, LocalSource, Metadata
@@ -591,6 +592,45 @@ def test_the_record_still_validates_after_every_stage(paper, monkeypatch):
     reread = store.read(root, DOI)
     assert reread.supplements is not None
     assert reread.supplements.by_id("41586_2023_6812_MOESM1_ESM.xlsx").status == "present"
+
+
+def test_a_fetched_manifest_with_present_and_skipped_files_passes_the_record_check(
+    paper, monkeypatch
+):
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+    body = make_zip({"41586_2023_6812_MOESM1_ESM.xlsx": xlsx_bytes()})
+
+    handler = bundle_only(
+        head=httpx.Response(200, headers={"content-length": str(len(body))}),
+        get=httpx.Response(200, content=body))
+
+    with client_for(handler) as http:
+        record.supplements = supp_flow.fetch_supplements(record, root, client=http)
+
+    statuses = {f.status for f in record.supplements.files}
+    assert {"present", "skipped"} <= statuses
+    assert record_module.check(record.to_dict()) == []
+
+
+def test_a_manifest_with_a_deferred_file_passes_the_record_check(paper, monkeypatch):
+    record, root = paper
+    monkeypatch.delenv("ASTA_API_KEY", raising=False)
+    record.supplements = supp_flow.list_supplements(record, root)
+    body = make_zip({"41586_2023_6812_MOESM1_ESM.xlsx": xlsx_bytes()})
+
+    handler = bundle_only(
+        head=httpx.Response(200, headers={"content-length": str(len(body))}),
+        get=httpx.Response(200, content=body))
+
+    with client_for(handler) as http:
+        record.supplements = supp_flow.fetch_supplements(
+            record, root, client=http, max_bytes=1, allow_large=True
+        )
+
+    assert "deferred" in {f.status for f in record.supplements.files}
+    assert record_module.check(record.to_dict()) == []
 
 
 def test_a_404_is_unavailable_and_a_5xx_is_failed():

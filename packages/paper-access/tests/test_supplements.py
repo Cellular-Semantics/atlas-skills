@@ -165,6 +165,26 @@ def test_a_listed_file_with_a_path_is_rejected():
         Supplements(files=[entry]).to_dict()))
 
 
+@pytest.mark.parametrize("status", ["listed", "missing", "skipped"])
+def test_a_file_that_is_not_present_must_not_carry_a_digest(status):
+    entry = SupplementFile(
+        file_id="x.xlsx", status=status, sha256="a" * 64,
+        retrieval=SupplementRetrieval(route="europepmc_bundle", note="why"),
+    )
+    assert any("a digest is set" in p for p in cross_check_supplements(
+        Supplements(files=[entry]).to_dict()))
+
+
+@pytest.mark.parametrize("status", ["missing", "skipped"])
+def test_a_file_that_is_not_present_must_not_carry_a_path(status):
+    entry = SupplementFile(
+        file_id="x.xlsx", status=status, path="supplements/files/x.xlsx",
+        retrieval=SupplementRetrieval(route="europepmc_bundle", note="why"),
+    )
+    assert any("a stored path is set" in p for p in cross_check_supplements(
+        Supplements(files=[entry]).to_dict()))
+
+
 def test_a_deferral_must_say_why():
     """Otherwise a reader cannot tell it from a file nobody could get."""
     entry = SupplementFile(file_id="x.xlsx", status="deferred")

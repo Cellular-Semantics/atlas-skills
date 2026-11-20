@@ -75,7 +75,7 @@
       "format": "date-time"
     },
     "supplements": {
-      "description": "A paper's supplementary material: what files it has, where each came from, and what could not be got. Retrieval only \u2014 nothing here says what a file *contains*. A `description` is harvested verbatim from a caption, a bundle manifest or a preprint server's label, with its source named; it is a fact the publisher stated, not a judgement anybody made. Deciding what a file is for, and whether it bears on a question, is a separate job against a separate artefact, and a relevance field is deliberately absent so that 'not yet judged' can never be read as 'judged irrelevant'.",
+      "description": "A paper's supplementary material: what files it has, where each came from, and what could not be got. Retrieval only \u2014 nothing here says what a file *contains*. A `description` is harvested verbatim from a caption, a bundle manifest or a preprint server's label, with its source named; it is a fact the publisher stated, not a judgement anybody made. Deciding what a file is for, and whether it bears on a question, is a separate job against a separate artefact, and a relevance field is deliberately absent so that 'not yet judged' can never be read as 'judged irrelevant'. This block is the retrieve-supplements skill's manifest: every retrieved file it lists is passthrough, stored as served and never parsed, and `cross_check_supplements` enforces the per-status guarantees the schema cannot express.",
       "$ref": "#/$defs/Supplements"
     }
   },

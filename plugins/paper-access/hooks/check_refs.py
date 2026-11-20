@@ -29,7 +29,7 @@ import sys
 from pathlib import Path
 
 # One literal, not two concatenated: the release tooling finds pins by pattern.
-PACKAGE = "https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-paper-access--v0.3.1.tar.gz#subdirectory=packages/paper-access"
+PACKAGE = "https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-paper-access--v0.3.2.tar.gz#subdirectory=packages/paper-access"
 
 CHECKED_SUFFIXES = {".md", ".markdown", ".txt", ".json", ".yaml", ".yml"}
 
