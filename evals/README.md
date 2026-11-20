@@ -12,7 +12,7 @@ here, because `claude plugin eval` cannot run code.
 |---|---|---|---|---|
 | author-annotation-columns | [`author-annotation-columns/`](author-annotation-columns/README.md): 9 behaviour cases (`runner.py`), the accuracy benchmark (`benchmark.py`), the run log | 8 `smoke` cases in `plugins/author-annotation-columns/evals/smoke/` | `python3 evals/author-annotation-columns/runner.py`; `python3 evals/author-annotation-columns/benchmark.py`; `claude plugin eval author-annotation-columns --tag smoke` (flags in the plugin's `evals/README.md`) | ~$5 per behaviour suite; ~$4 per smoke run; tens of dollars for a full benchmark |
 | onto-mapping | [`onto-mapping/`](onto-mapping/README.md): JSON cases scored by `check.py` | none yet | `python evals/onto-mapping/check.py <run-file.json>` | one agent run per batch |
-| paper-access | none yet | none yet | | |
+| paper-access | none yet | 3 `smoke` cases in `plugins/paper-access/evals/smoke/` | `claude plugin eval paper-access --tag smoke` (flags in the plugin's `evals/README.md`) | not yet measured |
 | remote-h5ad-obs | none yet | none yet | | |
 | atlas-tools | none (it has no skill of its own) | none | | |
 
