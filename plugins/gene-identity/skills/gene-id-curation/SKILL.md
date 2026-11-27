@@ -31,20 +31,46 @@ One record per name:
 
 ```yaml
 name: CB                         # as given
+taxon: NCBITaxon:10116           # as given
 outcome: GENE                    # GENE | NO_SINGLE_GENE | NOT_A_GENE_PRODUCT | UNRESOLVED
 ncbi_gene_id: NCBIGene:83839     # GENE only
 symbol: Calb1                    # GENE only: official symbol of that gene
 gene_taxon: NCBITaxon:10116      # GENE only: the gene's species
-method: PAPER_DEFINITION         # how the gene was reached (Steps 2–3)
+method: PAPER_DEFINITION         # GENE only: how the gene was reached (Steps 2–3)
 kind: null                       # NO_SINGLE_GENE / NOT_A_GENE_PRODUCT / UNRESOLVED: see Step 1 and 3
 antibody: null                   # when the name is an antibody or clone: the name as written
 evidence: '"... CB, calbindin-D28k ..."'   # the quote relied on, verbatim
 rationale: Paper defines CB as calbindin-D28k; claimants were Calb1 and Ctsb.
-claimants: []                    # UNRESOLVED (ambiguous): the candidate genes
+claimants: []                    # UNRESOLVED (AMBIGUOUS) only: [{ncbi_gene_id, symbol}, ...]
 ```
 
 `symbol` is the gene's **official** symbol, never the source's wording.
-Return records only; where they are stored is the caller's business.
+Return the records. Where they are kept is the caller's business, but when
+you write them to a file, follow **The record** below.
+
+## The record
+
+The schema is `gene_record.schema.json` in the `gene-identity` package
+(`gene-id schema` prints it). On disk, records are a **JSON array** in a file
+whose name ends in **`.gene-records.json`**. Check a file with
+`gene-id validate FILE` before you report it done: exit 0 is valid, and
+exit 2 lists each problem by record index and name.
+
+| `outcome` | Must have | Must not have | `kind` |
+|---|---|---|---|
+| `GENE` | `ncbi_gene_id`, `symbol`, `gene_taxon`, `method` | `kind`, `claimants` | — |
+| `NO_SINGLE_GENE` | `kind` | gene fields, `method`, `claimants` | `GENE_FAMILY`, `GLYCOFORM`, `PTM_STATE` |
+| `NOT_A_GENE_PRODUCT` | `kind` | gene fields, `method`, `claimants` | `EXOGENOUS_LABEL`, `NON_GENE_TERM` |
+| `UNRESOLVED` | `kind`; `claimants` (two or more) when `AMBIGUOUS` | gene fields, `method` | `AMBIGUOUS`, `NO_MATCH`, `LOOKUP_FAILED` |
+
+"Gene fields" are `ncbi_gene_id`, `symbol` and `gene_taxon`: leave them
+null or out. Every record needs `name`, `taxon`, `outcome` and a non-empty
+`rationale`. No other fields are allowed.
+
+**What the schema does not guarantee:** that an ID exists, is current,
+belongs to `taxon`, or that `symbol` is its official symbol; nor that the ID
+came from the lookup. Those need a lookup, not a schema. Getting them right
+is your job under Steps 2–3.
 
 ## Step 1 — Decide what the name refers to
 
@@ -118,7 +144,7 @@ memory.
 ## Lookup tool
 
 ```bash
-alias gene-id='uvx --from "${GENE_ID_FROM:-https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-gene-identity--v0.1.0.tar.gz#subdirectory=packages/gene-identity}" gene-id'
+alias gene-id='uvx --from "${GENE_ID_FROM:-https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-gene-identity--v0.2.0.tar.gz#subdirectory=packages/gene-identity}" gene-id'
 ```
 
 If `$GENE_ID_BIN` is set, run `"$GENE_ID_BIN"` in place of `gene-id` and say
@@ -137,5 +163,5 @@ Translator Name Resolver for that species only; it does not search
 descendants of a higher taxon, hence Step 2's choice of species.
 
 Exit 1 means the lookup could not run (Translator unreachable, no table).
-Report the names as `UNRESOLVED` with the error in `rationale`; never fill
-in IDs from memory to make up for it.
+Report the names as `UNRESOLVED` (`LOOKUP_FAILED`) with the error in
+`rationale`; never fill in IDs from memory to make up for it.

@@ -15,6 +15,8 @@ The marker-pin, KB-walking and KB hook code stayed in evidencell.
 gene-id resolve --taxon NCBITaxon:10090 NAME...      Name Resolver, one species (network)
 gene-id resolve --gene-table gene_ids.tsv.gz NAME... a dataset's gene table (offline)
 gene-id build-table --ensembl-ids ids.txt -o gene_ids.tsv.gz [--label ID]
+gene-id validate x.gene-records.json                the skill's records, against the schema
+gene-id schema                                      print the record schema
 gene-id --version
 ```
 
@@ -38,8 +40,17 @@ gene-id --version
 symbol the dataset itself uses (for example `Car8` where the official label is
 now `Ca8`).
 
-Exit codes: 0 ok, 1 the lookup could not run (Translator unreachable, or the
-table is missing), 2 bad arguments.
+Exit codes: 0 ok; 1 could not run (Translator unreachable, a missing table or
+file, not JSON); 2 bad arguments, or `validate` found problems.
+
+## Records
+
+The `gene-id-curation` skill writes its results as a JSON array in a file
+ending `.gene-records.json`, one record per name. The shape and per-outcome
+rules are in `src/gene_identity/schemas/gene_record.schema.json` (JSON Schema
+2020-12); the skill's "The record" section states them in prose. `validate`
+checks shape only: whether an ID exists, belongs to the taxon and carries that
+official symbol needs a lookup.
 
 ## Gene tables
 
