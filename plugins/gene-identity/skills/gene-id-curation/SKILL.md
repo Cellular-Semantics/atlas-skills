@@ -163,7 +163,7 @@ Each Bash call is a fresh, non-interactive shell, so an `alias` does not
 survive. Put this function at the start of every command that uses `gene-id`:
 
 ```bash
-gene-id() { uvx -q --from "${GENE_ID_FROM:-https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-gene-identity--v0.3.0.tar.gz#subdirectory=packages/gene-identity}" gene-id "$@"; }
+gene-id() { uvx -q --from "${GENE_ID_FROM:-https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-gene-identity--v0.3.1.tar.gz#subdirectory=packages/gene-identity}" gene-id "$@"; }
 ```
 
 If `$GENE_ID_BIN` is set, run `"$GENE_ID_BIN"` in place of `gene-id` and say

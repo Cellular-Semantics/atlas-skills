@@ -40,7 +40,7 @@ import sys
 from pathlib import Path
 
 # One literal, not two concatenated: the release tooling finds pins by pattern.
-PACKAGE = "https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-gene-identity--v0.3.0.tar.gz#subdirectory=packages/gene-identity"
+PACKAGE = "https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-gene-identity--v0.3.1.tar.gz#subdirectory=packages/gene-identity"
 
 SUFFIX = ".gene-records.json"
 
