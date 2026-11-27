@@ -6,7 +6,7 @@ is repo-only: `evals/gene-identity/` in the atlas-skills repo.
 
 ## `smoke/`: does `gene-id-curation` avoid the traps it exists for?
 
-Each case gives one name, a taxon and an evidence sentence, and asks for the
+Each case gives one name, a taxon and (all but one) an evidence sentence, and asks for the
 record in `result.gene-records.json`. Graders read that file, so they check the
 record the skill would hand on, not the wording of the reply.
 
@@ -24,6 +24,9 @@ record the skill would hand on, not the wording of the reply.
 - **`neun-antibody`** (constructed sentence). NeuN is an antibody to Rbfox3.
   The record must give Rbfox3 (NCBIGene:52897) as `symbol`, with `antibody`
   set to `NeuN`.
+- **`crf-no-evidence`** (constructed). `CRF` is claimed by Crh and C1ql1, and
+  the input has no evidence and no title. The record must be `UNRESOLVED` /
+  `AMBIGUOUS`: with no field there is no convention to settle it by.
 
 Every case also checks that the skill fired, that `gene-id` ran from its pinned
 source archive, that the record file was written and run through
@@ -31,7 +34,7 @@ source archive, that the record file was written and run through
 Step 1 settles regions and families without a lookup, so the other two do not.
 
 ```sh
-claude plugin eval gene-identity --tag smoke --ablation none -j 4 \
+claude plugin eval plugins/gene-identity --tag smoke --ablation none -j 4 \
   --allow-tools Write Bash \
     "WebFetch(domain:name-resolution-sri.renci.org)" \
     "WebFetch(domain:nodenormalization-sri.renci.org)" \

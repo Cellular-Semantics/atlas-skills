@@ -74,9 +74,12 @@ does them: it validates, then checks every gene (a `GENE` record's and each
 claimant) against Translator NodeNormalization (exists, current, `symbol` is
 its official symbol), checks `gene_taxon` is the gene's own and lies within
 `taxon`, and checks the ID was returned by an earlier `gene-id resolve` here.
-This plugin's hook runs it after every write of a `.gene-records.json`; when
-it reports problems, fix the record from the lookup's output and write it
-again. `UNCHECKED` lines mean a lookup could not run: say so when you report.
+This plugin's hook runs it after a Write, Edit or MultiEdit of a
+`.gene-records.json`, or a shell command that names one; when it reports
+problems, fix the record from the lookup's output and write it again. The hook
+is a backstop, not a guarantee (it can be off, or fail to run), so run
+`gene-id check FILE` yourself before you report. `UNCHECKED` lines mean a
+lookup could not run: say so when you report.
 
 What no check can tell you is whether a real, looked-up gene is the one the
 source means (Dio1 for "D1" passes every check). That is Steps 1–3.
@@ -126,7 +129,7 @@ The lookup tool is described under **Lookup tool** below.
 | `EXACT_SYMBOL` | `GENE`: take the gene's ID and official symbol. |
 | `UNIQUE_SYNONYM` | `GENE`, after checking the gene fits the evidence and the field. One claimant means only that one gene lists the string, not that the source means it: `D1` → Dio1, `GAD` → Uchl1, `GABAA` → Gabrg1 are all single matches. If it doesn't fit, go back to Step 1 or 2. |
 | `CASE_INSENSITIVE_SYMBOL` | `GENE`, unless a caution below applies or other genes also claim the name — then check the evidence means this one. |
-| `AMBIGUOUS` | Pick **one gene from the claimants**, never another. Use the evidence first and quote it; where it doesn't define the name, the field's convention may settle it (`SOM` in a neuroscience source is Sst, not Grhl3) — say so in `rationale`. If neither settles it: `UNRESOLVED` (`AMBIGUOUS`), with the claimants. |
+| `AMBIGUOUS` | Pick **one gene from the claimants**, never another. Use the evidence first and quote it; where it doesn't define the name, the field's convention may settle it (`SOM` in a neuroscience source is Sst, not Grhl3) — say so in `rationale`. A convention needs a field: with no evidence and no title there is none, so do not settle by convention. If neither settles it: `UNRESOLVED` (`AMBIGUOUS`), with the claimants. |
 | `NO_MATCH` | Not a name of any gene in the species. If the evidence names the gene, look that up (Step 2). Otherwise reconsider Step 1; if still unclear, `UNRESOLVED` (`NO_MATCH`). |
 
 Never return a gene the lookup did not produce, and never fill in an ID from
@@ -146,14 +149,21 @@ memory.
   `NO_SINGLE_GENE` (`GENE_FAMILY`).
 - **Field convention vs evidence.** Where the decision rests on the field's
   conventions rather than the quote, say so in `rationale`, so a reviewer
-  can tell a reading of the source from background knowledge.
+  can tell a reading of the source from background knowledge. With no
+  evidence and no title, there is no field to apply (see `AMBIGUOUS` above).
+- **Say only what you saw.** `rationale` states what the lookup returned in
+  this run and what the source says. Do not copy this skill's worked examples
+  (`GAD` maps to Uchl1) into a record as if you had observed them.
 - **Species case.** `SST` (human style) in a mouse paper means Sst; the
   official symbol follows the gene's species, not the source.
 
 ## Lookup tool
 
+Each Bash call is a fresh, non-interactive shell, so an `alias` does not
+survive. Put this function at the start of every command that uses `gene-id`:
+
 ```bash
-alias gene-id='uvx --from "${GENE_ID_FROM:-https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-gene-identity--v0.3.0.tar.gz#subdirectory=packages/gene-identity}" gene-id'
+gene-id() { uvx -q --from "${GENE_ID_FROM:-https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-gene-identity--v0.3.0.tar.gz#subdirectory=packages/gene-identity}" gene-id "$@"; }
 ```
 
 If `$GENE_ID_BIN` is set, run `"$GENE_ID_BIN"` in place of `gene-id` and say
