@@ -69,8 +69,17 @@ null or out. Every record needs `name`, `taxon`, `outcome` and a non-empty
 
 **What the schema does not guarantee:** that an ID exists, is current,
 belongs to `taxon`, or that `symbol` is its official symbol; nor that the ID
-came from the lookup. Those need a lookup, not a schema. Getting them right
-is your job under Steps 2–3.
+came from the lookup. Those need a lookup, not a schema. `gene-id check FILE`
+does them: it validates, then checks every gene (a `GENE` record's and each
+claimant) against Translator NodeNormalization (exists, current, `symbol` is
+its official symbol), checks `gene_taxon` is the gene's own and lies within
+`taxon`, and checks the ID was returned by an earlier `gene-id resolve` here.
+This plugin's hook runs it after every write of a `.gene-records.json`; when
+it reports problems, fix the record from the lookup's output and write it
+again. `UNCHECKED` lines mean a lookup could not run: say so when you report.
+
+What no check can tell you is whether a real, looked-up gene is the one the
+source means (Dio1 for "D1" passes every check). That is Steps 1–3.
 
 ## Step 1 — Decide what the name refers to
 
@@ -144,7 +153,7 @@ memory.
 ## Lookup tool
 
 ```bash
-alias gene-id='uvx --from "${GENE_ID_FROM:-https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-gene-identity--v0.2.0.tar.gz#subdirectory=packages/gene-identity}" gene-id'
+alias gene-id='uvx --from "${GENE_ID_FROM:-https://github.com/Cellular-Semantics/atlas-skills/archive/refs/tags/pkg-gene-identity--v0.3.0.tar.gz#subdirectory=packages/gene-identity}" gene-id'
 ```
 
 If `$GENE_ID_BIN` is set, run `"$GENE_ID_BIN"` in place of `gene-id` and say

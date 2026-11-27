@@ -39,6 +39,9 @@ packages/obs-column-eval/.venv/bin/python -m pytest evals "$@"
 # The supplement manifest check's catch rate, against mutated manifests.
 packages/paper-access/.venv/bin/python -m pytest evals/paper-access "$@"
 packages/paper-access/.venv/bin/python -m pytest tests "$@"
+# The gene records check: its catch rate against mutated records, and its
+# hook end to end. Both need gene-identity, which only its own venv has.
+packages/gene-identity/.venv/bin/python -m pytest evals/gene-identity tests/test_plugin_hooks.py "$@"
 python3 scripts/versions.py report --check docs/pins.md
 if command -v claude >/dev/null; then
   claude plugin validate . && for p in plugins/*/; do claude plugin validate "$p"; done

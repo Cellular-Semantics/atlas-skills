@@ -465,3 +465,125 @@ def test_a_paper_that_was_never_fetched_is_unchecked_not_flagged(tmp_path):
     )
     assert proc.returncode == 0
     assert "unchecked" in proc.stderr
+
+
+# -- gene-identity: the gene records check ------------------------------
+
+GENE_HOOKS = HOOKS.parent.parent / "gene-identity" / "hooks"
+CHECK_GENES = GENE_HOOKS / "check_gene_records.py"
+
+GENE_ID_BIN = Path(sys.executable).parent / "gene-id"
+needs_gene_id = pytest.mark.skipif(not GENE_ID_BIN.exists(),
+                                   reason="gene-identity is not installed here")
+
+DRD1 = {"name": "D1", "taxon": "NCBITaxon:10090", "outcome": "GENE",
+        "ncbi_gene_id": "NCBIGene:13488", "symbol": "Drd1", "gene_taxon": "NCBITaxon:10090",
+        "method": "PAPER_DEFINITION", "rationale": "dopamine D1 receptor"}
+
+
+def gene_cache(tmp_path: Path, resolved=("NCBIGene:13488",)) -> Path:
+    """What earlier lookups would have left: Drd1 known, and in the resolve log."""
+    d = tmp_path / "cache"
+    d.mkdir()
+    (d / "genes.json").write_text(json.dumps(
+        {"NCBIGene:13488": {"label": "Drd1", "taxon": "NCBITaxon:10090"}}))
+    (d / "resolved.json").write_text(json.dumps({i: {"name": "D1"} for i in resolved}))
+    return d
+
+
+def run_genes(payload, cache: Path, **env: str):
+    # Nothing here may reach the network: an uncached lookup hits a closed port.
+    return run(CHECK_GENES, payload, env={
+        "GENE_ID_BIN": str(GENE_ID_BIN), "GENE_IDENTITY_CACHE": str(cache),
+        "GENE_IDENTITY_NODENORM_URL": "http://127.0.0.1:9",
+        "GENE_IDENTITY_EUTILS_URL": "http://127.0.0.1:9", **env})
+
+
+def records_file(tmp_path: Path, records: list[dict], name="out.gene-records.json") -> Path:
+    path = tmp_path / name
+    path.write_text(json.dumps(records))
+    return path
+
+
+@needs_gene_id
+def test_a_correct_record_passes(tmp_path):
+    result = run_genes(write_of(str(records_file(tmp_path, [DRD1]))), gene_cache(tmp_path))
+    assert result.returncode == 0, result.stderr
+    assert result.stderr == ""
+
+
+@needs_gene_id
+def test_a_source_wording_symbol_is_flagged_with_the_official_one(tmp_path):
+    rec = {**DRD1, "symbol": "D1"}
+    result = run_genes(write_of(str(records_file(tmp_path, [rec]))), gene_cache(tmp_path))
+    assert result.returncode == 2
+    assert "is 'Drd1'" in result.stderr
+    assert "from `gene-id resolve`" in result.stderr   # what to do, not just a refusal
+
+
+@needs_gene_id
+def test_an_id_the_lookup_never_returned_is_flagged(tmp_path):
+    result = run_genes(write_of(str(records_file(tmp_path, [DRD1]))),
+                       gene_cache(tmp_path, resolved=()))
+    assert result.returncode == 2
+    assert "never returned by `gene-id resolve`" in result.stderr
+
+
+@needs_gene_id
+def test_a_schema_violation_is_flagged(tmp_path):
+    rec = {**DRD1, "kind": "GENE_FAMILY"}
+    result = run_genes(write_of(str(records_file(tmp_path, [rec]))), gene_cache(tmp_path))
+    assert result.returncode == 2 and "[0] (D1).kind" in result.stderr
+
+
+@needs_gene_id
+def test_an_uncached_gene_offline_is_unchecked_not_flagged(tmp_path):
+    rec = {**DRD1, "ncbi_gene_id": "NCBIGene:20604", "symbol": "Sst"}
+    result = run_genes(write_of(str(records_file(tmp_path, [rec]))),
+                       gene_cache(tmp_path, resolved=("NCBIGene:20604",)))
+    assert result.returncode == 0
+    assert "UNCHECKED NCBIGene:20604" in result.stderr
+
+
+@needs_gene_id
+def test_a_relative_records_path_resolves_against_the_hook_cwd(tmp_path):
+    records_file(tmp_path, [{**DRD1, "symbol": "D1"}])
+    payload = {**write_of("out.gene-records.json"), "cwd": str(tmp_path)}
+    assert run_genes(payload, gene_cache(tmp_path)).returncode == 2
+
+
+def test_only_a_gene_records_file_is_checked(tmp_path):
+    other = records_file(tmp_path, [{"nonsense": True}], name="records.json")
+    result = run(CHECK_GENES, write_of(str(other)), env={"GENE_ID_BIN": "/nonexistent"})
+    assert result.returncode == 0
+    assert result.stderr == ""
+
+
+def test_a_gene_checker_that_cannot_run_says_so(tmp_path):
+    path = records_file(tmp_path, [DRD1])
+    result = run(CHECK_GENES, write_of(str(path)),
+                 env={"GENE_ID_BIN": "/nonexistent/gene-id"})
+    assert result.returncode == 0
+    assert "unchecked" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "payload",
+    ["", "not json at all", "[]", "{}", '{"tool_input": {}}', '{"tool_input": null}',
+     '{"tool_input": {"file_path": 3}}'],
+)
+def test_malformed_input_does_not_block_a_gene_records_write(payload):
+    assert run(CHECK_GENES, payload).returncode == 0
+
+
+def test_the_gene_records_manifest_runs_after_the_write():
+    """PostToolUse: the check reads the file, so it has to be on disk."""
+    manifest = json.loads((GENE_HOOKS / "hooks.json").read_text())
+    events = manifest["hooks"]
+    assert set(events) == {"PostToolUse"}
+    (entry,) = events["PostToolUse"]
+    assert "Write" in entry["matcher"] and "Edit" in entry["matcher"]
+    (hook,) = entry["hooks"]
+    assert hook["command"].endswith('/hooks/check_gene_records.py"')
+    assert "${CLAUDE_PLUGIN_ROOT}" in hook["command"]
+    assert CHECK_GENES.is_file()

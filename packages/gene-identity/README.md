@@ -16,6 +16,8 @@ gene-id resolve --taxon NCBITaxon:10090 NAME...      Name Resolver, one species 
 gene-id resolve --gene-table gene_ids.tsv.gz NAME... a dataset's gene table (offline)
 gene-id build-table --ensembl-ids ids.txt -o gene_ids.tsv.gz [--label ID]
 gene-id validate x.gene-records.json                the skill's records, against the schema
+gene-id check x.gene-records.json [--no-provenance] [--offline]
+                                                    schema + NodeNorm, symbol, taxon, provenance
 gene-id schema                                      print the record schema
 gene-id --version
 ```
@@ -41,7 +43,7 @@ symbol the dataset itself uses (for example `Car8` where the official label is
 now `Ca8`).
 
 Exit codes: 0 ok; 1 could not run (Translator unreachable, a missing table or
-file, not JSON); 2 bad arguments, or `validate` found problems.
+file, not JSON); 2 bad arguments, or `validate` / `check` found problems.
 
 ## Records
 
@@ -51,6 +53,29 @@ rules are in `src/gene_identity/schemas/gene_record.schema.json` (JSON Schema
 2020-12); the skill's "The record" section states them in prose. `validate`
 checks shape only: whether an ID exists, belongs to the taxon and carries that
 official symbol needs a lookup.
+
+## Checking records
+
+`check` validates, then checks every gene a file names (each `GENE` record's
+and each claimant):
+
+| Check | Against |
+|---|---|
+| the ID exists and is current (a merged ID is named with its successor) | Translator NodeNormalization |
+| `symbol` is the gene's official symbol, exactly | NodeNorm's label |
+| `gene_taxon` is the gene's own, and lies within the record's `taxon` | NodeNorm's taxon, NCBI Taxonomy lineage (E-utilities) |
+| the ID was printed by an earlier `resolve` here | the resolve log |
+
+A lookup that can't run is reported as `UNCHECKED ...` on stderr and does not
+fail the check. `--offline` uses the caches only; `--no-provenance` skips the
+resolve log, for records made elsewhere. The `gene-identity` plugin's hook runs
+`check` after every write of a `.gene-records.json`. Its catch rate against
+mutated records is measured in `evals/gene-identity/record_catch_rate.py`.
+
+Caches live in `$GENE_IDENTITY_CACHE` (default `~/.cache/gene-identity/`):
+`genes.json` (ID → label, taxon), `taxa.json` (taxon → lineage) and
+`resolved.json` (every ID `resolve` printed). Only successful lookups are
+cached, so a passing outage never becomes a lasting verdict.
 
 ## Gene tables
 
@@ -74,6 +99,8 @@ diff.
 |---|---|
 | `GENE_IDENTITY_NODENORM_URL` | `https://nodenormalization-sri.renci.org` |
 | `GENE_IDENTITY_NAMERES_URL` | `https://name-resolution-sri.renci.org` |
+| `GENE_IDENTITY_EUTILS_URL` | `https://eutils.ncbi.nlm.nih.gov/entrez/eutils` |
+| `GENE_IDENTITY_CACHE` | `~/.cache/gene-identity` |
 
 ## Tests
 
