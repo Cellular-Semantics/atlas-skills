@@ -1,9 +1,9 @@
 {
-  "description": "Checks every .gene-records.json the gene-id-curation skill writes: the records match their schema, every gene ID exists and is current in Translator NodeNormalization, each symbol is the gene's official symbol, each gene's species lies within the record's taxon, and every ID came out of `gene-id resolve` rather than from memory. A bad record is flagged straight after the write, so it is fixed before the user is told anything. It does not stop the write itself.",
+  "description": "Checks every .gene-records.json the gene-id-curation skill writes with Write, Edit or MultiEdit, or names in a Bash command: the records match their schema, every gene ID exists and is current in Translator NodeNormalization, each symbol is the gene's official symbol, each gene's species lies within the record's taxon, and every ID came out of `gene-id resolve` rather than from memory. A bad record is flagged straight after the write, so it is fixed before the user is told anything. It does not stop the write itself, and a file written some other way is covered only by the `gene-id check` step in the skill.",
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "Write|Edit|MultiEdit",
+        "matcher": "Write|Edit|MultiEdit|Bash",
         "hooks": [
           {
             "type": "command",

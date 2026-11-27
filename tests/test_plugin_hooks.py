@@ -552,6 +552,37 @@ def test_a_relative_records_path_resolves_against_the_hook_cwd(tmp_path):
     assert run_genes(payload, gene_cache(tmp_path)).returncode == 2
 
 
+@needs_gene_id
+def test_a_records_file_that_is_not_json_is_sent_back(tmp_path):
+    path = tmp_path / "out.gene-records.json"
+    path.write_text('[{"name":"PV","outcome":"GENE",')
+    result = run_genes(write_of(str(path)), gene_cache(tmp_path))
+    assert result.returncode == 2 and "not valid JSON" in result.stderr
+
+
+@needs_gene_id
+def test_a_bash_write_of_a_records_file_is_checked(tmp_path):
+    path = records_file(tmp_path, [{**DRD1, "symbol": "D1"}])
+    payload = {"tool_name": "Bash", "cwd": str(tmp_path), "tool_input": {
+        "command": f"cat > {path.name} <<'EOF'\n[]\nEOF"}}
+    assert run_genes(payload, gene_cache(tmp_path)).returncode == 2
+
+
+def test_a_bash_command_naming_no_records_file_is_ignored():
+    payload = {"tool_input": {"command": "ls -la && echo records.json"}}
+    result = run(CHECK_GENES, payload, env={"GENE_ID_BIN": "/nonexistent"})
+    assert result.returncode == 0 and result.stderr == "" and result.stdout == ""
+
+
+@needs_gene_id
+def test_unchecked_reaches_the_model_as_additional_context(tmp_path):
+    rec = {**DRD1, "ncbi_gene_id": "NCBIGene:20604", "symbol": "Sst"}
+    result = run_genes(write_of(str(records_file(tmp_path, [rec]))),
+                       gene_cache(tmp_path, resolved=("NCBIGene:20604",)))
+    out = json.loads(result.stdout)["hookSpecificOutput"]
+    assert out["hookEventName"] == "PostToolUse" and "UNCHECKED NCBIGene:20604" in out["additionalContext"]
+
+
 def test_only_a_gene_records_file_is_checked(tmp_path):
     other = records_file(tmp_path, [{"nonsense": True}], name="records.json")
     result = run(CHECK_GENES, write_of(str(other)), env={"GENE_ID_BIN": "/nonexistent"})

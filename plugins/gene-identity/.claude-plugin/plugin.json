@@ -1,6 +1,6 @@
 {
   "name": "gene-identity",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Find the NCBI Gene a gene or protein name in a paper refers to (PV, CB, mGluR1, NeuN), or say why it names no single gene. Disambiguates abbreviations several genes claim, catches confident wrong matches and region names that look like genes, and takes every ID from a lookup, never from memory.",
   "author": {
     "name": "Cellular Semantics",
