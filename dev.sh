@@ -14,7 +14,7 @@ cd "$(dirname "$0")"
 # interpreter it finds first, which can be older, and the install then fails.
 # Set UV_PYTHON to test another version, e.g. UV_PYTHON=3.13 ./dev.sh.
 PY="${UV_PYTHON:-3.11}"
-for pkg in h5ad-obs obs-column-eval paper-access gene-identity; do
+for pkg in h5ad-obs obs-column-eval paper-access gene-identity gene-identity-eval; do
   venv="packages/$pkg/.venv"
   # A venv left on an older interpreter is rebuilt rather than reused.
   if [ -x "$venv/bin/python" ] &&
@@ -29,6 +29,7 @@ packages/h5ad-obs/.venv/bin/python -m pytest packages/h5ad-obs "$@"
 packages/paper-access/.venv/bin/python -m pytest packages/paper-access "$@"
 packages/obs-column-eval/.venv/bin/python -m pytest packages/obs-column-eval "$@"
 packages/gene-identity/.venv/bin/python -m pytest packages/gene-identity "$@"
+packages/gene-identity-eval/.venv/bin/python -m pytest packages/gene-identity-eval "$@"
 # The grader unit tests are free and offline: they keep a rejection check from
 # quietly failing the answers it is supposed to pass.
 packages/obs-column-eval/.venv/bin/python -m pytest evals "$@"

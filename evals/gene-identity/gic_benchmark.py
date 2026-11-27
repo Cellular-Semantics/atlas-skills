@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
-"""Score the gene-id-curation skill on the 13 gic cases from evidencell.
+"""Score the gene-id-curation skill on the 13 gic cases, or on an NLM-Gene tier.
 
-    python3 evals/gene-identity/gic_benchmark.py                       # all three variants
+    python3 evals/gene-identity/gic_benchmark.py                       # gic, all three variants
     python3 evals/gene-identity/gic_benchmark.py --variant baseline    # free: no agent
     python3 evals/gene-identity/gic_benchmark.py --variant quote-title --case 'gic-0*'
     python3 evals/gene-identity/gic_benchmark.py --dry-run             # print the prompts only
+    python3 evals/gene-identity/gic_benchmark.py --set nlm-gene --tier l4 --variant quote-title
+
+Sets: ``gic`` (the 13 cases in ``cases/``, answers in ``answers.json``) and
+``nlm-gene`` (a tier of NLM-Gene test-split mentions from the
+``gene-identity-eval`` package, which must be installed; scored by its
+``metrics``, which adds per-stratum numbers and the lift over the lookup).
 
 Variants (the gic README's three):
 
@@ -48,7 +54,8 @@ INDEX = RUNS / "README.md"
 VARIANTS = ("baseline", "quote", "quote-title")
 AGENT_VARIANTS = VARIANTS[1:]
 #: The paths whose appearance in a tool call voids a run.
-FORBIDDEN = re.compile(r"evals/gene-identity|answers\.json|gene-id-curation/answers")
+FORBIDDEN = re.compile(r"evals/gene-identity|answers\.json|gene-id-curation/answers"
+                       r"|gene[-_]identity[-_]eval|nlm_gene|cases\.jsonl")
 
 PROMPT = """Use the gene-id-curation skill on this name.
 
@@ -60,6 +67,8 @@ Reply with the skill's output record as one JSON object in a ```json block. \
 Do not write files."""
 
 #: Keys every run file has; the tests hold committed run files to it.
+#: ``set`` and ``tier`` came later: a run file without them is a gic run (files
+#: are never edited after the fact).
 REQUIRED_RUN_KEYS = {"date", "variant", "command", "n_cases", "n_scored", "passed",
                      "accuracy", "voided", "errors", "cost_usd", "provenance", "cases"}
 
@@ -96,6 +105,23 @@ def prompt_for(case: dict, variant: str) -> str:
     return PROMPT.format(input=json.dumps(agent_input(case, variant), indent=2, ensure_ascii=False))
 
 
+def load_set(name: str, pattern: str = "*", tier: str | None = None) -> dict[str, dict]:
+    """``{id: {id, name, input, expected, baseline}}`` for either set: what the
+    agent sees, what it is scored against, and the lookup's own answer."""
+    if name == "gic":
+        answers = load_answers()
+        return {cid: {"id": cid, "name": c["name"], "input": c, "expected": answers[cid],
+                      "baseline": baseline_record(answers[cid])}
+                for cid, c in load_cases(pattern).items()}
+    from gene_identity_eval import data, metrics
+
+    cases = data.tier_cases(tier) if tier else data.cases()
+    return {cid: {"id": cid, "name": c["input"]["name"], "input": c["input"],
+                  "expected": c["expected"],
+                  "baseline": metrics.baseline_record(c.get("resolver_baseline"))}
+            for cid, c in cases.items() if fnmatch.fnmatch(cid, pattern)}
+
+
 # ── Scoring (pure) ───────────────────────────────────────────────────────────
 
 
@@ -113,7 +139,8 @@ def score(record: dict | None, answer: dict) -> tuple[bool, str]:
             return False, (f"gene {gid or '?'} {record.get('symbol') or ''}".rstrip()
                            + f" (want {' or '.join(sorted(accepted))})")
         return True, f"gene {gid}"
-    if want in ("NO_SINGLE_GENE", "NOT_A_GENE_PRODUCT"):
+    if want in ("NO_SINGLE_GENE", "NOT_A_GENE_PRODUCT") and answer.get("kind"):
+        # NLM-Gene sets no kind (it doesn't say family vs complex): outcome only.
         if record.get("kind") != answer["kind"]:
             return False, f"kind {record.get('kind')} (want {answer['kind']})"
         return True, f"kind {answer['kind']}"
@@ -196,9 +223,9 @@ def provenance() -> dict:
     return out
 
 
-def run_case(case: dict, answer: dict, variant: str, *, max_turns: int, timeout: int,
+def run_case(item: dict, variant: str, *, max_turns: int, timeout: int,
              model: str | None) -> dict:
-    row: dict = {"id": case["id"], "name": case["name"]}
+    row: dict = {"id": item["id"], "name": item["name"]}
     cmd = ["claude", "-p", "--output-format", "stream-json", "--verbose",
            "--max-turns", str(max_turns), "--plugin-dir", str(PLUGIN),
            "--allowedTools", "Skill", "Bash", "Read"]
@@ -206,7 +233,7 @@ def run_case(case: dict, answer: dict, variant: str, *, max_turns: int, timeout:
         cmd += ["--model", model]
     with tempfile.TemporaryDirectory(prefix="gic-") as cwd:
         try:
-            out = subprocess.run(cmd, input=prompt_for(case, variant), cwd=cwd,
+            out = subprocess.run(cmd, input=prompt_for(item["input"], variant), cwd=cwd,
                                  capture_output=True, text=True, timeout=timeout)
         except subprocess.TimeoutExpired:
             row["error"] = f"timed out after {timeout}s"
@@ -231,7 +258,7 @@ def run_case(case: dict, answer: dict, variant: str, *, max_turns: int, timeout:
         return row
     record = extract_record(result.get("result") or "")
     row["record"] = record
-    row["passed"], row["why"] = score(record, answer)
+    row["passed"], row["why"] = score(record, item["expected"])
     return row
 
 
@@ -241,7 +268,8 @@ def run_case(case: dict, answer: dict, variant: str, *, max_turns: int, timeout:
 def write_run(record: dict) -> pathlib.Path:
     """One committed file per run, never overwritten, and the index rebuilt."""
     RUNS.mkdir(exist_ok=True)
-    stem = f"{record['date']}-{record['variant']}-{record['provenance'].get('commit', 'nogit')}"
+    scope = "" if record.get("set", "gic") == "gic" else f"{record['set']}-{record.get('tier') or 'all'}-"
+    stem = f"{record['date']}-{scope}{record['variant']}-{record['provenance'].get('commit', 'nogit')}"
     path = RUNS / f"{stem}.json"
     n = 2
     while path.exists():
@@ -257,14 +285,15 @@ def write_index() -> None:
     for f in sorted(RUNS.glob("*.json")):
         r = json.loads(f.read_text())
         p = r["provenance"]
-        rows.append(f"| [{f.stem}]({f.name}) | {r['variant']} | {r['passed']}/{r['n_scored']} "
+        where = r.get("set", "gic") + (f" {r['tier']}" if r.get("tier") else "")
+        rows.append(f"| [{f.stem}]({f.name}) | {where} | {r['variant']} | {r['passed']}/{r['n_scored']} "
                     f"| {r['accuracy']} | {len(r['voided'])} | {len(r['errors'])} "
                     f"| {r['cost_usd']} | {p.get('plugin_version')} | {p.get('commit')} |")
     INDEX.write_text(
-        "# gic benchmark runs\n\n"
+        "# gene-id-curation benchmark runs\n\n"
         "Generated by `gic_benchmark.py`; do not edit. One file per run, never overwritten.\n\n"
-        "| Run | Variant | Passed | Accuracy | Voided | Errors | Cost (USD) | Plugin | Commit |\n"
-        "|---|---|---|---|---|---|---|---|---|\n" + "\n".join(rows) + "\n")
+        "| Run | Set | Variant | Passed | Accuracy | Voided | Errors | Cost (USD) | Plugin | Commit |\n"
+        "|---|---|---|---|---|---|---|---|---|---|\n" + "\n".join(rows) + "\n")
 
 
 # ── Main ─────────────────────────────────────────────────────────────────────
@@ -272,6 +301,8 @@ def write_index() -> None:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("--set", choices=("gic", "nlm-gene"), default="gic", dest="case_set")
+    ap.add_argument("--tier", help="nlm-gene only: a tier from gene-identity-eval, e.g. l4")
     ap.add_argument("--variant", choices=(*VARIANTS, "all"), default="all")
     ap.add_argument("--case", default="*", help="glob over case ids, e.g. 'gic-0*'")
     ap.add_argument("-j", "--jobs", type=int, default=4)
@@ -283,7 +314,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--note", default="", help="recorded in the run file")
     args = ap.parse_args(argv)
 
-    cases, answers = load_cases(args.case), load_answers()
+    cases = load_set(args.case_set, args.case, args.tier)
     if not cases:
         print(f"no case matches {args.case!r}", file=sys.stderr)
         return 1
@@ -293,38 +324,51 @@ def main(argv: list[str] | None = None) -> int:
         for v in variants:
             if v == "baseline":
                 continue
-            for case in cases.values():
-                print(f"── {case['id']} [{v}] ──\n{prompt_for(case, v)}\n")
+            for item in cases.values():
+                print(f"── {item['id']} [{v}] ──\n{prompt_for(item['input'], v)}\n")
         return 0
 
     prov = None
     for v in variants:
         if v == "baseline":
             rows = []
-            for cid, case in cases.items():
-                rec = baseline_record(answers[cid])
-                ok, why = score(rec, answers[cid])
-                rows.append({"id": cid, "name": case["name"], "record": rec, "passed": ok, "why": why})
+            for cid, item in cases.items():
+                ok, why = score(item["baseline"], item["expected"])
+                rows.append({"id": cid, "name": item["name"], "record": item["baseline"],
+                             "passed": ok, "why": why})
         else:
             prov = prov or provenance()
             with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, args.jobs)) as pool:
-                futures = {cid: pool.submit(run_case, case, answers[cid], v,
+                futures = {cid: pool.submit(run_case, item, v,
                                             max_turns=args.max_turns, timeout=args.timeout,
                                             model=args.model)
-                           for cid, case in cases.items()}
+                           for cid, item in cases.items()}
                 rows = [futures[cid].result() for cid in cases]
         summary = summarise(rows)
+        if args.case_set == "nlm-gene":
+            from gene_identity_eval import data, metrics
+
+            all_cases = data.cases()
+            summary["metrics"] = metrics.summarise(rows, all_cases)
+            m = summary["metrics"]
+            print(f"\n{v}: accuracy {m['accuracy']} vs lookup {m['baseline_accuracy']} "
+                  f"(lift {m['lift']}); gene ID {m['gene_id_accuracy']}, family recall "
+                  f"{m['family_recall']}")
+            for s_name, s in m["per_stratum"].items():
+                print(f"  {s_name:<18} {s['passed']}/{s['n']}  (lookup {s['baseline_accuracy']})")
         print(f"\n{v}: {summary['passed']}/{summary['n_scored']} passed"
               f" (voided {len(summary['voided'])}, errors {len(summary['errors'])},"
               f" ${summary['cost_usd']})")
         for r in rows:
             mark = "PASS" if r.get("passed") else ("VOID" if r.get("voided") else
                                                     "ERR " if r.get("error") else "FAIL")
-            print(f"  {mark} {r['id']} {r['name']:<8} {r.get('why') or r.get('error') or ''}")
+            if args.case_set == "gic" or not r.get("passed"):
+                print(f"  {mark} {r['id']} {r['name'][:24]:<24} {r.get('why') or r.get('error') or ''}")
         if v != "baseline" and not args.no_log:
             models = sorted({m for r in rows for m in r.get("models") or []})
             path = write_run({
-                "date": dt.date.today().isoformat(), "variant": v,
+                "date": dt.date.today().isoformat(), "set": args.case_set,
+                "tier": args.tier, "variant": v,
                 "command": " ".join(["python3", "evals/gene-identity/gic_benchmark.py",
                                      *(argv if argv is not None else sys.argv[1:])]),
                 "note": args.note, **summary,

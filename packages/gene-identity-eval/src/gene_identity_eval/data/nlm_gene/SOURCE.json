@@ -1,0 +1,62 @@
+{
+  "record": "https://zenodo.org/records/5089049",
+  "doi": "10.5061/dryad.dv41ns1wt",
+  "license": "cc-zero",
+  "title": "NLM-Gene, a richly annotated gold standard dataset for gene entities that addresses ambiguity and multi-species gene recognition",
+  "creators": [
+    "Islamaj, Rezarta",
+    "Lu, Zhiyong"
+  ],
+  "created": "2021-07-10T00:16:51.752813+00:00",
+  "files": {
+    "NLM-Gene-Corpus.zip": {
+      "md5": "e3edfb2c84c9e4572b5d285c5dc2f015",
+      "sha256": "09af404e6b96d5834aaf251f83d8eaf0107cbd9acf2a6a4dca7daa67195e9540",
+      "size": 952183
+    },
+    "Pmidlist.Test.txt": {
+      "md5": "c61123961143e068780af54294a622e4",
+      "sha256": "8aedfca39ae6427db35173b04da70aafa68c3089357b08f1aeb3b127aa7e7458",
+      "size": 900
+    },
+    "Pmidlist.Train.txt": {
+      "md5": "7de2ffb355476d474daee895c443df36",
+      "sha256": "ba9c2bc648588169bde28138328aec0557631146fc8deb0b6dcbb8c0a7b9edbd",
+      "size": 4050
+    }
+  },
+  "captured": "2026-11-27",
+  "how": "packages/gene-identity-eval/scripts/snapshot_nlm_gene.py",
+  "split": "Test (Pmidlist.Test.txt); Train is left for SKILL.md iteration",
+  "documents": 100,
+  "mentions": 2755,
+  "cases": 1441,
+  "excluded": {
+    "coded": 1,
+    "ellipsis": 51,
+    "id_not_in_nodenorm": 20,
+    "malformed": 10,
+    "mixed_or_unknown_species": 42,
+    "no_id": 25,
+    "repeat_in_document": 1165
+  },
+  "strata": {
+    "easy": 922,
+    "lookup_wrong": 28,
+    "lookup_ambiguous": 66,
+    "lookup_no_match": 346,
+    "family": 79
+  },
+  "generic_rule": "single-ID mention not equal (normalised) to the gene's label or any Name Resolver synonym: GENE or NO_SINGLE_GENE both pass",
+  "generic_cases": 357,
+  "tiers": {
+    "l4": 168
+  },
+  "translator": {
+    "nodenorm_babel_version": "2026jul22",
+    "nodenorm_version": "2.5.1",
+    "nameres_babel_version": "2026jul22",
+    "nameres_version": "v1.7.0"
+  },
+  "cases_sha256": "7f5a8e06269fa9548663a08f0abf7372fd23f65c30617e9a79023557302ad411"
+}
