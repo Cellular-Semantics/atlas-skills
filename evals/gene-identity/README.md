@@ -55,4 +55,19 @@ and freezes the baseline at 3/13.
 
 ## Results
 
-See [`runs/README.md`](runs/README.md).
+Every run is in [`runs/README.md`](runs/README.md).
+
+**First run (2026-11-27, plugin 0.2.1 at `c3581fc`, gene-identity 0.2.0,
+Claude Code 2.1.332, `claude-sonnet-5-5`):** both agent variants **13/13**,
+against 3/13 for the lookup alone; $1.58 (`quote`) and $1.56 (`quote-title`).
+The title made no difference: `quote` alone settled even gic-02, where the
+quote says only "D1 and D2 cells", by field convention.
+
+The skill's `method` shows how it got there. Five cases rest on field
+convention rather than the quote (gic-01, -02, -06, -08: `FIELD_CONVENTION`;
+gic-11 took the lookup's single match), so a reviewer should read their
+rationale. gic-01 went by convention although its quote spells out "dopamine
+D1 ... receptors", which reads as a definition.
+
+**The set is saturated.** At 13/13 it can catch a regression but cannot rank
+two versions of the skill. That is what the L4 tier (NLM-Gene, #48) is for.
