@@ -40,7 +40,13 @@ nor any Name Resolver synonym, compared as the lookup compares. That test can't
 tell a class from a specific name Translator doesn't list ("CCL-2", "α-SMA"),
 so `generic` is a flag across strata, not a stratum, and `summarise` reports
 the flagged cases apart and counts the passes that needed the allowance.
+
 357 of the 1,441 cases are flagged.
+
+Because `NO_SINGLE_GENE` is accepted for `generic` mentions and families, a policy that
+always refuses scores well above zero (56.5% on the `l4` tier, which over-weights hard
+strata; 30.3% on all 1,441). `summarise` reports it as `refuse_all_accuracy`: read
+`accuracy` against it, and lead with `by_name_match.names_gene` (the strict cases).
 
 The taxon is the gold gene's species, supplied as the caller would. The
 evidence is the sentence holding the mention. A mention repeated in one
