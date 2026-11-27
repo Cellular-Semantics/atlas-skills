@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Portal-agnostic agentic skills for working with published single-cell atlases and the literature behind them. Each skill installs on its own.",
-    "version": "0.7.0"
+    "version": "0.8.0"
   },
   "plugins": [
     {
@@ -28,6 +28,11 @@
       "name": "onto-mapping",
       "source": "./plugins/onto-mapping",
       "description": "Map annotator-written tissue, cell-type and developmental-stage strings to ontology terms from lexical and graph evidence, with per-ontology advice documents for the conventions that produce confidently wrong answers."
+    },
+    {
+      "name": "gene-identity",
+      "source": "./plugins/gene-identity",
+      "description": "Find the NCBI Gene a gene or protein name in a paper refers to, or say why it names no single gene, with every ID taken from a lookup rather than from memory."
     },
     {
       "name": "atlas-tools",

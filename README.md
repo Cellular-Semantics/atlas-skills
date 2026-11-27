@@ -18,9 +18,11 @@ it never contains non-trivial code.
 packages/h5ad-obs/                 remote h5ad obs reader + `h5ad-obs` CLI
 packages/obs-column-eval/          gold sets and metrics for the picker benchmarks
 packages/paper-access/             paper retrieval + `paper-access` CLI
+packages/gene-identity/            gene name → NCBI Gene claimants + `gene-id` CLI
 plugins/remote-h5ad-obs/           one skill
 plugins/author-annotation-columns/ one skill + the two picker sub-agents
 plugins/paper-access/              one skill + the identifier-provenance hooks
+plugins/gene-identity/             one skill: gene or protein name → NCBI Gene
 plugins/atlas-tools/               a bundle of the two h5ad plugins; no skills of its own
 evals/<plugin>/                    repo-only evals per plugin: behaviour cases, benchmarks
 docs/                              what the benchmarks measured
@@ -135,6 +137,7 @@ h5ad-obs obs.parquet --profile text   # free
 | `remote-h5ad-obs` | `remote-h5ad-obs` | reads `obs` from a remote `.h5ad` over HTTP range requests, never touching `X` |
 | `author-annotation-columns` | `author-annotation-columns` | works out which `obs` columns hold the authors' own cell type, tissue, developmental stage or disease, as opposed to the portal's standardised fields, cluster indices, protocol and QC |
 | `paper-access` | `paper-access` | retrieves a list of papers as tagged article XML where it can be had, probes how much of each a search index holds, and names the papers nobody can reach |
+| `gene-identity` | `gene-id-curation` | finds the NCBI Gene a gene or protein name in a paper refers to (`PV`, `CB`, `NeuN`), or says why it names no single gene; disambiguates abbreviations several genes claim and catches region names that look like genes |
 | `paper-access` | `retrieve-supplements` | fetches a paper's supplementary files, reading the list and the publisher's captions out of the article XML, and refuses to download half a gigabyte without asking |
 
 `author-annotation-columns` takes a `field_type` of `cell_type`, `tissue`,
