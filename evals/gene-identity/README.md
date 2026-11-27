@@ -63,10 +63,10 @@ against 3/13 for the lookup alone; $1.58 (`quote`) and $1.56 (`quote-title`).
 The title made no difference: `quote` alone settled even gic-02, where the
 quote says only "D1 and D2 cells", by field convention.
 
-The skill's `method` shows how it got there. Five cases rest on field
-convention rather than the quote (gic-01, -02, -06, -08: `FIELD_CONVENTION`;
-gic-11 took the lookup's single match), so a reviewer should read their
-rationale. gic-01 went by convention although its quote spells out "dopamine
+The skill's `method` shows how it got there. Four cases rest on field
+convention rather than the quote (gic-01, -02, -06, -08: `FIELD_CONVENTION`)
+and one on the lookup's single match (gic-11, `UNIQUE_SYNONYM`), so a
+reviewer should read their rationale. gic-01 went by convention although its quote spells out "dopamine
 D1 ... receptors", which reads as a definition.
 
 **The set is saturated.** At 13/13 it can catch a regression but cannot rank
