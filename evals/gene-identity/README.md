@@ -1,4 +1,9 @@
-# gene-identity: the gic benchmark
+# gene-identity evals
+
+Two things here: the gic benchmark (does the skill name the right gene?) and
+the record check's catch rate (does `gene-id check` flag a wrong record?).
+
+## The gic benchmark
 
 How often does `gene-id-curation` name the right gene, or rightly name none,
 for the names a string lookup gets wrong? The 13 cases are the evidencell
@@ -71,3 +76,26 @@ D1 ... receptors", which reads as a definition.
 
 **The set is saturated.** At 13/13 it can catch a regression but cannot rank
 two versions of the skill. That is what the L4 tier (NLM-Gene, #48) is for.
+
+## The record check's catch rate
+
+```sh
+packages/gene-identity/.venv/bin/python evals/gene-identity/record_catch_rate.py
+```
+
+Offline and free; `test_record_catch_rate.py` pins it (it needs
+gene-identity installed, so `dev.sh` runs it in the package's venv and CI in
+its shared one). A clean set of six records (one per outcome, one under a
+higher taxon) is checked against a fixed world (NodeNorm answers, NCBI
+lineages, the resolve log), then each mutation class is applied to every
+record it fits:
+
+| Group | Classes | Result |
+|---|---|---|
+| catchable | wrong ID, made-up ID, retired ID, source wording as symbol, symbol in another case, wrong `gene_taxon`, a human gene in a mouse record (with its own or the record's taxon), a claimant's symbol or ID wrong, an ID never looked up; and shape: GENE without ID, `kind` on GENE, bad outcome, claimants on a resolved record, an ID on a family | **16/16 classes at 100%** |
+| control | unmutated, reworded rationale, a mouse record widened to Murinae | 0% flagged |
+| not catchable | Dio1 for "D1": real, looked up, ID and symbol consistent, wrong gene | 0%, as stated |
+
+Every class but `never_looked_up` is also measured with the provenance check
+off and is still caught every time, so no catch is the resolve log doing
+another check's job.

@@ -1,0 +1,17 @@
+{
+  "description": "Checks every .gene-records.json the gene-id-curation skill writes: the records match their schema, every gene ID exists and is current in Translator NodeNormalization, each symbol is the gene's official symbol, each gene's species lies within the record's taxon, and every ID came out of `gene-id resolve` rather than from memory. A bad record is flagged straight after the write, so it is fixed before the user is told anything. It does not stop the write itself.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/check_gene_records.py\"",
+            "timeout": 130
+          }
+        ]
+      }
+    ]
+  }
+}

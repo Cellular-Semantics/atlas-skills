@@ -4,6 +4,7 @@
     gene-id resolve --gene-table gene_ids.tsv.gz PV SOM   (offline)
     gene-id build-table --ensembl-ids ids.txt -o gene_ids.tsv.gz
     gene-id validate x.gene-records.json                  (the skill's records: schema only)
+    gene-id check x.gene-records.json                     (schema + NodeNorm, symbol, taxon, provenance)
     gene-id schema                                        (print the record schema)
 
 ``resolve`` prints a JSON list, one object per name:
@@ -11,7 +12,10 @@
 ``label`` is the gene's official symbol.
 
 Exit codes: 0 ok; 1 could not run (missing table or file, network down,
-not JSON); 2 bad arguments, or ``validate`` found problems.
+not JSON); 2 bad arguments, or ``validate`` / ``check`` found problems.
+
+Every ID ``resolve`` prints is logged to ``$GENE_IDENTITY_CACHE/resolved.json``;
+``check`` flags a record whose ID never came out of the lookup.
 """
 
 from __future__ import annotations
@@ -22,7 +26,7 @@ import re
 import sys
 from pathlib import Path
 
-from gene_identity import __version__, records
+from gene_identity import __version__, check, records
 from gene_identity.resolve import GeneIdsUnavailable, resolve_by_taxon, resolve_with_table
 from gene_identity.table import build_gene_ids, read_id_list
 from gene_identity.translator import NETWORK_ERRORS
@@ -58,8 +62,34 @@ def build_parser() -> argparse.ArgumentParser:
     v = sub.add_parser("validate", help="check a .gene-records.json against the record schema")
     v.add_argument("file", type=Path)
 
+    c = sub.add_parser("check", help="validate, then check every gene against NodeNorm, "
+                       "its official symbol, the taxon and the resolve log")
+    c.add_argument("file", type=Path)
+    c.add_argument("--no-provenance", action="store_true",
+                   help="skip the resolve-log check (records made elsewhere)")
+    c.add_argument("--offline", action="store_true", help="caches only; no network")
+
     sub.add_parser("schema", help="print the record schema (JSON Schema 2020-12)")
     return p
+
+
+def _check(path: Path, *, provenance: bool, offline: bool) -> int:
+    try:
+        data = records.load(path)
+    except (OSError, ValueError) as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
+    problems, unchecked = check.check(data, check.Store(offline=offline), provenance=provenance)
+    for line in unchecked:
+        print(f"UNCHECKED {line}", file=sys.stderr)
+    if problems:
+        print(f"{path}: {len(problems)} problem(s)", file=sys.stderr)
+        for line in problems:
+            print(f"  {line}", file=sys.stderr)
+        return 2
+    n = len(data) if isinstance(data, list) else 0
+    print(f"{path}: {n} record(s), checked" + (f", {len(unchecked)} unchecked" if unchecked else ""))
+    return 0
 
 
 def _validate(path: Path) -> int:
@@ -83,6 +113,8 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.cmd == "validate":
         return _validate(args.file)
+    if args.cmd == "check":
+        return _check(args.file, provenance=not args.no_provenance, offline=args.offline)
     if args.cmd == "schema":
         print(json.dumps(records.schema(), indent=2))
         return 0
@@ -92,6 +124,7 @@ def main(argv: list[str] | None = None) -> int:
                 res = resolve_with_table(args.names, args.gene_table)
             else:
                 res = resolve_by_taxon(args.names, args.taxon)
+            check.log_resolved(res)
             print(json.dumps(res, indent=2))
         elif args.cmd == "build-table":
             genes = read_id_list(args.ensembl_ids)

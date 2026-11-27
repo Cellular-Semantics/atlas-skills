@@ -1,6 +1,6 @@
 [project]
 name = "gene-identity"
-version = "0.2.0"
+version = "0.3.0"
 description = "Look up which NCBI genes claim a gene or protein name, through Translator Name Resolver or an offline gene table. Returns the claimants; never picks among them."
 readme = "README.md"
 requires-python = ">=3.11"
