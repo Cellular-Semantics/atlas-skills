@@ -1,0 +1,21 @@
+{
+  "source": "https://github.com/Cellular-Semantics/evidencell",
+  "commit": "7641aab0ce93fbc6f434b01bf786e6095b8c7c85",
+  "converted": "YAML -> JSON with yaml.safe_load / json.dumps; content otherwise unchanged",
+  "files_sha256": {
+    "research/validation/skill_evals/gene-id-curation/cases/gic-01.yaml": "b8bf4ea9f95bdb13e65009c5f9d3c227de0748923a90b8b4e3c86fb6fb0b1510",
+    "research/validation/skill_evals/gene-id-curation/cases/gic-02.yaml": "51f2be09f5db295967add32b81857eda007715bd1fc44a7298f530f97fd266d4",
+    "research/validation/skill_evals/gene-id-curation/cases/gic-03.yaml": "e6ceebadffb067a56d1c2e9af1b1c14a15d88be36ee6e7976c4795464960ecf8",
+    "research/validation/skill_evals/gene-id-curation/cases/gic-04.yaml": "13afd64bbee28fe7b904932a0be513e574e726f84c4a32b5a39c4738f2dc4aa5",
+    "research/validation/skill_evals/gene-id-curation/cases/gic-05.yaml": "5aae32921259dac8c3b962eb0aee258371228f6421586cb36eb63864a7f872f1",
+    "research/validation/skill_evals/gene-id-curation/cases/gic-06.yaml": "bfed302f1b83bd5df13f3efc2312fa5610accd8ae415f6635c7f9498790fcfa8",
+    "research/validation/skill_evals/gene-id-curation/cases/gic-07.yaml": "40f6a0f2193758d718e17aae8f6347c4ccc0b6eed8266828266247609aa75629",
+    "research/validation/skill_evals/gene-id-curation/cases/gic-08.yaml": "6519058fe3b9b2f83b9e3f4086086727d4e69aa98b30411e21266196c8645f09",
+    "research/validation/skill_evals/gene-id-curation/cases/gic-09.yaml": "80d42f6f6edb27217af71ec7785bcb5c368acc2931239b18f12862a9a9550f9f",
+    "research/validation/skill_evals/gene-id-curation/cases/gic-10.yaml": "77c2d783da2ad5569c83fb5600ab580f3a6df501a2330f8002506f490782c826",
+    "research/validation/skill_evals/gene-id-curation/cases/gic-11.yaml": "e6031b77ca336262d8fe1ae9afff8de32f20ebc2aae86ed1b4c3fac2b38bc40a",
+    "research/validation/skill_evals/gene-id-curation/cases/gic-12.yaml": "2208be02231ab4fb6680103be9f6fb7511dac37afb08758be86ba30fa779604e",
+    "research/validation/skill_evals/gene-id-curation/cases/gic-13.yaml": "4f44c8301ddda30fe19c807a188fb972f64f578653175cafb65123e1c726527d",
+    "research/validation/skill_evals/gene-id-curation/answers.yaml": "1d7464f5392e2d7e4f1d1a3d7a3bd36451c9441b64baf19d5e73ff212fc164de"
+  }
+}
