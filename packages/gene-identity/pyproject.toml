@@ -1,0 +1,35 @@
+[project]
+name = "gene-identity"
+version = "0.1.0"
+description = "Look up which NCBI genes claim a gene or protein name, through Translator Name Resolver or an offline gene table. Returns the claimants; never picks among them."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Cellular Semantics" }]
+# Standard library only: the two Translator services are plain JSON over HTTPS.
+dependencies = []
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0",
+]
+
+[project.scripts]
+# `gene-id` is what the skill types. `gene-identity` matches the package
+# directory, which is the name the repo's pin check invokes.
+gene-id = "gene_identity.cli:main"
+gene-identity = "gene_identity.cli:main"
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "live: hits a real Translator service; deselected by default",
+]
+addopts = "-m 'not live'"

@@ -43,7 +43,7 @@ jobs:
         with:
           enable-cache: false
       - run: uv venv --python ${{ matrix.python }}
-      - run: uv pip install -e "packages/h5ad-obs[test]" -e "packages/obs-column-eval[test]" -e "packages/paper-access[test]" -e "packages/onto-query[test]"
+      - run: uv pip install -e "packages/h5ad-obs[test]" -e "packages/obs-column-eval[test]" -e "packages/paper-access[test]" -e "packages/onto-query[test]" -e "packages/gene-identity[test]"
       # Live tests are excluded by the package's addopts: they read a real remote
       # h5ad. The offline suite still covers the whole range-read path, against a
       # localhost server that honours Range.
@@ -52,6 +52,8 @@ jobs:
       # No network: every rung is exercised through an httpx MockTransport.
       - run: uv run pytest packages/paper-access -q
       - run: uv run pytest packages/onto-query -q
+      # No network: Translator calls are monkeypatched.
+      - run: uv run pytest packages/gene-identity -q
       # The eval *cases* drive a real agent and are not in CI. Their graders are
       # pure functions and are: a rejection check that fails a correct answer
       # makes a green suite meaningless.
