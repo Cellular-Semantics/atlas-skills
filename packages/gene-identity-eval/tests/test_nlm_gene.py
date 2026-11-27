@@ -196,6 +196,15 @@ def test_summarise_counts_passes_that_needed_the_generic_allowance():
     assert s["by_name_match"]["generic"]["n"] == 2
 
 
+def test_summarise_reports_the_refuse_everything_reference():
+    generic = {**GENE_EXP, "generic": True}
+    cases = {"g": _case("g", generic, "NO_MATCH"), "s": _case("s", GENE_EXP, "NO_MATCH")}
+    rows = [{"id": "g", "passed": True, "record": {"outcome": "NO_SINGLE_GENE"}},
+            {"id": "s", "passed": False, "record": {"outcome": "NO_SINGLE_GENE"}}]
+    s = metrics.summarise(rows, cases)
+    assert s["refuse_all_accuracy"] == 0.5  # the generic one only
+
+
 # ── The committed snapshot ───────────────────────────────────────────────────
 
 

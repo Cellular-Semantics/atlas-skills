@@ -1,6 +1,6 @@
 [project]
 name = "gene-identity-eval"
-version = "0.1.0"
+version = "0.1.1"
 description = "Gold cases and metrics for the gene-id-curation skill: NLM-Gene mentions as gene-id-curation inputs, stratified by what the lookup alone gets right."
 readme = "README.md"
 requires-python = ">=3.11"

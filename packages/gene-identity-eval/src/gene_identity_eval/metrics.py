@@ -94,7 +94,11 @@ def summarise(rows: Iterable[Mapping], cases: Mapping[str, Mapping]) -> dict:
     - ``accuracy``: share of cases passed, overall and per stratum;
     - ``gene_id_accuracy``: on cases expecting one gene;
     - ``family_recall``: share of family mentions reported as no single gene;
-    - ``baseline_accuracy`` on the same scored cases, and the ``lift``.
+    - ``baseline_accuracy`` on the same scored cases, and the ``lift``;
+    - ``refuse_all_accuracy``: a policy that answers NO_SINGLE_GENE to everything,
+      scored the same way. Accepting that outcome for ``generic`` mentions and
+      families means this is well above zero; read ``accuracy`` against it, and
+      read ``by_name_match["names_gene"]`` (the strict cases) beside it.
     """
     rows = list(rows)
     scored = [r for r in rows if r.get("passed") is not None]
@@ -103,6 +107,8 @@ def summarise(rows: Iterable[Mapping], cases: Mapping[str, Mapping]) -> dict:
     by_name: dict[str, Counter] = defaultdict(Counter)
     allowance = 0
     base_pass = 0
+    refuse_pass = 0
+    refuse = {"outcome": "NO_SINGLE_GENE"}
     for r in scored:
         case = cases[r["id"]]
         s = stratum(case)
@@ -111,6 +117,7 @@ def summarise(rows: Iterable[Mapping], cases: Mapping[str, Mapping]) -> dict:
         b = score(baseline_record(case.get("resolver_baseline")), case["expected"])[0]
         per[s]["baseline_passed"] += b
         base_pass += b
+        refuse_pass += score(refuse, case["expected"])[0]
         if case["expected"]["outcome"] == "GENE":
             gene["n"] += 1
             gene["passed"] += bool(r["passed"])
@@ -136,6 +143,7 @@ def summarise(rows: Iterable[Mapping], cases: Mapping[str, Mapping]) -> dict:
         "passed": passed,
         "accuracy": acc,
         "baseline_accuracy": base,
+        "refuse_all_accuracy": rate(refuse_pass, n),
         "lift": round(acc - base, 4) if acc is not None and base is not None else None,
         "gene_id_accuracy": rate(gene["passed"], gene["n"]),
         "family_recall": rate(fam["recalled"], fam["n"]),

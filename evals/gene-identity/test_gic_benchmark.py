@@ -80,6 +80,25 @@ def test_score(record, answer, passed):
     assert gb.score(record, answer)[0] is passed
 
 
+GENERIC_ANSWER = {**GENE_ANSWER, "generic": True}
+
+
+def test_generic_mention_accepts_no_single_gene_like_the_package_scorer():
+    """The driver and gene_identity_eval.metrics must agree (they once did not)."""
+    from gene_identity_eval import metrics
+
+    refuse = {"outcome": "NO_SINGLE_GENE", "kind": "GENE_FAMILY"}
+    for record, answer in [
+        (refuse, GENERIC_ANSWER), (refuse, GENE_ANSWER),
+        ({"outcome": "GENE", "ncbi_gene_id": "NCBIGene:1"}, GENERIC_ANSWER),
+        ({"outcome": "UNRESOLVED", "kind": "AMBIGUOUS"}, GENERIC_ANSWER),
+        ({"outcome": "GENE", "ncbi_gene_id": "NCBIGene:81645"}, GENERIC_ANSWER),
+    ]:
+        assert gb.score(record, answer) == metrics.score(record, answer)
+    assert gb.score(refuse, GENERIC_ANSWER)[0] is True
+    assert gb.score(refuse, GENE_ANSWER)[0] is False
+
+
 def test_method_and_rationale_are_not_scored():
     rec = {"outcome": "GENE", "ncbi_gene_id": "NCBIGene:243764", "method": "WHATEVER",
            "rationale": ""}

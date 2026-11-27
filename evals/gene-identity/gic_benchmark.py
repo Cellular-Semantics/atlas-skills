@@ -130,6 +130,9 @@ def score(record: dict | None, answer: dict) -> tuple[bool, str]:
     if not isinstance(record, dict):
         return False, "no record"
     got, want = record.get("outcome"), answer["outcome"]
+    # NLM-Gene's ``generic`` flag (same rule as gene_identity_eval.metrics.score).
+    if want == "GENE" and answer.get("generic") and got == "NO_SINGLE_GENE":
+        return True, "no single gene, for a generic mention"
     if got != want:
         return False, f"outcome {got} (want {want})"
     if want == "GENE":
@@ -354,6 +357,8 @@ def main(argv: list[str] | None = None) -> int:
             print(f"\n{v}: accuracy {m['accuracy']} vs lookup {m['baseline_accuracy']} "
                   f"(lift {m['lift']}); gene ID {m['gene_id_accuracy']}, family recall "
                   f"{m['family_recall']}")
+            print(f"  reference: always NO_SINGLE_GENE {m['refuse_all_accuracy']}; "
+                  f"strict (non-generic) GENE cases {m['by_name_match'].get('names_gene')}")
             for s_name, s in m["per_stratum"].items():
                 print(f"  {s_name:<18} {s['passed']}/{s['n']}  (lookup {s['baseline_accuracy']})")
         print(f"\n{v}: {summary['passed']}/{summary['n_scored']} passed"
