@@ -88,7 +88,9 @@ def _check(path: Path, *, provenance: bool, offline: bool) -> int:
             print(f"  {line}", file=sys.stderr)
         return 2
     n = len(data) if isinstance(data, list) else 0
-    print(f"{path}: {n} record(s), checked" + (f", {len(unchecked)} unchecked" if unchecked else ""))
+    print(f"{path}: {n} record(s), "
+          + (f"NOT FULLY CHECKED ({len(unchecked)} unchecked, see above)" if unchecked
+             else "checked"))
     return 0
 
 
@@ -127,7 +129,10 @@ def main(argv: list[str] | None = None) -> int:
             check.log_resolved(res)
             print(json.dumps(res, indent=2))
         elif args.cmd == "build-table":
-            genes = read_id_list(args.ensembl_ids)
+            try:
+                genes = read_id_list(args.ensembl_ids)
+            except (OSError, ValueError) as exc:  # includes UnicodeDecodeError
+                raise GeneIdsUnavailable(f"Cannot read {args.ensembl_ids}: {exc}") from exc
             meta = {"dataset_id": args.label} if args.label else {}
             meta["source_file"] = args.ensembl_ids.name
             build_gene_ids(genes, args.out, meta=meta)

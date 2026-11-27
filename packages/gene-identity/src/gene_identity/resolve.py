@@ -24,6 +24,7 @@ source means it (``D1`` → Dio1): that judgement is the skill's.
 
 from __future__ import annotations
 
+import csv
 import sqlite3
 from collections.abc import Iterable
 from dataclasses import dataclass, field
@@ -174,7 +175,11 @@ def resolve_with_table(names: list[str], path: Path) -> list[dict]:
         raise GeneIdsUnavailable(f"No gene table at {path}.")
     con = sqlite3.connect(":memory:")
     try:
-        load_gene_tables(con, path)
+        try:
+            load_gene_tables(con, path)
+        except (OSError, EOFError, ValueError, csv.Error, sqlite3.Error) as exc:
+            # Not a network failure: the file is unreadable (e.g. not a gzip).
+            raise GeneIdsUnavailable(f"Cannot read the gene table {path}: {exc}") from exc
         return [m.to_dict() for m in resolve_names(con, names).values()]
     finally:
         con.close()
@@ -199,11 +204,17 @@ def resolve_by_taxon(names: list[str], taxon: str) -> list[dict]:
             or normalise_name(c.get("label") or "") == norm
         ]
         exact = [c for c in claim if c.get("label") == name]
+        by_label = [c for c in claim if normalise_name(c.get("label") or "") == norm]
+        others: list[dict] = []
         if len(exact) == 1:
             method, gene = EXACT_SYMBOL, exact[0]
+        elif len(by_label) == 1:
+            # A symbol hit beats other genes' synonyms, as with a gene table:
+            # `SST` is Sst although Lmx1a lists it. The rest stay as claimants.
+            method, gene = CASE_INSENSITIVE_SYMBOL, by_label[0]
+            others = [c for c in claim if c is not by_label[0]]
         elif len(claim) == 1:
-            same = normalise_name(claim[0].get("label") or "") == norm
-            method, gene = (CASE_INSENSITIVE_SYMBOL if same else UNIQUE_SYNONYM), claim[0]
+            method, gene = UNIQUE_SYNONYM, claim[0]
         else:
             method, gene = (AMBIGUOUS if claim else NO_MATCH), None
         out.append({
@@ -211,7 +222,8 @@ def resolve_by_taxon(names: list[str], taxon: str) -> list[dict]:
             "gene": {"ncbi_gene_id": gene["ncbi_gene_id"], "label": gene["label"]} if gene else None,
             "claimants": [
                 {"ncbi_gene_id": c["ncbi_gene_id"], "label": c["label"]} for c in claim
-            ] if method == AMBIGUOUS else [],
+            ] if method == AMBIGUOUS else [
+                {"ncbi_gene_id": c["ncbi_gene_id"], "label": c["label"]} for c in others],
             "nameres_candidates": [
                 {"ncbi_gene_id": c["ncbi_gene_id"], "label": c["label"]} for c in cands
             ] if method in (AMBIGUOUS, NO_MATCH) else [],

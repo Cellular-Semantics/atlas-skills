@@ -249,6 +249,27 @@ def test_resolve_by_taxon_methods(monkeypatch, name, method):
     assert out["claimants"] == [] and out["nameres_candidates"] == []
 
 
+def test_resolve_by_taxon_symbol_hit_beats_another_genes_synonym(monkeypatch):
+    # SST in a mouse paper: Sst by label, Lmx1a lists `sst`. Same answer as a gene table.
+    _fake_nameres(monkeypatch, [
+        {"ncbi_gene_id": "NCBIGene:20604", "label": "Sst", "taxa": []},
+        {"ncbi_gene_id": "NCBIGene:110648", "label": "Lmx1a", "taxa": []},
+    ], {"NCBIGene:20604": ["somatostatin"], "NCBIGene:110648": ["sst", "dreher"]})
+    out = resolve.resolve_by_taxon(["SST"], "NCBITaxon:10090")[0]
+    assert out["method"] == CASE_INSENSITIVE_SYMBOL
+    assert out["gene"] == {"ncbi_gene_id": "NCBIGene:20604", "label": "Sst"}
+    assert [c["label"] for c in out["claimants"]] == ["Lmx1a"]
+
+
+def test_resolve_by_taxon_two_genes_with_the_same_label_stay_ambiguous(monkeypatch):
+    _fake_nameres(monkeypatch, [
+        {"ncbi_gene_id": "NCBIGene:1", "label": "Abc", "taxa": []},
+        {"ncbi_gene_id": "NCBIGene:2", "label": "ABC", "taxa": []},
+    ], {"NCBIGene:1": [], "NCBIGene:2": []})
+    out = resolve.resolve_by_taxon(["abc"], "NCBITaxon:10090")[0]
+    assert out["method"] == AMBIGUOUS and out["gene"] is None
+
+
 def test_resolve_by_taxon_candidate_that_does_not_carry_the_name_is_no_match(monkeypatch):
     # Name Resolver returns fuzzy hits; none lists "BrdU", so nothing claims it.
     _fake_nameres(monkeypatch, [{"ncbi_gene_id": "NCBIGene:1", "label": "Brd1", "taxa": []}],
@@ -313,6 +334,21 @@ def test_cli_resolve_with_table_prints_json(gene_table, capsys):
 def test_cli_missing_table_exits_1(tmp_path, capsys):
     assert cli.main(["resolve", "--gene-table", str(tmp_path / "x.tsv.gz"), "PV"]) == 1
     assert "No gene table" in capsys.readouterr().err
+
+
+def test_cli_corrupt_table_is_not_blamed_on_the_network(tmp_path, capsys):
+    bad = tmp_path / "t.tsv.gz"
+    bad.write_text("garbage")
+    assert cli.main(["resolve", "--gene-table", str(bad), "PV"]) == 1
+    err = capsys.readouterr().err
+    assert "Cannot read the gene table" in err and "unreachable" not in err
+
+
+def test_cli_missing_ensembl_id_file_is_not_blamed_on_the_network(tmp_path, capsys):
+    assert cli.main(["build-table", "--ensembl-ids", str(tmp_path / "none.txt"),
+                     "-o", str(tmp_path / "o.tsv.gz")]) == 1
+    err = capsys.readouterr().err
+    assert "Cannot read" in err and "unreachable" not in err
 
 
 def test_cli_network_failure_exits_1_and_warns_against_memory(monkeypatch, capsys):
