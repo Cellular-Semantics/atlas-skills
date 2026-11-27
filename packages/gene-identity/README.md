@@ -42,6 +42,9 @@ gene-id --version
 symbol the dataset itself uses (for example `Car8` where the official label is
 now `Ca8`).
 
+Empty names are skipped and a repeated name is resolved once, so the output can
+have fewer objects than names given; match by `name`, not by position.
+
 Exit codes: 0 ok; 1 could not run (Translator unreachable, a missing table or
 file, not JSON); 2 bad arguments, or `validate` / `check` found problems.
 
