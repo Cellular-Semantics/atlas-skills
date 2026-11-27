@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Cellular-Semantics/atlas-skills/packages/gene-identity/gene_record.schema.json",
+  "title": "gene-id-curation records",
+  "description": "What the gene-id-curation skill writes: a JSON array of records, one per name, in a file ending .gene-records.json. A record says which NCBI gene a name as the source writes it refers to, or why it refers to no single gene. The schema fixes the shape and the per-outcome rules; whether an ID exists, belongs to the taxon and carries that official symbol is the record check's job (gene-id check), not the schema's.",
+  "type": "array",
+  "items": { "$ref": "#/$defs/Record" },
+  "$defs": {
+    "NcbiGene": { "type": "string", "pattern": "^NCBIGene:[0-9]+$" },
+    "NcbiTaxon": { "type": "string", "pattern": "^NCBITaxon:[0-9]+$" },
+    "Claimant": {
+      "type": "object",
+      "required": ["ncbi_gene_id", "symbol"],
+      "additionalProperties": false,
+      "properties": {
+        "ncbi_gene_id": { "$ref": "#/$defs/NcbiGene" },
+        "symbol": { "type": "string", "minLength": 1, "description": "The claimant's official symbol (the lookup's label)." }
+      }
+    },
+    "Record": {
+      "type": "object",
+      "required": ["name", "taxon", "outcome", "rationale"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "description": "The name exactly as the source writes it." },
+        "taxon": { "$ref": "#/$defs/NcbiTaxon", "description": "The taxon the caller gave. May be above species." },
+        "outcome": { "enum": ["GENE", "NO_SINGLE_GENE", "NOT_A_GENE_PRODUCT", "UNRESOLVED"] },
+        "ncbi_gene_id": { "oneOf": [{ "$ref": "#/$defs/NcbiGene" }, { "type": "null" }] },
+        "symbol": { "type": ["string", "null"], "description": "The gene's official symbol, never the source's wording." },
+        "gene_taxon": { "oneOf": [{ "$ref": "#/$defs/NcbiTaxon" }, { "type": "null" }], "description": "The gene's species." },
+        "method": {
+          "enum": ["EXACT_SYMBOL", "CASE_INSENSITIVE_SYMBOL", "UNIQUE_SYNONYM", "PAPER_DEFINITION", "ANTIBODY_TARGET", "FIELD_CONVENTION", null],
+          "description": "How the gene was reached: the lookup's method when the name itself was looked up, otherwise why a different name was (SKILL.md Step 2)."
+        },
+        "kind": {
+          "enum": ["GENE_FAMILY", "GLYCOFORM", "PTM_STATE", "EXOGENOUS_LABEL", "NON_GENE_TERM", "AMBIGUOUS", "NO_MATCH", "LOOKUP_FAILED", null]
+        },
+        "antibody": { "type": ["string", "null"], "description": "The antibody or clone name as written, when the name is one." },
+        "evidence": { "type": ["string", "null"], "description": "The quote relied on, verbatim." },
+        "rationale": { "type": "string", "minLength": 1 },
+        "claimants": { "type": "array", "items": { "$ref": "#/$defs/Claimant" } }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "outcome": { "const": "GENE" } } },
+          "then": {
+            "required": ["ncbi_gene_id", "symbol", "gene_taxon", "method"],
+            "properties": {
+              "ncbi_gene_id": { "$ref": "#/$defs/NcbiGene" },
+              "symbol": { "type": "string", "minLength": 1 },
+              "gene_taxon": { "$ref": "#/$defs/NcbiTaxon" },
+              "method": { "type": "string" },
+              "kind": { "const": null },
+              "claimants": { "maxItems": 0 }
+            }
+          },
+          "else": {
+            "required": ["kind"],
+            "properties": {
+              "ncbi_gene_id": { "const": null },
+              "symbol": { "const": null },
+              "gene_taxon": { "const": null },
+              "method": { "const": null },
+              "kind": { "type": "string" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "outcome": { "const": "NO_SINGLE_GENE" } } },
+          "then": { "properties": { "kind": { "enum": ["GENE_FAMILY", "GLYCOFORM", "PTM_STATE"] }, "claimants": { "maxItems": 0 } } }
+        },
+        {
+          "if": { "properties": { "outcome": { "const": "NOT_A_GENE_PRODUCT" } } },
+          "then": { "properties": { "kind": { "enum": ["EXOGENOUS_LABEL", "NON_GENE_TERM"] }, "claimants": { "maxItems": 0 } } }
+        },
+        {
+          "if": { "properties": { "outcome": { "const": "UNRESOLVED" } } },
+          "then": { "properties": { "kind": { "enum": ["AMBIGUOUS", "NO_MATCH", "LOOKUP_FAILED"] } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "AMBIGUOUS" } }, "required": ["kind"] },
+          "then": { "required": ["claimants"], "properties": { "claimants": { "minItems": 2 } } },
+          "else": { "properties": { "claimants": { "maxItems": 0 } } }
+        }
+      ]
+    }
+  }
+}
