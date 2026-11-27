@@ -72,6 +72,9 @@ FAMILY_ANSWER = {"outcome": "NO_SINGLE_GENE", "kind": "GENE_FAMILY", "accept": [
     ({"outcome": "NO_SINGLE_GENE", "kind": "PTM_STATE"}, FAMILY_ANSWER, False),
     ({"outcome": "GENE", "ncbi_gene_id": "NCBIGene:14405"}, FAMILY_ANSWER, False),
     (None, FAMILY_ANSWER, False),
+    # NLM-Gene expects no kind (it doesn't say family vs complex): outcome only.
+    ({"outcome": "NO_SINGLE_GENE", "kind": "PTM_STATE"}, {**FAMILY_ANSWER, "kind": None}, True),
+    ({"outcome": "UNRESOLVED", "kind": "AMBIGUOUS"}, {**FAMILY_ANSWER, "kind": None}, False),
 ])
 def test_score(record, answer, passed):
     assert gb.score(record, answer)[0] is passed
@@ -135,6 +138,9 @@ def test_committed_runs_are_complete():
         run = json.loads(f.read_text())
         assert set(run) >= gb.REQUIRED_RUN_KEYS, f.name
         assert run["variant"] in gb.AGENT_VARIANTS
+        assert run.get("set", "gic") in ("gic", "nlm-gene")
+        if run.get("set") == "nlm-gene":
+            assert run["tier"] and "metrics" in run, f.name
 
 
 def test_write_run_never_overwrites(tmp_path, monkeypatch):

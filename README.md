@@ -19,6 +19,7 @@ packages/h5ad-obs/                 remote h5ad obs reader + `h5ad-obs` CLI
 packages/obs-column-eval/          gold sets and metrics for the picker benchmarks
 packages/paper-access/             paper retrieval + `paper-access` CLI
 packages/gene-identity/            gene name → NCBI Gene claimants + `gene-id` CLI
+packages/gene-identity-eval/       NLM-Gene gold cases and metrics for the gene-id-curation benchmark
 plugins/remote-h5ad-obs/           one skill
 plugins/author-annotation-columns/ one skill + the two picker sub-agents
 plugins/paper-access/              one skill + the identifier-provenance hooks

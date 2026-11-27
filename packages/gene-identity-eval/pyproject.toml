@@ -1,0 +1,30 @@
+[project]
+name = "gene-identity-eval"
+version = "0.1.0"
+description = "Gold cases and metrics for the gene-id-curation skill: NLM-Gene mentions as gene-id-curation inputs, stratified by what the lookup alone gets right."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Cellular Semantics" }]
+# Deliberately none: the cases are JSON and the metrics are arithmetic. The
+# snapshot script (dev-only) also needs gene-identity, for the baseline.
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=8.0"]
+
+[project.scripts]
+gene-identity-eval = "gene_identity_eval.cli:main"
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+gene_identity_eval = ["data/nlm_gene/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

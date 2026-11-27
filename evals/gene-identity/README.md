@@ -99,3 +99,35 @@ record it fits:
 Every class but `never_looked_up` is also measured with the provenance check
 off and is still caught every time, so no catch is the resolve log doing
 another check's job.
+
+## The NLM-Gene tier
+
+```sh
+packages/gene-identity-eval/.venv/bin/python evals/gene-identity/gic_benchmark.py \
+    --set nlm-gene --tier l4 --variant quote-title -j 6        # ~$20, ~10 min
+packages/gene-identity-eval/.venv/bin/python evals/gene-identity/gic_benchmark.py \
+    --set nlm-gene --tier l4 --variant baseline                # free
+```
+
+168 test-split mentions from NLM-Gene (`packages/gene-identity-eval`: how cases
+are built, the strata, the `generic` flag and the CC0 source). Run it with a
+Python that has `gene-identity-eval` installed. The run file adds `metrics`:
+accuracy against the lookup's own, per stratum, gene-ID accuracy, family
+recall, accuracy for mentions that name their gene vs `generic` ones, and the
+passes that needed the generic allowance.
+
+| Stratum (the lookup alone...) | In the tier | Of 1,441 cases |
+|---|---|---|
+| `easy` (right) | 30 | 922 |
+| `lookup_wrong` | 28 | 28 |
+| `lookup_ambiguous` | 40 | 66 |
+| `lookup_no_match` | 40 | 346 |
+| `family` (several genes) | 30 | 79 |
+
+**No logged run yet.** An unlogged 19-case pilot (`--case 'nlm-1*'`, $2.33,
+before the `generic` flag existed) scored 9/19 strictly against the lookup's
+3/19. Eight of its ten failures were the skill calling a class a family or
+complex ("GPCR", "Rac", "PKC", "protein kinase C", "eIF2B", "TAP", "AT(1)
+receptors") or "oncogenes" not a gene product, where the gold names one member:
+the reason for the `generic` flag. The first logged run becomes the tier's
+frozen baseline.
